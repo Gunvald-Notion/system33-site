@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System 33 — An Operating System for Thinking</title>
+    <meta name="description" content="A collection of methods for learning, deciding, and building. Designed to work with any AI or on your own. Built by Gunvald.">
+    
+    <!-- Open Graph / LinkedIn preview -->
+    <meta property="og:title" content="System 33 — An Operating System for Thinking">
+    <meta property="og:description" content="Methods for learning, deciding, and building. Works with any AI or on your own.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://system33.io">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="System 33 — An Operating System for Thinking">
+    <meta name="twitter:description" content="Methods for learning, deciding, and building. Works with any AI or on your own.">
+    
+    <style>
+        /* Reset & Base */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --bg-card: #18181b;
+            --border: #27272a;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #e4e4e7;
+            --accent-glow: rgba(228, 228, 231, 0.08);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            opacity: 0.7;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Divider */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: var(--border);
+            margin: 0;
+        }
+
+        /* Section */
+        .section {
+            padding: 64px 0;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+
+        /* Method Cards */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .method-card {
+            display: block;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .method-card:hover {
+            background: var(--accent-glow);
+            border-color: #3f3f46;
+            opacity: 1;
+        }
+
+        .method-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .method-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .method-card-tag {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 3px 10px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+
+        .method-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .method-card-arrow {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .method-card:hover .method-card-arrow {
+            color: var(--text-primary);
+        }
+
+        /* Coming soon card */
+        .method-card.coming-soon {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* About */
+        .about-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .about-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 48px 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-left {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 80px 0 56px;
+            }
+
+            .section {
+                padding: 48px 0;
+            }
+
+            .method-card {
+                padding: 22px;
+            }
+
+            .footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">Open Source</div>
+            <h1>System 33</h1>
+            <p>An operating system for thinking. Methods for learning, deciding, and building — designed to work with any AI or on your own.</p>
+        </div>
+    </section>
+
+    <div class="container"><div class="divider"></div></div>
+
+    <!-- Methods -->
+    <section class="section">
+        <div class="container">
+            <div class="section-label">Methods</div>
+            <div class="methods-grid">
+                
+                <a href="https://github.com/Gunvald-Notion/system33-understanding-method" class="method-card" target="_blank" rel="noopener">
+                    <div class="method-card-header">
+                        <h3>Understanding Method</h3>
+                        <span class="method-card-tag">Free on GitHub</span>
+                    </div>
+                    <p>A six-stage method for learning anything by finding out where it came from, why it exists, and how it's actually used. Works with any AI or on your own.</p>
+                    <span class="method-card-arrow">View on GitHub →</span>
+                </a>
+
+                <div class="method-card coming-soon">
+                    <div class="method-card-header">
+                        <h3>Financial Decision Method</h3>
+                        <span class="method-card-tag">Coming soon</span>
+                    </div>
+                    <p>A five-stage framework for seeing the full shape of any financial decision before you act. Full cost, position, category, exit, decision.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="container"><div class="divider"></div></div>
+
+    <!-- About -->
+    <section class="section">
+        <div class="container">
+            <div class="section-label">About</div>
+            <p class="about-text">
+                <strong>System 33</strong> started as a personal problem. I have dyslexia — every piece of knowledge I gain costs more effort than it costs most people. Losing it after all that work was something I couldn't accept. So I built methods that make things stick. Not through memorization, but through understanding where things come from and why they exist.
+            </p>
+            <br>
+            <p class="about-text">
+                What started as a learning tool grew into an operating system for thinking — a collection of methods I use daily for learning, making decisions, and building things. System 33 is the public version. Every method is free and open source.
+            </p>
+            <br>
+            <p class="about-text">
+                Built by <strong>Gunvald</strong>, in Norway.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer">
+                <div class="footer-left">
+                    © 2026 System 33. MIT License.
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/Gunvald-Notion" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
