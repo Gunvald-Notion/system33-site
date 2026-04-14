@@ -119,6 +119,20 @@
             margin-bottom: 32px;
         }
 
+        /* Mermaid diagrams */
+        .diagram-container {
+            margin-bottom: 48px;
+        }
+
+        .diagram-container .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+
+        .diagram-container .mermaid svg {
+            max-width: 100%;
+        }
+
         /* Method Cards */
         .methods-grid {
             display: grid;
@@ -180,10 +194,25 @@
             color: var(--text-primary);
         }
 
+        /* Method card diagram */
+        .method-card-diagram {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .method-card-diagram .mermaid svg {
+            max-width: 100%;
+        }
+
         /* Coming soon card */
         .method-card.coming-soon {
             opacity: 0.5;
             pointer-events: none;
+        }
+
+        .method-card.coming-soon .method-card-diagram {
+            display: none;
         }
 
         /* About */
@@ -258,6 +287,25 @@
 
     <div class="container"><div class="divider"></div></div>
 
+    <!-- Ecosystem -->
+    <section class="section">
+        <div class="container">
+            <div class="section-label">Ecosystem</div>
+            <div class="diagram-container">
+                <pre class="mermaid">
+                    graph TD
+                        S33["🧠 System 33"]
+                        S33 --> UM["Understanding Method"]
+                        S33 --> FDM["Financial Decision Method"]
+                        S33 --> Galdr["Galdr — Mathematical Language"]
+                        S33 --> MORE["...more methods"]
+                </pre>
+            </div>
+        </div>
+    </section>
+
+    <div class="container"><div class="divider"></div></div>
+
     <!-- Methods -->
     <section class="section">
         <div class="container">
@@ -270,6 +318,18 @@
                         <span class="method-card-tag">Free on GitHub</span>
                     </div>
                     <p>A six-stage method for learning anything by finding out where it came from, why it exists, and how it's actually used. Works with any AI or on your own.</p>
+                    <div class="method-card-diagram">
+                        <pre class="mermaid">
+                            gantt
+                                title Version History
+                                dateFormat YYYY-MM-DD
+                                axisFormat %b %d, %Y
+                                section System 32
+                                    Private Development :done, 2026-01-07, 2026-04-14
+                                section System 33
+                                    Public Release :active, 2026-04-07, 2026-04-14
+                        </pre>
+                    </div>
                     <span class="method-card-arrow">View on GitHub →</span>
                 </a>
 
@@ -281,6 +341,16 @@
                     <p>Traditional math education routes through sequential symbol processing — read the formula, memorize the steps, repeat. Galdr takes a different path: enter a mental spatial environment, speak mathematical notation as commands, and feel the forces reshape the space around you. Instead of reading about what Σ means, you stand inside it and feel accumulation pull.</p>
                     <br>
                     <p>The method is grounded in research. Dyslexic brains show a measurable advantage in holistic spatial visualization (Haskins Labs, Yale). Spatial reasoning is a proven predictor of physics and math problem-solving (Kozhevnikov, 2007). And embodied cognition research shows that mathematical understanding is built on physical experience, not abstract symbols (Nature, 2022). Galdr connects these findings into a single method — routing mathematics through the spatial channel where the brain is fastest, instead of the sequential channel where it struggles.</p>
+                    <div class="method-card-diagram">
+                        <pre class="mermaid">
+                            gantt
+                                title Version History
+                                dateFormat YYYY-MM-DD
+                                axisFormat %b %d, %Y
+                                section System 32
+                                    In Development :active, 2026-03-01, 2026-04-14
+                        </pre>
+                    </div>
                 </div>
 
                 <div class="method-card coming-soon">
@@ -289,6 +359,16 @@
                         <span class="method-card-tag">Coming soon</span>
                     </div>
                     <p>A five-stage framework for seeing the full shape of any financial decision before you act. Full cost, position, category, exit, decision.</p>
+                    <div class="method-card-diagram">
+                        <pre class="mermaid">
+                            gantt
+                                title Version History
+                                dateFormat YYYY-MM-DD
+                                axisFormat %b %d, %Y
+                                section System 32
+                                    In Development :active, 2026-02-01, 2026-04-14
+                        </pre>
+                    </div>
                 </div>
 
             </div>
@@ -329,6 +409,24 @@
             </div>
         </div>
     </footer>
+
+    <!-- Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#18181b',
+                primaryTextColor: '#fafafa',
+                primaryBorderColor: '#27272a',
+                lineColor: '#a1a1aa',
+                secondaryColor: '#27272a',
+                tertiaryColor: '#111113',
+                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
+            }
+        });
+    </script>
 
 </body>
 </html>
