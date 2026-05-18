@@ -217,6 +217,17 @@
             pointer-events: none;
         }
 
+        /* Activate section helper */
+        .activate-footnote {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .activate-footnote a {
+            color: var(--text-secondary);
+        }
+
         /* About */
         .about-text {
             color: var(--text-secondary);
@@ -289,6 +300,26 @@
 
     <div class="container"><div class="divider"></div></div>
 
+    <!-- Activate -->
+    <section class="section">
+        <div class="container">
+            <div class="section-label">Activate</div>
+            <div class="methods-grid">
+                <a href="/activate/understanding-method/" class="method-card">
+                    <div class="method-card-header">
+                        <h3>Activate Understanding Method</h3>
+                        <span class="method-card-tag">Six stages</span>
+                    </div>
+                    <p>A six-stage learning protocol. Copy the prompt, paste into any AI, name your topic. Understand anything — origin, principle, application.</p>
+                    <span class="method-card-arrow">Activate →</span>
+                </a>
+            </div>
+            <p class="activate-footnote">More methods become activatable as they're ready. <a href="/activate/">View all →</a></p>
+        </div>
+    </section>
+
+    <div class="container"><div class="divider"></div></div>
+
     <!-- Creator -->
     <section class="section">
         <div class="container">
@@ -317,12 +348,14 @@
                 <pre class="mermaid">
                     graph TD
                         S33["🧠 System 33"]
-                        S33 --> UM["Understanding Method"]
+                        S33 --> ACT["⚡ Activate"]
+                        ACT --> UM["Understanding Method"]
                         S33 --> COURSES["📚 Courses"]
                         COURSES --> HSM["HSM126 — Prøv deg selv"]
                         S33 --> NOTES["📝 Notes"]
                         NOTES --> GM["High Agency — George Mack"]
-                        click UM "#method-understanding"
+                        click ACT "/activate/"
+                        click UM "/activate/understanding-method/"
                         click HSM "/courses/hsm126/"
                         click GM "/notes/george-mack-high-agency/"
                 </pre>
@@ -338,7 +371,7 @@
             <div class="section-label">Methods</div>
             <div class="methods-grid">
                 
-                <a href="https://github.com/Gunvald-Notion/system33-understanding-method" id="method-understanding" class="method-card" target="_blank" rel="noopener">
+                <a href="/activate/understanding-method/" id="method-understanding" class="method-card">
                     <div class="method-card-diagram">
                         <pre class="mermaid">
                             gantt
@@ -354,10 +387,10 @@
                     </div>
                     <div class="method-card-header">
                         <h3>Understanding Method</h3>
-                        <span class="method-card-tag">Free on GitHub</span>
+                        <span class="method-card-tag">Activate</span>
                     </div>
                     <p>A six-stage method for learning anything by finding out where it came from, why it exists, and how it's actually used. Works with any AI or on your own.</p>
-                    <span class="method-card-arrow">View on GitHub →</span>
+                    <span class="method-card-arrow">Activate →</span>
                 </a>
 
             </div>
