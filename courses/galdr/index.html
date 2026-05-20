@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galdr — Rune Quiz | System 33</title>
+    <meta name="description" content="68 scenario-baserte spørsmål over 5 tiers. Kjenn runene i voiden. Bygget av Gunvald som del av system33.io.">
+    <meta property="og:title" content="Galdr — Rune Quiz">
+    <meta property="og:description" content="68 spørsmål. 5 tiers. Scenario-basert. Kjenn runene.">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --bg-card: #18181b;
+            --border: #27272a;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.7; }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .site-header { padding: 24px 0 0; }
+        .site-header a { color: var(--text-muted); font-size: 0.85rem; }
+        .hero { padding: 48px 0 32px; text-align: center; }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .section { padding: 32px 0 64px; }
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .chapter-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .chapter-card {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px 24px;
+            cursor: pointer;
+            font-family: inherit;
+            color: inherit;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .chapter-card:hover {
+            background: rgba(228, 228, 231, 0.04);
+            border-color: #3f3f46;
+        }
+        .chapter-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 12px;
+        }
+        .chapter-card h3 { font-size: 1.05rem; font-weight: 600; }
+        .chapter-card-weight {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 3px 10px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+        .chapter-card-meta { font-size: 0.85rem; color: var(--text-secondary); }
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+        .progress-bar-fill { height: 100%; background: var(--text-primary); transition: width 0.3s ease; }
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            line-height: 1.45;
+            margin-bottom: 28px;
+        }
+        .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .option-btn {
+            text-align: left;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: background 0.15s, border-color 0.15s;
+            line-height: 1.45;
+        }
+        .option-btn:hover:not(:disabled) { background: rgba(228, 228, 231, 0.04); border-color: #3f3f46; }
+        .option-btn:disabled { cursor: default; }
+        .option-btn.correct { border-color: var(--correct); background: rgba(34, 197, 94, 0.08); }
+        .option-btn.wrong { border-color: var(--wrong); background: rgba(239, 68, 68, 0.08); }
+        .option-letter {
+            display: inline-block;
+            width: 22px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .option-btn.correct .option-letter { color: var(--correct); }
+        .option-btn.wrong .option-letter { color: var(--wrong); }
+        .explanation {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--text-primary);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+        .explanation strong { color: var(--text-primary); }
+        .next-btn {
+            width: 100%;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .next-btn:hover { opacity: 0.85; }
+        .results-score { text-align: center; padding: 16px 0 24px; }
+        .results-score-number {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+        }
+        .results-score-label { font-size: 0.9rem; color: var(--text-secondary); }
+        .squares-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin: 16px 0 32px;
+        }
+        .square {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: transform 0.15s;
+        }
+        .square:hover { transform: scale(1.1); }
+        .square.right { background: rgba(34, 197, 94, 0.7); }
+        .square.wrong { background: rgba(239, 68, 68, 0.7); }
+        .chart-container {
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+        }
+        .chart-container svg { max-width: 100%; height: auto; }
+        .results-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-secondary:hover { background: rgba(228, 228, 231, 0.04); }
+        .btn-shuffle {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 16px;
+        }
+        .btn-shuffle:hover { background: rgba(228, 228, 231, 0.04); }
+        footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        footer a { color: var(--text-secondary); }
+        .hidden { display: none !important; }
+        @media (max-width: 480px) {
+            .hero { padding: 32px 0 24px; }
+            .section { padding: 24px 0 48px; }
+            .chapter-card { padding: 18px 20px; }
+            .question-text { font-size: 1.05rem; }
+            .option-btn { font-size: 0.92rem; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="https://system33.io">&larr; system33.io</a>
+        </div>
+    </header>
+
+    <div id="screen-picker">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">68 sp&oslash;rsm&aring;l &middot; 5 tiers &middot; scenario-basert</div>
+                <h1>Galdr &mdash; Rune Quiz</h1>
+                <p>Hva skjer i voiden? Kjenn runen. Velg en tier eller kj&oslash;r alle p&aring; shuffle.</p>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="section-label">Tiers</div>
+                <div class="chapter-grid" id="chapter-grid"></div>
+                <button class="btn-shuffle" id="shuffle-all-btn">&starf; Shuffle alle 68 sp&oslash;rsm&aring;l</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="screen-quiz" class="hidden">
+        <section class="section">
+            <div class="container">
+                <div class="quiz-meta">
+                    <span id="quiz-chapter-name"></span>
+                    <span id="quiz-progress-text"></span>
+                </div>
+                <div class="progress-bar"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+                <div class="question-text" id="question-text"></div>
+                <div class="options" id="options"></div>
+                <div class="explanation hidden" id="explanation"></div>
+                <button class="next-btn hidden" id="next-btn">Neste &rarr;</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="screen-results" class="hidden">
+        <section class="section">
+            <div class="container">
+                <div class="section-label" id="results-chapter-label"></div>
+                <div class="results-score">
+                    <div class="results-score-number" id="score-number"></div>
+                    <div class="results-score-label" id="score-label"></div>
+                </div>
+                <div class="squares-grid" id="squares-grid"></div>
+                <div class="chart-container">
+                    <pre class="mermaid" id="mermaid-chart"></pre>
+                </div>
+                <div class="results-actions">
+                    <button class="next-btn" id="retry-btn">Pr&oslash;v samme tier igjen</button>
+                    <button class="btn-secondary" id="back-btn">Velg en annen tier</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            Bygget av Gunvald &middot; Del av <a href="https://system33.io">system33.io</a>
+        </div>
+    </footer>
+
+    <script>
+        const TIERS = [
+            { id: "Primordial", name: "Tier 0 \u2014 Primordial", desc: "=, +/\u2212, \u00d7/\u00f7, \u03a3 Total" },
+            { id: "Algebraic", name: "Tier 1 \u2014 Algebraic", desc: "x, x\u207f, \u221a, e, \u03c0, f(x), \u221e, n, log" },
+            { id: "Operational", name: "Tier 2 \u2014 Operational", desc: "\u03a3, \u03a0, n!, nCr, nPr, \u2229, \u222a, P(A), P(A|B), Bayes, Independence" },
+            { id: "Descriptive", name: "Tier 3 \u2014 Descriptive", desc: "x\u0304, \u03bc, \u03c3\u00b2, \u03c3, s/s\u00b2, E(X)" },
+            { id: "Statistical", name: "Tier 4 \u2014 Statistical", desc: "H\u2080, H\u2081, \u03b1, df" }
+        ];
+
+        const QUESTIONS = [
+            {tier:"Primordial",q:"Alle krefter er til stede, i perfekt balanse. Ingenting beveger seg, men alt summer. Tilstanden f\u00f8r det f\u00f8rste ordet uttales.",a:"\u03a3 Total (Conservation)",b:"+/\u2212 (Transfer)",c:"= (Equilibrium)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"C",rune:"= Equilibrium",explanation:"= er ikke frav\u00e6r \u2014 det er tilstedev\u00e6relse holdt stille. Begge sider b\u00e6rer samme totale energi. Voiden i hvile, der alle krefter kansellerer perfekt."},
+            {tier:"Primordial",q:"Bassenget vokser raskere jo st\u00f8rre det blir. Hvert steg skaleres av det som allerede er der. Akkumulasjon med hunger.",a:"+/\u2212 (Transfer)",b:"= (Equilibrium)",c:"\u03a3 Total (Conservation)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"D",rune:"\u00d7/\u00f7 Proportional Transfer",explanation:"\u00d7 er akkumulasjon som n\u00e6rer seg selv \u2014 jo st\u00f8rre bassenget, jo hardere det trekker. \u00f7 er tvillingen: elven som deler seg i kanaler."},
+            {tier:"Primordial",q:"Begge sider av en ligning b\u00e6rer samme totale energi, m\u00e5lt fra forskjellige posisjoner.",a:"+/\u2212 (Transfer)",b:"= (Equilibrium)",c:"\u03a3 Total (Conservation)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"B",rune:"= Equilibrium",explanation:"= erkl\u00e6rer at venstre og h\u00f8yre side er samme kraft m\u00e5lt fra forskjellige posisjoner. Likevekt."},
+            {tier:"Primordial",q:"Du deler en elv i fem kanaler. Flere kanaler betyr tynnere flyt i hver.",a:"\u03a3 Total (Conservation)",b:"\u00f7 (Proportional Transfer)",c:"+/\u2212 (Transfer)",d:"= (Equilibrium)",correct:"B",rune:"\u00d7/\u00f7 Proportional Transfer",explanation:"\u00f7 er distribusjon \u2014 elven som deler seg. Mer kanaler, tynnere flyt. Tvillingen til \u00d7."},
+            {tier:"Primordial",q:"Du ganger prisen med 3 for \u00e5 finne totalen for tre varer. Operasjonen skalerer med mengden.",a:"+/\u2212 (Transfer)",b:"= (Equilibrium)",c:"\u00d7/\u00f7 (Proportional Transfer)",d:"\u03a3 Total (Conservation)",correct:"C",rune:"\u00d7/\u00f7 Proportional Transfer",explanation:"\u00d7 er gjentatt addisjon som skalerer med det som allerede er der. 3 \u00d7 pris = total."},
+            {tier:"Primordial",q:"Energi forlater ett sted og ankommer et annet. Fjellet mister, elven f\u00e5r. Totalen endres aldri. Hvilken rune?",a:"+/\u2212 (Transfer)",b:"\u00d7/\u00f7 (Proportional Transfer)",c:"\u03a3 Total (Conservation)",d:"= (Equilibrium)",correct:"A",rune:"+/\u2212 Transfer",explanation:"+/\u2212 er den eldste rytmen \u2014 energi som forlater ett sted og ankommer et annet. Totalen er alltid bevart."},
+            {tier:"Primordial",q:"To sider av en ligning. Venstre side har bygget opp noe, h\u00f8yre side har bygget opp noe annet. De m\u00f8tes og balanserer. Likevekt.",a:"+ (Additive Force)",b:"\u03a3 Total (Conservation)",c:"= (Equilibrium)",d:"\u00d7 (Multiplicative Scaling)",correct:"C",rune:"= \u2014 Equilibrium",explanation:"= er balansepunktet. Begge sider av ligningen har lik tyngde. Ikke bevegelse \u2014 tilstand."},
+            {tier:"Primordial",q:"To verdier sitter p\u00e5 hver sin side. Den ene f\u00e5r n\u00f8yaktig det den andre mister. Innpust og utpust.",a:"= (Equilibrium)",b:"\u03a3 Total (Conservation)",c:"+/\u2212 (Transfer)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"C",rune:"+/\u2212 Transfer",explanation:"+/\u2212 er overf\u00f8ring. Lungene fylles fordi luften t\u00f8mmes. \u00c9n hendelse, f\u00f8lt fra to posisjoner."},
+            {tier:"Primordial",q:"Uansett hvilke runer som uttales, endres aldri totalen. Energi transformeres men oppst\u00e5r eller forsvinner aldri.",a:"= (Equilibrium)",b:"\u00d7/\u00f7 (Proportional Transfer)",c:"+/\u2212 (Transfer)",d:"\u03a3 Total (Conservation)",correct:"D",rune:"\u03a3 Total (Conservation)",explanation:"Den primordiale \u03a3 er bevaringsloven \u2014 den ene loven som aldri b\u00f8yer seg. Summen endres aldri."},
+            {tier:"Algebraic",q:"1/\u221e \u2192 0. 1/0 \u2192 \u221e. Disse to er hverandres refleksjoner. Hvilken rune handler om det som aldri har en ende?",a:"\u03a3 Total (Conservation)",b:"\u03c0 (Circularity)",c:"\u221e (Unboundedness)",d:"e (Self-Pullin Growth)",correct:"C",rune:"\u221e \u2014 Unboundedness",explanation:"\u221e og null er hverandres speilbilder. \u221e er ubegrensetheten \u2014 retningen, ikke tallet."},
+            {tier:"Algebraic",q:"Du har 3 terninger, hver med 6 sider. Totalt antall mulige utfall er funnet ved denne runen.",a:"\u03a3 (Summation)",b:"n! (Factorial)",c:"x\u207f (Charge Across Nexus)",d:"\u03a0 (Product)",correct:"C",rune:"x\u207f \u2014 Charge Across Nexus",explanation:"x\u207f betyr x ganget med seg selv n ganger. 6\u00b3 = 216. Ladningen x fyller hver av de n beholderne."},
+            {tier:"Algebraic",q:"Du m\u00e5ler rett over midten av en sirkel og trenger omkretsen. Denne konstanten dukker alltid opp.",a:"e (Self-Pullin Growth)",b:"\u221e (Unboundedness)",c:"\u03c0 (Signature of Circularity)",d:"x (Potential Charge)",correct:"C",rune:"\u03c0 \u2014 Signature of Circularity",explanation:"\u03c0 \u2248 3.14159. Forholdet mellom en sirkels omkrets og diameter. Runen for lukket kurve."},
+            {tier:"Algebraic",q:"Du vet at 2\u00b9\u2070 = 1024. N\u00e5 sp\u00f8r noen: \u00abHvilken potens av 2 gir 1024?\u00bb Du reverserer eksponentieringen.",a:"\u221a (Root Extraction)",b:"e (Organic Growth)",c:"x\u207f (Charge Across Nexus)",d:"log (Inverse of Exponentiation)",correct:"D",rune:"log \u2014 Inverse of Exponentiation",explanation:"log\u2082(1024) = 10. Du sp\u00f8r: \u00abHvor mange ganger m\u00e5 2 dupliseres for \u00e5 bli 1024?\u00bb Log reverserer eksponentieringen."},
+            {tier:"Algebraic",q:"Du vet at produktet er 5\u00b9\u2070 og basen er 5. Hvor mange beholdere? Denne runen finner antallet.",a:"\u221a (Reverse of x\u207f)",b:"log (Backtrackin)",c:"n (Nexus)",d:"\u00f7 (Proportional Transfer)",correct:"B",rune:"log \u2014 Backtrackin",explanation:"log tar produktet og basen, og gir tilbake antallet. \u221a gir tilbake ladningen, log gir tilbake tellingen."},
+            {tier:"Algebraic",q:"En bindende kraft som gj\u00f8r at mediet samler seg til distinkte enheter \u2014 hver enkelt holdt adskilt fra omgivelsene.",a:"n (Nexus / Binding Force)",b:"\u03a3 (Summation)",c:"x (Potential Charge)",d:"\u03a0 (Product)",correct:"A",rune:"n \u2014 Nexus / Binding Force",explanation:"n teller \u2014 antall utfall, antall elementer, antall deler. Bindingen og tellingen ankommer sammen."},
+            {tier:"Algebraic",q:"En prosess gjentas 100 ganger. Hver gang legger du til resultatet. Etter 100 runder tar du snittet. n = 100 her.",a:"\u221e (Infinity)",b:"x (The Unknown)",c:"n (Counter / Iterator)",d:"\u03a3 (Summation)",correct:"C",rune:"n \u2014 Counter / Iterator",explanation:"n teller. Den holder styr p\u00e5 hvor mange ganger du har gjort noe. Her er n = 100 runder."},
+            {tier:"Algebraic",q:"En regel er definert. Du sender en ladning gjennom den og f\u00e5r et resultat. Parentesene er munningen til kammeret.",a:"x (Potential Charge)",b:"f(x) (Saved Spell)",c:"\u03a3 (Summation)",d:"n (Nexus)",correct:"B",rune:"f(x) \u2014 Saved Spell",explanation:"f(x) er en lagret formel \u2014 galdr den \u00e9n gang, den blir st\u00e5ende i voiden. Parentesene betyr 'apply'."},
+            {tier:"Algebraic",q:"En sirkel med diameter 1. Omkretsen er alltid dette tallet, uansett st\u00f8rrelse. Forholdet mellom omkrets og diameter.",a:"e (Organic Growth)",b:"\u221e (Infinity)",c:"\u03a3 Total (Conservation)",d:"\u03c0 (Structural Constant)",correct:"D",rune:"\u03c0 \u2014 Structural Constant",explanation:"\u03c0 \u2248 3.14159... Forholdet C/d. Uforanderlig, uavhengig av sirkelens st\u00f8rrelse."},
+            {tier:"Algebraic",q:"En ukjent x sitter i en ligning. Du isolerer den \u2014 trekker fra, deler, roterer \u2014 til x st\u00e5r alene. Hva er x?",a:"f(x) (Transformation Engine)",b:"x (The Unknown)",c:"n (Counter / Iterator)",d:"= (Equilibrium)",correct:"B",rune:"x \u2014 The Unknown",explanation:"x er den ukjente. Den sitter i strukturen og venter p\u00e5 \u00e5 bli isolert."},
+            {tier:"Algebraic",q:"Eskalatoren \u2014 kontinuerlig flyt. Tid som input. Smooth, ethvert reelt tall. Ikke diskrete steg.",a:"x\u207f (Charge Across Nexus)",b:"e (Self-Pullin Growth)",c:"\u03a0 (Product)",d:"\u00d7 (Proportional Transfer)",correct:"B",rune:"e \u2014 Self-Pullin Growth",explanation:"e\u1d57 er eskalatoren. x\u207f er trappen (diskret). e har bare \u00c9N beholder \u2014 det som varierer er t (tid). Kontinuerlig flow."},
+            {tier:"Algebraic",q:"Et basseng med energi vokser kontinuerlig, der inntaksraten er lik den n\u00e5v\u00e6rende mengden. Selvtrekkende vekst.",a:"\u03c0 (Circularity)",b:"x\u207f (Charge Across Nexus)",c:"\u00d7 (Proportional Transfer)",d:"e (Self-Pullin Growth)",correct:"D",rune:"e \u2014 Self-Pullin Growth",explanation:"e \u2248 2.718. Kraften der inntaksraten er lik n\u00e5v\u00e6rende mengde. Kontinuerlig selvtrekkende vekst."},
+            {tier:"Algebraic",q:"Et kammer i voiden st\u00e5r klart. Formen er fast \u2014 regelen. Det som sendes inn er fritt \u2014 inputen.",a:"\u03a3 (Summation)",b:"x (Potential Charge)",c:"n (Nexus)",d:"f(x) (Saved Spell)",correct:"D",rune:"f(x) \u2014 Saved Spell",explanation:"f(x) er grammatikken for \u00e5 navngi en konfigurasjon. Kammeret er fast, inputen varierer."},
+            {tier:"Algebraic",q:"Et symbol som st\u00e5r inn for et tall uten \u00e5 l\u00e5se hvilket. Regler kan skrives om det som holder uansett verdi.",a:"n (Nexus)",b:"f(x) (Saved Spell)",c:"x (Potential Charge)",d:"\u221e (Unboundedness)",correct:"C",rune:"x \u2014 Potential Charge",explanation:"x er variabelen \u2014 en dimensjon av voidens energitilstand. Ladning som venter."},
+            {tier:"Algebraic",q:"Forholdet som dukker opp automatisk n\u00e5r noe kurver tilbake i seg selv. Bakt inn i formen. Form-i-hvile, ikke kraft-over-tid.",a:"e (Self-Pullin Growth)",b:"= (Equilibrium)",c:"\u03c0 (Signature of Circularity)",d:"\u221e (Unboundedness)",correct:"C",rune:"\u03c0 \u2014 Signature of Circularity",explanation:"\u03c0 er voidens geometrilov. Ikke doing, bare being. N\u00e5r noe kurver tilbake i seg selv, er \u03c0 allerede der."},
+            {tier:"Algebraic",q:"Input \u2192 maskineri \u2192 output. Du putter inn 3, maskinen gj\u00f8r noe med det, ut kommer 9. Maskinen er regelen.",a:"x (The Unknown)",b:"= (Equilibrium)",c:"f(x) (Transformation Engine)",d:"log (Inverse of Exponentiation)",correct:"C",rune:"f(x) \u2014 Transformation Engine",explanation:"f(x) er transformasjonsmaskinen. Input \u2192 regel \u2192 output. f(3) = 9 betyr at regelen tok 3 og produserte 9."},
+            {tier:"Algebraic",q:"Noe vokser. Vekstraten er proporsjonal med det som allerede er der. Renter p\u00e5 renter. Organisk eksplosjon.",a:"x\u207f (Charge Across Nexus)",b:"\u03c0 (Structural Constant)",c:"e (Organic Growth Constant)",d:"log (Inverse of Exponentiation)",correct:"C",rune:"e \u2014 Organic Growth Constant",explanation:"e \u2248 2.718... Vekst der raten er lik mengden. Renter p\u00e5 renter med uendelig mange perioder."},
+            {tier:"Algebraic",q:"Produktet over alle beholdere var 36, og det var 2 beholdere. Hva var i hver? Denne runen finner tilbake.",a:"log (Backtrackin)",b:"\u221a (Reverse of x\u207f)",c:"x\u207f (Charge Across Nexus)",d:"\u00f7 (Proportional Transfer)",correct:"B",rune:"\u221a \u2014 Reverse of x\u207f",explanation:"\u221a tar produktet og sp\u00f8r bakover: hvilken ladning m\u00e5 hver beholder ha hatt? \u221a36 = 6."},
+            {tier:"Algebraic",q:"Samme ladning fyller hver av n beholdere samtidig. Utlesingen er produktet over alle. Trappen \u2014 diskrete heltallssteg.",a:"\u03a3 (Summation)",b:"e (Self-Pullin Growth)",c:"x\u207f (Charge Across Nexus)",d:"\u03a0 (Product)",correct:"C",rune:"x\u207f \u2014 Charge Across Nexus",explanation:"x\u207f er trappen \u2014 tellbare steg, heltalls-compounding. Ladningen x i hver av n bundne beholdere."},
+            {tier:"Algebraic",q:"Voiden har ingen vegger. Du kan reise i alle retninger og aldri treffe en grense. Alltid mer. Alltid lenger.",a:"\u03a3 Total (Conservation)",b:"\u221e (Unboundedness)",c:"x (Potential Charge)",d:"\u03c0 (Circularity)",correct:"B",rune:"\u221e \u2014 Unboundedness",explanation:"\u221e er ikke et tall \u2014 det er en retning, en egenskap. Voidens egen natur: den ender ikke."},
+            {tier:"Operational",q:"10 l\u00f8pere. Hvor mange m\u00e5ter kan gull, s\u00f8lv og bronse deles ut? Rekkef\u00f8lge teller \u2014 gull er ikke s\u00f8lv.",a:"nCr (Combinations)",b:"n! (Factorial)",c:"nPr (Permutations)",d:"\u03a0 (Product)",correct:"C",rune:"nPr \u2014 Permutations",explanation:"10P3 = 10\u00b79\u00b78 = 720. Delvis avgang fra bassenget. Rekkef\u00f8lgen teller."},
+            {tier:"Operational",q:"5 personer skal sitte i 5 spesifikke stoler. Hvor mange mulige plasseringer finnes?",a:"nCr (Combinations)",b:"\u03a0 (Product)",c:"n! (Factorial)",d:"nPr (Permutations)",correct:"C",rune:"n! \u2014 Factorial",explanation:"5! = 5\u00b74\u00b73\u00b72\u00b71 = 120. Hele bassenget t\u00f8mmes \u2014 alle forlater, rekkef\u00f8lgen teller."},
+            {tier:"Operational",q:"Av alle gangene B skjer, hvor ofte skjer ogs\u00e5 A? Du m\u00e5ler inne i B, ikke i hele rommet.",a:"P(A) (Probability)",b:"\u222a (Union)",c:"P(A|B) (Conditional)",d:"\u2229 (Intersection)",correct:"C",rune:"P(A|B) \u2014 Conditional",explanation:"P(A|B) = P(A\u2229B)/P(B). Domen krymper til B. Inni den lille domen m\u00e5ler du A."},
+            {tier:"Operational",q:"Bassenget t\u00f8mmes delvis \u2014 r forlater \u2014 men rekkef\u00f8lgen de forlot i teller ikke lenger.",a:"nPr (Permutations)",b:"n! (Factorial)",c:"nCr (Combinations)",d:"\u2229 (Intersection)",correct:"C",rune:"nCr \u2014 Combinations",explanation:"nCr kollapser alle r! ordninger av samme r som forlot til \u00e9n. Du teller delmengder, ikke sekvenser."},
+            {tier:"Operational",q:"Bassenget t\u00f8mmes delvis \u2014 r forlater, \u00e9n om gangen, og rekkef\u00f8lgen de forlot i betyr noe.",a:"n! (Factorial)",b:"nCr (Combinations)",c:"\u03a0 (Product)",d:"nPr (Permutations)",correct:"D",rune:"nPr \u2014 Permutations",explanation:"nPr er delvis, ordnet avgang. F\u00f8rste som forlater er ikke andre."},
+            {tier:"Operational",q:"Domen krymper til B. Inni den mindre domen m\u00e5ler du A sin tetthet. Hvor ofte skjer A, gitt at B allerede har skjedd?",a:"P(A) (Probability)",b:"\u2229 (Intersection)",c:"Bayes (Reversal)",d:"P(A|B) (Conditional)",correct:"D",rune:"P(A|B) \u2014 Conditional",explanation:"P(A|B) krymper \u03a9 ned til B. B blir den nye domen. Inni den krympede voiden m\u00e5ler du A."},
+            {tier:"Operational",q:"Du kaster to terninger. Resultatet av den ene p\u00e5virker ikke den andre.",a:"P(A|B) (Conditional)",b:"\u2229 (Intersection)",c:"Bayes (Reversal)",d:"Independence",correct:"D",rune:"Independence",explanation:"Terningene snakker ikke med hverandre. P(B|A) = P(B). Ren uavhengighet."},
+            {tier:"Operational",q:"Du velger en komit\u00e9 p\u00e5 4 fra 20 personer. Hvem som er med, ikke hvem som er leder.",a:"nPr (Permutations)",b:"nCr (Combinations)",c:"n! (Factorial)",d:"\u03a3 (Summation)",correct:"B",rune:"nCr \u2014 Combinations",explanation:"20C4 = 20!/(4!\u00b716!). Uordnet utvalg. Delmengder, ikke sekvenser."},
+            {tier:"Operational",q:"Du vet hvordan en \u00e5rsak produserer bevis. N\u00e5 trenger du \u00e5 diagnostisere \u00e5rsaken fra observert bevis. Reversal.",a:"P(A|B) (Conditional)",b:"Independence",c:"\u2229 (Intersection)",d:"Bayes (Reversal Galdr)",correct:"D",rune:"Bayes \u2014 Reversal Galdr",explanation:"Bayes snur en kjent conditional om. Diagnostisering fra bevis tilbake til \u00e5rsak."},
+            {tier:"Operational",q:"En medisinsk test er positiv. Testen fanger 95% av syke. Men hvor sannsynlig er det at pasienten faktisk er syk?",a:"P(A) (Probability)",b:"P(A|B) (Conditional)",c:"Independence",d:"Bayes (Reversal Galdr)",correct:"D",rune:"Bayes \u2014 Reversal Galdr",explanation:"Du vet P(Positiv|Syk) = 0.95. Du trenger P(Syk|Positiv). Bayes snur det."},
+            {tier:"Operational",q:"Et basseng med distinkte energier t\u00f8mmes \u00e9n om gangen inn i posisjoner. Hvert steg krymper bassenget med \u00e9n.",a:"nCr (Combinations)",b:"nPr (Permutations)",c:"n! (Factorial)",d:"\u03a3 (Summation)",correct:"C",rune:"n! \u2014 Factorial",explanation:"n! er aktiv migrasjon. Bassenget t\u00f8mmes, \u00e9n energi om gangen, inn i en sekvens."},
+            {tier:"Operational",q:"Fra 52 kort deler du ut 5 i sekvens. F\u00f8rste kort er ikke andre kort. Rekkef\u00f8lgen betyr noe.",a:"nCr (Combinations)",b:"nPr (Permutations)",c:"n! (Factorial)",d:"\u03a3 (Summation)",correct:"B",rune:"nPr \u2014 Permutations",explanation:"52P5 = 52\u00b751\u00b750\u00b749\u00b748. Ordnet utvalg. Delvis avgang fra bassenget, rekkef\u00f8lgen teller."},
+            {tier:"Operational",q:"Fra 52 kort velger du 5. Rekkef\u00f8lgen spiller ingen rolle \u2014 bare hvilke kort du har.",a:"nPr (Permutations)",b:"n! (Factorial)",c:"\u03a0 (Product)",d:"nCr (Combinations)",correct:"D",rune:"nCr \u2014 Combinations",explanation:"52C5 = 52!/(5!\u00b747!). Uordnet utvalg."},
+            {tier:"Operational",q:"Hele rommet er \u03a9. En region sitter inni det. Du m\u00e5ler br\u00f8kdelen den tar opp. Kast en blind pil \u2014 hvor stor er sjansen den lander i A?",a:"P(A|B) (Conditional)",b:"\u2229 (Intersection)",c:"\u222a (Union)",d:"P(A) (Probability)",correct:"D",rune:"P(A) \u2014 Probability",explanation:"P(A) er tettheten av A inni \u03a9 \u2014 br\u00f8kdelen av hele rommet som A tar opp."},
+            {tier:"Operational",q:"Hver energi n\u00e5r inn i hver annen og dupliserer den med sitt eget antall. Rommet fylles med kopier. Replikasjon.",a:"\u03a3 (Summation)",b:"x\u207f (Charge Across Nexus)",c:"\u03a0 (Product)",d:"n! (Factorial)",correct:"C",rune:"\u03a0 \u2014 Product",explanation:"\u03a0 er replikasjon. Hver energi dupliseres av alle andre. \u03a3 kollapser, \u03a0 prolifererer."},
+            {tier:"Operational",q:"Hvis en faktor er 0, kollapser hele produktet til 0. \u00c9n d\u00f8d kanal bryter kjeden.",a:"\u03a3 (Summation)",b:"n! (Factorial)",c:"\u03a0 (Product)",d:"x\u207f (Charge Across Nexus)",correct:"C",rune:"\u03a0 \u2014 Product",explanation:"\u03a0 er multiplikativ kjede. Hvis noen x\u1d62 = 0, kollapser alt. Fragiliteten er innebygd."},
+            {tier:"Operational",q:"Mange blir \u00e9n. Alle energier slipper innholdet fra sine beholdere og kollapser innover til \u00e9n total.",a:"\u03a0 (Product)",b:"\u03a3 (Summation)",c:"n! (Factorial)",d:"\u222a (Union)",correct:"B",rune:"\u03a3 \u2014 Summation",explanation:"\u03a3 er kollaps. Mange blir \u00e9n. Alle separasjoner kollapser innover."},
+            {tier:"Operational",q:"P(A\u2229B) = P(A)\u00b7P(B). Jointen faktoriserer rent i produktet av marginalene.",a:"Bayes (Reversal)",b:"\u222a (Union)",c:"P(A|B) (Conditional)",d:"Independence",correct:"D",rune:"Independence",explanation:"N\u00e5r A og B er uavhengige, faktoriserer jointen rent: P(A\u2229B) = P(A)\u00b7P(B)."},
+            {tier:"Operational",q:"P(\u03a9) = 1. P(\u2205) = 0. 0 \u2264 P(A) \u2264 1. Domen er avgrenset. Hele rommet er 100%.",a:"\u03a3 Total (Conservation)",b:"P(A) (Probability)",c:"= (Equilibrium)",d:"\u2229 (Intersection)",correct:"B",rune:"P(A) \u2014 Probability",explanation:"P setter domen: hele rommet er 1. Hver hendelse har en tetthet mellom 0 og 1."},
+            {tier:"Operational",q:"To regioner overlapper. Du vil kun ha stripen der begge er sanne samtidig. Alltid smalere, aldri bredere.",a:"\u222a (Union)",b:"P(A|B) (Conditional)",c:"\u2229 (Intersection)",d:"Bayes (Reversal)",correct:"C",rune:"\u2229 \u2014 Intersection",explanation:"\u2229 er felles grunn. Der begge er sanne samtidig. Innsnevring, aldri utvidelse."},
+            {tier:"Operational",q:"To regioner sl\u00e5s sammen. Du tar alt fra begge, men trekker fra det du telte dobbelt. Expand, expand, correct.",a:"\u2229 (Intersection)",b:"P(A) (Probability)",c:"\u222a (Union)",d:"\u03a3 (Summation)",correct:"C",rune:"\u222a \u2014 Union",explanation:"\u222a er samling. Alt fra A, alt fra B, men overlappet ble telt dobbelt, s\u00e5 trekk det fra."},
+            {tier:"Operational",q:"Tre korridorer, hver med en verdi i enden. Et magnetisk drag skyter fra sentrum og alle verdier raser innover til \u00e9n haug.",a:"\u03a0 (Product)",b:"n! (Factorial)",c:"\u03a3 (Summation)",d:"\u222a (Union)",correct:"C",rune:"\u03a3 \u2014 Summation",explanation:"\u03a3 er kollaps innover. Korridorene er n. Haugen i hendene er summen."},
+            {tier:"Operational",q:"\u00c5 vite at det regnet forteller deg ingenting om bussen var forsinket. De to hendelsene snakker ikke med hverandre.",a:"Bayes (Reversal)",b:"\u222a (Union)",c:"Independence",d:"P(A|B) (Conditional)",correct:"C",rune:"Independence",explanation:"A og B er uavhengige n\u00e5r P(A|B) = P(A). Kollapsen ned til B endret ikke A sin tetthet."},
+            {tier:"Descriptive",q:"Du m\u00e5lte 25 studenters h\u00f8yde. \u00c9n uvanlig h\u00f8y student drar spredningen. Du deler p\u00e5 n-1, ikke n.",a:"\u03c3 (Population SD)",b:"s (Sample SD)",c:"\u03c3\u00b2 (Population Variance)",d:"E(X) (Expected Value)",correct:"B",rune:"s \u2014 Sample Standard Deviation",explanation:"s = \u221a[s\u00b2] der s\u00b2 = \u03a3(x\u1d62\u2212x\u0304)\u00b2/(n-1). Korrigert for frihetsgraden tapt til x\u0304."},
+            {tier:"Descriptive",q:"Du st\u00e5r i voiden med et endelig nett. Bare n medlemmer er synlige. De utenfor nettet er i skyggen. Beste gjetning av spredning.",a:"\u03c3 (Population SD)",b:"\u03bc (Population Mean)",c:"s\u00b2 (Sample Variance)",d:"x\u0304 (Sample Mean)",correct:"C",rune:"s\u00b2 \u2014 Sample Variance",explanation:"s\u00b2 = \u03a3(x\u1d62\u2212x\u0304)\u00b2/(n-1). Finite sight \u2014 du ser bare utvalget ditt. n-1 korreksjonen kompenserer."},
+            {tier:"Descriptive",q:"En endelig h\u00e5ndfull verdier, summert og omfordelt jevnt over n steiner. Niv\u00e5et hver stein ville sittet p\u00e5 hvis energi fl\u00f8t fritt.",a:"\u03bc (Population Mean)",b:"E(X) (Expected Value)",c:"x\u0304 (Sample Mean)",d:"\u03c3 (Standard Deviation)",correct:"C",rune:"x\u0304 \u2014 Sample Mean",explanation:"x\u0304 = (\u03a3x\u1d62)/n. Gjennomsnittet av et utvalg, ikke hele populasjonen."},
+            {tier:"Descriptive",q:"Hver stein i hele populasjonen \u2014 alle 5.5 millioner nordmenn \u2014 summert og omfordelt jevnt over N.",a:"x\u0304 (Sample Mean)",b:"\u03c3 (Standard Deviation)",c:"E(X) (Expected Value)",d:"\u03bc (Population Mean)",correct:"D",rune:"\u03bc \u2014 Population Mean",explanation:"\u03bc = (\u03a3x\u1d62)/N. Hele feltet, ikke et utvalg. Samme oppskrift som x\u0304, men bassenget er hele populasjonen."},
+            {tier:"Descriptive",q:"Legg alle mulige utfall p\u00e5 en tallinje. Plasser vekter lik sannsynlighetene. Finn balansepunktet.",a:"x\u0304 (Sample Mean)",b:"\u03bc (Population Mean)",c:"\u03c3 (Standard Deviation)",d:"E(X) (Expected Value)",correct:"D",rune:"E(X) \u2014 Centre-of-Gravity Galdr",explanation:"E(X) = \u03a3 x\u1d62\u00b7P(X=x\u1d62). Vektet sum av alle mulige utfall. Tyngdepunktet."},
+            {tier:"Descriptive",q:"St\u00e5 ved gjennomsnittet. Kvadrer hver taulengde til hver verdi. Samle og omfordel. Lever i kvadrerte enheter.",a:"\u03c3 (Standard Deviation)",b:"s\u00b2 (Sample Variance)",c:"\u03c3\u00b2 (Variance)",d:"E(X) (Expected Value)",correct:"C",rune:"\u03c3\u00b2 \u2014 Variance",explanation:"\u03c3\u00b2 = \u03a3(x\u1d62\u2212\u03bc)\u00b2/N. Gjennomsnittlig kvadrert avstand fra sentrum."},
+            {tier:"Descriptive",q:"Ta kvadratroten av variansen. N\u00e5 holder du et enkelt tau av typisk avstand fra gjennomsnittet. Tilbake i originale enheter.",a:"\u03c3\u00b2 (Variance)",b:"s (Sample SD)",c:"\u03c3 (Standard Deviation)",d:"x\u0304 (Sample Mean)",correct:"C",rune:"\u03c3 \u2014 Standard Deviation",explanation:"\u03c3 = \u221a\u03c3\u00b2. Kvadratroten av variansen returnerer spredningen til originale enheter."},
+            {tier:"Descriptive",q:"Vektet sum av alle mulige utfall, der vektene er sannsynligheter. Reduseres til vanlig gjennomsnitt n\u00e5r utfall er like sannsynlige.",a:"\u03bc (Population Mean)",b:"\u03c3 (Standard Deviation)",c:"x\u0304 (Sample Mean)",d:"E(X) (Expected Value)",correct:"D",rune:"E(X) \u2014 Expected Value",explanation:"E(X) er forventningsverdien \u2014 tyngdepunktet av vektede utfall."},
+            {tier:"Statistical",q:"En p\u00e5stand om virkeligheten: \u00abGjennomsnittet er 50.\u00bb Du setter den opp som standard. Ingenting skjer med mindre beviset tvinger deg bort.",a:"H\u2081 (Alternative Hypothesis)",b:"\u03b1 (Significance Level)",c:"H\u2080 (Null Hypothesis)",d:"df (Degrees of Freedom)",correct:"C",rune:"H\u2080 \u2014 Null Hypothesis",explanation:"H\u2080 er standardtilstanden \u2014 status quo. Du antar den er sann til du har nok bevis til \u00e5 forkaste."},
+            {tier:"Statistical",q:"Beviset er tungt nok. Du forkaster standardtilstanden. Hva aksepterer du i stedet?",a:"H\u2080 (Null Hypothesis)",b:"df (Degrees of Freedom)",c:"\u03b1 (Significance Level)",d:"H\u2081 (Alternative Hypothesis)",correct:"D",rune:"H\u2081 \u2014 Alternative Hypothesis",explanation:"H\u2081 er utfordreren. Motp\u00e5standen som erstatter H\u2080 n\u00e5r beviset er sterkt nok."},
+            {tier:"Statistical",q:"Du setter en grense: \u00abHvis sannsynligheten for dette resultatet under H\u2080 er under 5%, forkaster jeg.\u00bb Hva heter den grensen?",a:"H\u2080 (Null Hypothesis)",b:"\u03b1 (Significance Level)",c:"df (Degrees of Freedom)",d:"H\u2081 (Alternative Hypothesis)",correct:"B",rune:"\u03b1 \u2014 Significance Level",explanation:"\u03b1 er terskelen for forkastning. Vanligvis 0.05. Risikoen du aksepterer for \u00e5 forkaste en sann H\u2080."},
+            {tier:"Statistical",q:"Du har 10 datapunkter og brukte 1 for \u00e5 beregne gjennomsnittet. Hvor mange kan bevege seg fritt? 10 minus 1.",a:"\u03b1 (Significance Level)",b:"H\u2080 (Null Hypothesis)",c:"df (Degrees of Freedom)",d:"s\u00b2 (Sample Variance)",correct:"C",rune:"df \u2014 Degrees of Freedom",explanation:"df = n \u2212 (antall parametere estimert). 10 punkter, 1 brukt til x\u0304 \u2192 df = 9."},
+            {tier:"Statistical",q:"p-verdien er 0.02. \u03b1 er 0.05. Hva gj\u00f8r du?",a:"Aksepter H\u2081 direkte",b:"Forkast H\u2080",c:"Behold H\u2080",d:"Senk \u03b1 til 0.01",correct:"B",rune:"H\u2080 forkastes \u2014 p < \u03b1",explanation:"p = 0.02 < \u03b1 = 0.05. Beviset er sterkt nok. Du forkaster H\u2080 til fordel for H\u2081."},
+            {tier:"Statistical",q:"p-verdien er 0.12. \u03b1 er 0.05. Hva gj\u00f8r du?",a:"Forkast H\u2080",b:"Behold H\u2080",c:"Senk \u03b1",d:"Aksepter H\u2081",correct:"B",rune:"H\u2080 beholdes \u2014 p > \u03b1",explanation:"p = 0.12 > \u03b1 = 0.05. Ikke nok bevis til \u00e5 forkaste. Du beholder H\u2080."},
+            {tier:"Statistical",q:"Forskeren hevder at medisinen virker bedre enn placebo. \u03bc > 0. Hvilken rolle spiller denne p\u00e5standen?",a:"H\u2080 (Null Hypothesis)",b:"\u03b1 (Significance Level)",c:"H\u2081 (Alternative Hypothesis)",d:"df (Degrees of Freedom)",correct:"C",rune:"H\u2081 \u2014 Alternative Hypothesis",explanation:"\u00ab\u03bc > 0\u00bb er utfordreren \u2014 det du pr\u00f8ver \u00e5 bevise. H\u2080 sier \u00ab\u03bc = 0\u00bb."},
+            {tier:"Statistical",q:"Du har estimert gjennomsnitt og standardavvik fra utvalget. N\u00e5 vil du finne et intervall som med 95% sannsynlighet fanger den sanne \u03bc. Hva trenger du for \u00e5 finne riktig t-verdi?",a:"\u03b1 (Significance Level)",b:"H\u2081 (Alternative Hypothesis)",c:"s\u00b2 (Sample Variance)",d:"df (Degrees of Freedom)",correct:"D",rune:"df \u2014 Degrees of Freedom",explanation:"t-fordelingen endrer form basert p\u00e5 df. Flere frihetsgrader = slankere haler. df = n-1."}
+        ];
+
+        let currentTier = null;
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let answers = [];
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function show(screen) {
+            document.getElementById("screen-picker").classList.add("hidden");
+            document.getElementById("screen-quiz").classList.add("hidden");
+            document.getElementById("screen-results").classList.add("hidden");
+            document.getElementById("screen-" + screen).classList.remove("hidden");
+            window.scrollTo(0, 0);
+        }
+
+        function renderTierGrid() {
+            const grid = document.getElementById("chapter-grid");
+            grid.innerHTML = "";
+            TIERS.forEach(t => {
+                const count = QUESTIONS.filter(q => q.tier === t.id).length;
+                const card = document.createElement("button");
+                card.className = "chapter-card";
+                card.innerHTML = `
+                    <div class="chapter-card-header">
+                        <h3>${t.name}</h3>
+                        <span class="chapter-card-weight">${count} sp\u00f8rsm\u00e5l</span>
+                    </div>
+                    <div class="chapter-card-meta">${t.desc}</div>
+                `;
+                card.addEventListener("click", () => startTier(t));
+                grid.appendChild(card);
+            });
+        }
+
+        function startTier(t) {
+            currentTier = t;
+            currentQuestions = shuffle(QUESTIONS.filter(q => q.tier === t.id));
+            currentIndex = 0;
+            answers = currentQuestions.map(() => null);
+            show("quiz");
+            renderQuestion();
+        }
+
+        function startAll() {
+            currentTier = { id: "all", name: "Alle tiers \u2014 Shuffle" };
+            currentQuestions = shuffle([...QUESTIONS]);
+            currentIndex = 0;
+            answers = currentQuestions.map(() => null);
+            show("quiz");
+            renderQuestion();
+        }
+
+        document.getElementById("shuffle-all-btn").addEventListener("click", startAll);
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById("quiz-chapter-name").textContent = currentTier.name;
+            document.getElementById("quiz-progress-text").textContent = `${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById("progress-bar-fill").style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
+            document.getElementById("question-text").textContent = q.q;
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+            ["a", "b", "c", "d"].forEach((key, i) => {
+                const letter = ["A", "B", "C", "D"][i];
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerHTML = `<span class="option-letter">${letter}</span> ${escapeHtml(q[key])}`;
+                btn.addEventListener("click", () => selectAnswer(letter));
+                optionsDiv.appendChild(btn);
+            });
+            document.getElementById("explanation").classList.add("hidden");
+            document.getElementById("next-btn").classList.add("hidden");
+            if (answers[currentIndex] !== null) {
+                showAnswer(answers[currentIndex].selected, q);
+            }
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+        }
+
+        function selectAnswer(letter) {
+            const q = currentQuestions[currentIndex];
+            const isCorrect = letter === q.correct;
+            answers[currentIndex] = { selected: letter, correct: isCorrect };
+            showAnswer(letter, q);
+        }
+
+        function showAnswer(selected, q) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach((btn, i) => {
+                const letter = ["A", "B", "C", "D"][i];
+                btn.disabled = true;
+                if (letter === q.correct) btn.classList.add("correct");
+                else if (letter === selected) btn.classList.add("wrong");
+            });
+            const exp = document.getElementById("explanation");
+            const isCorrect = selected === q.correct;
+            exp.innerHTML = `<strong>${isCorrect ? "Riktig." : "Feil."}</strong> <em>${escapeHtml(q.rune)}</em> \u2014 ${escapeHtml(q.explanation)}`;
+            exp.classList.remove("hidden");
+            const nextBtn = document.getElementById("next-btn");
+            nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? "Se resultatet \u2192" : "Neste \u2192";
+            nextBtn.classList.remove("hidden");
+        }
+
+        document.getElementById("next-btn").addEventListener("click", () => {
+            if (currentIndex === currentQuestions.length - 1) {
+                showResults();
+            } else {
+                currentIndex++;
+                renderQuestion();
+            }
+        });
+
+        function showResults() {
+            const correctCount = answers.filter(a => a && a.correct).length;
+            const total = currentQuestions.length;
+            const pct = Math.round((correctCount / total) * 100);
+            document.getElementById("results-chapter-label").textContent = currentTier.name;
+            document.getElementById("score-number").textContent = `${correctCount} / ${total}`;
+            document.getElementById("score-label").textContent = `${pct}% riktig`;
+            const grid = document.getElementById("squares-grid");
+            grid.innerHTML = "";
+            answers.forEach((a, i) => {
+                const sq = document.createElement("button");
+                sq.className = `square ${a && a.correct ? "right" : "wrong"}`;
+                sq.textContent = i + 1;
+                sq.title = `Sp\u00f8rsm\u00e5l ${i + 1}`;
+                sq.addEventListener("click", () => {
+                    currentIndex = i;
+                    show("quiz");
+                    renderQuestion();
+                });
+                grid.appendChild(sq);
+            });
+            const wrong = total - correctCount;
+            const chart = document.getElementById("mermaid-chart");
+            chart.removeAttribute("data-processed");
+            chart.textContent = `pie showData\n    title Resultat\n    "Riktig" : ${correctCount}\n    "Feil" : ${wrong}`;
+            show("results");
+            if (window.mermaid) {
+                try { mermaid.run({ nodes: [chart] }); }
+                catch (e) { mermaid.init(undefined, chart); }
+            }
+        }
+
+        document.getElementById("retry-btn").addEventListener("click", () => {
+            if (currentTier.id === "all") startAll();
+            else startTier(currentTier);
+        });
+        document.getElementById("back-btn").addEventListener("click", () => show("picker"));
+
+        if (window.mermaid) {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: "dark",
+                themeVariables: {
+                    background: "#18181b",
+                    primaryColor: "#22c55e",
+                    primaryTextColor: "#fafafa",
+                    pie1: "#22c55e",
+                    pie2: "#ef4444"
+                }
+            });
+        }
+        renderTierGrid();
+    </script>
+</body>
+</html>
