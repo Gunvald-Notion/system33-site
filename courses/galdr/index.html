@@ -1,588 +1,238 @@
 <!DOCTYPE html>
-<html lang="nb">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galdr — Rune Quiz | System 33</title>
-    <meta name="description" content="68 scenario-baserte spørsmål over 5 tiers. Kjenn runene i voiden. Bygget av Gunvald som del av system33.io.">
+    <meta name="description" content="63 questions across 5 tiers and 4 types. Architectural literacy for the void. Built by Gunvald as part of system33.io.">
     <meta property="og:title" content="Galdr — Rune Quiz">
-    <meta property="og:description" content="68 spørsmål. 5 tiers. Scenario-basert. Kjenn runene.">
+    <meta property="og:description" content="63 questions. 5 tiers. 4 types. Know what space each rune builds.">
     <meta property="og:type" content="website">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-card: #18181b;
-            --border: #27272a;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --correct: #22c55e;
-            --wrong: #ef4444;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-        body {
-            font-family: var(--font);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
-        a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
-        a:hover { opacity: 0.7; }
-        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-        .site-header { padding: 24px 0 0; }
-        .site-header a { color: var(--text-muted); font-size: 0.85rem; }
-        .hero { padding: 48px 0 32px; text-align: center; }
-        .hero-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 2.75rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-        .hero p {
-            font-size: 1.05rem;
-            color: var(--text-secondary);
-            max-width: 520px;
-            margin: 0 auto;
-        }
-        .section { padding: 32px 0 64px; }
-        .section-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-        .chapter-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        .chapter-card {
-            display: block;
-            width: 100%;
-            text-align: left;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 22px 24px;
-            cursor: pointer;
-            font-family: inherit;
-            color: inherit;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .chapter-card:hover {
-            background: rgba(228, 228, 231, 0.04);
-            border-color: #3f3f46;
-        }
-        .chapter-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            gap: 12px;
-        }
-        .chapter-card h3 { font-size: 1.05rem; font-weight: 600; }
-        .chapter-card-weight {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 3px 10px;
-            border-radius: 100px;
-            white-space: nowrap;
-        }
-        .chapter-card-meta { font-size: 0.85rem; color: var(--text-secondary); }
-        .quiz-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-        .progress-bar {
-            width: 100%;
-            height: 3px;
-            background: var(--border);
-            border-radius: 2px;
-            margin-bottom: 32px;
-            overflow: hidden;
-        }
-        .progress-bar-fill { height: 100%; background: var(--text-primary); transition: width 0.3s ease; }
-        .question-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-            line-height: 1.45;
-            margin-bottom: 28px;
-        }
-        .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .option-btn {
-            text-align: left;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 14px 18px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            transition: background 0.15s, border-color 0.15s;
-            line-height: 1.45;
-        }
-        .option-btn:hover:not(:disabled) { background: rgba(228, 228, 231, 0.04); border-color: #3f3f46; }
-        .option-btn:disabled { cursor: default; }
-        .option-btn.correct { border-color: var(--correct); background: rgba(34, 197, 94, 0.08); }
-        .option-btn.wrong { border-color: var(--wrong); background: rgba(239, 68, 68, 0.08); }
-        .option-letter {
-            display: inline-block;
-            width: 22px;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-        .option-btn.correct .option-letter { color: var(--correct); }
-        .option-btn.wrong .option-letter { color: var(--wrong); }
-        .explanation {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--text-primary);
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.55;
-        }
-        .explanation strong { color: var(--text-primary); }
-        .next-btn {
-            width: 100%;
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            border: none;
-            border-radius: 10px;
-            padding: 14px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        .next-btn:hover { opacity: 0.85; }
-        .results-score { text-align: center; padding: 16px 0 24px; }
-        .results-score-number {
-            font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 6px;
-        }
-        .results-score-label { font-size: 0.9rem; color: var(--text-secondary); }
-        .squares-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-            margin: 16px 0 32px;
-        }
-        .square {
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            transition: transform 0.15s;
-        }
-        .square:hover { transform: scale(1.1); }
-        .square.right { background: rgba(34, 197, 94, 0.7); }
-        .square.wrong { background: rgba(239, 68, 68, 0.7); }
-        .chart-container {
-            margin: 24px 0;
-            padding: 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            text-align: center;
-        }
-        .chart-container svg { max-width: 100%; height: auto; }
-        .results-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 14px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-secondary:hover { background: rgba(228, 228, 231, 0.04); }
-        .btn-shuffle {
-            background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
-            font-family: inherit;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 16px;
-        }
-        .btn-shuffle:hover { background: rgba(228, 228, 231, 0.04); }
-        footer {
-            padding: 32px 0;
-            border-top: 1px solid var(--border);
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-align: center;
-        }
-        footer a { color: var(--text-secondary); }
-        .hidden { display: none !important; }
-        @media (max-width: 480px) {
-            .hero { padding: 32px 0 24px; }
-            .section { padding: 24px 0 48px; }
-            .chapter-card { padding: 18px 20px; }
-            .question-text { font-size: 1.05rem; }
-            .option-btn { font-size: 0.92rem; padding: 12px 16px; }
-        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg-primary:#0a0a0b;--bg-secondary:#111113;--bg-card:#18181b;--border:#27272a;--text-primary:#fafafa;--text-secondary:#a1a1aa;--text-muted:#71717a;--correct:#22c55e;--wrong:#ef4444;--accent:#a78bfa;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+        body{font-family:var(--font);background:var(--bg-primary);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+        a{color:var(--text-primary);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
+        .container{max-width:720px;margin:0 auto;padding:0 24px}
+        .site-header{padding:24px 0 0}.site-header a{color:var(--text-muted);font-size:.85rem}
+        .hero{padding:48px 0 32px;text-align:center}
+        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text-secondary);letter-spacing:.05em;text-transform:uppercase;margin-bottom:24px}
+        .hero h1{font-size:clamp(2rem,5vw,2.75rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px}
+        .hero p{font-size:1.05rem;color:var(--text-secondary);max-width:520px;margin:0 auto}
+        .section{padding:32px 0 64px}
+        .section-label{font-size:.75rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+        .filter-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+        .filter-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:8px 16px;font-family:inherit;font-size:.8rem;color:var(--text-secondary);cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+        .filter-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .chapter-grid{display:grid;grid-template-columns:1fr;gap:12px}
+        .chapter-card{display:block;width:100%;text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:22px 24px;cursor:pointer;font-family:inherit;color:inherit;transition:background .2s,border-color .2s}
+        .chapter-card:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .chapter-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:12px}
+        .chapter-card h3{font-size:1.05rem;font-weight:600}
+        .chapter-card-weight{font-size:.7rem;color:var(--text-muted);border:1px solid var(--border);padding:3px 10px;border-radius:100px;white-space:nowrap}
+        .chapter-card-meta{font-size:.85rem;color:var(--text-secondary)}
+        .quiz-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;font-size:.8rem;color:var(--text-muted)}
+        .progress-bar{width:100%;height:3px;background:var(--border);border-radius:2px;margin-bottom:32px;overflow:hidden}
+        .progress-bar-fill{height:100%;background:var(--text-primary);transition:width .3s ease}
+        .question-tag{display:inline-block;padding:4px 12px;border:1px solid var(--border);border-radius:100px;font-size:.7rem;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px}
+        .question-text{font-size:1.2rem;font-weight:500;line-height:1.45;margin-bottom:28px}
+        .options{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+        .option-btn{text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 18px;cursor:pointer;font-family:inherit;font-size:.95rem;color:var(--text-primary);transition:background .15s,border-color .15s;line-height:1.45}
+        .option-btn:hover:not(:disabled){background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .option-btn:disabled{cursor:default}
+        .option-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+        .option-btn.wrong{border-color:var(--wrong);background:rgba(239,68,68,.08)}
+        .option-letter{display:inline-block;width:22px;font-weight:600;color:var(--text-muted)}
+        .option-btn.correct .option-letter{color:var(--correct)}
+        .option-btn.wrong .option-letter{color:var(--wrong)}
+        .explanation{background:var(--bg-secondary);border:1px solid var(--border);border-left:3px solid var(--text-primary);border-radius:8px;padding:14px 18px;margin-bottom:20px;font-size:.9rem;color:var(--text-secondary);line-height:1.55}
+        .explanation strong{color:var(--text-primary)}
+        .next-btn{width:100%;background:var(--text-primary);color:var(--bg-primary);border:none;border-radius:10px;padding:14px;font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+        .next-btn:hover{opacity:.85}
+        .results-score{text-align:center;padding:16px 0 24px}
+        .results-score-number{font-size:3rem;font-weight:700;letter-spacing:-.03em;margin-bottom:6px}
+        .results-score-label{font-size:.9rem;color:var(--text-secondary)}
+        .squares-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:16px 0 32px}
+        .square{width:30px;height:30px;border-radius:5px;cursor:pointer;border:none;font-family:inherit;font-size:.75rem;font-weight:600;color:var(--text-primary);transition:transform .15s}
+        .square:hover{transform:scale(1.1)}
+        .square.right{background:rgba(34,197,94,.7)}.square.wrong{background:rgba(239,68,68,.7)}
+        .chart-container{margin:24px 0;padding:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;text-align:center}
+        .chart-container svg{max-width:100%;height:auto}
+        .results-actions{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+        .btn-secondary{background:transparent;color:var(--text-primary);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:inherit;font-size:.95rem;font-weight:500;cursor:pointer;transition:background .2s}
+        .btn-secondary:hover{background:rgba(228,228,231,.04)}
+        .btn-shuffle{background:transparent;color:var(--text-secondary);border:1px solid var(--border);border-radius:10px;padding:12px;font-family:inherit;font-size:.85rem;font-weight:500;cursor:pointer;transition:background .2s;margin-top:16px}
+        .btn-shuffle:hover{background:rgba(228,228,231,.04)}
+        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--text-muted);text-align:center}
+        footer a{color:var(--text-secondary)}
+        .hidden{display:none!important}
+        @media(max-width:480px){.hero{padding:32px 0 24px}.section{padding:24px 0 48px}.chapter-card{padding:18px 20px}.question-text{font-size:1.05rem}.option-btn{font-size:.92rem;padding:12px 16px}}
     </style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <a href="https://system33.io">&larr; system33.io</a>
+<header class="site-header"><div class="container"><a href="https://system33.io">&larr; system33.io</a></div></header>
+
+<div id="screen-picker">
+    <section class="hero"><div class="container">
+        <div class="hero-badge">63 questions &middot; 5 tiers &middot; 4 types</div>
+        <h1>Galdr &mdash; Rune Quiz</h1>
+        <p>Do you know what space each rune builds? The space <em>is</em> the process. Pick a tier, filter by type, or shuffle everything.</p>
+    </div></section>
+    <section class="section"><div class="container">
+        <div class="section-label">Filter by type</div>
+        <div class="filter-row" id="type-filters">
+            <button class="filter-btn active" data-type="all">All types</button>
+            <button class="filter-btn" data-type="Architecture">&#x2756; Architecture</button>
+            <button class="filter-btn" data-type="Process">&#x2699; Process</button>
+            <button class="filter-btn" data-type="Reverse">&#x21BA; Reverse</button>
+            <button class="filter-btn" data-type="Definition">&#x2630; Definition</button>
         </div>
-    </header>
+        <div class="section-label">Tiers</div>
+        <div class="chapter-grid" id="chapter-grid"></div>
+        <button class="btn-shuffle" id="shuffle-all-btn">&starf; Shuffle all questions</button>
+    </div></section>
+</div>
 
-    <div id="screen-picker">
-        <section class="hero">
-            <div class="container">
-                <div class="hero-badge">68 sp&oslash;rsm&aring;l &middot; 5 tiers &middot; scenario-basert</div>
-                <h1>Galdr &mdash; Rune Quiz</h1>
-                <p>Hva skjer i voiden? Kjenn runen. Velg en tier eller kj&oslash;r alle p&aring; shuffle.</p>
-            </div>
-        </section>
-        <section class="section">
-            <div class="container">
-                <div class="section-label">Tiers</div>
-                <div class="chapter-grid" id="chapter-grid"></div>
-                <button class="btn-shuffle" id="shuffle-all-btn">&starf; Shuffle alle 68 sp&oslash;rsm&aring;l</button>
-            </div>
-        </section>
-    </div>
+<div id="screen-quiz" class="hidden">
+    <section class="section"><div class="container">
+        <div class="quiz-meta"><span id="quiz-chapter-name"></span><span id="quiz-progress-text"></span></div>
+        <div class="progress-bar"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+        <div class="question-tag" id="question-tag"></div>
+        <div class="question-text" id="question-text"></div>
+        <div class="options" id="options"></div>
+        <div class="explanation hidden" id="explanation"></div>
+        <button class="next-btn hidden" id="next-btn">Next &rarr;</button>
+    </div></section>
+</div>
 
-    <div id="screen-quiz" class="hidden">
-        <section class="section">
-            <div class="container">
-                <div class="quiz-meta">
-                    <span id="quiz-chapter-name"></span>
-                    <span id="quiz-progress-text"></span>
-                </div>
-                <div class="progress-bar"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
-                <div class="question-text" id="question-text"></div>
-                <div class="options" id="options"></div>
-                <div class="explanation hidden" id="explanation"></div>
-                <button class="next-btn hidden" id="next-btn">Neste &rarr;</button>
-            </div>
-        </section>
-    </div>
-
-    <div id="screen-results" class="hidden">
-        <section class="section">
-            <div class="container">
-                <div class="section-label" id="results-chapter-label"></div>
-                <div class="results-score">
-                    <div class="results-score-number" id="score-number"></div>
-                    <div class="results-score-label" id="score-label"></div>
-                </div>
-                <div class="squares-grid" id="squares-grid"></div>
-                <div class="chart-container">
-                    <pre class="mermaid" id="mermaid-chart"></pre>
-                </div>
-                <div class="results-actions">
-                    <button class="next-btn" id="retry-btn">Pr&oslash;v samme tier igjen</button>
-                    <button class="btn-secondary" id="back-btn">Velg en annen tier</button>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <footer>
-        <div class="container">
-            Bygget av Gunvald &middot; Del av <a href="https://system33.io">system33.io</a>
+<div id="screen-results" class="hidden">
+    <section class="section"><div class="container">
+        <div class="section-label" id="results-chapter-label"></div>
+        <div class="results-score">
+            <div class="results-score-number" id="score-number"></div>
+            <div class="results-score-label" id="score-label"></div>
         </div>
-    </footer>
+        <div class="squares-grid" id="squares-grid"></div>
+        <div class="chart-container"><pre class="mermaid" id="mermaid-chart"></pre></div>
+        <div class="results-actions">
+            <button class="next-btn" id="retry-btn">Try same set again</button>
+            <button class="btn-secondary" id="back-btn">Pick another tier</button>
+        </div>
+    </div></section>
+</div>
 
-    <script>
-        const TIERS = [
-            { id: "Primordial", name: "Tier 0 \u2014 Primordial", desc: "=, +/\u2212, \u00d7/\u00f7, \u03a3 Total" },
-            { id: "Algebraic", name: "Tier 1 \u2014 Algebraic", desc: "x, x\u207f, \u221a, e, \u03c0, f(x), \u221e, n, log" },
-            { id: "Operational", name: "Tier 2 \u2014 Operational", desc: "\u03a3, \u03a0, n!, nCr, nPr, \u2229, \u222a, P(A), P(A|B), Bayes, Independence" },
-            { id: "Descriptive", name: "Tier 3 \u2014 Descriptive", desc: "x\u0304, \u03bc, \u03c3\u00b2, \u03c3, s/s\u00b2, E(X)" },
-            { id: "Statistical", name: "Tier 4 \u2014 Statistical", desc: "H\u2080, H\u2081, \u03b1, df" }
-        ];
+<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a></div></footer>
 
-        const QUESTIONS = [
-            {tier:"Primordial",q:"Alle krefter er til stede, i perfekt balanse. Ingenting beveger seg, men alt summer. Tilstanden f\u00f8r det f\u00f8rste ordet uttales.",a:"\u03a3 Total (Conservation)",b:"+/\u2212 (Transfer)",c:"= (Equilibrium)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"C",rune:"= Equilibrium",explanation:"= er ikke frav\u00e6r \u2014 det er tilstedev\u00e6relse holdt stille. Begge sider b\u00e6rer samme totale energi. Voiden i hvile, der alle krefter kansellerer perfekt."},
-            {tier:"Primordial",q:"Bassenget vokser raskere jo st\u00f8rre det blir. Hvert steg skaleres av det som allerede er der. Akkumulasjon med hunger.",a:"+/\u2212 (Transfer)",b:"= (Equilibrium)",c:"\u03a3 Total (Conservation)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"D",rune:"\u00d7/\u00f7 Proportional Transfer",explanation:"\u00d7 er akkumulasjon som n\u00e6rer seg selv \u2014 jo st\u00f8rre bassenget, jo hardere det trekker. \u00f7 er tvillingen: elven som deler seg i kanaler."},
-            {tier:"Primordial",q:"Begge sider av en ligning b\u00e6rer samme totale energi, m\u00e5lt fra forskjellige posisjoner.",a:"+/\u2212 (Transfer)",b:"= (Equilibrium)",c:"\u03a3 Total (Conservation)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"B",rune:"= Equilibrium",explanation:"= erkl\u00e6rer at venstre og h\u00f8yre side er samme kraft m\u00e5lt fra forskjellige posisjoner. Likevekt."},
-            {tier:"Primordial",q:"Du deler en elv i fem kanaler. Flere kanaler betyr tynnere flyt i hver.",a:"\u03a3 Total (Conservation)",b:"\u00f7 (Proportional Transfer)",c:"+/\u2212 (Transfer)",d:"= (Equilibrium)",correct:"B",rune:"\u00d7/\u00f7 Proportional Transfer",explanation:"\u00f7 er distribusjon \u2014 elven som deler seg. Mer kanaler, tynnere flyt. Tvillingen til \u00d7."},
-            {tier:"Primordial",q:"Du ganger prisen med 3 for \u00e5 finne totalen for tre varer. Operasjonen skalerer med mengden.",a:"+/\u2212 (Transfer)",b:"= (Equilibrium)",c:"\u00d7/\u00f7 (Proportional Transfer)",d:"\u03a3 Total (Conservation)",correct:"C",rune:"\u00d7/\u00f7 Proportional Transfer",explanation:"\u00d7 er gjentatt addisjon som skalerer med det som allerede er der. 3 \u00d7 pris = total."},
-            {tier:"Primordial",q:"Energi forlater ett sted og ankommer et annet. Fjellet mister, elven f\u00e5r. Totalen endres aldri. Hvilken rune?",a:"+/\u2212 (Transfer)",b:"\u00d7/\u00f7 (Proportional Transfer)",c:"\u03a3 Total (Conservation)",d:"= (Equilibrium)",correct:"A",rune:"+/\u2212 Transfer",explanation:"+/\u2212 er den eldste rytmen \u2014 energi som forlater ett sted og ankommer et annet. Totalen er alltid bevart."},
-            {tier:"Primordial",q:"To sider av en ligning. Venstre side har bygget opp noe, h\u00f8yre side har bygget opp noe annet. De m\u00f8tes og balanserer. Likevekt.",a:"+ (Additive Force)",b:"\u03a3 Total (Conservation)",c:"= (Equilibrium)",d:"\u00d7 (Multiplicative Scaling)",correct:"C",rune:"= \u2014 Equilibrium",explanation:"= er balansepunktet. Begge sider av ligningen har lik tyngde. Ikke bevegelse \u2014 tilstand."},
-            {tier:"Primordial",q:"To verdier sitter p\u00e5 hver sin side. Den ene f\u00e5r n\u00f8yaktig det den andre mister. Innpust og utpust.",a:"= (Equilibrium)",b:"\u03a3 Total (Conservation)",c:"+/\u2212 (Transfer)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"C",rune:"+/\u2212 Transfer",explanation:"+/\u2212 er overf\u00f8ring. Lungene fylles fordi luften t\u00f8mmes. \u00c9n hendelse, f\u00f8lt fra to posisjoner."},
-            {tier:"Primordial",q:"Uansett hvilke runer som uttales, endres aldri totalen. Energi transformeres men oppst\u00e5r eller forsvinner aldri.",a:"= (Equilibrium)",b:"\u00d7/\u00f7 (Proportional Transfer)",c:"+/\u2212 (Transfer)",d:"\u03a3 Total (Conservation)",correct:"D",rune:"\u03a3 Total (Conservation)",explanation:"Den primordiale \u03a3 er bevaringsloven \u2014 den ene loven som aldri b\u00f8yer seg. Summen endres aldri."},
-            {tier:"Algebraic",q:"1/\u221e \u2192 0. 1/0 \u2192 \u221e. Disse to er hverandres refleksjoner. Hvilken rune handler om det som aldri har en ende?",a:"\u03a3 Total (Conservation)",b:"\u03c0 (Circularity)",c:"\u221e (Unboundedness)",d:"e (Self-Pullin Growth)",correct:"C",rune:"\u221e \u2014 Unboundedness",explanation:"\u221e og null er hverandres speilbilder. \u221e er ubegrensetheten \u2014 retningen, ikke tallet."},
-            {tier:"Algebraic",q:"Du har 3 terninger, hver med 6 sider. Totalt antall mulige utfall er funnet ved denne runen.",a:"\u03a3 (Summation)",b:"n! (Factorial)",c:"x\u207f (Charge Across Nexus)",d:"\u03a0 (Product)",correct:"C",rune:"x\u207f \u2014 Charge Across Nexus",explanation:"x\u207f betyr x ganget med seg selv n ganger. 6\u00b3 = 216. Ladningen x fyller hver av de n beholderne."},
-            {tier:"Algebraic",q:"Du m\u00e5ler rett over midten av en sirkel og trenger omkretsen. Denne konstanten dukker alltid opp.",a:"e (Self-Pullin Growth)",b:"\u221e (Unboundedness)",c:"\u03c0 (Signature of Circularity)",d:"x (Potential Charge)",correct:"C",rune:"\u03c0 \u2014 Signature of Circularity",explanation:"\u03c0 \u2248 3.14159. Forholdet mellom en sirkels omkrets og diameter. Runen for lukket kurve."},
-            {tier:"Algebraic",q:"Du vet at 2\u00b9\u2070 = 1024. N\u00e5 sp\u00f8r noen: \u00abHvilken potens av 2 gir 1024?\u00bb Du reverserer eksponentieringen.",a:"\u221a (Root Extraction)",b:"e (Organic Growth)",c:"x\u207f (Charge Across Nexus)",d:"log (Inverse of Exponentiation)",correct:"D",rune:"log \u2014 Inverse of Exponentiation",explanation:"log\u2082(1024) = 10. Du sp\u00f8r: \u00abHvor mange ganger m\u00e5 2 dupliseres for \u00e5 bli 1024?\u00bb Log reverserer eksponentieringen."},
-            {tier:"Algebraic",q:"Du vet at produktet er 5\u00b9\u2070 og basen er 5. Hvor mange beholdere? Denne runen finner antallet.",a:"\u221a (Reverse of x\u207f)",b:"log (Backtrackin)",c:"n (Nexus)",d:"\u00f7 (Proportional Transfer)",correct:"B",rune:"log \u2014 Backtrackin",explanation:"log tar produktet og basen, og gir tilbake antallet. \u221a gir tilbake ladningen, log gir tilbake tellingen."},
-            {tier:"Algebraic",q:"En bindende kraft som gj\u00f8r at mediet samler seg til distinkte enheter \u2014 hver enkelt holdt adskilt fra omgivelsene.",a:"n (Nexus / Binding Force)",b:"\u03a3 (Summation)",c:"x (Potential Charge)",d:"\u03a0 (Product)",correct:"A",rune:"n \u2014 Nexus / Binding Force",explanation:"n teller \u2014 antall utfall, antall elementer, antall deler. Bindingen og tellingen ankommer sammen."},
-            {tier:"Algebraic",q:"En prosess gjentas 100 ganger. Hver gang legger du til resultatet. Etter 100 runder tar du snittet. n = 100 her.",a:"\u221e (Infinity)",b:"x (The Unknown)",c:"n (Counter / Iterator)",d:"\u03a3 (Summation)",correct:"C",rune:"n \u2014 Counter / Iterator",explanation:"n teller. Den holder styr p\u00e5 hvor mange ganger du har gjort noe. Her er n = 100 runder."},
-            {tier:"Algebraic",q:"En regel er definert. Du sender en ladning gjennom den og f\u00e5r et resultat. Parentesene er munningen til kammeret.",a:"x (Potential Charge)",b:"f(x) (Saved Spell)",c:"\u03a3 (Summation)",d:"n (Nexus)",correct:"B",rune:"f(x) \u2014 Saved Spell",explanation:"f(x) er en lagret formel \u2014 galdr den \u00e9n gang, den blir st\u00e5ende i voiden. Parentesene betyr 'apply'."},
-            {tier:"Algebraic",q:"En sirkel med diameter 1. Omkretsen er alltid dette tallet, uansett st\u00f8rrelse. Forholdet mellom omkrets og diameter.",a:"e (Organic Growth)",b:"\u221e (Infinity)",c:"\u03a3 Total (Conservation)",d:"\u03c0 (Structural Constant)",correct:"D",rune:"\u03c0 \u2014 Structural Constant",explanation:"\u03c0 \u2248 3.14159... Forholdet C/d. Uforanderlig, uavhengig av sirkelens st\u00f8rrelse."},
-            {tier:"Algebraic",q:"En ukjent x sitter i en ligning. Du isolerer den \u2014 trekker fra, deler, roterer \u2014 til x st\u00e5r alene. Hva er x?",a:"f(x) (Transformation Engine)",b:"x (The Unknown)",c:"n (Counter / Iterator)",d:"= (Equilibrium)",correct:"B",rune:"x \u2014 The Unknown",explanation:"x er den ukjente. Den sitter i strukturen og venter p\u00e5 \u00e5 bli isolert."},
-            {tier:"Algebraic",q:"Eskalatoren \u2014 kontinuerlig flyt. Tid som input. Smooth, ethvert reelt tall. Ikke diskrete steg.",a:"x\u207f (Charge Across Nexus)",b:"e (Self-Pullin Growth)",c:"\u03a0 (Product)",d:"\u00d7 (Proportional Transfer)",correct:"B",rune:"e \u2014 Self-Pullin Growth",explanation:"e\u1d57 er eskalatoren. x\u207f er trappen (diskret). e har bare \u00c9N beholder \u2014 det som varierer er t (tid). Kontinuerlig flow."},
-            {tier:"Algebraic",q:"Et basseng med energi vokser kontinuerlig, der inntaksraten er lik den n\u00e5v\u00e6rende mengden. Selvtrekkende vekst.",a:"\u03c0 (Circularity)",b:"x\u207f (Charge Across Nexus)",c:"\u00d7 (Proportional Transfer)",d:"e (Self-Pullin Growth)",correct:"D",rune:"e \u2014 Self-Pullin Growth",explanation:"e \u2248 2.718. Kraften der inntaksraten er lik n\u00e5v\u00e6rende mengde. Kontinuerlig selvtrekkende vekst."},
-            {tier:"Algebraic",q:"Et kammer i voiden st\u00e5r klart. Formen er fast \u2014 regelen. Det som sendes inn er fritt \u2014 inputen.",a:"\u03a3 (Summation)",b:"x (Potential Charge)",c:"n (Nexus)",d:"f(x) (Saved Spell)",correct:"D",rune:"f(x) \u2014 Saved Spell",explanation:"f(x) er grammatikken for \u00e5 navngi en konfigurasjon. Kammeret er fast, inputen varierer."},
-            {tier:"Algebraic",q:"Et symbol som st\u00e5r inn for et tall uten \u00e5 l\u00e5se hvilket. Regler kan skrives om det som holder uansett verdi.",a:"n (Nexus)",b:"f(x) (Saved Spell)",c:"x (Potential Charge)",d:"\u221e (Unboundedness)",correct:"C",rune:"x \u2014 Potential Charge",explanation:"x er variabelen \u2014 en dimensjon av voidens energitilstand. Ladning som venter."},
-            {tier:"Algebraic",q:"Forholdet som dukker opp automatisk n\u00e5r noe kurver tilbake i seg selv. Bakt inn i formen. Form-i-hvile, ikke kraft-over-tid.",a:"e (Self-Pullin Growth)",b:"= (Equilibrium)",c:"\u03c0 (Signature of Circularity)",d:"\u221e (Unboundedness)",correct:"C",rune:"\u03c0 \u2014 Signature of Circularity",explanation:"\u03c0 er voidens geometrilov. Ikke doing, bare being. N\u00e5r noe kurver tilbake i seg selv, er \u03c0 allerede der."},
-            {tier:"Algebraic",q:"Input \u2192 maskineri \u2192 output. Du putter inn 3, maskinen gj\u00f8r noe med det, ut kommer 9. Maskinen er regelen.",a:"x (The Unknown)",b:"= (Equilibrium)",c:"f(x) (Transformation Engine)",d:"log (Inverse of Exponentiation)",correct:"C",rune:"f(x) \u2014 Transformation Engine",explanation:"f(x) er transformasjonsmaskinen. Input \u2192 regel \u2192 output. f(3) = 9 betyr at regelen tok 3 og produserte 9."},
-            {tier:"Algebraic",q:"Noe vokser. Vekstraten er proporsjonal med det som allerede er der. Renter p\u00e5 renter. Organisk eksplosjon.",a:"x\u207f (Charge Across Nexus)",b:"\u03c0 (Structural Constant)",c:"e (Organic Growth Constant)",d:"log (Inverse of Exponentiation)",correct:"C",rune:"e \u2014 Organic Growth Constant",explanation:"e \u2248 2.718... Vekst der raten er lik mengden. Renter p\u00e5 renter med uendelig mange perioder."},
-            {tier:"Algebraic",q:"Produktet over alle beholdere var 36, og det var 2 beholdere. Hva var i hver? Denne runen finner tilbake.",a:"log (Backtrackin)",b:"\u221a (Reverse of x\u207f)",c:"x\u207f (Charge Across Nexus)",d:"\u00f7 (Proportional Transfer)",correct:"B",rune:"\u221a \u2014 Reverse of x\u207f",explanation:"\u221a tar produktet og sp\u00f8r bakover: hvilken ladning m\u00e5 hver beholder ha hatt? \u221a36 = 6."},
-            {tier:"Algebraic",q:"Samme ladning fyller hver av n beholdere samtidig. Utlesingen er produktet over alle. Trappen \u2014 diskrete heltallssteg.",a:"\u03a3 (Summation)",b:"e (Self-Pullin Growth)",c:"x\u207f (Charge Across Nexus)",d:"\u03a0 (Product)",correct:"C",rune:"x\u207f \u2014 Charge Across Nexus",explanation:"x\u207f er trappen \u2014 tellbare steg, heltalls-compounding. Ladningen x i hver av n bundne beholdere."},
-            {tier:"Algebraic",q:"Voiden har ingen vegger. Du kan reise i alle retninger og aldri treffe en grense. Alltid mer. Alltid lenger.",a:"\u03a3 Total (Conservation)",b:"\u221e (Unboundedness)",c:"x (Potential Charge)",d:"\u03c0 (Circularity)",correct:"B",rune:"\u221e \u2014 Unboundedness",explanation:"\u221e er ikke et tall \u2014 det er en retning, en egenskap. Voidens egen natur: den ender ikke."},
-            {tier:"Operational",q:"10 l\u00f8pere. Hvor mange m\u00e5ter kan gull, s\u00f8lv og bronse deles ut? Rekkef\u00f8lge teller \u2014 gull er ikke s\u00f8lv.",a:"nCr (Combinations)",b:"n! (Factorial)",c:"nPr (Permutations)",d:"\u03a0 (Product)",correct:"C",rune:"nPr \u2014 Permutations",explanation:"10P3 = 10\u00b79\u00b78 = 720. Delvis avgang fra bassenget. Rekkef\u00f8lgen teller."},
-            {tier:"Operational",q:"5 personer skal sitte i 5 spesifikke stoler. Hvor mange mulige plasseringer finnes?",a:"nCr (Combinations)",b:"\u03a0 (Product)",c:"n! (Factorial)",d:"nPr (Permutations)",correct:"C",rune:"n! \u2014 Factorial",explanation:"5! = 5\u00b74\u00b73\u00b72\u00b71 = 120. Hele bassenget t\u00f8mmes \u2014 alle forlater, rekkef\u00f8lgen teller."},
-            {tier:"Operational",q:"Av alle gangene B skjer, hvor ofte skjer ogs\u00e5 A? Du m\u00e5ler inne i B, ikke i hele rommet.",a:"P(A) (Probability)",b:"\u222a (Union)",c:"P(A|B) (Conditional)",d:"\u2229 (Intersection)",correct:"C",rune:"P(A|B) \u2014 Conditional",explanation:"P(A|B) = P(A\u2229B)/P(B). Domen krymper til B. Inni den lille domen m\u00e5ler du A."},
-            {tier:"Operational",q:"Bassenget t\u00f8mmes delvis \u2014 r forlater \u2014 men rekkef\u00f8lgen de forlot i teller ikke lenger.",a:"nPr (Permutations)",b:"n! (Factorial)",c:"nCr (Combinations)",d:"\u2229 (Intersection)",correct:"C",rune:"nCr \u2014 Combinations",explanation:"nCr kollapser alle r! ordninger av samme r som forlot til \u00e9n. Du teller delmengder, ikke sekvenser."},
-            {tier:"Operational",q:"Bassenget t\u00f8mmes delvis \u2014 r forlater, \u00e9n om gangen, og rekkef\u00f8lgen de forlot i betyr noe.",a:"n! (Factorial)",b:"nCr (Combinations)",c:"\u03a0 (Product)",d:"nPr (Permutations)",correct:"D",rune:"nPr \u2014 Permutations",explanation:"nPr er delvis, ordnet avgang. F\u00f8rste som forlater er ikke andre."},
-            {tier:"Operational",q:"Domen krymper til B. Inni den mindre domen m\u00e5ler du A sin tetthet. Hvor ofte skjer A, gitt at B allerede har skjedd?",a:"P(A) (Probability)",b:"\u2229 (Intersection)",c:"Bayes (Reversal)",d:"P(A|B) (Conditional)",correct:"D",rune:"P(A|B) \u2014 Conditional",explanation:"P(A|B) krymper \u03a9 ned til B. B blir den nye domen. Inni den krympede voiden m\u00e5ler du A."},
-            {tier:"Operational",q:"Du kaster to terninger. Resultatet av den ene p\u00e5virker ikke den andre.",a:"P(A|B) (Conditional)",b:"\u2229 (Intersection)",c:"Bayes (Reversal)",d:"Independence",correct:"D",rune:"Independence",explanation:"Terningene snakker ikke med hverandre. P(B|A) = P(B). Ren uavhengighet."},
-            {tier:"Operational",q:"Du velger en komit\u00e9 p\u00e5 4 fra 20 personer. Hvem som er med, ikke hvem som er leder.",a:"nPr (Permutations)",b:"nCr (Combinations)",c:"n! (Factorial)",d:"\u03a3 (Summation)",correct:"B",rune:"nCr \u2014 Combinations",explanation:"20C4 = 20!/(4!\u00b716!). Uordnet utvalg. Delmengder, ikke sekvenser."},
-            {tier:"Operational",q:"Du vet hvordan en \u00e5rsak produserer bevis. N\u00e5 trenger du \u00e5 diagnostisere \u00e5rsaken fra observert bevis. Reversal.",a:"P(A|B) (Conditional)",b:"Independence",c:"\u2229 (Intersection)",d:"Bayes (Reversal Galdr)",correct:"D",rune:"Bayes \u2014 Reversal Galdr",explanation:"Bayes snur en kjent conditional om. Diagnostisering fra bevis tilbake til \u00e5rsak."},
-            {tier:"Operational",q:"En medisinsk test er positiv. Testen fanger 95% av syke. Men hvor sannsynlig er det at pasienten faktisk er syk?",a:"P(A) (Probability)",b:"P(A|B) (Conditional)",c:"Independence",d:"Bayes (Reversal Galdr)",correct:"D",rune:"Bayes \u2014 Reversal Galdr",explanation:"Du vet P(Positiv|Syk) = 0.95. Du trenger P(Syk|Positiv). Bayes snur det."},
-            {tier:"Operational",q:"Et basseng med distinkte energier t\u00f8mmes \u00e9n om gangen inn i posisjoner. Hvert steg krymper bassenget med \u00e9n.",a:"nCr (Combinations)",b:"nPr (Permutations)",c:"n! (Factorial)",d:"\u03a3 (Summation)",correct:"C",rune:"n! \u2014 Factorial",explanation:"n! er aktiv migrasjon. Bassenget t\u00f8mmes, \u00e9n energi om gangen, inn i en sekvens."},
-            {tier:"Operational",q:"Fra 52 kort deler du ut 5 i sekvens. F\u00f8rste kort er ikke andre kort. Rekkef\u00f8lgen betyr noe.",a:"nCr (Combinations)",b:"nPr (Permutations)",c:"n! (Factorial)",d:"\u03a3 (Summation)",correct:"B",rune:"nPr \u2014 Permutations",explanation:"52P5 = 52\u00b751\u00b750\u00b749\u00b748. Ordnet utvalg. Delvis avgang fra bassenget, rekkef\u00f8lgen teller."},
-            {tier:"Operational",q:"Fra 52 kort velger du 5. Rekkef\u00f8lgen spiller ingen rolle \u2014 bare hvilke kort du har.",a:"nPr (Permutations)",b:"n! (Factorial)",c:"\u03a0 (Product)",d:"nCr (Combinations)",correct:"D",rune:"nCr \u2014 Combinations",explanation:"52C5 = 52!/(5!\u00b747!). Uordnet utvalg."},
-            {tier:"Operational",q:"Hele rommet er \u03a9. En region sitter inni det. Du m\u00e5ler br\u00f8kdelen den tar opp. Kast en blind pil \u2014 hvor stor er sjansen den lander i A?",a:"P(A|B) (Conditional)",b:"\u2229 (Intersection)",c:"\u222a (Union)",d:"P(A) (Probability)",correct:"D",rune:"P(A) \u2014 Probability",explanation:"P(A) er tettheten av A inni \u03a9 \u2014 br\u00f8kdelen av hele rommet som A tar opp."},
-            {tier:"Operational",q:"Hver energi n\u00e5r inn i hver annen og dupliserer den med sitt eget antall. Rommet fylles med kopier. Replikasjon.",a:"\u03a3 (Summation)",b:"x\u207f (Charge Across Nexus)",c:"\u03a0 (Product)",d:"n! (Factorial)",correct:"C",rune:"\u03a0 \u2014 Product",explanation:"\u03a0 er replikasjon. Hver energi dupliseres av alle andre. \u03a3 kollapser, \u03a0 prolifererer."},
-            {tier:"Operational",q:"Hvis en faktor er 0, kollapser hele produktet til 0. \u00c9n d\u00f8d kanal bryter kjeden.",a:"\u03a3 (Summation)",b:"n! (Factorial)",c:"\u03a0 (Product)",d:"x\u207f (Charge Across Nexus)",correct:"C",rune:"\u03a0 \u2014 Product",explanation:"\u03a0 er multiplikativ kjede. Hvis noen x\u1d62 = 0, kollapser alt. Fragiliteten er innebygd."},
-            {tier:"Operational",q:"Mange blir \u00e9n. Alle energier slipper innholdet fra sine beholdere og kollapser innover til \u00e9n total.",a:"\u03a0 (Product)",b:"\u03a3 (Summation)",c:"n! (Factorial)",d:"\u222a (Union)",correct:"B",rune:"\u03a3 \u2014 Summation",explanation:"\u03a3 er kollaps. Mange blir \u00e9n. Alle separasjoner kollapser innover."},
-            {tier:"Operational",q:"P(A\u2229B) = P(A)\u00b7P(B). Jointen faktoriserer rent i produktet av marginalene.",a:"Bayes (Reversal)",b:"\u222a (Union)",c:"P(A|B) (Conditional)",d:"Independence",correct:"D",rune:"Independence",explanation:"N\u00e5r A og B er uavhengige, faktoriserer jointen rent: P(A\u2229B) = P(A)\u00b7P(B)."},
-            {tier:"Operational",q:"P(\u03a9) = 1. P(\u2205) = 0. 0 \u2264 P(A) \u2264 1. Domen er avgrenset. Hele rommet er 100%.",a:"\u03a3 Total (Conservation)",b:"P(A) (Probability)",c:"= (Equilibrium)",d:"\u2229 (Intersection)",correct:"B",rune:"P(A) \u2014 Probability",explanation:"P setter domen: hele rommet er 1. Hver hendelse har en tetthet mellom 0 og 1."},
-            {tier:"Operational",q:"To regioner overlapper. Du vil kun ha stripen der begge er sanne samtidig. Alltid smalere, aldri bredere.",a:"\u222a (Union)",b:"P(A|B) (Conditional)",c:"\u2229 (Intersection)",d:"Bayes (Reversal)",correct:"C",rune:"\u2229 \u2014 Intersection",explanation:"\u2229 er felles grunn. Der begge er sanne samtidig. Innsnevring, aldri utvidelse."},
-            {tier:"Operational",q:"To regioner sl\u00e5s sammen. Du tar alt fra begge, men trekker fra det du telte dobbelt. Expand, expand, correct.",a:"\u2229 (Intersection)",b:"P(A) (Probability)",c:"\u222a (Union)",d:"\u03a3 (Summation)",correct:"C",rune:"\u222a \u2014 Union",explanation:"\u222a er samling. Alt fra A, alt fra B, men overlappet ble telt dobbelt, s\u00e5 trekk det fra."},
-            {tier:"Operational",q:"Tre korridorer, hver med en verdi i enden. Et magnetisk drag skyter fra sentrum og alle verdier raser innover til \u00e9n haug.",a:"\u03a0 (Product)",b:"n! (Factorial)",c:"\u03a3 (Summation)",d:"\u222a (Union)",correct:"C",rune:"\u03a3 \u2014 Summation",explanation:"\u03a3 er kollaps innover. Korridorene er n. Haugen i hendene er summen."},
-            {tier:"Operational",q:"\u00c5 vite at det regnet forteller deg ingenting om bussen var forsinket. De to hendelsene snakker ikke med hverandre.",a:"Bayes (Reversal)",b:"\u222a (Union)",c:"Independence",d:"P(A|B) (Conditional)",correct:"C",rune:"Independence",explanation:"A og B er uavhengige n\u00e5r P(A|B) = P(A). Kollapsen ned til B endret ikke A sin tetthet."},
-            {tier:"Descriptive",q:"Du m\u00e5lte 25 studenters h\u00f8yde. \u00c9n uvanlig h\u00f8y student drar spredningen. Du deler p\u00e5 n-1, ikke n.",a:"\u03c3 (Population SD)",b:"s (Sample SD)",c:"\u03c3\u00b2 (Population Variance)",d:"E(X) (Expected Value)",correct:"B",rune:"s \u2014 Sample Standard Deviation",explanation:"s = \u221a[s\u00b2] der s\u00b2 = \u03a3(x\u1d62\u2212x\u0304)\u00b2/(n-1). Korrigert for frihetsgraden tapt til x\u0304."},
-            {tier:"Descriptive",q:"Du st\u00e5r i voiden med et endelig nett. Bare n medlemmer er synlige. De utenfor nettet er i skyggen. Beste gjetning av spredning.",a:"\u03c3 (Population SD)",b:"\u03bc (Population Mean)",c:"s\u00b2 (Sample Variance)",d:"x\u0304 (Sample Mean)",correct:"C",rune:"s\u00b2 \u2014 Sample Variance",explanation:"s\u00b2 = \u03a3(x\u1d62\u2212x\u0304)\u00b2/(n-1). Finite sight \u2014 du ser bare utvalget ditt. n-1 korreksjonen kompenserer."},
-            {tier:"Descriptive",q:"En endelig h\u00e5ndfull verdier, summert og omfordelt jevnt over n steiner. Niv\u00e5et hver stein ville sittet p\u00e5 hvis energi fl\u00f8t fritt.",a:"\u03bc (Population Mean)",b:"E(X) (Expected Value)",c:"x\u0304 (Sample Mean)",d:"\u03c3 (Standard Deviation)",correct:"C",rune:"x\u0304 \u2014 Sample Mean",explanation:"x\u0304 = (\u03a3x\u1d62)/n. Gjennomsnittet av et utvalg, ikke hele populasjonen."},
-            {tier:"Descriptive",q:"Hver stein i hele populasjonen \u2014 alle 5.5 millioner nordmenn \u2014 summert og omfordelt jevnt over N.",a:"x\u0304 (Sample Mean)",b:"\u03c3 (Standard Deviation)",c:"E(X) (Expected Value)",d:"\u03bc (Population Mean)",correct:"D",rune:"\u03bc \u2014 Population Mean",explanation:"\u03bc = (\u03a3x\u1d62)/N. Hele feltet, ikke et utvalg. Samme oppskrift som x\u0304, men bassenget er hele populasjonen."},
-            {tier:"Descriptive",q:"Legg alle mulige utfall p\u00e5 en tallinje. Plasser vekter lik sannsynlighetene. Finn balansepunktet.",a:"x\u0304 (Sample Mean)",b:"\u03bc (Population Mean)",c:"\u03c3 (Standard Deviation)",d:"E(X) (Expected Value)",correct:"D",rune:"E(X) \u2014 Centre-of-Gravity Galdr",explanation:"E(X) = \u03a3 x\u1d62\u00b7P(X=x\u1d62). Vektet sum av alle mulige utfall. Tyngdepunktet."},
-            {tier:"Descriptive",q:"St\u00e5 ved gjennomsnittet. Kvadrer hver taulengde til hver verdi. Samle og omfordel. Lever i kvadrerte enheter.",a:"\u03c3 (Standard Deviation)",b:"s\u00b2 (Sample Variance)",c:"\u03c3\u00b2 (Variance)",d:"E(X) (Expected Value)",correct:"C",rune:"\u03c3\u00b2 \u2014 Variance",explanation:"\u03c3\u00b2 = \u03a3(x\u1d62\u2212\u03bc)\u00b2/N. Gjennomsnittlig kvadrert avstand fra sentrum."},
-            {tier:"Descriptive",q:"Ta kvadratroten av variansen. N\u00e5 holder du et enkelt tau av typisk avstand fra gjennomsnittet. Tilbake i originale enheter.",a:"\u03c3\u00b2 (Variance)",b:"s (Sample SD)",c:"\u03c3 (Standard Deviation)",d:"x\u0304 (Sample Mean)",correct:"C",rune:"\u03c3 \u2014 Standard Deviation",explanation:"\u03c3 = \u221a\u03c3\u00b2. Kvadratroten av variansen returnerer spredningen til originale enheter."},
-            {tier:"Descriptive",q:"Vektet sum av alle mulige utfall, der vektene er sannsynligheter. Reduseres til vanlig gjennomsnitt n\u00e5r utfall er like sannsynlige.",a:"\u03bc (Population Mean)",b:"\u03c3 (Standard Deviation)",c:"x\u0304 (Sample Mean)",d:"E(X) (Expected Value)",correct:"D",rune:"E(X) \u2014 Expected Value",explanation:"E(X) er forventningsverdien \u2014 tyngdepunktet av vektede utfall."},
-            {tier:"Statistical",q:"En p\u00e5stand om virkeligheten: \u00abGjennomsnittet er 50.\u00bb Du setter den opp som standard. Ingenting skjer med mindre beviset tvinger deg bort.",a:"H\u2081 (Alternative Hypothesis)",b:"\u03b1 (Significance Level)",c:"H\u2080 (Null Hypothesis)",d:"df (Degrees of Freedom)",correct:"C",rune:"H\u2080 \u2014 Null Hypothesis",explanation:"H\u2080 er standardtilstanden \u2014 status quo. Du antar den er sann til du har nok bevis til \u00e5 forkaste."},
-            {tier:"Statistical",q:"Beviset er tungt nok. Du forkaster standardtilstanden. Hva aksepterer du i stedet?",a:"H\u2080 (Null Hypothesis)",b:"df (Degrees of Freedom)",c:"\u03b1 (Significance Level)",d:"H\u2081 (Alternative Hypothesis)",correct:"D",rune:"H\u2081 \u2014 Alternative Hypothesis",explanation:"H\u2081 er utfordreren. Motp\u00e5standen som erstatter H\u2080 n\u00e5r beviset er sterkt nok."},
-            {tier:"Statistical",q:"Du setter en grense: \u00abHvis sannsynligheten for dette resultatet under H\u2080 er under 5%, forkaster jeg.\u00bb Hva heter den grensen?",a:"H\u2080 (Null Hypothesis)",b:"\u03b1 (Significance Level)",c:"df (Degrees of Freedom)",d:"H\u2081 (Alternative Hypothesis)",correct:"B",rune:"\u03b1 \u2014 Significance Level",explanation:"\u03b1 er terskelen for forkastning. Vanligvis 0.05. Risikoen du aksepterer for \u00e5 forkaste en sann H\u2080."},
-            {tier:"Statistical",q:"Du har 10 datapunkter og brukte 1 for \u00e5 beregne gjennomsnittet. Hvor mange kan bevege seg fritt? 10 minus 1.",a:"\u03b1 (Significance Level)",b:"H\u2080 (Null Hypothesis)",c:"df (Degrees of Freedom)",d:"s\u00b2 (Sample Variance)",correct:"C",rune:"df \u2014 Degrees of Freedom",explanation:"df = n \u2212 (antall parametere estimert). 10 punkter, 1 brukt til x\u0304 \u2192 df = 9."},
-            {tier:"Statistical",q:"p-verdien er 0.02. \u03b1 er 0.05. Hva gj\u00f8r du?",a:"Aksepter H\u2081 direkte",b:"Forkast H\u2080",c:"Behold H\u2080",d:"Senk \u03b1 til 0.01",correct:"B",rune:"H\u2080 forkastes \u2014 p < \u03b1",explanation:"p = 0.02 < \u03b1 = 0.05. Beviset er sterkt nok. Du forkaster H\u2080 til fordel for H\u2081."},
-            {tier:"Statistical",q:"p-verdien er 0.12. \u03b1 er 0.05. Hva gj\u00f8r du?",a:"Forkast H\u2080",b:"Behold H\u2080",c:"Senk \u03b1",d:"Aksepter H\u2081",correct:"B",rune:"H\u2080 beholdes \u2014 p > \u03b1",explanation:"p = 0.12 > \u03b1 = 0.05. Ikke nok bevis til \u00e5 forkaste. Du beholder H\u2080."},
-            {tier:"Statistical",q:"Forskeren hevder at medisinen virker bedre enn placebo. \u03bc > 0. Hvilken rolle spiller denne p\u00e5standen?",a:"H\u2080 (Null Hypothesis)",b:"\u03b1 (Significance Level)",c:"H\u2081 (Alternative Hypothesis)",d:"df (Degrees of Freedom)",correct:"C",rune:"H\u2081 \u2014 Alternative Hypothesis",explanation:"\u00ab\u03bc > 0\u00bb er utfordreren \u2014 det du pr\u00f8ver \u00e5 bevise. H\u2080 sier \u00ab\u03bc = 0\u00bb."},
-            {tier:"Statistical",q:"Du har estimert gjennomsnitt og standardavvik fra utvalget. N\u00e5 vil du finne et intervall som med 95% sannsynlighet fanger den sanne \u03bc. Hva trenger du for \u00e5 finne riktig t-verdi?",a:"\u03b1 (Significance Level)",b:"H\u2081 (Alternative Hypothesis)",c:"s\u00b2 (Sample Variance)",d:"df (Degrees of Freedom)",correct:"D",rune:"df \u2014 Degrees of Freedom",explanation:"t-fordelingen endrer form basert p\u00e5 df. Flere frihetsgrader = slankere haler. df = n-1."}
-        ];
+<script>
+const TIERS=[{id:"Primordial",name:"Tier 0 \u2014 Primordial",desc:"=, +/\u2212, \u00d7/\u00f7, \u03a3 Total"},{id:"Algebraic",name:"Tier 1 \u2014 Algebraic",desc:"x, x\u207f, \u221a, e, \u03c0, f(x), \u221e, n, log"},{id:"Operational",name:"Tier 2 \u2014 Operational",desc:"\u03a3, \u03a0, n!, nCr, nPr, \u2229, \u222a, P(A), P(A|B), Bayes, Independence"},{id:"Descriptive",name:"Tier 3 \u2014 Descriptive",desc:"x\u0304, \u03bc, \u03c3\u00b2, \u03c3, s/s\u00b2, E(X)"},{id:"Statistical",name:"Tier 4 \u2014 Statistical",desc:"H\u2080, H\u2081, \u03b1, df"}];
 
-        let currentTier = null;
-        let currentQuestions = [];
-        let currentIndex = 0;
-        let answers = [];
+const QUESTIONS=[
+{tier:"Primordial",type:"Architecture",q:"You see = in a problem. What does the space look like?",a:"Two separate regions with no connection",b:"Two sides holding the same total energy, balanced",c:"A single point collapsing inward",d:"An expanding boundary with no limit",correct:"B",rune:"= \u2014 Equilibrium",exp:"= declares balance. Two sides, same weight. The void at rest \u2014 not absence, but presence held still."},
+{tier:"Primordial",type:"Architecture",q:"You see \u00d7 in a problem. What kind of space does it build?",a:"Additive \u2014 things stacking linearly",b:"Proportional \u2014 growth that scales with what's already there",c:"A bounded dome summing to 1",d:"A tree branching into sequential choices",correct:"B",rune:"\u00d7/\u00f7 \u2014 Proportional Transfer",exp:"\u00d7 builds proportional space. The rate depends on what's already present. \u00f7 is the twin \u2014 distribution."},
+{tier:"Primordial",type:"Definition",q:"What is = commonly defined as in mathematics?",a:"The symbol declaring two expressions have the same value",b:"The symbol for approximate equality",c:"The symbol for assignment in programming",d:"The symbol for proportionality",correct:"A",rune:"= \u2014 Equilibrium",exp:"= states that the expression on the left and the expression on the right evaluate to the same value."},
+{tier:"Primordial",type:"Definition",q:"What does the conservation law (primordial \u03a3) state?",a:"Energy can be created but not destroyed",b:"The total energy in a closed system remains constant \u2014 it changes form but never amount",c:"Every action has an equal and opposite reaction",d:"Systems tend toward maximum disorder",correct:"B",rune:"\u03a3 Total \u2014 Conservation",exp:"Energy transforms but never appears or vanishes. The sum across all forms is always the same."},
+{tier:"Primordial",type:"Process",q:"\u03a3 (primordial) \u2014 what does it declare about the system?",a:"The total across all forms never changes",b:"Things accumulate into a sum",c:"The space is bounded to 1",d:"Energy transfers proportionally",correct:"A",rune:"\u03a3 Total \u2014 Conservation",exp:"The primordial \u03a3 is the conservation law \u2014 the one law that never bends."},
+{tier:"Primordial",type:"Process",q:"+/\u2212 \u2014 what's the process?",a:"Energy scales proportionally with existing quantity",b:"Energy leaves one place and arrives at another \u2014 total unchanged",c:"Energy accumulates across all forms into a total",d:"Energy reaches equilibrium between two sides",correct:"B",rune:"+/\u2212 \u2014 Transfer",exp:"Transfer is one event felt from two positions. The mountain loses, the river gains."},
+{tier:"Primordial",type:"Reverse",q:"Growth that feeds on itself. The bigger the river, the more tributaries it attracts. Rate depends on current size.",a:"+/\u2212 (Transfer)",b:"\u00d7/\u00f7 (Proportional Transfer)",c:"\u03a3 Total (Conservation)",d:"= (Equilibrium)",correct:"B",rune:"\u00d7/\u00f7 \u2014 Proportional Transfer",exp:"\u00d7 is accumulation that feeds on itself \u2014 the rate scales with what's already there."},
+{tier:"Primordial",type:"Reverse",q:"Energy leaves one position and arrives at another. One event, two perspectives. The total is always unchanged.",a:"= (Equilibrium)",b:"\u03a3 Total (Conservation)",c:"+/\u2212 (Transfer)",d:"\u00d7/\u00f7 (Proportional Transfer)",correct:"C",rune:"+/\u2212 \u2014 Transfer",exp:"+/\u2212 is the oldest rhythm. Energy departing one place, arriving at another."},
+{tier:"Algebraic",type:"Architecture",q:"You see x in a problem. What does it declare?",a:"A fixed constant that never changes",b:"An axis \u2014 a dimension of the space where charge can vary",c:"A boundary limiting the space",d:"A function that transforms input to output",correct:"B",rune:"x \u2014 Potential Charge",exp:"x opens the first axis. It names the dimension \u2014 the amount of potential energy along that axis."},
+{tier:"Algebraic",type:"Architecture",q:"You see x\u207f. What's the architecture?",a:"One container with varying charge",b:"n containers bound together, each holding the same charge x \u2014 product read across all",c:"n containers each holding different charges, summed",d:"A single container raised to a variable power",correct:"B",rune:"x\u207f \u2014 Charge Across the Nexus",exp:"x\u207f means the same charge x fills each of n bound containers. The readout is the product across all of them."},
+{tier:"Algebraic",type:"Architecture",q:"You see f(x). What's the architecture?",a:"A variable waiting to be solved",b:"A constant embedded in the structure",c:"A chamber \u2014 fixed rule inside, variable input through the opening",d:"An accumulator gathering values",correct:"C",rune:"f(x) \u2014 Saved Spell",exp:"f(x) is a saved spell. The chamber is the rule \u2014 fixed, permanent. The parentheses are the mouth."},
+{tier:"Algebraic",type:"Architecture",q:"You see n in a formula. What does it declare?",a:"An unknown to solve for",b:"A count \u2014 how many distinct units are bound together",c:"A continuous flow of energy",d:"An infinite boundary",correct:"B",rune:"n \u2014 Nexus / Binding Force",exp:"n counts. It binds the medium into discrete, distinct units \u2014 each held separate from the others."},
+{tier:"Algebraic",type:"Definition",q:"What is e (Euler's number) approximately equal to, and what does it govern?",a:"3.14159 \u2014 the ratio of circumference to diameter",b:"2.71828 \u2014 continuous compound growth",c:"1.61803 \u2014 the golden ratio",d:"0.57721 \u2014 the Euler-Mascheroni constant",correct:"B",rune:"e \u2014 Self-Pullin Growth",exp:"e \u2248 2.71828. Governs continuous growth where the rate equals the current quantity."},
+{tier:"Algebraic",type:"Definition",q:"What is x\u207f commonly defined as?",a:"x added to itself n times",b:"x multiplied by itself n times",c:"The nth root of x",d:"x divided by n",correct:"B",rune:"x\u207f \u2014 Charge Across the Nexus",exp:"x\u207f = x \u00d7 x \u00d7 x... (n times). Exponentiation \u2014 repeated multiplication of the same base."},
+{tier:"Algebraic",type:"Definition",q:"What is log_b(y) commonly defined as?",a:"The exponent you raise b to in order to get y",b:"The bth root of y",c:"b multiplied by y",d:"y divided by b",correct:"A",rune:"log \u2014 Backtrackin",exp:"log_b(y) = n means b\u207f = y. The inverse of exponentiation."},
+{tier:"Algebraic",type:"Process",q:"\u221a \u2014 what does it do to the x\u207f tower?",a:"Returns n (the count) given the product and x",b:"Multiplies the product by the base",c:"Returns x (the charge) given the product and n",d:"Adds the base to the product",correct:"C",rune:"\u221a \u2014 Reverse of x\u207f",exp:"\u221a takes the product and asks backward: what charge must each container have held? \u221a36 = 6."},
+{tier:"Algebraic",type:"Process",q:"x\u207f \u2014 what's the construction process?",a:"Add x to itself n times",b:"Multiply x by itself n times \u2014 same charge stacked across n bound containers",c:"Divide x into n equal parts",d:"Take the nth root of x",correct:"B",rune:"x\u207f \u2014 Charge Across the Nexus",exp:"x \u00d7 x \u00d7 x... n times. Each container holds the same charge. The product is the readout."},
+{tier:"Algebraic",type:"Process",q:"log \u2014 what does it do to the x\u207f tower?",a:"Returns the charge x given the product and n",b:"Returns n (the count) given the product and the base x",c:"Doubles the product",d:"Squares the base",correct:"B",rune:"log \u2014 Backtrackin",exp:"log takes the product and the base, and gives back the count. How many containers?"},
+{tier:"Algebraic",type:"Reverse",q:"No walls. No boundary. Always more. Always further. A direction, not a number.",a:"\u03a3 Total (Conservation)",b:"\u03c0 (Circularity)",c:"\u221e (Unboundedness)",d:"n (Nexus)",correct:"C",rune:"\u221e \u2014 Unboundedness",exp:"\u221e is not a number \u2014 it's a property. The direction of never ending."},
+{tier:"Algebraic",type:"Reverse",q:"The ratio that appears automatically whenever something curves back into itself. Not doing \u2014 just being. Baked into the shape.",a:"e (Self-Pullin Growth)",b:"\u03c0 (Signature of Circularity)",c:"\u221e (Unboundedness)",d:"n (Nexus)",correct:"B",rune:"\u03c0 \u2014 Signature of Circularity",exp:"\u03c0 \u2248 3.14159. The void's geometry law. When anything curves back into itself, \u03c0 is already there."},
+{tier:"Algebraic",type:"Reverse",q:"A chamber with a fixed rule inside. You send a charge through the opening and get a result. The rule is saved \u2014 use it as many times as you need.",a:"x (Potential Charge)",b:"n (Nexus)",c:"f(x) (Saved Spell)",d:"x\u207f (Charge Across Nexus)",correct:"C",rune:"f(x) \u2014 Saved Spell",exp:"f(x) is a stored formula. Galdr it once, it stands in the void. Send charges through as many times as you need."},
+{tier:"Algebraic",type:"Reverse",q:"Growth where the intake rate equals the current amount. Continuous, smooth, self-feeding. The escalator, not the staircase.",a:"x\u207f (Charge Across Nexus)",b:"\u03c0 (Signature of Circularity)",c:"\u00d7 (Proportional Transfer)",d:"e (Self-Pullin Growth)",correct:"D",rune:"e \u2014 Self-Pullin Growth",exp:"e \u2248 2.718. The force where the intake rate equals the current amount. Continuous compound growth."},
+{tier:"Operational",type:"Architecture",q:"You see P in a problem. What does the space look like?",a:"An unbounded line extending infinitely",b:"A bounded dome \u2014 everything inside sums to 1, 100%",c:"A tree branching into sequential paths",d:"A single axis with one variable",correct:"B",rune:"P(A) \u2014 Probability",exp:"P sets the dome. The whole space is 1. Every event has a density between 0 and 1."},
+{tier:"Operational",type:"Architecture",q:"You see \u2229 with two sets A and B. What's the architecture?",a:"Everything from both sets gathered together",b:"A tree with sequential branches",c:"A square with four rooms \u2014 two axes crossing, each running to 100%",d:"A single line where A and B sit at different points",correct:"C",rune:"\u2229 \u2014 Intersection",exp:"\u2229 with two sets creates a 2\u00d72 space: four rooms in a square. Two axes crossing. All four rooms sum to the whole dome."},
+{tier:"Operational",type:"Architecture",q:"You see n! in a problem. What's the architecture?",a:"A pool of n distinct items, all leaving in sequence \u2014 every position matters",b:"A selection of r items from n, order doesn't matter",c:"n containers each holding the same charge",d:"A bounded dome summing to 1",correct:"A",rune:"n! \u2014 Factorial",exp:"n! is full ordered departure. The entire pool empties one at a time. n choices, then n-1, then n-2... down to 1."},
+{tier:"Operational",type:"Architecture",q:"You see nPr. What's the architecture?",a:"Full pool empties \u2014 all n leave in sequence",b:"Partial pool \u2014 r leave from n, and the order they leave matters",c:"Partial pool \u2014 r leave from n, order doesn't matter",d:"A product of all values multiplied together",correct:"B",rune:"nPr \u2014 Permutations",exp:"nPr is partial ordered departure. r items leave the pool of n, one at a time. Who left first is not who left second."},
+{tier:"Operational",type:"Architecture",q:"You see nCr. What's the architecture compared to nPr?",a:"Same as nPr but with an additional ordering step",b:"Same as nPr but you divide out the r! orderings \u2014 who's in the group, not who left first",c:"Completely different \u2014 nCr uses addition, nPr uses multiplication",d:"nCr includes replacement, nPr doesn't",correct:"B",rune:"nCr \u2014 Combinations",exp:"nCr = nPr / r!. Same departure, but collapse all r! orderings of the same group into one."},
+{tier:"Operational",type:"Architecture",q:"You see \u03a3 (operational) in a formula. What does it declare?",a:"Replication \u2014 each value multiplied by every other",b:"Accumulation \u2014 scattered things gathered into one total",c:"A bounded dome summing to 1",d:"A sequential departure from a pool",correct:"B",rune:"\u03a3 \u2014 Summation",exp:"\u03a3 is collapse inward. Many become one. All values release from their containers and accumulate into a single total."},
+{tier:"Operational",type:"Architecture",q:"You see \u03a0 in a formula. What does it declare compared to \u03a3?",a:"\u03a3 gathers by addition (collapse), \u03a0 gathers by multiplication (replication)",b:"\u03a3 and \u03a0 are identical operations",c:"\u03a0 is subtraction, \u03a3 is addition",d:"\u03a0 is for probabilities only, \u03a3 is for everything else",correct:"A",rune:"\u03a0 \u2014 Product",exp:"\u03a3 collapses additively. \u03a0 replicates multiplicatively \u2014 each value reaches into every other. If any factor is 0, the whole product dies."},
+{tier:"Operational",type:"Definition",q:"What is P(A) commonly defined as?",a:"The number of outcomes in A divided by the total number of outcomes in the sample space",b:"The intersection of A with the complement of B",c:"The sum of all values in A",d:"The average of A's outcomes",correct:"A",rune:"P(A) \u2014 Probability",exp:"P(A) = |A|/|\u03a9| for equally likely outcomes. The fraction of the sample space that A occupies."},
+{tier:"Operational",type:"Definition",q:"What is P(A|B) commonly defined as?",a:"P(A) + P(B) \u2212 P(A\u2229B)",b:"P(A\u2229B) / P(B)",c:"P(A) \u00d7 P(B)",d:"P(B|A) \u00d7 P(A)",correct:"B",rune:"P(A|B) \u2014 Conditional",exp:"P(A|B) = P(A\u2229B)/P(B). The probability of A given B. You restrict to the world where B happened."},
+{tier:"Operational",type:"Definition",q:"What is n! commonly defined as?",a:"n \u00d7 (n-1) \u00d7 (n-2) \u00d7 ... \u00d7 1",b:"n \u00d7 r",c:"n / (n-r)",d:"The sum of integers from 1 to n",correct:"A",rune:"n! \u2014 Factorial",exp:"n! = n \u00d7 (n-1) \u00d7 (n-2) \u00d7 ... \u00d7 1. The product of all positive integers up to n."},
+{tier:"Operational",type:"Definition",q:"What does it mean for A and B to be independent?",a:"P(A\u2229B) = 0",b:"P(A\u2229B) = P(A) \u00d7 P(B)",c:"P(A\u222aB) = P(A) + P(B)",d:"P(A|B) > P(A)",correct:"B",rune:"Independence",exp:"A and B are independent when P(A\u2229B) = P(A)\u00b7P(B). Knowing B gives no information about A."},
+{tier:"Operational",type:"Process",q:"P(A|B) \u2014 what's the construction sequence?",a:"Measure A in the full space \u03a9",b:"Find where A and B overlap, then expand",c:"Shrink the dome to B first, then measure A's density inside the smaller dome \u2014 two moves, that order",d:"Multiply P(A) by P(B)",correct:"C",rune:"P(A|B) \u2014 Conditional",exp:"P(A|B) = P(A\u2229B)/P(B). B becomes your new dome. Inside that smaller dome, how much is also A?"},
+{tier:"Operational",type:"Process",q:"\u222a \u2014 what's the construction sequence?",a:"Find where A and B overlap \u2014 one move",b:"Shrink the dome to B, then measure A inside it \u2014 two moves",c:"Expand A, expand B, subtract the overlap \u2014 three moves",d:"Multiply A by B \u2014 one move",correct:"C",rune:"\u222a \u2014 Union",exp:"\u222a is gathering. Take everything in A, everything in B, but the overlap got counted twice \u2014 subtract it back."},
+{tier:"Operational",type:"Process",q:"\u2229 \u2014 what's the construction sequence?",a:"Expand A, expand B, subtract overlap",b:"Find where A and B are both true at once \u2014 the overlap region",c:"Shrink the dome to A, then measure B",d:"Add everything from A and B together",correct:"B",rune:"\u2229 \u2014 Intersection",exp:"\u2229 is constraining. What's in both rooms at once? One move \u2014 find the overlap."},
+{tier:"Operational",type:"Process",q:"Bayes \u2014 what's the construction sequence?",a:"You know P(B|A). You flip the conditional \u2014 reverse the anchor from A to B using P(A) and P(B)",b:"You add P(A) and P(B) and divide by 2",c:"You find the union of A and B",d:"You check if A and B are independent",correct:"A",rune:"Bayes \u2014 Reversal Galdr",exp:"Bayes flips a known conditional. P(A|B) = P(B|A)\u00b7P(A)/P(B). Same intersection, different anchor."},
+{tier:"Operational",type:"Process",q:"n! \u2014 what's the construction sequence?",a:"Pick r from n, order matters",b:"Pick r from n, order doesn't matter",c:"Full pool empties one at a time. n choices, then n-1, then n-2... down to 1. Every step shrinks the pool",d:"Each item is multiplied by every other item",correct:"C",rune:"n! \u2014 Factorial",exp:"n! is active migration. The pool empties completely, one energy at a time, into a sequence."},
+{tier:"Operational",type:"Process",q:"\u03a3 (operational) \u2014 what's the construction sequence?",a:"Each value replicates against every other \u2014 proliferation",b:"All values release from their containers and collapse inward to one total \u2014 many become one",c:"Values are distributed evenly across channels",d:"Values are squared and then summed",correct:"B",rune:"\u03a3 \u2014 Summation",exp:"\u03a3 is collapse. Many become one. All separations collapse inward."},
+{tier:"Operational",type:"Reverse",q:"The dome shrinks to a smaller space. Inside that smaller dome, you measure density. Two moves, always in that order.",a:"P(A) (Probability)",b:"\u2229 (Intersection)",c:"\u222a (Union)",d:"P(A|B) (Conditional)",correct:"D",rune:"P(A|B) \u2014 Conditional",exp:"P(A|B) shrinks \u03a9 to B. B becomes the new dome. Inside the smaller dome, measure A's density."},
+{tier:"Operational",type:"Reverse",q:"You know how a cause produces evidence. Now you need to diagnose the cause from observed evidence. Flip the direction.",a:"P(A|B) (Conditional)",b:"Independence",c:"Bayes (Reversal)",d:"\u222a (Union)",correct:"C",rune:"Bayes \u2014 Reversal Galdr",exp:"Bayes reverses a known conditional. Same data, different anchor point."},
+{tier:"Operational",type:"Reverse",q:"Knowing B happened tells you nothing new about A. The density of A is the same whether you're inside B or in the full space.",a:"P(A|B) (Conditional)",b:"Bayes (Reversal)",c:"\u222a (Union)",d:"Independence",correct:"D",rune:"Independence",exp:"A and B are independent when P(A|B) = P(A). Collapsing down to B didn't change A's density."},
+{tier:"Operational",type:"Reverse",q:"If any single factor is zero, the entire result collapses to zero. One dead channel breaks the chain. Replication with built-in fragility.",a:"\u03a3 (Summation)",b:"n! (Factorial)",c:"\u03a0 (Product)",d:"\u2229 (Intersection)",correct:"C",rune:"\u03a0 \u2014 Product",exp:"\u03a0 is multiplicative chaining. If any x\u1d62 = 0, everything dies. Built-in fragility."},
+{tier:"Operational",type:"Reverse",q:"Pool empties partially. r leave from n, one at a time. Who left first matters \u2014 it's not the same as who left second.",a:"n! (Factorial)",b:"nCr (Combinations)",c:"\u03a0 (Product)",d:"nPr (Permutations)",correct:"D",rune:"nPr \u2014 Permutations",exp:"nPr is partial ordered departure. r leave from n, sequence matters."},
+{tier:"Operational",type:"Reverse",q:"Same partial departure, but now collapse all r! orderings of the same group into one. Who's in the group, not who left first.",a:"nPr (Permutations)",b:"n! (Factorial)",c:"nCr (Combinations)",d:"\u03a3 (Summation)",correct:"C",rune:"nCr \u2014 Combinations",exp:"nCr collapses all r! orderings of the same r departures into one. Subsets, not sequences."},
+{tier:"Descriptive",type:"Architecture",q:"You see x\u0304 in a formula. What's the architecture?",a:"All possible outcomes weighted by probability",b:"A finite handful of values \u2014 summed and redistributed evenly across n stones",c:"The entire population measured at once",d:"The squared distance from center",correct:"B",rune:"x\u0304 \u2014 Sample Mean",exp:"x\u0304 = (\u03a3x\u1d62)/n. A finite sample \u2014 not the whole population. Sum them, divide evenly."},
+{tier:"Descriptive",type:"Architecture",q:"You see \u03c3\u00b2 in a formula. What's the architecture?",a:"Average distance from center in original units",b:"Stand at the mean, measure each distance, square it, average over all \u2014 lives in squared units",c:"Sum all values and divide by n",d:"Weighted sum of all outcomes by probability",correct:"B",rune:"\u03c3\u00b2 \u2014 Variance",exp:"\u03c3\u00b2 = \u03a3(x\u1d62\u2212\u03bc)\u00b2/N. Stand at the mean. Square each rope. Average over all. Lives in squared units."},
+{tier:"Descriptive",type:"Definition",q:"What is x\u0304 commonly defined as?",a:"The sum of all sample values divided by n",b:"The sum of all population values divided by N",c:"The weighted sum of outcomes times probabilities",d:"The square root of variance",correct:"A",rune:"x\u0304 \u2014 Sample Mean",exp:"x\u0304 = (\u03a3x\u1d62)/n. The arithmetic average of a sample."},
+{tier:"Descriptive",type:"Definition",q:"What is \u03c3 commonly defined as?",a:"The average of all values",b:"The square root of the variance \u2014 average distance from the mean in original units",c:"The sum of squared deviations",d:"The weighted average of outcomes",correct:"B",rune:"\u03c3 \u2014 Standard Deviation",exp:"\u03c3 = \u221a\u03c3\u00b2. Measures the typical spread around the mean, in the same units as the data."},
+{tier:"Descriptive",type:"Definition",q:"What is the difference between \u03bc and x\u0304?",a:"\u03bc is for samples, x\u0304 is for populations",b:"\u03bc is the population mean (all N), x\u0304 is the sample mean (a subset of n)",c:"They are identical",d:"\u03bc is the median, x\u0304 is the mean",correct:"B",rune:"\u03bc vs x\u0304",exp:"\u03bc covers the entire population. x\u0304 covers a finite sample. Same formula, different pool size."},
+{tier:"Descriptive",type:"Process",q:"\u03c3 \u2014 what's the construction process?",a:"Sum all values, divide by n",b:"Compute the variance (\u03c3\u00b2), then take the square root \u2014 return to original units",c:"Multiply each value by its probability",d:"Find the median of the distribution",correct:"B",rune:"\u03c3 \u2014 Standard Deviation",exp:"\u03c3 = \u221a\u03c3\u00b2. The square root of variance returns the spread to original units."},
+{tier:"Descriptive",type:"Process",q:"E(X) \u2014 what's the construction process?",a:"Sum all values and divide by n",b:"Place every possible outcome on a line, weight each by its probability, find the balance point",c:"Take the square root of the variance",d:"Count the number of outcomes",correct:"B",rune:"E(X) \u2014 Centre-of-Gravity Galdr",exp:"E(X) = \u03a3 x\u1d62\u00b7P(X=x\u1d62). Weighted sum of all possible outcomes. The balance point."},
+{tier:"Descriptive",type:"Process",q:"s\u00b2 (sample variance) \u2014 how does it differ from \u03c3\u00b2?",a:"s\u00b2 uses n, \u03c3\u00b2 uses n-1",b:"s\u00b2 divides by n-1 because one degree of freedom was spent estimating x\u0304 \u2014 finite sight correction",c:"s\u00b2 uses the population mean, \u03c3\u00b2 uses the sample mean",d:"There is no difference",correct:"B",rune:"s\u00b2 \u2014 Sample Variance",exp:"s\u00b2 = \u03a3(x\u1d62\u2212x\u0304)\u00b2/(n-1). x\u0304 cost a degree of freedom \u2014 n-1 corrects for that binding."},
+{tier:"Descriptive",type:"Reverse",q:"Weighted sum of all possible outcomes, where the weights are probabilities. The balance point. Reduces to ordinary average when outcomes are equally likely.",a:"\u03bc (Population Mean)",b:"x\u0304 (Sample Mean)",c:"\u03c3\u00b2 (Variance)",d:"E(X) (Expected Value)",correct:"D",rune:"E(X) \u2014 Expected Value",exp:"E(X) is the expectation \u2014 the center of gravity of weighted outcomes."},
+{tier:"Descriptive",type:"Reverse",q:"Every stone in the entire population \u2014 all of them \u2014 summed and redistributed evenly across N.",a:"x\u0304 (Sample Mean)",b:"E(X) (Expected Value)",c:"\u03bc (Population Mean)",d:"\u03c3 (Standard Deviation)",correct:"C",rune:"\u03bc \u2014 Population Mean",exp:"\u03bc = (\u03a3x\u1d62)/N. The entire field, not a subset. Same recipe as x\u0304, but the pool is the full population."},
+{tier:"Statistical",type:"Architecture",q:"You see H\u2080 in a hypothesis test. What does it declare?",a:"The claim you're trying to prove",b:"The flat default posture \u2014 status quo, assumed true until evidence forces you away",c:"The significance threshold",d:"The number of free data points",correct:"B",rune:"H\u2080 \u2014 Null Hypothesis",exp:"H\u2080 is the default. Status quo. No effect, no difference. You assume it's true until evidence is strong enough to reject it."},
+{tier:"Statistical",type:"Architecture",q:"You see \u03b1 in a hypothesis test. What does it declare?",a:"The null hypothesis",b:"The alternative hypothesis",c:"The pre-set threshold \u2014 how much risk of false rejection you'll tolerate",d:"The degrees of freedom",correct:"C",rune:"\u03b1 \u2014 Significance Level",exp:"\u03b1 is the filter threshold. Usually 0.05. The maximum probability of rejecting H\u2080 when it's actually true."},
+{tier:"Statistical",type:"Definition",q:"What is \u03b1 commonly defined as in hypothesis testing?",a:"The probability of the data given H\u2080 is true",b:"The maximum probability of rejecting H\u2080 when it's actually true (Type I error rate)",c:"The probability that H\u2081 is correct",d:"The sample size divided by the population size",correct:"B",rune:"\u03b1 \u2014 Significance Level",exp:"\u03b1 is the Type I error rate \u2014 the risk you accept of falsely rejecting a true H\u2080. Typically 0.05."},
+{tier:"Statistical",type:"Definition",q:"What is H\u2080 commonly defined as?",a:"The hypothesis the researcher hopes to prove",b:"The default assumption of no effect or no difference, assumed true until evidence says otherwise",c:"The significance level for the test",d:"The alternative to the research hypothesis",correct:"B",rune:"H\u2080 \u2014 Null Hypothesis",exp:"H\u2080 is the null hypothesis \u2014 the default position of no effect, no change, no difference."},
+{tier:"Statistical",type:"Process",q:"Hypothesis testing \u2014 what's the sequence?",a:"Set H\u2081 first, then find data to confirm it",b:"Set H\u2080 (default), set \u03b1 (threshold), collect evidence, compute p-value, compare p to \u03b1 \u2014 reject H\u2080 only if p < \u03b1",c:"Calculate the mean and reject if it's unusual",d:"Set \u03b1 after seeing the data to get the result you want",correct:"B",rune:"Hypothesis Testing Sequence",exp:"The sequence is fixed: default first (H\u2080), threshold second (\u03b1), evidence third, comparison last."},
+{tier:"Statistical",type:"Process",q:"df \u2014 what does it do in a t-test?",a:"Sets the significance level",b:"Determines the shape of the t-distribution \u2014 more df means slimmer tails, closer to normal",c:"Counts the total sample size",d:"Defines the null hypothesis",correct:"B",rune:"df \u2014 Degrees of Freedom",exp:"df shapes the t-distribution. Low df = fat tails (more uncertainty). High df = slim tails (closer to the normal curve)."},
+{tier:"Statistical",type:"Reverse",q:"10 data points. 1 spent estimating the mean. 9 remain free to vary. What concept is this?",a:"\u03b1 (Significance Level)",b:"H\u2080 (Null Hypothesis)",c:"H\u2081 (Alternative Hypothesis)",d:"df (Degrees of Freedom)",correct:"D",rune:"df \u2014 Degrees of Freedom",exp:"df = n \u2212 (parameters estimated). 10 points, 1 spent on x\u0304 \u2192 df = 9."},
+{tier:"Statistical",type:"Reverse",q:"The claim that replaces the default when evidence is strong enough. The challenger. You never accept it directly \u2014 you reject the default in its favor.",a:"H\u2080 (Null Hypothesis)",b:"\u03b1 (Significance Level)",c:"H\u2081 (Alternative Hypothesis)",d:"df (Degrees of Freedom)",correct:"C",rune:"H\u2081 \u2014 Alternative Hypothesis",exp:"H\u2081 is the challenger. You don't accept H\u2081 directly \u2014 you reject H\u2080 in its favor when the evidence is strong enough."}
+];
 
-        function shuffle(arr) {
-            const a = [...arr];
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-            return a;
-        }
+let activeType="all";
+let currentTier=null;
+let currentQuestions=[];
+let currentIndex=0;
+let answers=[];
 
-        function show(screen) {
-            document.getElementById("screen-picker").classList.add("hidden");
-            document.getElementById("screen-quiz").classList.add("hidden");
-            document.getElementById("screen-results").classList.add("hidden");
-            document.getElementById("screen-" + screen).classList.remove("hidden");
-            window.scrollTo(0, 0);
-        }
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
-        function renderTierGrid() {
-            const grid = document.getElementById("chapter-grid");
-            grid.innerHTML = "";
-            TIERS.forEach(t => {
-                const count = QUESTIONS.filter(q => q.tier === t.id).length;
-                const card = document.createElement("button");
-                card.className = "chapter-card";
-                card.innerHTML = `
-                    <div class="chapter-card-header">
-                        <h3>${t.name}</h3>
-                        <span class="chapter-card-weight">${count} sp\u00f8rsm\u00e5l</span>
-                    </div>
-                    <div class="chapter-card-meta">${t.desc}</div>
-                `;
-                card.addEventListener("click", () => startTier(t));
-                grid.appendChild(card);
-            });
-        }
+function show(screen){document.getElementById("screen-picker").classList.add("hidden");document.getElementById("screen-quiz").classList.add("hidden");document.getElementById("screen-results").classList.add("hidden");document.getElementById("screen-"+screen).classList.remove("hidden");window.scrollTo(0,0);}
 
-        function startTier(t) {
-            currentTier = t;
-            currentQuestions = shuffle(QUESTIONS.filter(q => q.tier === t.id));
-            currentIndex = 0;
-            answers = currentQuestions.map(() => null);
-            show("quiz");
-            renderQuestion();
-        }
+function getFiltered(tierId){let qs=QUESTIONS;if(tierId&&tierId!=="all")qs=qs.filter(q=>q.tier===tierId);if(activeType!=="all")qs=qs.filter(q=>q.type===activeType);return qs;}
 
-        function startAll() {
-            currentTier = { id: "all", name: "Alle tiers \u2014 Shuffle" };
-            currentQuestions = shuffle([...QUESTIONS]);
-            currentIndex = 0;
-            answers = currentQuestions.map(() => null);
-            show("quiz");
-            renderQuestion();
-        }
+function renderTierGrid(){const grid=document.getElementById("chapter-grid");grid.innerHTML="";TIERS.forEach(t=>{const count=getFiltered(t.id).length;const card=document.createElement("button");card.className="chapter-card";if(count===0)card.style.opacity="0.4";card.innerHTML=`<div class="chapter-card-header"><h3>${t.name}</h3><span class="chapter-card-weight">${count} questions</span></div><div class="chapter-card-meta">${t.desc}</div>`;card.addEventListener("click",()=>{if(count>0)startTier(t);});grid.appendChild(card);});const totalCount=getFiltered("all").length;document.getElementById("shuffle-all-btn").textContent=`\u2605 Shuffle all ${totalCount} questions`;}
 
-        document.getElementById("shuffle-all-btn").addEventListener("click", startAll);
+document.getElementById("type-filters").addEventListener("click",e=>{const btn=e.target.closest(".filter-btn");if(!btn)return;document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");activeType=btn.dataset.type;renderTierGrid();});
 
-        function renderQuestion() {
-            const q = currentQuestions[currentIndex];
-            document.getElementById("quiz-chapter-name").textContent = currentTier.name;
-            document.getElementById("quiz-progress-text").textContent = `${currentIndex + 1} / ${currentQuestions.length}`;
-            document.getElementById("progress-bar-fill").style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
-            document.getElementById("question-text").textContent = q.q;
-            const optionsDiv = document.getElementById("options");
-            optionsDiv.innerHTML = "";
-            ["a", "b", "c", "d"].forEach((key, i) => {
-                const letter = ["A", "B", "C", "D"][i];
-                const btn = document.createElement("button");
-                btn.className = "option-btn";
-                btn.innerHTML = `<span class="option-letter">${letter}</span> ${escapeHtml(q[key])}`;
-                btn.addEventListener("click", () => selectAnswer(letter));
-                optionsDiv.appendChild(btn);
-            });
-            document.getElementById("explanation").classList.add("hidden");
-            document.getElementById("next-btn").classList.add("hidden");
-            if (answers[currentIndex] !== null) {
-                showAnswer(answers[currentIndex].selected, q);
-            }
-        }
+function startTier(t){currentTier=t;currentQuestions=shuffle(getFiltered(t.id));currentIndex=0;answers=currentQuestions.map(()=>null);show("quiz");renderQuestion();}
 
-        function escapeHtml(s) {
-            return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
-        }
+function startAll(){currentTier={id:"all",name:"All tiers \u2014 Shuffle"};currentQuestions=shuffle(getFiltered("all"));currentIndex=0;answers=currentQuestions.map(()=>null);show("quiz");renderQuestion();}
 
-        function selectAnswer(letter) {
-            const q = currentQuestions[currentIndex];
-            const isCorrect = letter === q.correct;
-            answers[currentIndex] = { selected: letter, correct: isCorrect };
-            showAnswer(letter, q);
-        }
+document.getElementById("shuffle-all-btn").addEventListener("click",startAll);
 
-        function showAnswer(selected, q) {
-            const buttons = document.querySelectorAll(".option-btn");
-            buttons.forEach((btn, i) => {
-                const letter = ["A", "B", "C", "D"][i];
-                btn.disabled = true;
-                if (letter === q.correct) btn.classList.add("correct");
-                else if (letter === selected) btn.classList.add("wrong");
-            });
-            const exp = document.getElementById("explanation");
-            const isCorrect = selected === q.correct;
-            exp.innerHTML = `<strong>${isCorrect ? "Riktig." : "Feil."}</strong> <em>${escapeHtml(q.rune)}</em> \u2014 ${escapeHtml(q.explanation)}`;
-            exp.classList.remove("hidden");
-            const nextBtn = document.getElementById("next-btn");
-            nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? "Se resultatet \u2192" : "Neste \u2192";
-            nextBtn.classList.remove("hidden");
-        }
+function renderQuestion(){const q=currentQuestions[currentIndex];document.getElementById("quiz-chapter-name").textContent=currentTier.name;document.getElementById("quiz-progress-text").textContent=`${currentIndex+1} / ${currentQuestions.length}`;document.getElementById("progress-bar-fill").style.width=`${((currentIndex+1)/currentQuestions.length)*100}%`;document.getElementById("question-tag").textContent=`${q.tier} \u00b7 ${q.type}`;document.getElementById("question-text").textContent=q.q;const optionsDiv=document.getElementById("options");optionsDiv.innerHTML="";["a","b","c","d"].forEach((key,i)=>{const letter=["A","B","C","D"][i];const btn=document.createElement("button");btn.className="option-btn";btn.innerHTML=`<span class="option-letter">${letter}</span> ${esc(q[key])}`;btn.addEventListener("click",()=>selectAnswer(letter));optionsDiv.appendChild(btn);});document.getElementById("explanation").classList.add("hidden");document.getElementById("next-btn").classList.add("hidden");if(answers[currentIndex]!==null)showAnswer(answers[currentIndex].selected,q);}
 
-        document.getElementById("next-btn").addEventListener("click", () => {
-            if (currentIndex === currentQuestions.length - 1) {
-                showResults();
-            } else {
-                currentIndex++;
-                renderQuestion();
-            }
-        });
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);}
 
-        function showResults() {
-            const correctCount = answers.filter(a => a && a.correct).length;
-            const total = currentQuestions.length;
-            const pct = Math.round((correctCount / total) * 100);
-            document.getElementById("results-chapter-label").textContent = currentTier.name;
-            document.getElementById("score-number").textContent = `${correctCount} / ${total}`;
-            document.getElementById("score-label").textContent = `${pct}% riktig`;
-            const grid = document.getElementById("squares-grid");
-            grid.innerHTML = "";
-            answers.forEach((a, i) => {
-                const sq = document.createElement("button");
-                sq.className = `square ${a && a.correct ? "right" : "wrong"}`;
-                sq.textContent = i + 1;
-                sq.title = `Sp\u00f8rsm\u00e5l ${i + 1}`;
-                sq.addEventListener("click", () => {
-                    currentIndex = i;
-                    show("quiz");
-                    renderQuestion();
-                });
-                grid.appendChild(sq);
-            });
-            const wrong = total - correctCount;
-            const chart = document.getElementById("mermaid-chart");
-            chart.removeAttribute("data-processed");
-            chart.textContent = `pie showData\n    title Resultat\n    "Riktig" : ${correctCount}\n    "Feil" : ${wrong}`;
-            show("results");
-            if (window.mermaid) {
-                try { mermaid.run({ nodes: [chart] }); }
-                catch (e) { mermaid.init(undefined, chart); }
-            }
-        }
+function selectAnswer(letter){const q=currentQuestions[currentIndex];const isCorrect=letter===q.correct;answers[currentIndex]={selected:letter,correct:isCorrect};showAnswer(letter,q);}
 
-        document.getElementById("retry-btn").addEventListener("click", () => {
-            if (currentTier.id === "all") startAll();
-            else startTier(currentTier);
-        });
-        document.getElementById("back-btn").addEventListener("click", () => show("picker"));
+function showAnswer(selected,q){const buttons=document.querySelectorAll(".option-btn");buttons.forEach((btn,i)=>{const letter=["A","B","C","D"][i];btn.disabled=true;if(letter===q.correct)btn.classList.add("correct");else if(letter===selected)btn.classList.add("wrong");});const exp=document.getElementById("explanation");const isCorrect=selected===q.correct;exp.innerHTML=`<strong>${isCorrect?"Correct.":"Wrong."}</strong> <em>${esc(q.rune)}</em> \u2014 ${esc(q.exp)}`;exp.classList.remove("hidden");const nextBtn=document.getElementById("next-btn");nextBtn.textContent=currentIndex===currentQuestions.length-1?"See results \u2192":"Next \u2192";nextBtn.classList.remove("hidden");}
 
-        if (window.mermaid) {
-            mermaid.initialize({
-                startOnLoad: false,
-                theme: "dark",
-                themeVariables: {
-                    background: "#18181b",
-                    primaryColor: "#22c55e",
-                    primaryTextColor: "#fafafa",
-                    pie1: "#22c55e",
-                    pie2: "#ef4444"
-                }
-            });
-        }
-        renderTierGrid();
-    </script>
+document.getElementById("next-btn").addEventListener("click",()=>{if(currentIndex===currentQuestions.length-1)showResults();else{currentIndex++;renderQuestion();}});
+
+function showResults(){const correctCount=answers.filter(a=>a&&a.correct).length;const total=currentQuestions.length;const pct=Math.round((correctCount/total)*100);document.getElementById("results-chapter-label").textContent=currentTier.name;document.getElementById("score-number").textContent=`${correctCount} / ${total}`;document.getElementById("score-label").textContent=`${pct}% correct`;const grid=document.getElementById("squares-grid");grid.innerHTML="";answers.forEach((a,i)=>{const sq=document.createElement("button");sq.className=`square ${a&&a.correct?"right":"wrong"}`;sq.textContent=i+1;sq.title=`Question ${i+1}`;sq.addEventListener("click",()=>{currentIndex=i;show("quiz");renderQuestion();});grid.appendChild(sq);});const wrong=total-correctCount;const chart=document.getElementById("mermaid-chart");chart.removeAttribute("data-processed");chart.textContent=`pie showData\n    title Result\n    "Correct" : ${correctCount}\n    "Wrong" : ${wrong}`;show("results");if(window.mermaid){try{mermaid.run({nodes:[chart]});}catch(e){mermaid.init(undefined,chart);}}}
+
+document.getElementById("retry-btn").addEventListener("click",()=>{if(currentTier.id==="all")startAll();else startTier(currentTier);});
+document.getElementById("back-btn").addEventListener("click",()=>show("picker"));
+
+if(window.mermaid){mermaid.initialize({startOnLoad:false,theme:"dark",themeVariables:{background:"#18181b",primaryColor:"#22c55e",primaryTextColor:"#fafafa",pie1:"#22c55e",pie2:"#ef4444"}});}
+renderTierGrid();
+</script>
 </body>
 </html>
