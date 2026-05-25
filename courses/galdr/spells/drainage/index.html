@@ -51,8 +51,23 @@
         .grid-2x2 .corner{background:var(--bg2)!important}
         .grid-2x2 .cell-active{background:rgba(167,139,250,.12)!important;box-shadow:inset 0 0 0 2px var(--accent)!important;color:var(--accent);font-weight:600}
         .grid-2x2 .cell-dim{opacity:.35}
-        .tree-wrap{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px 8px;margin:20px 0;overflow:hidden}
+        .tree-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+        .tree-section h3{font-size:1rem;font-weight:600;margin-bottom:6px}
+        .tree-section p{color:var(--text2);font-size:.85rem;margin-bottom:12px}
+        .tree-controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end}
+        .tree-controls .input-group{display:flex;flex-direction:column;gap:3px}
+        .tree-controls .input-group label{font-size:.72rem;color:var(--muted)}
+        .tree-controls .input-group input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-family:inherit;font-size:.85rem;color:var(--text);width:80px;text-align:center}
+        .tree-controls .input-group input:focus{outline:none;border-color:var(--accent)}
+        .tree-controls button{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:6px 14px;font-family:inherit;font-size:.82rem;color:var(--accent);cursor:pointer;transition:all .2s;align-self:flex-end}
+        .tree-controls button:hover{background:rgba(167,139,250,.2)}
+        .tree-wrap{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 8px;overflow:hidden}
         .tree-wrap canvas{display:block;margin:0 auto}
+        .tree-note{font-size:.78rem;color:var(--muted);margin-top:10px;text-align:center}
+        .proc-block{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0}
+        .proc-block .proc-title{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+        .proc-step{font-size:.88rem;color:var(--text2);line-height:1.7;margin:4px 0;padding-left:6px}
+        .proc-step strong{color:var(--text)}
         .input-row{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap;align-items:flex-end}
         .input-group{display:flex;flex-direction:column;gap:4px}
         .input-group label{font-size:.75rem;color:var(--muted)}
@@ -84,6 +99,8 @@
             .q-options{flex-direction:column}
             .input-row{flex-direction:column;align-items:stretch}
             .input-group input{width:100%}
+            .tree-controls{flex-direction:column;align-items:stretch}
+            .tree-controls .input-group input{width:100%}
         }
     </style>
 </head>
@@ -100,6 +117,30 @@
 <section class="section"><div class="container">
     <div class="principle">
         <strong>The pool shrinks.</strong> Every pick removes one from the pool. The next pick has fewer to choose from. The product of the shrinking choices is the count.
+    </div>
+</div></section>
+
+<!-- Tree Visualization (standalone) -->
+<section class="section" id="viz-section"><div class="container">
+    <div class="section-label">See the Web</div>
+    <div class="tree-section">
+        <h3>The Branching</h3>
+        <p>Pick a formula above, then explore how the pool fans out at each round.</p>
+        <div class="tree-controls">
+            <div class="input-group">
+                <label>N (pool)</label>
+                <input type="number" id="tree-n" value="10" min="1" max="50">
+            </div>
+            <div class="input-group">
+                <label>S (draw)</label>
+                <input type="number" id="tree-s" value="3" min="1" max="10">
+            </div>
+            <button id="tree-redraw">Redraw</button>
+        </div>
+        <div class="tree-wrap" id="tree-wrap">
+            <canvas id="tree-canvas"></canvas>
+        </div>
+        <div class="tree-note" id="tree-note">Select a formula in the Blueprint step, then explore here.</div>
     </div>
 </div></section>
 
@@ -153,14 +194,11 @@
         <p id="blueprint-result" class="hidden" style="margin-top:14px;color:var(--accent);font-size:.88rem;font-weight:500"></p>
     </div>
 
-    <!-- Step 2: Process (Round-Spread + Tree) -->
+    <!-- Step 2: Process (pure procedure, no numbers) -->
     <div class="step-content hidden" id="step-2">
-        <h3 id="process-title">Step 2 &mdash; The Round-Spread</h3>
-        <p id="process-desc">Select a formula in Step 1 to see the process.</p>
-        <div class="tree-wrap hidden" id="tree-wrap">
-            <canvas id="tree-canvas"></canvas>
-        </div>
-        <div id="spread-text"></div>
+        <h3 id="process-title">Step 2 &mdash; The Process</h3>
+        <p id="process-desc">Select a formula in Step 1 to see the procedure.</p>
+        <div id="process-body"></div>
     </div>
 
     <!-- Step 3: Data -->
@@ -217,22 +255,22 @@
     <div class="section-label">Formula Reference &mdash; Kap 3</div>
     <div class="formula-ref">
         <div class="formula-ref-header"><span class="formula-ref-name">n!</span><span class="formula-ref-kap">Full drainage</span></div>
-        <div class="formula-ref-eq">n! = n × (n−1) × … × 1</div>
+        <div class="formula-ref-eq">n! = n &times; (n&minus;1) &times; &hellip; &times; 1</div>
         <div class="formula-ref-desc">Every item leaves the pool. nPr and nCr are built from n!.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">nPr — Permutations</span><span class="formula-ref-kap">Ordered</span></div>
-        <div class="formula-ref-eq">nPr = N! / (N−S)! = N × (N−1) × … × (N−S+1)</div>
-        <div class="formula-ref-desc">S items leave. Order matters. The (N−S)! cancels the unused rounds.</div>
+        <div class="formula-ref-header"><span class="formula-ref-name">nPr &mdash; Permutations</span><span class="formula-ref-kap">Ordered</span></div>
+        <div class="formula-ref-eq">nPr = N! / (N&minus;S)! = N &times; (N&minus;1) &times; &hellip; &times; (N&minus;S+1)</div>
+        <div class="formula-ref-desc">S items leave. Order matters. The (N&minus;S)! cancels the unused rounds.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">nCr — Combinations</span><span class="formula-ref-kap">Unordered</span></div>
-        <div class="formula-ref-eq">nCr = N! / (S!(N−S)!) = nPr / S!</div>
-        <div class="formula-ref-desc">Same drainage as nPr, then ÷ S! to strip the costume-count.</div>
+        <div class="formula-ref-header"><span class="formula-ref-name">nCr &mdash; Combinations</span><span class="formula-ref-kap">Unordered</span></div>
+        <div class="formula-ref-eq">nCr = N! / (S!(N&minus;S)!) = nPr / S!</div>
+        <div class="formula-ref-desc">Same drainage as nPr, then &divide; S! to strip the costume-count.</div>
     </div>
     <div class="formula-ref">
         <div class="formula-ref-header"><span class="formula-ref-name">N<sup>S</sup></span><span class="formula-ref-kap">No drainage</span></div>
-        <div class="formula-ref-eq">N<sup>S</sup> = N × N × … (S times)</div>
+        <div class="formula-ref-eq">N<sup>S</sup> = N &times; N &times; &hellip; (S times)</div>
         <div class="formula-ref-desc">Pool refills. Every round has the same N choices.</div>
     </div>
 </div></section>
@@ -280,6 +318,7 @@ function updateGrid(){
         const names={ns:'N\u02E2 \u2014 pool refills, order matters',npr:'nPr \u2014 pool drains, order matters',ncr:'nCr \u2014 pool drains, order collapsed'};
         if(formula){ el.textContent='Formula: '+names[formula]; el.classList.remove('hidden'); el.style.color='var(--accent)'; stepBtns[0].classList.add('done'); }
         else{ el.textContent='Ikke pensum'; el.classList.remove('hidden'); el.style.color='var(--muted)'; }
+        drawTreeViz();
     }
 }
 document.querySelectorAll('#q1-opts .q-opt').forEach(o=>{
@@ -295,172 +334,148 @@ document.querySelectorAll('#q2-opts .q-opt').forEach(o=>{
     });
 });
 
-/* === STEP 2: PROCESS + TREE === */
-function renderProcess(){
-    if(!formula){ document.getElementById('process-desc').textContent='Select a formula in Step 1 first.'; document.getElementById('tree-wrap').classList.add('hidden'); document.getElementById('spread-text').innerHTML=''; return; }
-    const n = N||10, s = S||3;
-    const names={ns:'N\u02E2 (pool refills)',npr:'nPr (ordered drainage)',ncr:'nCr (unordered drainage)'};
-    document.getElementById('process-title').textContent='Step 2 \u2014 '+names[formula];
-    const isDefault = !N;
-    document.getElementById('process-desc').textContent = isDefault ? 'Showing with default N=10, S=3. Enter your own values in Step 3.' : `N=${n}, S=${s}`;
-    drawTree(n, s);
-    buildSpreadText(n, s);
-    document.getElementById('tree-wrap').classList.remove('hidden');
-}
+/* === TREE VISUALIZATION (standalone section) === */
+document.getElementById('tree-redraw').addEventListener('click', drawTreeViz);
 
-function drawTree(n, s){
+function drawTreeViz(){
+    if(!formula) return;
+    const n = parseInt(document.getElementById('tree-n').value)||10;
+    const s = Math.min(parseInt(document.getElementById('tree-s').value)||3, 6);
+
     const wrap = document.getElementById('tree-wrap');
     const canvas = document.getElementById('tree-canvas');
     const dpr = window.devicePixelRatio||1;
-    const cw = wrap.clientWidth - 34;
-    const sVis = Math.min(s, 5);
-    const rowH = 80;
-    const ch = (sVis+1)*rowH + 30;
+    const cw = wrap.clientWidth - 18;
+    const rowH = 75;
+    const ch = (s+1)*rowH + 30;
     canvas.width = cw*dpr; canvas.height = ch*dpr;
     canvas.style.width = cw+'px'; canvas.style.height = ch+'px';
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr,dpr); ctx.clearRect(0,0,cw,ch);
 
     const R = 7;
-    const accent='#a78bfa', muted='#71717a', border='#27272a', green='#22c55e', red='#ef4444', text2='#a1a1aa';
+    const accent='#a78bfa', muted='#71717a', linec='#27272a', green='#22c55e', red='#ef4444', text2='#a1a1aa';
 
-    function poolAt(round){ return formula==='ns' ? n : n-round; }
+    function poolAt(round){ return formula==='ns' ? n : Math.max(n-round,1); }
 
-    // Build node positions level by level
-    // Each level: array of {x, parentX, ellipsis}
-    // Strategy: only expand the leftmost parent at each level to keep it readable
-    // Show up to `show` children per expanded parent
-    const levels = [[{x:cw/2, parentX:null, ellipsis:false}]];
-    const showPerLevel = [Math.min(poolAt(0),6), Math.min(poolAt(1),5), Math.min(poolAt(2),4), Math.min(poolAt(3),3), Math.min(poolAt(4),3)];
-
-    for(let lv=0; lv<sVis; lv++){
+    // Build node tree
+    const levels = [[{x:cw/2, px:null, ell:false}]];
+    for(let lv=0; lv<s; lv++){
         const pool = poolAt(lv);
         const parents = levels[lv];
         const children = [];
-        // We expand up to 2 parents at level 0, 1 parent at deeper levels
-        const expandLimit = lv===0 ? 1 : 1;
         let expanded = 0;
-
         for(const p of parents){
-            if(p.ellipsis) continue;
-            if(expanded >= expandLimit){ continue; }
+            if(p.ell) continue;
+            if(expanded >= 1) continue;
             expanded++;
-
-            const show = showPerLevel[lv]||3;
+            const show = Math.min(pool, lv===0?6:(lv===1?5:4));
             const hasMore = pool > show;
             const totalSlots = show + (hasMore?1:0);
-
-            // Width allocation shrinks with depth
-            const widthFrac = lv===0 ? 0.85 : (lv===1 ? 0.5 : (lv===2 ? 0.35 : 0.25));
+            const widthFrac = lv===0?0.85:(lv===1?0.5:(lv===2?0.35:0.25));
             const totalW = cw * widthFrac;
             const startX = p.x - totalW/2;
             const step = totalW / (totalSlots+1);
-
-            for(let i=0;i<show;i++){
-                children.push({x: startX+step*(i+1), parentX:p.x, ellipsis:false});
-            }
-            if(hasMore){
-                children.push({x: startX+step*(show+1), parentX:p.x, ellipsis:true});
-            }
+            for(let i=0;i<show;i++) children.push({x:startX+step*(i+1), px:p.x, ell:false});
+            if(hasMore) children.push({x:startX+step*(show+1), px:p.x, ell:true});
         }
         levels.push(children);
     }
 
-    // Draw lines + nodes
-    for(let lv=1; lv<=sVis; lv++){
+    // Draw
+    for(let lv=1; lv<=s; lv++){
         const y = 35 + lv*rowH;
         const py = 35 + (lv-1)*rowH;
         for(const nd of levels[lv]){
-            // Line
             ctx.beginPath();
-            ctx.moveTo(nd.parentX, py+R+2);
+            ctx.moveTo(nd.px, py+R+2);
             ctx.lineTo(nd.x, y-R-2);
-            ctx.strokeStyle = border;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-
-            if(nd.ellipsis){
-                ctx.fillStyle = muted;
-                ctx.font = '13px Inter,sans-serif';
-                ctx.textAlign = 'center';
+            ctx.strokeStyle = linec; ctx.lineWidth = 1; ctx.stroke();
+            if(nd.ell){
+                ctx.fillStyle = muted; ctx.font = '13px Inter,sans-serif'; ctx.textAlign = 'center';
                 ctx.fillText('\u22ef', nd.x, y+4);
             } else {
-                ctx.beginPath();
-                ctx.arc(nd.x, y, R, 0, Math.PI*2);
-                ctx.fillStyle = 'rgba(167,139,250,0.1)';
-                ctx.fill();
-                ctx.strokeStyle = accent;
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
+                ctx.beginPath(); ctx.arc(nd.x, y, R, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(167,139,250,0.1)'; ctx.fill();
+                ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
             }
         }
-        // Level label
         const pool = poolAt(lv-1);
-        ctx.fillStyle = text2;
-        ctx.font = '12px Inter,sans-serif';
-        ctx.textAlign = 'right';
+        ctx.fillStyle = text2; ctx.font = '12px Inter,sans-serif'; ctx.textAlign = 'right';
         ctx.fillText('Round '+lv+': '+pool+' choices', cw-4, y+4);
         if(formula!=='ns' && lv>1){
-            ctx.fillStyle = red;
-            ctx.font = '10px Inter,sans-serif';
-            ctx.fillText('pool \u22121', cw-4, y+17);
+            ctx.fillStyle = red; ctx.font = '10px Inter,sans-serif';
+            ctx.fillText('pool \u22121', cw-4, y+16);
         }
     }
 
     // Root
-    ctx.beginPath();
-    ctx.arc(cw/2, 35, R+3, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(167,139,250,0.15)';
-    ctx.fill();
-    ctx.strokeStyle = accent;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.fillStyle = '#fafafa';
-    ctx.font = 'bold 10px Inter,sans-serif';
-    ctx.textAlign = 'center';
+    ctx.beginPath(); ctx.arc(cw/2, 35, R+3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(167,139,250,0.15)'; ctx.fill();
+    ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = '#fafafa'; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center';
     ctx.fillText('Pool: '+n, cw/2, 39);
 
-    // Total line at bottom
-    const totalY = 35 + (sVis+0.7)*rowH;
+    // Total
+    const totalY = 35 + (s+0.7)*rowH;
     let parts=[], total=1;
     for(let i=0;i<s;i++){ const p=poolAt(i); parts.push(p); total*=p; }
-    ctx.fillStyle = green;
-    ctx.font = 'bold 14px Inter,sans-serif';
-    ctx.textAlign = 'center';
+    ctx.fillStyle = green; ctx.font = 'bold 14px Inter,sans-serif'; ctx.textAlign = 'center';
     if(formula==='ncr'){
         ctx.fillText(parts.join(' \u00d7 ')+' = '+fmtBig(total)+' ordered', cw/2, totalY);
         const fact = factorial(s);
-        ctx.fillStyle = text2;
-        ctx.font = '12px Inter,sans-serif';
+        ctx.fillStyle = text2; ctx.font = '12px Inter,sans-serif';
         ctx.fillText('\u00f7 '+s+'! = \u00f7 '+fmtBig(fact)+' = '+fmtBig(total/fact)+' groups', cw/2, totalY+20);
     } else {
         ctx.fillText(parts.join(' \u00d7 ')+' = '+fmtBig(total)+' ways', cw/2, totalY);
     }
+
+    // Update note
+    const names={ns:'N\u02E2',npr:'nPr',ncr:'nCr'};
+    document.getElementById('tree-note').textContent = names[formula]+' with N='+n+', S='+s+' \u2014 adjust above to explore.';
 }
 
-function buildSpreadText(n, s){
-    const box = document.getElementById('spread-text');
-    let html = '';
-    if(formula==='ns'){
-        html = '<div class="derivation"><div class="d-label">No drainage</div>';
-        html += '<div class="d-line">Every round has '+n+' choices. The pool refills after each pick.</div>';
-        html += '<div class="d-line">'+Array(Math.min(s,6)).fill(n).join(' \u00d7 ')+(s>6?' \u00d7 \u2026':'')+' = <strong>'+fmtBig(Math.pow(n,s))+'</strong></div></div>';
-    } else if(formula==='npr'){
-        html = '<div class="derivation"><div class="d-label">The pool shrinks each round</div>';
-        let parts=[];
-        for(let i=0;i<s;i++) parts.push(n-i);
-        html += '<div class="d-line">N!/(N\u2212S)! = '+n+'!/'+((n-s))+'!</div>';
-        html += '<div class="d-line">Cancel the bottom '+(n-s)+' factors. What survives:</div>';
-        html += '<div class="d-line"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(permut(n,s))+'</strong></div></div>';
-    } else if(formula==='ncr'){
-        html = '<div class="derivation"><div class="d-label">Same drainage as nPr, then collapse order</div>';
-        let parts=[];
-        for(let i=0;i<s;i++) parts.push(n-i);
-        html += '<div class="d-line">Drainage rounds: '+parts.join(' \u00d7 ')+' = '+fmtBig(permut(n,s))+' ordered</div>';
-        html += '<div class="d-line">Costume-count: '+s+'! = '+fmtBig(factorial(s))+'</div>';
-        html += '<div class="d-line"><strong>'+fmtBig(permut(n,s))+' \u00f7 '+fmtBig(factorial(s))+' = '+fmtBig(combin(n,s))+' groups</strong></div></div>';
+/* === STEP 2: PROCESS (pure procedure, no numbers) === */
+function renderProcess(){
+    const body = document.getElementById('process-body');
+    if(!formula){
+        document.getElementById('process-desc').textContent = 'Select a formula in Step 1 first.';
+        body.innerHTML = ''; return;
     }
-    box.innerHTML = html;
+    document.getElementById('process-desc').textContent = '';
+
+    if(formula==='npr'){
+        document.getElementById('process-title').textContent = 'Step 2 \u2014 nPr Process';
+        body.innerHTML = '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+            '<div class="proc-step"><strong>1.</strong> Write N! \u2014 the full factorial, every item drains.</div>'+
+            '<div class="proc-step"><strong>2.</strong> Divide by (N\u2212S)! \u2014 cancel the rounds you didn\u2019t use.</div>'+
+            '<div class="proc-step"><strong>3.</strong> What survives: S consecutive factors, each one smaller than the last.</div>'+
+            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">nPr = N! / (N\u2212S)!</div>'+
+            '</div>'+
+            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
+            '<div class="proc-step">Each round picks from a shrinking pool. Round 1 has N choices, round 2 has N\u22121, round 3 has N\u22122, and so on. Multiplying S shrinking rounds gives the ordered count.</div>'+
+            '</div>';
+    } else if(formula==='ncr'){
+        document.getElementById('process-title').textContent = 'Step 2 \u2014 nCr Process';
+        body.innerHTML = '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+            '<div class="proc-step"><strong>1.</strong> Do the nPr process \u2014 S rounds drain from the pool.</div>'+
+            '<div class="proc-step"><strong>2.</strong> Divide by S! \u2014 the costume-count. S items can be ordered S! ways, but order doesn\u2019t matter here.</div>'+
+            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">nCr = N! / (S! \u00d7 (N\u2212S)!) = nPr / S!</div>'+
+            '</div>'+
+            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
+            '<div class="proc-step">nPr counts every arrangement. But if order doesn\u2019t matter, each group of S was counted S! times (once per permutation). Dividing collapses those duplicates into one group.</div>'+
+            '</div>';
+    } else if(formula==='ns'){
+        document.getElementById('process-title').textContent = 'Step 2 \u2014 N\u02E2 Process';
+        body.innerHTML = '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+            '<div class="proc-step"><strong>1.</strong> Every round has N choices. The pool refills after each pick.</div>'+
+            '<div class="proc-step"><strong>2.</strong> Multiply N by itself, S times.</div>'+
+            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">N\u02E2 = N \u00d7 N \u00d7 \u2026 (S times)</div>'+
+            '</div>'+
+            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
+            '<div class="proc-step">No drainage. The pool stays full. Every round is independent with the same N options, so the total is N multiplied S times.</div>'+
+            '</div>';
+    }
 }
 
 /* === STEP 3: DATA === */
@@ -491,10 +506,10 @@ function showResult(){
     if(formula==='ns'){
         value=Math.pow(n,s);
         name='N\u02E2 \u2014 Pool Refills';
-        desc=s+' rounds, each with '+n+' choices. No shrinking.';
-        fStr=n+'\u02E2';
+        desc=s+' rounds, each with '+n+' choices.';
+        fStr=n+'\u02E2 = '+fmtBig(value);
         dHTML='<div class="derivation"><div class="d-label">Computation</div>';
-        dHTML+='<div class="d-line">'+Array(Math.min(s,6)).fill(n).join(' \u00d7 ')+(s>6?' \u00d7 \u2026':'')+'</div>';
+        dHTML+='<div class="d-line">'+Array(Math.min(s,8)).fill(n).join(' \u00d7 ')+(s>8?' \u00d7 \u2026':'')+'</div>';
         dHTML+='<div class="d-line"><strong>= '+fmtBig(value)+'</strong></div></div>';
     } else if(formula==='npr'){
         value=permut(n,s);
@@ -502,11 +517,11 @@ function showResult(){
         desc=s+' items leave a pool of '+n+'. Order matters.';
         let parts=[];
         for(let i=0;i<s;i++) parts.push(n-i);
-        fStr=parts.join(' \u00d7 ');
+        fStr=parts.join(' \u00d7 ')+' = '+fmtBig(value);
         dHTML='<div class="derivation"><div class="d-label">Where each round comes from</div>';
         dHTML+='<div class="d-line">N! / (N\u2212S)! = '+n+'! / '+(n-s)+'!</div>';
         dHTML+='<div class="d-line">Cancel '+(n-s)+'! from bottom. Surviving rounds:</div>';
-        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': '+(n-i)+' choices (pool lost '+i+')</div>';
+        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': <strong>'+(n-i)+'</strong> \u2190 pool lost '+i+'</div>';
         dHTML+='<div class="d-line" style="margin-top:6px"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(value)+'</strong></div></div>';
     } else if(formula==='ncr'){
         const perm=permut(n,s), cost=factorial(s);
@@ -515,15 +530,14 @@ function showResult(){
         desc='Same '+s+' drainage rounds, then \u00f7 '+s+'! to collapse order.';
         let parts=[];
         for(let i=0;i<s;i++) parts.push(n-i);
-        fStr=fmtBig(perm)+' \u00f7 '+fmtBig(cost);
+        fStr=fmtBig(perm)+' \u00f7 '+fmtBig(cost)+' = '+fmtBig(value);
         dHTML='<div class="derivation"><div class="d-label">Drainage (same as nPr)</div>';
-        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': '+(n-i)+' choices</div>';
+        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': <strong>'+(n-i)+'</strong></div>';
         dHTML+='<div class="d-line"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(perm)+' ordered</strong></div></div>';
         dHTML+='<div class="derivation"><div class="d-label">Costume-count</div>';
-        let cp=[];
-        for(let i=s;i>=1;i--) cp.push(i);
+        let cp=[]; for(let i=s;i>=1;i--) cp.push(i);
         dHTML+='<div class="d-line">'+s+'! = '+cp.join(' \u00d7 ')+' = '+fmtBig(cost)+'</div>';
-        dHTML+='<div class="d-line">Each group of '+s+' appeared '+fmtBig(cost)+' times in different orders</div></div>';
+        dHTML+='<div class="d-line">Each group of '+s+' appeared '+fmtBig(cost)+' times in different orders.</div></div>';
         dHTML+='<div class="derivation"><div class="d-label">Result</div>';
         dHTML+='<div class="d-line"><strong>'+fmtBig(perm)+' \u00f7 '+fmtBig(cost)+' = '+fmtBig(value)+' groups</strong></div></div>';
     }
@@ -542,8 +556,7 @@ document.getElementById('btn-reset').addEventListener('click',()=>{
     document.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('active'));
     Object.values(gridCells).forEach(c=>{c.classList.remove('cell-active');c.classList.add('cell-dim');});
     document.getElementById('blueprint-result').classList.add('hidden');
-    document.getElementById('tree-wrap').classList.add('hidden');
-    document.getElementById('spread-text').innerHTML='';
+    document.getElementById('process-body').innerHTML='';
     document.getElementById('derivation-box').innerHTML='';
     ['in-n','in-s'].forEach(id=>document.getElementById(id).value='');
     stepBtns.forEach(b=>b.classList.remove('done'));
