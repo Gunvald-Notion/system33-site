@@ -70,9 +70,14 @@
         .action-btn.secondary:hover{background:rgba(228,228,231,.04)}
         .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
         .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
-        .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+        .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
         .result-box-formula{font-size:.9rem;color:var(--text2);margin-bottom:8px;line-height:1.5}
-        .result-box-value{font-size:1.4rem;font-weight:700}
+        .result-box-value{font-size:1.4rem;font-weight:700;margin-top:12px}
+        .derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2)}
+        .derivation .d-label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+        .derivation .d-line{margin:2px 0}
+        .derivation .d-line strong{color:var(--text);font-weight:600}
+        .derivation .d-source{color:var(--muted);font-size:.78rem;font-style:italic}
         .walk-log{font-size:.85rem;color:var(--text2);line-height:2;font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:-.01em;margin-top:12px}
         .walk-log .log-line{opacity:0;animation:fadeIn .4s ease forwards}
         @keyframes fadeIn{to{opacity:1}}
@@ -104,12 +109,12 @@
     <div class="hero-icon">🏠</div>
     <div class="hero-badge">Galdr Spell &middot; Kap 2 + Kap 4</div>
     <h1>The Probability House</h1>
-    <p>Two forces. Four rooms. One conservation law. Four paths through the same house &mdash; each one a different formula.</p>
+    <p>Two forces. Four rooms. One conservation law. Four paths through the same house &mdash; each one reads different P-values from the same cells.</p>
 </div></section>
 
 <section class="section"><div class="container">
     <div class="principle">
-        <strong>The whole is one.</strong> Probability mass is conserved. The four rooms together always sum to 1. Every formula in Kap 2 + Kap 4 is a path through this house.
+        <strong>Everything starts with P.</strong> P(A), P(B), P(A&cap;B) &mdash; three given values drop into the house. The conservation law fills the rest. Every formula is a different way of reading those P-values from the filled cells.
     </div>
 </div></section>
 
@@ -121,7 +126,7 @@
             <tr>
                 <th class="corner"></th>
                 <th>B</th>
-                <th>ikke-B</th>
+                <th>B&prime;</th>
                 <th>&Sigma; rad</th>
             </tr>
             <tr>
@@ -131,13 +136,13 @@
                 <td id="c-pa" class="cell-label">P(A)</td>
             </tr>
             <tr>
-                <th>ikke-A</th>
+                <th>A&prime;</th>
                 <td id="c-nab" class="cell-label">P(A&prime;&cap;B)</td>
                 <td id="c-nanb" class="cell-label">P(A&prime;&cap;B&prime;)</td>
                 <td id="c-pna" class="cell-label">P(A&prime;)</td>
             </tr>
             <tr>
-                <th>&Sigma; kolonne</th>
+                <th>&Sigma; kol</th>
                 <td id="c-pb" class="cell-label">P(B)</td>
                 <td id="c-pnb" class="cell-label">P(B&prime;)</td>
                 <td id="c-total" class="cell-locked">1</td>
@@ -159,7 +164,7 @@
     <!-- Step 1: Blueprint / Path Selection -->
     <div class="step-content" id="step-1">
         <h3>Step 1 &mdash; Which path are you walking?</h3>
-        <p>The house is always the same. The path determines which rooms you read and in what order. Choose your formula:</p>
+        <p>The house is always the same four rooms. The path determines which P-values you read and in what order. Choose your formula:</p>
         <div class="path-grid" id="path-grid">
             <div class="path-card" data-path="addisjon">
                 <div class="path-card-name">Addisjon</div>
@@ -191,7 +196,7 @@
     <!-- Step 3: Data -->
     <div class="step-content hidden" id="step-3">
         <h3>Step 3 &mdash; Drop the Data</h3>
-        <p>Enter the values given in the problem. The house fills what it can from the conservation law.</p>
+        <p>Enter the three P-values given in the problem. The conservation law fills every other cell.</p>
         <div class="input-row">
             <div class="input-group">
                 <label>P(A)</label>
@@ -218,6 +223,7 @@
     <div class="step-content hidden" id="step-4">
         <h3 id="formula-title">Step 4 &mdash; Formula</h3>
         <p id="formula-desc"></p>
+        <div id="derivation-box"></div>
         <div class="result-box" id="result-box">
             <div class="result-box-name" id="result-name"></div>
             <div class="result-box-formula" id="result-formula"></div>
@@ -234,7 +240,7 @@
 <!-- Formula Reference (bottom) -->
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
     <div class="section-label">Formula Reference &mdash; Kap 2 + Kap 4</div>
-    <p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">The five named formulas from the book. Each one is a readout of the filled house.</p>
+    <p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">The five named formulas from the book. Each one is a way of reading P-values from the filled house.</p>
 
     <div class="formula-ref">
         <div class="formula-ref-header">
@@ -242,39 +248,39 @@
             <span class="formula-ref-kap">Kap 2</span>
         </div>
         <div class="formula-ref-eq">P(A&prime;) = 1 &minus; P(A)</div>
-        <div class="formula-ref-desc">The complement. Read from the &Sigma; rad margin. Already known &mdash; the simplest conservation law readout.</div>
+        <div class="formula-ref-desc">Read from the &Sigma; rad margin. The simplest conservation law readout &mdash; what's left when you subtract P(A) from 1.</div>
     </div>
     <div class="formula-ref">
         <div class="formula-ref-header">
             <span class="formula-ref-name">Addisjon</span>
             <span class="formula-ref-kap">Kap 2</span>
         </div>
-        <div class="formula-ref-eq">P(A &cup; B) = P(A) + P(B) &minus; P(A &cap; B)</div>
-        <div class="formula-ref-desc">The union. Three rooms of the house gathered together. The overlap subtracted because it was counted twice.</div>
+        <div class="formula-ref-eq">P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)</div>
+        <div class="formula-ref-desc">Three rooms gathered. P(A) from the row margin, P(B) from the column margin, P(A&cap;B) subtracted because it was counted in both.</div>
     </div>
     <div class="formula-ref">
         <div class="formula-ref-header">
             <span class="formula-ref-name">Multiplikasjon</span>
             <span class="formula-ref-kap">Kap 4</span>
         </div>
-        <div class="formula-ref-eq">P(A &cap; B) = P(A | B) &middot; P(B)</div>
-        <div class="formula-ref-desc">The barrier formula. Shrink the dome to B, measure A inside, scale back. The intersection rewritten as conditional times margin.</div>
+        <div class="formula-ref-eq">P(A&cap;B) = P(A|B) &middot; P(B)</div>
+        <div class="formula-ref-desc">The barrier. P(A|B) = P(A&cap;B) / P(B) &mdash; shrink the dome to the B-column, measure A's density inside. Multiply back by P(B) to get the intersection.</div>
     </div>
     <div class="formula-ref">
         <div class="formula-ref-header">
             <span class="formula-ref-name">Oppsplitting</span>
             <span class="formula-ref-kap">Kap 4</span>
         </div>
-        <div class="formula-ref-eq">P(B) = P(B|A) &middot; P(A) + P(B|A&prime;) &middot; P(A&prime;)</div>
-        <div class="formula-ref-desc">Total probability. Split the B-column into two lanes weighted by row margins. Used to build P(B) for a Bayes denominator.</div>
+        <div class="formula-ref-eq">P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</div>
+        <div class="formula-ref-desc">Total probability. P(B|A) = P(A&cap;B)/P(A) from the A-lane. P(B|A&prime;) = P(A&prime;&cap;B)/P(A&prime;) from the A&prime;-lane. Each conditional times its row margin, summed.</div>
     </div>
     <div class="formula-ref">
         <div class="formula-ref-header">
             <span class="formula-ref-name">Bayes</span>
             <span class="formula-ref-kap">Kap 4</span>
         </div>
-        <div class="formula-ref-eq">P(A|B) = P(B|A) &middot; P(A) / P(B)</div>
-        <div class="formula-ref-desc">The reversal. You know the forward conditional. Bayes flips the anchor &mdash; same intersection, different denominator.</div>
+        <div class="formula-ref-eq">P(A|B) = P(B|A)&middot;P(A) / P(B)</div>
+        <div class="formula-ref-desc">The reversal. P(B|A) = P(A&cap;B)/P(A). Flip: P(A|B) = P(A&cap;B)/P(B). Same intersection cell, different denominator from the margins.</div>
     </div>
 </div></section>
 
@@ -286,65 +292,150 @@ const PATHS = {
     addisjon: {
         name: 'Addisjon',
         kap: 'Kap 2',
-        hint: 'Three rooms gathered. The overlap subtracted once.',
+        hint: 'Three P-values from the margins. P(A) + P(B) \u2212 P(A\u2229B). The overlap subtracted once.',
         blueprint: ['ab','anb','nab'],
         moves: [
-            { title:'Move 1 \u2014 Take all of A', text:'The A-row holds everything where A fires. Its total is P(A) in the \u03a3 rad margin. This includes both A\u2229B and A\u2229B\u2032.', hl:['ab','anb','pa'] },
-            { title:'Move 2 \u2014 Take all of B', text:'The B-column holds everything where B fires. Its total is P(B) in the \u03a3 kolonne margin. This includes both A\u2229B and A\u2032\u2229B.', hl:['ab','nab','pb'] },
-            { title:'Move 3 \u2014 Subtract the overlap', text:'A\u2229B got counted twice \u2014 once in the A-row, once in the B-column. Subtract it back. P(A\u222aB) = P(A) + P(B) \u2212 P(A\u2229B).', hl:['ab'] }
+            { title:'Move 1 \u2014 Read P(A)', text:'P(A) sits in the \u03a3 rad margin. It\u2019s the total of the A-row: P(A) = P(A\u2229B) + P(A\u2229B\u2032). Everything where A fires.', hl:['ab','anb','pa'] },
+            { title:'Move 2 \u2014 Read P(B)', text:'P(B) sits in the \u03a3 kol margin. It\u2019s the total of the B-column: P(B) = P(A\u2229B) + P(A\u2032\u2229B). Everything where B fires.', hl:['ab','nab','pb'] },
+            { title:'Move 3 \u2014 Subtract P(A\u2229B)', text:'P(A\u2229B) got counted twice \u2014 once inside P(A), once inside P(B). Subtract it back once. P(A\u222aB) = P(A) + P(B) \u2212 P(A\u2229B).', hl:['ab'] }
         ],
         compute: function(S){
             const v = +(S.pa + S.pb - S.pab).toFixed(6);
-            return { name:'Addisjon (Union)', formula:`P(A\u222aB) = ${fmt(S.pa)} + ${fmt(S.pb)} \u2212 ${fmt(S.pab)}`, value:fmt(v), hl:['ab','anb','nab'], desc:'The three rooms where at least one event fires. Read directly from the filled house.' };
+            return {
+                name:'Addisjon \u2014 P(A\u222aB)',
+                derivations: [
+                    { label:'From the house', lines: [
+                        `P(A) = ${fmt(S.pa)}  \u2190 \u03a3 rad margin`,
+                        `P(B) = ${fmt(S.pb)}  \u2190 \u03a3 kol margin`,
+                        `P(A\u2229B) = ${fmt(S.pab)}  \u2190 top-left cell`
+                    ]},
+                    { label:'Formula', lines: [
+                        `P(A\u222aB) = P(A) + P(B) \u2212 P(A\u2229B)`,
+                        `P(A\u222aB) = ${fmt(S.pa)} + ${fmt(S.pb)} \u2212 ${fmt(S.pab)}`,
+                        `P(A\u222aB) = ${fmt(v)}`
+                    ]}
+                ],
+                formula: `P(A\u222aB) = ${fmt(S.pa)} + ${fmt(S.pb)} \u2212 ${fmt(S.pab)}`,
+                value: fmt(v),
+                hl:['ab','anb','nab'],
+                desc:'Three rooms of the house where at least one event fires. All P-values read directly from the margins and one cell.'
+            };
         }
     },
     multiplikasjon: {
         name: 'Multiplikasjon',
         kap: 'Kap 4',
-        hint: 'The barrier. Shrink the dome to B, measure A inside, scale back.',
+        hint: 'The barrier. Shrink the dome to P(B), measure P(A) inside it.',
         blueprint: ['ab','nab','pb'],
         moves: [
-            { title:'Move 1 \u2014 Shrink the dome to B', text:'The full house has four rooms summing to 1. Condition on B: collapse to the B-column only. The B-column becomes your new dome. Its total is P(B).', hl:['ab','nab','pb'] },
-            { title:'Move 2 \u2014 Measure A inside B', text:'Inside the B-column, find the A\u2229B room. Its density relative to the new dome is P(A\u2229B) / P(B). That\u2019s P(A|B) \u2014 the conditional.', hl:['ab'] },
-            { title:'Move 3 \u2014 Read the intersection', text:'Rearrange: P(A\u2229B) = P(A|B) \u00b7 P(B). The intersection is the conditional times the margin. The barrier formula.', hl:['ab','pb'] }
+            { title:'Move 1 \u2014 Shrink the dome to B', text:'The full house sums to 1. Condition on B: the B-column becomes the new dome. Its total P(B) sits in the \u03a3 kol margin.', hl:['ab','nab','pb'] },
+            { title:'Move 2 \u2014 Measure P(A|B)', text:'Inside the B-column, find P(A\u2229B) in the top cell. Divide by the column total: P(A|B) = P(A\u2229B) / P(B). That\u2019s the conditional \u2014 A\u2019s density inside the smaller dome.', hl:['ab','pb'] },
+            { title:'Move 3 \u2014 The barrier formula', text:'Rearrange: P(A\u2229B) = P(A|B) \u00b7 P(B). The intersection is the conditional times the margin. Every P-value traces back to two cells of the house.', hl:['ab','pb'] }
         ],
         compute: function(S){
             const pagb = S.pb > 0 ? +(S.pab / S.pb).toFixed(6) : 0;
-            return { name:'Multiplikasjon (Barrier)', formula:`P(A\u2229B) = P(A|B) \u00b7 P(B) = ${fmt(pagb)} \u00b7 ${fmt(S.pb)}`, value:fmt(S.pab), hl:['ab','pb'], desc:'The dome shrank to B. A\u2019s density inside that smaller dome, scaled back to the full house. P(A|B) = '+fmt(pagb) };
+            return {
+                name:'Multiplikasjon \u2014 P(A\u2229B)',
+                derivations: [
+                    { label:'Where does P(A|B) come from?', lines: [
+                        `P(A\u2229B) = ${fmt(S.pab)}  \u2190 top-left cell`,
+                        `P(B) = ${fmt(S.pb)}  \u2190 \u03a3 kol margin`,
+                        `P(A|B) = P(A\u2229B) / P(B) = ${fmt(S.pab)} / ${fmt(S.pb)} = ${fmt(pagb)}`
+                    ]},
+                    { label:'Check: multiply back', lines: [
+                        `P(A\u2229B) = P(A|B) \u00b7 P(B)  = ${fmt(pagb)} \u00b7 ${fmt(S.pb)} = ${fmt(S.pab)}`
+                    ]}
+                ],
+                formula: `P(A|B) = P(A\u2229B) / P(B) = ${fmt(S.pab)} / ${fmt(S.pb)}`,
+                value: fmt(pagb),
+                hl:['ab','pb'],
+                desc:`The dome shrank to the B-column. P(A\u2229B) = ${fmt(S.pab)} from the top-left cell, divided by P(B) = ${fmt(S.pb)} from the column margin.`
+            };
         }
     },
     oppsplitting: {
         name: 'Oppsplitting',
         kap: 'Kap 4',
-        hint: 'Split the B-column into two lanes. Weight each by its row margin.',
+        hint: 'Split the B-column into two lanes. Each conditional comes from dividing a cell by its row margin.',
         blueprint: ['ab','nab','pb'],
         moves: [
-            { title:'Move 1 \u2014 See the B-column as two lanes', text:'The B-column has two rooms: A\u2229B (top) and A\u2032\u2229B (bottom). Together they sum to P(B) \u2014 the column total.', hl:['ab','nab'] },
-            { title:'Move 2 \u2014 Rewrite each lane', text:'A\u2229B = P(B|A) \u00b7 P(A) \u2014 the conditional times the row margin. A\u2032\u2229B = P(B|A\u2032) \u00b7 P(A\u2032) \u2014 same logic, other row.', hl:['ab','pa','nab','pna'] },
-            { title:'Move 3 \u2014 Sum the two lanes', text:'P(B) = P(B|A)\u00b7P(A) + P(B|A\u2032)\u00b7P(A\u2032). Two channels weighted by their lane widths. This is how you build P(B) when the problem only gives you conditionals.', hl:['pb'] }
+            { title:'Move 1 \u2014 The B-column has two rooms', text:'P(A\u2229B) in the top cell, P(A\u2032\u2229B) in the bottom cell. Together they sum to P(B) in the column margin.', hl:['ab','nab'] },
+            { title:'Move 2 \u2014 Rewrite each room as a conditional \u00d7 margin', text:'Top room: P(A\u2229B) = P(B|A) \u00b7 P(A). The conditional P(B|A) = P(A\u2229B) / P(A) \u2014 that\u2019s the cell divided by its row margin. Bottom room: P(A\u2032\u2229B) = P(B|A\u2032) \u00b7 P(A\u2032) \u2014 same logic, other row.', hl:['ab','pa','nab','pna'] },
+            { title:'Move 3 \u2014 Sum the two lanes', text:'P(B) = P(B|A)\u00b7P(A) + P(B|A\u2032)\u00b7P(A\u2032). Two channels weighted by their lane widths. Used to build P(B) when the problem only gives you conditionals.', hl:['pb'] }
         ],
         compute: function(S){
-            const pbga = S.pa > 0 ? +(S.pab / S.pa).toFixed(6) : 0;
             const nab = +(S.pb - S.pab).toFixed(6);
             const pna = +(1 - S.pa).toFixed(6);
+            const pbga = S.pa > 0 ? +(S.pab / S.pa).toFixed(6) : 0;
             const pbgna = pna > 0 ? +(nab / pna).toFixed(6) : 0;
-            return { name:'Oppsplitting (Total Probability)', formula:`P(B) = ${fmt(pbga)}\u00b7${fmt(S.pa)} + ${fmt(pbgna)}\u00b7${fmt(pna)}`, value:fmt(S.pb), hl:['ab','nab','pb'], desc:`Two lanes: P(B|A)=${fmt(pbga)} through the A-lane (width ${fmt(S.pa)}), P(B|A\u2032)=${fmt(pbgna)} through the A\u2032-lane (width ${fmt(pna)}).` };
+            const lane1 = +(pbga * S.pa).toFixed(6);
+            const lane2 = +(pbgna * pna).toFixed(6);
+            return {
+                name:'Oppsplitting \u2014 P(B)',
+                derivations: [
+                    { label:'Where does P(B|A) come from?', lines: [
+                        `P(A\u2229B) = ${fmt(S.pab)}  \u2190 top-left cell`,
+                        `P(A) = ${fmt(S.pa)}  \u2190 \u03a3 rad margin`,
+                        `P(B|A) = P(A\u2229B) / P(A) = ${fmt(S.pab)} / ${fmt(S.pa)} = ${fmt(pbga)}`
+                    ]},
+                    { label:'Where does P(B|A\u2032) come from?', lines: [
+                        `P(A\u2032\u2229B) = ${fmt(nab)}  \u2190 bottom-left cell`,
+                        `P(A\u2032) = ${fmt(pna)}  \u2190 \u03a3 rad margin`,
+                        `P(B|A\u2032) = P(A\u2032\u2229B) / P(A\u2032) = ${fmt(nab)} / ${fmt(pna)} = ${fmt(pbgna)}`
+                    ]},
+                    { label:'Sum the two lanes', lines: [
+                        `P(B) = P(B|A)\u00b7P(A) + P(B|A\u2032)\u00b7P(A\u2032)`,
+                        `P(B) = ${fmt(pbga)} \u00b7 ${fmt(S.pa)} + ${fmt(pbgna)} \u00b7 ${fmt(pna)}`,
+                        `P(B) = ${fmt(lane1)} + ${fmt(lane2)} = ${fmt(S.pb)}`
+                    ]}
+                ],
+                formula: `P(B) = ${fmt(pbga)}\u00b7${fmt(S.pa)} + ${fmt(pbgna)}\u00b7${fmt(pna)}`,
+                value: fmt(S.pb),
+                hl:['ab','nab','pb','pa','pna'],
+                desc:'Every conditional traced back to its source: a cell divided by its row margin.'
+            };
         }
     },
     bayes: {
         name: 'Bayes',
         kap: 'Kap 4',
-        hint: 'Same intersection, flip the anchor. Forward to reverse.',
+        hint: 'Same P(A\u2229B) cell, flip the denominator. Forward to reverse.',
         blueprint: ['ab','pa','pb'],
         moves: [
-            { title:'Move 1 \u2014 The forward conditional', text:'You know P(B|A): dome is the A-row, measure B inside it. P(B|A) = P(A\u2229B) / P(A).', hl:['ab','pa'] },
-            { title:'Move 2 \u2014 Flip the anchor', text:'You need P(A|B): dome flips to the B-column. Same intersection room (A\u2229B), but now the denominator is P(B) instead of P(A).', hl:['ab','pb'] },
-            { title:'Move 3 \u2014 The Bayes formula', text:'P(A|B) = P(B|A) \u00b7 P(A) / P(B). Same numerator rewritten: the intersection expressed through the forward conditional. If P(B) isn\u2019t given, use oppsplitting to build it.', hl:['ab','pa','pb'] }
+            { title:'Move 1 \u2014 The forward conditional P(B|A)', text:'Dome is the A-row. P(B|A) = P(A\u2229B) / P(A). That\u2019s the top-left cell divided by the A-row margin. You read two P-values from the house.', hl:['ab','pa'] },
+            { title:'Move 2 \u2014 Flip the anchor', text:'Now you need P(A|B). Dome flips to the B-column. Same intersection cell P(A\u2229B), but the denominator is now P(B) from the column margin instead of P(A) from the row margin.', hl:['ab','pb'] },
+            { title:'Move 3 \u2014 The Bayes formula', text:'P(A|B) = P(B|A) \u00b7 P(A) / P(B). The numerator is P(A\u2229B) rewritten as P(B|A)\u00b7P(A). The denominator is P(B). Every piece is a P-value from the house.', hl:['ab','pa','pb'] }
         ],
         compute: function(S){
+            const nab = +(S.pb - S.pab).toFixed(6);
+            const pna = +(1 - S.pa).toFixed(6);
             const pbga = S.pa > 0 ? +(S.pab / S.pa).toFixed(6) : 0;
+            const pbgna = pna > 0 ? +(nab / pna).toFixed(6) : 0;
             const pagb = S.pb > 0 ? +(S.pab / S.pb).toFixed(6) : 0;
-            return { name:'Bayes (Reversal)', formula:`P(A|B) = P(B|A)\u00b7P(A) / P(B) = ${fmt(pbga)}\u00b7${fmt(S.pa)} / ${fmt(S.pb)}`, value:fmt(pagb), hl:['ab','pa','pb'], desc:`Forward: P(B|A) = ${fmt(pbga)} (dome = A-row). Reverse: P(A|B) = ${fmt(pagb)} (dome = B-column). Same room, different frame.` };
+            return {
+                name:'Bayes \u2014 P(A|B)',
+                derivations: [
+                    { label:'Forward: where does P(B|A) come from?', lines: [
+                        `P(A\u2229B) = ${fmt(S.pab)}  \u2190 top-left cell`,
+                        `P(A) = ${fmt(S.pa)}  \u2190 \u03a3 rad margin`,
+                        `P(B|A) = P(A\u2229B) / P(A) = ${fmt(S.pab)} / ${fmt(S.pa)} = ${fmt(pbga)}`
+                    ]},
+                    { label:'Reverse: flip the denominator', lines: [
+                        `P(A\u2229B) = ${fmt(S.pab)}  \u2190 same cell`,
+                        `P(B) = ${fmt(S.pb)}  \u2190 \u03a3 kol margin`,
+                        `P(A|B) = P(A\u2229B) / P(B) = ${fmt(S.pab)} / ${fmt(S.pb)} = ${fmt(pagb)}`
+                    ]},
+                    { label:'Bayes connects them', lines: [
+                        `P(A|B) = P(B|A) \u00b7 P(A) / P(B)`,
+                        `P(A|B) = ${fmt(pbga)} \u00b7 ${fmt(S.pa)} / ${fmt(S.pb)}`,
+                        `P(A|B) = ${fmt(S.pab)} / ${fmt(S.pb)} = ${fmt(pagb)}`
+                    ]}
+                ],
+                formula: `P(A|B) = P(B|A)\u00b7P(A) / P(B) = ${fmt(pbga)}\u00b7${fmt(S.pa)} / ${fmt(S.pb)}`,
+                value: fmt(pagb),
+                hl:['ab','pa','pb'],
+                desc:`Forward: P(B|A) = ${fmt(pbga)} (cell / row margin). Reverse: P(A|B) = ${fmt(pagb)} (same cell / column margin). Same P(A\u2229B), different P in the denominator.`
+            };
         }
     }
 };
@@ -477,7 +568,6 @@ function dropData(pa, pb, pab){
     fillHouse();
     stepBtns[2].classList.add('done');
 
-    // Log the derivations
     const log = document.getElementById('walk-log');
     const panb = +(pa-pab).toFixed(6);
     const nab = +(pb-pab).toFixed(6);
@@ -485,11 +575,11 @@ function dropData(pa, pb, pab){
     const pnb = +(1-pb).toFixed(6);
     const nanb = +(pna-nab).toFixed(6);
     log.innerHTML = [
-        `P(A\u2229B') = ${fmt(pa)} \u2212 ${fmt(pab)} = ${fmt(panb)}`,
-        `P(A'\u2229B) = ${fmt(pb)} \u2212 ${fmt(pab)} = ${fmt(nab)}`,
-        `P(A') = 1 \u2212 ${fmt(pa)} = ${fmt(pna)}`,
-        `P(B') = 1 \u2212 ${fmt(pb)} = ${fmt(pnb)}`,
-        `P(A'\u2229B') = ${fmt(pna)} \u2212 ${fmt(nab)} = ${fmt(nanb)}`
+        `P(A\u2229B') = P(A) \u2212 P(A\u2229B) = ${fmt(pa)} \u2212 ${fmt(pab)} = ${fmt(panb)}`,
+        `P(A'\u2229B) = P(B) \u2212 P(A\u2229B) = ${fmt(pb)} \u2212 ${fmt(pab)} = ${fmt(nab)}`,
+        `P(A') = 1 \u2212 P(A) = 1 \u2212 ${fmt(pa)} = ${fmt(pna)}`,
+        `P(B') = 1 \u2212 P(B) = 1 \u2212 ${fmt(pb)} = ${fmt(pnb)}`,
+        `P(A'\u2229B') = P(A') \u2212 P(A'\u2229B) = ${fmt(pna)} \u2212 ${fmt(nab)} = ${fmt(nanb)}`
     ].map(t => `<div class="log-line" style="animation-delay:0s">${t}</div>`).join('');
 }
 
@@ -520,12 +610,21 @@ document.getElementById('btn-random').addEventListener('click', () => {
 });
 
 /* === FORMULA RESULT (Step 4) === */
+function renderDerivations(derivs){
+    const box = document.getElementById('derivation-box');
+    box.innerHTML = derivs.map(d => {
+        const lines = d.lines.map(l => `<div class="d-line">${l}</div>`).join('');
+        return `<div class="derivation"><div class="d-label">${d.label}</div>${lines}</div>`;
+    }).join('');
+}
+
 function showResult(){
     if(!activePath || !S.solved) return;
     const path = PATHS[activePath];
     const r = path.compute(S);
     document.getElementById('formula-title').textContent = `Step 4 \u2014 ${path.name}`;
     document.getElementById('formula-desc').textContent = r.desc;
+    renderDerivations(r.derivations);
     document.getElementById('result-name').textContent = r.name;
     document.getElementById('result-formula').textContent = r.formula;
     document.getElementById('result-value').textContent = r.value;
@@ -542,6 +641,7 @@ document.getElementById('btn-reset').addEventListener('click', () => {
     showLabels();
     clearHL();
     document.getElementById('walk-log').innerHTML = '';
+    document.getElementById('derivation-box').innerHTML = '';
     ['in-pa','in-pb','in-pab'].forEach(id => document.getElementById(id).value = '');
     stepBtns.forEach(b => b.classList.remove('done'));
     pathCards.forEach(c => c.classList.remove('active'));
