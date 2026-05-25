@@ -61,16 +61,10 @@
         .proc-block .proc-title{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
         .proc-step{font-size:.88rem;color:var(--text2);line-height:1.7;margin:4px 0;padding-left:6px}
         .proc-step strong{color:var(--text)}
-        .input-row{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap;align-items:flex-end}
-        .input-group{display:flex;flex-direction:column;gap:4px}
-        .input-group label{font-size:.75rem;color:var(--muted)}
-        .input-group input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:.9rem;color:var(--text);width:100px;text-align:center;transition:border-color .2s}
-        .input-group input:focus{outline:none;border-color:var(--accent)}
-        .action-btn{background:var(--text);color:var(--bg);border:none;border-radius:10px;padding:12px 20px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:opacity .2s}
-        .action-btn:hover{opacity:.85}
-        .action-btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
-        .action-btn.secondary:hover{background:rgba(228,228,231,.04)}
-        .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+        .data-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin:14px 0;display:flex;gap:32px;align-items:center;flex-wrap:wrap}
+        .data-item{text-align:center}
+        .data-item .data-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+        .data-item .data-value{font-size:1.5rem;font-weight:700;color:var(--accent)}
         .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
         .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
         .result-box-formula{font-size:.9rem;color:var(--text2);margin-bottom:8px;line-height:1.5}
@@ -90,8 +84,7 @@
         @media(max-width:520px){
             .hero{padding:32px 0 20px}
             .q-options{flex-direction:column}
-            .input-row{flex-direction:column;align-items:stretch}
-            .input-group input{width:100%}
+            .data-card{gap:20px}
         }
     </style>
 </head>
@@ -111,16 +104,16 @@
     </div>
 </div></section>
 
-<!-- Tree Visualization (standalone, reads Step 3 data) -->
+<!-- Tree Visualization -->
 <section class="section" id="viz-section"><div class="container">
     <div class="section-label">See the Web</div>
     <div class="tree-section">
         <h3>The Branching</h3>
-        <p id="tree-intro">Pick a formula in Step 1 and drop data in Step 3 to see the web.</p>
+        <p id="tree-intro">Pick a formula in Step 1 to see how the pool fans out.</p>
         <div class="tree-wrap" id="tree-wrap">
             <canvas id="tree-canvas"></canvas>
         </div>
-        <div class="tree-note" id="tree-note"></div>
+        <div class="tree-note" id="tree-note">N = 10, S = 3</div>
     </div>
 </div></section>
 
@@ -181,32 +174,29 @@
         <div id="process-body"></div>
     </div>
 
-    <!-- Step 3: Data -->
+    <!-- Step 3: Data (fixed N=10, S=3) -->
     <div class="step-content hidden" id="step-3">
-        <h3>Step 3 &mdash; Drop the Data</h3>
-        <p>Find N (pool) and S (draw) in the problem.</p>
-        <div class="input-row">
-            <div class="input-group">
-                <label>N (pool size)</label>
-                <input type="number" id="in-n" step="1" min="1" max="170" placeholder="10">
+        <h3>Step 3 &mdash; The Data</h3>
+        <p>A pool of 10 items. Draw 3.</p>
+        <div class="data-card">
+            <div class="data-item">
+                <div class="data-label">N (pool)</div>
+                <div class="data-value">10</div>
             </div>
-            <div class="input-group">
-                <label>S (draw size)</label>
-                <input type="number" id="in-s" step="1" min="1" max="170" placeholder="3">
+            <div class="data-item">
+                <div class="data-label">S (draw)</div>
+                <div class="data-value">3</div>
             </div>
         </div>
-        <div class="btn-row">
-            <button class="action-btn" id="btn-drop">Drop data</button>
-            <button class="action-btn secondary" id="btn-example">Example (N=10, S=3)</button>
-        </div>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:8px">N = 10, S = 3 &mdash; fixed example for this walkthrough.</p>
     </div>
 
     <!-- Step 4: Formula -->
     <div class="step-content hidden" id="step-4">
         <h3 id="formula-title">Step 4 &mdash; Walk the Rounds</h3>
-        <p id="formula-desc"></p>
+        <p id="formula-desc">Select a formula in Step 1 first.</p>
         <div id="derivation-box"></div>
-        <div class="result-box" id="result-box">
+        <div class="result-box hidden" id="result-box">
             <div class="result-box-name" id="result-name"></div>
             <div class="result-box-formula" id="result-formula"></div>
             <div class="result-box-value" id="result-value"></div>
@@ -258,9 +248,10 @@
 <footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 
 <script>
-/* === STATE === */
+/* === FIXED DATA === */
+const N = 10, S = 3;
+
 let q1 = null, q2 = null, formula = null;
-let N = null, S = null, solved = false;
 
 function factorial(n){ let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
 function permut(n,s){ let r=1; for(let i=0;i<s;i++) r*=(n-i); return r; }
@@ -280,7 +271,7 @@ function showStep(n){
     stepEls.forEach(s => s.classList.add('hidden'));
     stepEls[n-1].classList.remove('hidden');
     if(n===2) renderProcess();
-    if(n===4 && solved) showResult();
+    if(n===4) showResult();
 }
 stepBtns.forEach(b => b.addEventListener('click', () => showStep(parseInt(b.dataset.step))));
 
@@ -314,19 +305,12 @@ document.querySelectorAll('#q2-opts .q-opt').forEach(o=>{
     });
 });
 
-/* === TREE VISUALIZATION ===
-   Reads N/S from Step 3 state. Defaults to 10/3.
-   Layout: layered rows. Each level is a centered row of circles.
-   Lines fan from ONE highlighted node per level to all nodes in the next level.
-   Row width shrinks per level to show pool drainage. */
+/* === TREE VISUALIZATION === */
 function drawTreeViz(){
     if(!formula) return;
-    const n = N || 10;
-    const s = Math.min(S || 3, 6);
 
-    const names={ns:'N\u02E2',npr:'nPr',ncr:'nCr'};
-    document.getElementById('tree-intro').textContent = names[formula]+' \u2014 N='+n+', S='+s;
-    document.getElementById('tree-note').textContent = 'Drop data in Step 3 to update.';
+    const names={ns:'N\u02E2 \u2014 pool stays full',npr:'nPr \u2014 pool drains',ncr:'nCr \u2014 pool drains, then collapse order'};
+    document.getElementById('tree-intro').textContent = names[formula];
 
     const wrap = document.getElementById('tree-wrap');
     const canvas = document.getElementById('tree-canvas');
@@ -334,7 +318,7 @@ function drawTreeViz(){
     const cw = wrap.clientWidth - 18;
     const rowH = 80;
     const topPad = 40;
-    const ch = topPad + s * rowH + 60;
+    const ch = topPad + S * rowH + 60;
     canvas.width = cw * dpr;
     canvas.height = ch * dpr;
     canvas.style.width = cw + 'px';
@@ -353,14 +337,14 @@ function drawTreeViz(){
     const green = '#22c55e';
     const red = '#ef4444';
     const text2 = '#a1a1aa';
-    const cx = cw / 2;
+    const midX = cw / 2;
 
-    function poolAt(round){ return formula === 'ns' ? n : Math.max(n - round, 1); }
+    function poolAt(round){ return formula === 'ns' ? N : N - round; }
 
     // Root node
     const rootY = topPad;
     ctx.beginPath();
-    ctx.arc(cx, rootY, R + 4, 0, Math.PI * 2);
+    ctx.arc(midX, rootY, R + 4, 0, Math.PI * 2);
     ctx.fillStyle = accentHi;
     ctx.fill();
     ctx.strokeStyle = accent;
@@ -370,48 +354,40 @@ function drawTreeViz(){
     ctx.font = 'bold 10px Inter,sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(n.toString(), cx, rootY);
+    ctx.fillText(N.toString(), midX, rootY);
 
-    // Label
     ctx.fillStyle = muted;
     ctx.font = '10px Inter,sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('Pool: ' + n, cx + R + 10, rootY);
+    ctx.fillText('Pool: ' + N, midX + R + 10, rootY);
 
-    // For each round, draw a row of circles
-    // Track the "highlighted" node (first node) at each level for fan lines
-    let prevHighlightX = cx;
+    let prevHiX = midX;
     let prevY = rootY;
 
-    for (let lv = 0; lv < s; lv++) {
+    for (let lv = 0; lv < S; lv++) {
         const pool = poolAt(lv);
         const y = topPad + (lv + 1) * rowH;
 
-        // How many dots to show (cap for readability)
-        const maxDots = Math.min(pool, 12);
-        const hasMore = pool > maxDots;
-        const totalShown = maxDots + (hasMore ? 1 : 0); // +1 for "..." indicator
+        // Row width shrinks to show drainage
+        const baseFrac = 0.88;
+        const frac = formula === 'ns' ? baseFrac : baseFrac * (pool / N);
+        const rowW = Math.max(cw * frac, 80);
+        const startX = midX - rowW / 2;
+        const spacing = rowW / (pool + 1);
 
-        // Row width: shrinks proportionally to pool shrinkage (visual drainage)
-        const baseFrac = 0.9;
-        const frac = formula === 'ns' ? baseFrac : baseFrac * (pool / n);
-        const rowW = Math.max(cw * frac, 100);
-        const startX = cx - rowW / 2;
-        const spacing = rowW / (maxDots + 1);
-
-        // Draw fan lines from previous highlighted node to each dot in this row
-        for (let i = 0; i < maxDots; i++) {
+        // Fan lines from previous highlighted node
+        for (let i = 0; i < pool; i++) {
             const dotX = startX + spacing * (i + 1);
             ctx.beginPath();
-            ctx.moveTo(prevHighlightX, prevY + R + 2);
+            ctx.moveTo(prevHiX, prevY + R + 2);
             ctx.lineTo(dotX, y - R - 1);
             ctx.strokeStyle = i === 0 ? lineHi : linec;
-            ctx.lineWidth = i === 0 ? 1.5 : 0.7;
+            ctx.lineWidth = i === 0 ? 1.5 : 0.6;
             ctx.stroke();
         }
 
         // Draw dots
-        for (let i = 0; i < maxDots; i++) {
+        for (let i = 0; i < pool; i++) {
             const dotX = startX + spacing * (i + 1);
             ctx.beginPath();
             ctx.arc(dotX, y, R, 0, Math.PI * 2);
@@ -422,54 +398,41 @@ function drawTreeViz(){
             ctx.stroke();
         }
 
-        // "..." if truncated
-        if (hasMore) {
-            const ellX = startX + spacing * (maxDots + 1);
-            ctx.fillStyle = muted;
-            ctx.font = '12px Inter,sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('\u22ef', ellX, y);
-        }
-
         // Right label
         ctx.fillStyle = text2;
         ctx.font = '11px Inter,sans-serif';
         ctx.textAlign = 'right';
         ctx.textBaseline = 'middle';
         ctx.fillText('Round ' + (lv + 1) + ': ' + pool, cw - 4, y);
-
-        // Shrinkage indicator
         if (formula !== 'ns' && lv > 0) {
             ctx.fillStyle = red;
             ctx.font = '9px Inter,sans-serif';
             ctx.fillText('\u22121', cw - 4, y + 13);
         }
 
-        // Update highlight for next level
-        prevHighlightX = startX + spacing;
+        prevHiX = startX + spacing;
         prevY = y;
     }
 
     // Total at bottom
-    const totalY = topPad + s * rowH + 40;
+    const totalY = topPad + S * rowH + 40;
     let parts = [], total = 1;
-    for (let i = 0; i < (S || 3); i++) { const p = poolAt(i); parts.push(p); total *= p; }
+    for (let i = 0; i < S; i++) { const p = poolAt(i); parts.push(p); total *= p; }
 
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
     if (formula === 'ncr') {
         ctx.fillStyle = green;
         ctx.font = 'bold 13px Inter,sans-serif';
-        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + '  ordered', cx, totalY - 10);
-        const fact = factorial(S || 3);
+        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + '  ordered', midX, totalY - 10);
+        const fact = factorial(S);
         ctx.fillStyle = text2;
         ctx.font = '12px Inter,sans-serif';
-        ctx.fillText('\u00f7 ' + (S||3) + '! = \u00f7 ' + fmtBig(fact) + ' = ' + fmtBig(total / fact) + ' groups', cx, totalY + 10);
+        ctx.fillText('\u00f7 ' + S + '! = \u00f7 ' + fmtBig(fact) + ' = ' + fmtBig(total / fact) + ' groups', midX, totalY + 10);
     } else {
         ctx.fillStyle = green;
         ctx.font = 'bold 13px Inter,sans-serif';
-        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + ' ways', cx, totalY);
+        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + ' ways', midX, totalY);
     }
 }
 
@@ -516,30 +479,17 @@ function renderProcess(){
     }
 }
 
-/* === STEP 3: DATA === */
-function dropData(n, s){
-    if(n<1||s<1) return;
-    if(formula!=='ns' && s>n) return;
-    N=n; S=s; solved=true;
-    stepBtns[2].classList.add('done');
-    drawTreeViz(); // Redraw tree with new data
-}
-document.getElementById('btn-drop').addEventListener('click',()=>{
-    const n=parseInt(document.getElementById('in-n').value);
-    const s=parseInt(document.getElementById('in-s').value);
-    if(!isNaN(n)&&!isNaN(s)&&formula) dropData(n,s);
-});
-document.getElementById('btn-example').addEventListener('click',()=>{
-    document.getElementById('in-n').value='10';
-    document.getElementById('in-s').value='3';
-    if(formula) dropData(10,3);
-});
-
-/* === STEP 4: RESULT === */
+/* === STEP 4: RESULT (always N=10, S=3) === */
 function showResult(){
-    if(!formula||!solved) return;
+    if(!formula){
+        document.getElementById('formula-desc').textContent = 'Select a formula in Step 1 first.';
+        document.getElementById('derivation-box').innerHTML = '';
+        document.getElementById('result-box').classList.add('hidden');
+        return;
+    }
     const n=N, s=S;
     const dbox = document.getElementById('derivation-box');
+    const rbox = document.getElementById('result-box');
     let dHTML='', name='', fStr='', value=0, desc='';
 
     if(formula==='ns'){
@@ -548,7 +498,7 @@ function showResult(){
         desc=s+' rounds, each with '+n+' choices.';
         fStr=n+'\u02E2 = '+fmtBig(value);
         dHTML='<div class="derivation"><div class="d-label">Computation</div>';
-        dHTML+='<div class="d-line">'+Array(Math.min(s,8)).fill(n).join(' \u00d7 ')+(s>8?' \u00d7 \u2026':'')+'</div>';
+        dHTML+='<div class="d-line">'+Array(s).fill(n).join(' \u00d7 ')+'</div>';
         dHTML+='<div class="d-line"><strong>= '+fmtBig(value)+'</strong></div></div>';
     } else if(formula==='npr'){
         value=permut(n,s);
@@ -586,24 +536,26 @@ function showResult(){
     document.getElementById('result-name').textContent=name;
     document.getElementById('result-formula').textContent=fStr;
     document.getElementById('result-value').textContent=fmtBig(value);
+    rbox.classList.remove('hidden');
     stepBtns[3].classList.add('done');
+    stepBtns[2].classList.add('done');
 }
 
 /* === RESET === */
 document.getElementById('btn-reset').addEventListener('click',()=>{
-    q1=null;q2=null;formula=null;N=null;S=null;solved=false;
+    q1=null;q2=null;formula=null;
     document.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('active'));
     Object.values(gridCells).forEach(c=>{c.classList.remove('cell-active');c.classList.add('cell-dim');});
     document.getElementById('blueprint-result').classList.add('hidden');
     document.getElementById('process-body').innerHTML='';
     document.getElementById('derivation-box').innerHTML='';
-    document.getElementById('tree-intro').textContent='Pick a formula in Step 1 and drop data in Step 3 to see the web.';
-    document.getElementById('tree-note').textContent='';
-    ['in-n','in-s'].forEach(id=>document.getElementById(id).value='');
-    stepBtns.forEach(b=>b.classList.remove('done'));
+    document.getElementById('result-box').classList.add('hidden');
+    document.getElementById('tree-intro').textContent='Pick a formula in Step 1 to see how the pool fans out.';
     const canvas=document.getElementById('tree-canvas');
     const ctx=canvas.getContext('2d');
+    ctx.setTransform(1,0,0,1,0,0);
     ctx.clearRect(0,0,canvas.width,canvas.height);
+    stepBtns.forEach(b=>b.classList.remove('done'));
     showStep(1);
 });
 
