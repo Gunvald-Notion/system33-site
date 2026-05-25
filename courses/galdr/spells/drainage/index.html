@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⛓️ Drainage — Galdr Spell | System 33</title>
+    <meta name="description" content="Interactive visualization of the Drainage spell — count the ways to draw from a shrinking pool.">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;
+            --border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;
+            --accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;
+            --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
+        }
+        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+        a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
+        .container{max-width:760px;margin:0 auto;padding:0 24px}
+        .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+        .hero{padding:48px 0 24px;text-align:center}
+        .hero-icon{font-size:3rem;margin-bottom:12px}
+        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
+        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+        .hero p{font-size:1rem;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
+        .section{padding:24px 0}
+        .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+        .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;font-size:.9rem;color:var(--text2);line-height:1.6}
+        .principle strong{color:var(--text)}
+        .step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+        .step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.8rem;color:var(--text2);cursor:pointer;transition:all .2s}
+        .step-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .step-btn.done{border-color:var(--green);color:var(--green)}
+        .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+        .step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
+        .step-content p{color:var(--text2);font-size:.92rem;line-height:1.65;margin-bottom:10px}
+        .step-content p:last-child{margin-bottom:0}
+        .step-content strong{color:var(--text)}
+        .q-block{margin:18px 0}
+        .q-label{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:10px}
+        .q-options{display:flex;gap:8px}
+        .q-opt{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 18px;cursor:pointer;transition:all .2s;flex:1;text-align:center}
+        .q-opt:hover{border-color:#3f3f46;background:rgba(228,228,231,.03)}
+        .q-opt.active{border-color:var(--accent);background:rgba(167,139,250,.08)}
+        .q-opt-title{font-size:.9rem;font-weight:600;margin-bottom:2px}
+        .q-opt-sub{font-size:.75rem;color:var(--muted)}
+        .grid-2x2{margin:20px 0;overflow-x:auto}
+        .grid-2x2 table{width:100%;border-collapse:collapse;font-size:.85rem;table-layout:fixed}
+        .grid-2x2 th,.grid-2x2 td{border:1px solid var(--border);padding:12px 8px;text-align:center;vertical-align:middle;transition:all .3s}
+        .grid-2x2 th{background:var(--bg2);color:var(--text2);font-weight:600;font-size:.78rem}
+        .grid-2x2 .corner{background:var(--bg2)!important}
+        .grid-2x2 .cell-active{background:rgba(167,139,250,.12)!important;box-shadow:inset 0 0 0 2px var(--accent)!important;color:var(--accent);font-weight:600}
+        .grid-2x2 .cell-dim{opacity:.35}
+        .pool-vis{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0;justify-content:center}
+        .pool-dot{width:28px;height:28px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--muted)}
+        .pool-dot.picked{background:rgba(167,139,250,.2);border-color:var(--accent);color:var(--accent)}
+        .pool-dot.gone{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red);opacity:.4}
+        .round-spread{margin:16px 0}
+        .round-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:8px 0}
+        .round-chip{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.85rem;transition:all .3s}
+        .round-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .round-chip.cancelled{border-color:rgba(239,68,68,.3);color:var(--red);opacity:.35;text-decoration:line-through}
+        .round-chip.surviving{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.06)}
+        .round-op{color:var(--muted);font-size:.9rem;font-weight:600}
+        .input-row{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap;align-items:flex-end}
+        .input-group{display:flex;flex-direction:column;gap:4px}
+        .input-group label{font-size:.75rem;color:var(--muted)}
+        .input-group input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:.9rem;color:var(--text);width:100px;text-align:center;transition:border-color .2s}
+        .input-group input:focus{outline:none;border-color:var(--accent)}
+        .action-btn{background:var(--text);color:var(--bg);border:none;border-radius:10px;padding:12px 20px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+        .action-btn:hover{opacity:.85}
+        .action-btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+        .action-btn.secondary:hover{background:rgba(228,228,231,.04)}
+        .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+        .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
+        .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+        .result-box-formula{font-size:.9rem;color:var(--text2);margin-bottom:8px;line-height:1.5}
+        .result-box-value{font-size:1.4rem;font-weight:700;margin-top:12px}
+        .derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2)}
+        .derivation .d-label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+        .derivation .d-line{margin:2px 0}
+        .formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px}
+        .formula-ref-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .formula-ref-name{font-size:.95rem;font-weight:600}
+        .formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
+        .formula-ref-eq{font-size:.85rem;color:var(--text2);line-height:1.5}
+        .formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:6px;line-height:1.5}
+        .move-nav{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+        .move-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-family:inherit;font-size:.75rem;color:var(--muted);cursor:pointer;transition:all .2s}
+        .move-btn:hover{color:var(--text2);border-color:#3f3f46}
+        .move-btn.active{color:var(--accent);border-color:var(--accent)}
+        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
+        footer a{color:var(--text2)}
+        .hidden{display:none!important}
+        @media(max-width:520px){
+            .hero{padding:32px 0 20px}
+            .q-options{flex-direction:column}
+            .input-row{flex-direction:column;align-items:stretch}
+            .input-group input{width:100%}
+        }
+    </style>
+</head>
+<body>
+<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
+
+<section class="hero"><div class="container">
+    <div class="hero-icon">⛓️</div>
+    <div class="hero-badge">Galdr Spell &middot; Kap 3</div>
+    <h1>Drainage</h1>
+    <p>A pool of N. Draw S. The pool shrinks with every pick. Count the ways &mdash; ordered or unordered, draining or refilling.</p>
+</div></section>
+
+<section class="section"><div class="container">
+    <div class="principle">
+        <strong>The pool shrinks.</strong> Every pick removes one item from the pool. The next pick has fewer to choose from. The product of the shrinking choices is the count of distinct ways.
+    </div>
+</div></section>
+
+<!-- The Pool -->
+<section class="section"><div class="container">
+    <div class="section-label">The Pool</div>
+    <div id="pool-container" style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;text-align:center">
+        <div class="pool-vis" id="pool-vis"></div>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:12px" id="pool-status">Enter N and S in Step 3 to see the pool</p>
+    </div>
+</div></section>
+
+<!-- Walk the Spell -->
+<section class="section"><div class="container">
+    <div class="section-label">Walk the spell</div>
+    <div class="step-nav">
+        <button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
+        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
+        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
+        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
+    </div>
+
+    <!-- Step 1: Blueprint -->
+    <div class="step-content" id="step-1">
+        <h3>Step 1 &mdash; Two Questions</h3>
+        <p>Before touching any formula, answer two questions about the situation. The answers determine which path you walk.</p>
+
+        <div class="q-block">
+            <div class="q-label">Question 1 &mdash; Does order matter?</div>
+            <div class="q-options" id="q1-opts">
+                <div class="q-opt" data-val="ordered">
+                    <div class="q-opt-title">Yes &mdash; ordnet</div>
+                    <div class="q-opt-sub">Positions, ranks, roles. 1st ≠ 2nd.</div>
+                </div>
+                <div class="q-opt" data-val="unordered">
+                    <div class="q-opt-title">No &mdash; uordnet</div>
+                    <div class="q-opt-sub">Just a group. Who’s in, not who’s first.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="q-block">
+            <div class="q-label">Question 2 &mdash; Does the pool refill?</div>
+            <div class="q-options" id="q2-opts">
+                <div class="q-opt" data-val="refills">
+                    <div class="q-opt-title">Yes &mdash; med tilbakelegging</div>
+                    <div class="q-opt-sub">Same item can be picked again.</div>
+                </div>
+                <div class="q-opt" data-val="drains">
+                    <div class="q-opt-title">No &mdash; uten tilbakelegging</div>
+                    <div class="q-opt-sub">Each pick removes one. Pool shrinks.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2x2" style="margin-top:20px">
+            <table>
+                <tr>
+                    <th class="corner"></th>
+                    <th>Pool refills</th>
+                    <th>Pool drains</th>
+                </tr>
+                <tr>
+                    <th>Order matters</th>
+                    <td id="g-ns" class="cell-dim">N<sup>S</sup></td>
+                    <td id="g-npr" class="cell-dim">nPr = N!/(N−S)!</td>
+                </tr>
+                <tr>
+                    <th>Order doesn’t matter</th>
+                    <td id="g-na" class="cell-dim" style="color:var(--muted);font-style:italic">(ikke pensum)</td>
+                    <td id="g-ncr" class="cell-dim">nCr = N!/(S!(N−S)!)</td>
+                </tr>
+            </table>
+        </div>
+        <p id="blueprint-result" class="hidden" style="margin-top:14px;color:var(--accent);font-size:.88rem;font-weight:500"></p>
+    </div>
+
+    <!-- Step 2: Process (Round-Spread) -->
+    <div class="step-content hidden" id="step-2">
+        <h3 id="process-title">Step 2 &mdash; The Round-Spread</h3>
+        <p id="process-desc">Select a formula in Step 1 first, then enter data in Step 3. The Round-Spread cracks the formula into rounds you can watch happening.</p>
+        <div id="round-spread-box"></div>
+    </div>
+
+    <!-- Step 3: Data -->
+    <div class="step-content hidden" id="step-3">
+        <h3>Step 3 &mdash; Drop the Data</h3>
+        <p>Read the problem. Find N (the pool) and S (the draw). Place them.</p>
+        <div class="input-row">
+            <div class="input-group">
+                <label>N (pool size)</label>
+                <input type="number" id="in-n" step="1" min="1" max="170" placeholder="10">
+            </div>
+            <div class="input-group">
+                <label>S (draw size)</label>
+                <input type="number" id="in-s" step="1" min="1" max="170" placeholder="3">
+            </div>
+        </div>
+        <div class="btn-row">
+            <button class="action-btn" id="btn-drop">Drop data</button>
+            <button class="action-btn secondary" id="btn-example">Example (N=10, S=3)</button>
+        </div>
+    </div>
+
+    <!-- Step 4: Formula -->
+    <div class="step-content hidden" id="step-4">
+        <h3 id="formula-title">Step 4 &mdash; Walk the Rounds</h3>
+        <p id="formula-desc"></p>
+        <div id="derivation-box"></div>
+        <div class="result-box" id="result-box">
+            <div class="result-box-name" id="result-name"></div>
+            <div class="result-box-formula" id="result-formula"></div>
+            <div class="result-box-value" id="result-value"></div>
+        </div>
+    </div>
+</div></section>
+
+<!-- Reset -->
+<section class="section"><div class="container" style="text-align:center">
+    <button class="action-btn secondary" id="btn-reset">&larr; Reset</button>
+</div></section>
+
+<!-- Laplace bridge -->
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">When Drainage Feeds the Probability House</div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px">When the problem asks for a <strong>probability</strong> &mdash; not just a count &mdash; you do two drainage walks:</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:6px"><strong>Mulige</strong> &mdash; total ways. This is the denominator.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Gunstige</strong> &mdash; ways that satisfy the condition. This is the numerator.</p>
+        <p style="color:var(--accent);font-size:.95rem;font-weight:600">P = gunstige / mulige</p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:10px">Drainage counts the ways. Laplace turns them into mass. The <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">Probability House</a> takes over for composition.</p>
+    </div>
+</div></section>
+
+<!-- Formula Reference -->
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">Formula Reference &mdash; Kap 3</div>
+
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">n!</span>
+            <span class="formula-ref-kap">Full drainage</span>
+        </div>
+        <div class="formula-ref-eq">n! = n × (n−1) × (n−2) × … × 2 × 1</div>
+        <div class="formula-ref-desc">Every item leaves the pool, one at a time. The total number of ways to empty the entire pool. nPr and nCr are built from n!.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">nPr &mdash; Permutations</span>
+            <span class="formula-ref-kap">Ordered drainage</span>
+        </div>
+        <div class="formula-ref-eq">nPr = N! / (N−S)! = N × (N−1) × … × (N−S+1)</div>
+        <div class="formula-ref-desc">S items leave a pool of N. Order matters. The (N−S)! on the bottom cancels the unused rounds. What survives is the S rounds you actually walked.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">nCr &mdash; Combinations</span>
+            <span class="formula-ref-kap">Unordered drainage</span>
+        </div>
+        <div class="formula-ref-eq">nCr = N! / (S! × (N−S)!) = nPr / S!</div>
+        <div class="formula-ref-desc">Same drainage as nPr, but order collapsed. Divide by S! to strip the costume-count &mdash; how many ways S items can be rearranged among themselves.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">N<sup>S</sup></span>
+            <span class="formula-ref-kap">No drainage</span>
+        </div>
+        <div class="formula-ref-eq">N<sup>S</sup> = N × N × N × … (S times)</div>
+        <div class="formula-ref-desc">Pool refills after each pick. Every round has the same N choices. No shrinking. The non-draining cousin.</div>
+    </div>
+</div></section>
+
+<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+
+<script>
+/* === STATE === */
+let q1 = null; // 'ordered' | 'unordered'
+let q2 = null; // 'refills' | 'drains'
+let formula = null; // 'ns' | 'npr' | 'ncr'
+let N = null, S = null;
+let solved = false;
+
+/* === HELPERS === */
+function fmtBig(n){
+    if(n===null||n===undefined) return '\u2014';
+    if(n > 999999999999) return n.toExponential(4);
+    return n.toLocaleString('en-US');
+}
+function factorial(n){ let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
+function nPr(n,s){ let r=1; for(let i=0;i<s;i++) r*=(n-i); return r; }
+function nCr(n,s){ return nPr(n,s)/factorial(s); }
+
+/* === STEP NAV === */
+const stepBtns = document.querySelectorAll('.step-btn');
+const stepEls = [1,2,3,4].map(i => document.getElementById('step-'+i));
+function showStep(n){
+    stepBtns.forEach(b => b.classList.remove('active'));
+    stepBtns[n-1].classList.add('active');
+    stepEls.forEach(s => s.classList.add('hidden'));
+    stepEls[n-1].classList.remove('hidden');
+    if(n===2 && formula && solved) buildRoundSpread();
+    if(n===4 && formula && solved) showResult();
+}
+stepBtns.forEach(b => b.addEventListener('click', () => showStep(parseInt(b.dataset.step))));
+
+/* === STEP 1: BLUEPRINT === */
+const gridCells = { ns: document.getElementById('g-ns'), npr: document.getElementById('g-npr'), ncr: document.getElementById('g-ncr'), na: document.getElementById('g-na') };
+
+function updateGrid(){
+    Object.values(gridCells).forEach(c => { c.classList.remove('cell-active'); c.classList.add('cell-dim'); });
+    formula = null;
+    if(q1 && q2){
+        if(q1==='ordered' && q2==='refills'){ formula='ns'; gridCells.ns.classList.add('cell-active'); gridCells.ns.classList.remove('cell-dim'); }
+        else if(q1==='ordered' && q2==='drains'){ formula='npr'; gridCells.npr.classList.add('cell-active'); gridCells.npr.classList.remove('cell-dim'); }
+        else if(q1==='unordered' && q2==='drains'){ formula='ncr'; gridCells.ncr.classList.add('cell-active'); gridCells.ncr.classList.remove('cell-dim'); }
+        else if(q1==='unordered' && q2==='refills'){ formula=null; gridCells.na.classList.add('cell-active'); gridCells.na.classList.remove('cell-dim'); }
+        const names = { ns:'N\u02E2 \u2014 pool refills, order matters', npr:'nPr \u2014 pool drains, order matters', ncr:'nCr \u2014 pool drains, order collapsed' };
+        const el = document.getElementById('blueprint-result');
+        if(formula){ el.textContent = 'Formula: ' + names[formula]; el.classList.remove('hidden'); stepBtns[0].classList.add('done'); }
+        else if(q1==='unordered'&&q2==='refills'){ el.textContent = 'This combination (unordered + refills) is ikke pensum.'; el.classList.remove('hidden'); el.style.color='var(--muted)'; }
+        else { el.classList.add('hidden'); }
+    }
+}
+
+document.querySelectorAll('#q1-opts .q-opt').forEach(o => {
+    o.addEventListener('click', () => {
+        document.querySelectorAll('#q1-opts .q-opt').forEach(x => x.classList.remove('active'));
+        o.classList.add('active');
+        q1 = o.dataset.val;
+        updateGrid();
+    });
+});
+document.querySelectorAll('#q2-opts .q-opt').forEach(o => {
+    o.addEventListener('click', () => {
+        document.querySelectorAll('#q2-opts .q-opt').forEach(x => x.classList.remove('active'));
+        o.classList.add('active');
+        q2 = o.dataset.val;
+        updateGrid();
+    });
+});
+
+/* === POOL VIS === */
+function renderPool(){
+    const vis = document.getElementById('pool-vis');
+    const status = document.getElementById('pool-status');
+    if(!N || !S){ vis.innerHTML=''; status.textContent='Enter N and S in Step 3 to see the pool'; return; }
+    const maxDots = Math.min(N, 30);
+    vis.innerHTML = '';
+    for(let i=1; i<=maxDots; i++){
+        const dot = document.createElement('div');
+        dot.className = 'pool-dot';
+        if(i <= S) dot.classList.add('picked');
+        dot.textContent = i<=N ? i : '';
+        vis.appendChild(dot);
+    }
+    if(N > 30){
+        const more = document.createElement('div');
+        more.style.cssText = 'color:var(--muted);font-size:.8rem;padding:4px 8px';
+        more.textContent = `+${N-30} more`;
+        vis.appendChild(more);
+    }
+    const fnames = { ns:'N\u02E2', npr:'nPr', ncr:'nCr' };
+    status.textContent = `N = ${N} items in the pool \u00b7 S = ${S} drawn \u00b7 Formula: ${fnames[formula]||'\u2014'}`;
+}
+
+/* === STEP 2: ROUND-SPREAD === */
+function buildRoundSpread(){
+    if(!formula || !N || !S) return;
+    const box = document.getElementById('round-spread-box');
+    const names = { ns:'N\u02E2 (pool refills)', npr:'nPr (ordered drainage)', ncr:'nCr (unordered drainage)' };
+    document.getElementById('process-title').textContent = 'Step 2 \u2014 Round-Spread: ' + names[formula];
+
+    let html = '';
+
+    if(formula === 'ns'){
+        document.getElementById('process-desc').textContent = 'Pool refills every round. Every pick has the same N choices. No cancellation needed.';
+        html += '<div class="round-row">';
+        const maxShow = Math.min(S, 8);
+        for(let i=0; i<maxShow; i++){
+            if(i>0) html += '<span class="round-op">&times;</span>';
+            html += `<span class="round-chip surviving">${N}</span>`;
+        }
+        if(S > 8) html += '<span class="round-op"> \u2026 \u00d7 ' + N + '</span>';
+        html += '</div>';
+        html += `<p style="margin-top:12px;color:var(--text2);font-size:.88rem"><strong>${S} rounds</strong>, each with ${N} choices. Pool stays full.</p>`;
+    }
+    else if(formula === 'npr'){
+        document.getElementById('process-desc').textContent = 'Write N! as the full chain. Write (N\u2212S)! underneath. Cancel the common tail. What survives is the rounds you walked.';
+        // Top: full N!
+        html += '<div class="derivation"><div class="d-label">N! expanded</div>';
+        let topParts = [];
+        for(let i=N; i>=1; i--) topParts.push(i);
+        html += '<div class="d-line">' + topParts.join(' \u00d7 ') + '</div></div>';
+        // Bottom: (N-S)!
+        const bot = N - S;
+        html += '<div class="derivation"><div class="d-label">(N\u2212S)! = ' + bot + '! cancels</div>';
+        let botParts = [];
+        for(let i=bot; i>=1; i--) botParts.push(i);
+        html += '<div class="d-line" style="text-decoration:line-through;opacity:.4">' + botParts.join(' \u00d7 ') + '</div></div>';
+        // Surviving rounds
+        html += '<div class="derivation" style="border-color:rgba(34,197,94,.3)"><div class="d-label" style="color:var(--green)">Surviving rounds</div><div class="round-row">';
+        for(let i=0; i<S; i++){
+            if(i>0) html += '<span class="round-op">&times;</span>';
+            html += `<span class="round-chip surviving">Round ${i+1}: ${N-i}</span>`;
+        }
+        html += '</div>';
+        html += `<div class="d-line" style="margin-top:8px"><strong>${S} rounds.</strong> Pool shrinks from ${N} down to ${N-S+1}.</div></div>`;
+    }
+    else if(formula === 'ncr'){
+        document.getElementById('process-desc').textContent = 'Same drainage as nPr \u2014 cancel (N\u2212S)! from the bottom. Then divide by S! to strip the costume-count.';
+        // Surviving rounds (same as nPr)
+        html += '<div class="derivation" style="border-color:rgba(34,197,94,.3)"><div class="d-label" style="color:var(--green)">Surviving rounds (same as nPr)</div><div class="round-row">';
+        for(let i=0; i<S; i++){
+            if(i>0) html += '<span class="round-op">&times;</span>';
+            html += `<span class="round-chip surviving">${N-i}</span>`;
+        }
+        html += '</div>';
+        html += `<div class="d-line" style="margin-top:6px">${S} rounds \u2192 nPr = ${fmtBig(nPr(N,S))}</div></div>`;
+        // Costume count
+        html += '<div class="derivation" style="border-color:rgba(239,68,68,.3)"><div class="d-label" style="color:var(--red)">Costume-count: S! = ' + S + '!</div>';
+        let costumeParts = [];
+        for(let i=S; i>=1; i--) costumeParts.push(i);
+        html += '<div class="d-line">' + costumeParts.join(' \u00d7 ') + ' = ' + fmtBig(factorial(S)) + '</div>';
+        html += '<div class="d-line">Each group of ' + S + ' appeared ' + fmtBig(factorial(S)) + ' times wearing different sequence-costumes. Divide to strip them.</div></div>';
+        // Result
+        html += `<div class="derivation"><div class="d-label">nCr = nPr / S!</div><div class="d-line">${fmtBig(nPr(N,S))} \u00f7 ${fmtBig(factorial(S))} = <strong>${fmtBig(nCr(N,S))}</strong></div></div>`;
+    }
+    box.innerHTML = html;
+}
+
+/* === STEP 3: DATA === */
+function dropData(n, s){
+    if(n<1 || s<0 || (!formula || formula!=='ns') && s>n) return;
+    N = n; S = s; solved = true;
+    stepBtns[2].classList.add('done');
+    renderPool();
+}
+
+document.getElementById('btn-drop').addEventListener('click', () => {
+    const n = parseInt(document.getElementById('in-n').value);
+    const s = parseInt(document.getElementById('in-s').value);
+    if(!isNaN(n) && !isNaN(s) && formula) dropData(n, s);
+});
+document.getElementById('btn-example').addEventListener('click', () => {
+    document.getElementById('in-n').value = '10';
+    document.getElementById('in-s').value = '3';
+    if(formula) dropData(10, 3);
+});
+
+/* === STEP 4: RESULT === */
+function showResult(){
+    if(!formula || !solved) return;
+    const dbox = document.getElementById('derivation-box');
+    let derivHTML = '';
+    let name = '', formulaStr = '', value = 0, desc = '';
+
+    if(formula === 'ns'){
+        value = Math.pow(N, S);
+        name = 'N\u02E2 \u2014 Pool Refills';
+        desc = `Every round has ${N} choices. ${S} rounds. No shrinking.`;
+        let roundStr = Array(Math.min(S,6)).fill(N).join(' \u00d7 ');
+        if(S>6) roundStr += ' \u00d7 \u2026';
+        formulaStr = `${N}\u02E2 = ${roundStr}`;
+        derivHTML = `<div class="derivation"><div class="d-label">Computation</div>`;
+        derivHTML += `<div class="d-line">N = ${N}, S = ${S}</div>`;
+        derivHTML += `<div class="d-line">${N}<sup>${S}</sup> = ${fmtBig(value)}</div></div>`;
+    }
+    else if(formula === 'npr'){
+        value = nPr(N, S);
+        name = 'nPr \u2014 Ordered Drainage';
+        desc = `${S} items leave a pool of ${N}. Order matters. Each round the pool shrinks by one.`;
+        // Show the fraction
+        derivHTML = `<div class="derivation"><div class="d-label">Where does each number come from?</div>`;
+        derivHTML += `<div class="d-line">N! / (N\u2212S)! = ${N}! / ${N-S}!</div>`;
+        derivHTML += `<div class="d-line">(N\u2212S)! = ${N-S}! cancels the bottom ${N-S} factors</div>`;
+        derivHTML += `<div class="d-line">What survives:</div>`;
+        let parts = [];
+        for(let i=0; i<S; i++) parts.push(`${N-i}`);
+        derivHTML += `<div class="d-line"><strong>${parts.join(' \u00d7 ')} = ${fmtBig(value)}</strong></div>`;
+        derivHTML += `<div class="d-line" style="margin-top:6px">Round 1: ${N} choices (full pool)</div>`;
+        for(let i=1; i<S; i++) derivHTML += `<div class="d-line">Round ${i+1}: ${N-i} choices (pool lost ${i})</div>`;
+        derivHTML += `</div>`;
+        let roundParts = [];
+        for(let i=0; i<S; i++) roundParts.push(N-i);
+        formulaStr = roundParts.join(' \u00d7 ');
+    }
+    else if(formula === 'ncr'){
+        const perm = nPr(N, S);
+        const costumes = factorial(S);
+        value = nCr(N, S);
+        name = 'nCr \u2014 Unordered Drainage';
+        desc = `Same ${S} rounds of drainage as nPr, then divide by S! = ${fmtBig(costumes)} to strip the costume-count.`;
+        derivHTML = `<div class="derivation"><div class="d-label">Step 1: Same drainage as nPr</div>`;
+        let parts = [];
+        for(let i=0; i<S; i++) parts.push(`${N-i}`);
+        derivHTML += `<div class="d-line">${parts.join(' \u00d7 ')} = ${fmtBig(perm)}</div>`;
+        derivHTML += `<div class="d-line">${S} rounds, pool shrinking from ${N} to ${N-S+1}</div></div>`;
+        derivHTML += `<div class="derivation"><div class="d-label">Step 2: Where does S! come from?</div>`;
+        let costParts = [];
+        for(let i=S; i>=1; i--) costParts.push(i);
+        derivHTML += `<div class="d-line">S! = ${S}! = ${costParts.join(' \u00d7 ')} = ${fmtBig(costumes)}</div>`;
+        derivHTML += `<div class="d-line">Each group of ${S} appeared ${fmtBig(costumes)} times in the nPr count, wearing ${fmtBig(costumes)} different sequence-costumes</div></div>`;
+        derivHTML += `<div class="derivation"><div class="d-label">Step 3: Divide</div>`;
+        derivHTML += `<div class="d-line">nCr = nPr / S! = ${fmtBig(perm)} \u00f7 ${fmtBig(costumes)} = <strong>${fmtBig(value)}</strong></div></div>`;
+        formulaStr = `${fmtBig(perm)} \u00f7 ${fmtBig(costumes)}`;
+    }
+
+    dbox.innerHTML = derivHTML;
+    document.getElementById('formula-title').textContent = 'Step 4 \u2014 ' + (formula==='ns'?'N\u02E2':formula==='npr'?'nPr':'nCr');
+    document.getElementById('formula-desc').textContent = desc;
+    document.getElementById('result-name').textContent = name;
+    document.getElementById('result-formula').textContent = formulaStr;
+    document.getElementById('result-value').textContent = fmtBig(value);
+    stepBtns[3].classList.add('done');
+}
+
+/* === RESET === */
+document.getElementById('btn-reset').addEventListener('click', () => {
+    q1=null; q2=null; formula=null; N=null; S=null; solved=false;
+    document.querySelectorAll('.q-opt').forEach(o => o.classList.remove('active'));
+    Object.values(gridCells).forEach(c => { c.classList.remove('cell-active'); c.classList.add('cell-dim'); });
+    document.getElementById('blueprint-result').classList.add('hidden');
+    document.getElementById('round-spread-box').innerHTML = '';
+    document.getElementById('derivation-box').innerHTML = '';
+    document.getElementById('pool-vis').innerHTML = '';
+    document.getElementById('pool-status').textContent = 'Enter N and S in Step 3 to see the pool';
+    document.getElementById('process-desc').textContent = 'Select a formula in Step 1 first, then enter data in Step 3.';
+    ['in-n','in-s'].forEach(id => document.getElementById(id).value='');
+    stepBtns.forEach(b => b.classList.remove('done'));
+    showStep(1);
+});
+
+showStep(1);
+</script>
+</body>
+</html>
