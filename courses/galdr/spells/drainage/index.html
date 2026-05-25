@@ -54,13 +54,6 @@
         .tree-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
         .tree-section h3{font-size:1rem;font-weight:600;margin-bottom:6px}
         .tree-section p{color:var(--text2);font-size:.85rem;margin-bottom:12px}
-        .tree-controls{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end}
-        .tree-controls .input-group{display:flex;flex-direction:column;gap:3px}
-        .tree-controls .input-group label{font-size:.72rem;color:var(--muted)}
-        .tree-controls .input-group input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-family:inherit;font-size:.85rem;color:var(--text);width:80px;text-align:center}
-        .tree-controls .input-group input:focus{outline:none;border-color:var(--accent)}
-        .tree-controls button{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:6px 14px;font-family:inherit;font-size:.82rem;color:var(--accent);cursor:pointer;transition:all .2s;align-self:flex-end}
-        .tree-controls button:hover{background:rgba(167,139,250,.2)}
         .tree-wrap{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 8px;overflow:hidden}
         .tree-wrap canvas{display:block;margin:0 auto}
         .tree-note{font-size:.78rem;color:var(--muted);margin-top:10px;text-align:center}
@@ -99,8 +92,6 @@
             .q-options{flex-direction:column}
             .input-row{flex-direction:column;align-items:stretch}
             .input-group input{width:100%}
-            .tree-controls{flex-direction:column;align-items:stretch}
-            .tree-controls .input-group input{width:100%}
         }
     </style>
 </head>
@@ -120,27 +111,16 @@
     </div>
 </div></section>
 
-<!-- Tree Visualization (standalone) -->
+<!-- Tree Visualization (standalone, reads Step 3 data) -->
 <section class="section" id="viz-section"><div class="container">
     <div class="section-label">See the Web</div>
     <div class="tree-section">
         <h3>The Branching</h3>
-        <p>Pick a formula above, then explore how the pool fans out at each round.</p>
-        <div class="tree-controls">
-            <div class="input-group">
-                <label>N (pool)</label>
-                <input type="number" id="tree-n" value="10" min="1" max="50">
-            </div>
-            <div class="input-group">
-                <label>S (draw)</label>
-                <input type="number" id="tree-s" value="3" min="1" max="10">
-            </div>
-            <button id="tree-redraw">Redraw</button>
-        </div>
+        <p id="tree-intro">Pick a formula in Step 1 and drop data in Step 3 to see the web.</p>
         <div class="tree-wrap" id="tree-wrap">
             <canvas id="tree-canvas"></canvas>
         </div>
-        <div class="tree-note" id="tree-note">Select a formula in the Blueprint step, then explore here.</div>
+        <div class="tree-note" id="tree-note"></div>
     </div>
 </div></section>
 
@@ -285,10 +265,10 @@ let N = null, S = null, solved = false;
 function factorial(n){ let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
 function permut(n,s){ let r=1; for(let i=0;i<s;i++) r*=(n-i); return r; }
 function combin(n,s){ return permut(n,s)/factorial(s); }
-function fmtBig(n){
-    if(n===null) return '\u2014';
-    if(n>999999999999) return n.toExponential(4);
-    return n.toLocaleString('en-US');
+function fmtBig(v){
+    if(v===null) return '\u2014';
+    if(v>999999999999) return v.toExponential(4);
+    return v.toLocaleString('en-US');
 }
 
 /* === STEP NAV === */
@@ -334,105 +314,163 @@ document.querySelectorAll('#q2-opts .q-opt').forEach(o=>{
     });
 });
 
-/* === TREE VISUALIZATION (standalone section) === */
-document.getElementById('tree-redraw').addEventListener('click', drawTreeViz);
-
+/* === TREE VISUALIZATION ===
+   Reads N/S from Step 3 state. Defaults to 10/3.
+   Layout: layered rows. Each level is a centered row of circles.
+   Lines fan from ONE highlighted node per level to all nodes in the next level.
+   Row width shrinks per level to show pool drainage. */
 function drawTreeViz(){
     if(!formula) return;
-    const n = parseInt(document.getElementById('tree-n').value)||10;
-    const s = Math.min(parseInt(document.getElementById('tree-s').value)||3, 6);
+    const n = N || 10;
+    const s = Math.min(S || 3, 6);
+
+    const names={ns:'N\u02E2',npr:'nPr',ncr:'nCr'};
+    document.getElementById('tree-intro').textContent = names[formula]+' \u2014 N='+n+', S='+s;
+    document.getElementById('tree-note').textContent = 'Drop data in Step 3 to update.';
 
     const wrap = document.getElementById('tree-wrap');
     const canvas = document.getElementById('tree-canvas');
-    const dpr = window.devicePixelRatio||1;
+    const dpr = window.devicePixelRatio || 1;
     const cw = wrap.clientWidth - 18;
-    const rowH = 75;
-    const ch = (s+1)*rowH + 30;
-    canvas.width = cw*dpr; canvas.height = ch*dpr;
-    canvas.style.width = cw+'px'; canvas.style.height = ch+'px';
+    const rowH = 80;
+    const topPad = 40;
+    const ch = topPad + s * rowH + 60;
+    canvas.width = cw * dpr;
+    canvas.height = ch * dpr;
+    canvas.style.width = cw + 'px';
+    canvas.style.height = ch + 'px';
     const ctx = canvas.getContext('2d');
-    ctx.scale(dpr,dpr); ctx.clearRect(0,0,cw,ch);
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, cw, ch);
 
-    const R = 7;
-    const accent='#a78bfa', muted='#71717a', linec='#27272a', green='#22c55e', red='#ef4444', text2='#a1a1aa';
+    const R = 6;
+    const accent = '#a78bfa';
+    const accentDim = 'rgba(167,139,250,0.12)';
+    const accentHi = 'rgba(167,139,250,0.35)';
+    const linec = 'rgba(167,139,250,0.15)';
+    const lineHi = 'rgba(167,139,250,0.4)';
+    const muted = '#71717a';
+    const green = '#22c55e';
+    const red = '#ef4444';
+    const text2 = '#a1a1aa';
+    const cx = cw / 2;
 
-    function poolAt(round){ return formula==='ns' ? n : Math.max(n-round,1); }
+    function poolAt(round){ return formula === 'ns' ? n : Math.max(n - round, 1); }
 
-    // Build node tree
-    const levels = [[{x:cw/2, px:null, ell:false}]];
-    for(let lv=0; lv<s; lv++){
+    // Root node
+    const rootY = topPad;
+    ctx.beginPath();
+    ctx.arc(cx, rootY, R + 4, 0, Math.PI * 2);
+    ctx.fillStyle = accentHi;
+    ctx.fill();
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#fafafa';
+    ctx.font = 'bold 10px Inter,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(n.toString(), cx, rootY);
+
+    // Label
+    ctx.fillStyle = muted;
+    ctx.font = '10px Inter,sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Pool: ' + n, cx + R + 10, rootY);
+
+    // For each round, draw a row of circles
+    // Track the "highlighted" node (first node) at each level for fan lines
+    let prevHighlightX = cx;
+    let prevY = rootY;
+
+    for (let lv = 0; lv < s; lv++) {
         const pool = poolAt(lv);
-        const parents = levels[lv];
-        const children = [];
-        let expanded = 0;
-        for(const p of parents){
-            if(p.ell) continue;
-            if(expanded >= 1) continue;
-            expanded++;
-            const show = Math.min(pool, lv===0?6:(lv===1?5:4));
-            const hasMore = pool > show;
-            const totalSlots = show + (hasMore?1:0);
-            const widthFrac = lv===0?0.85:(lv===1?0.5:(lv===2?0.35:0.25));
-            const totalW = cw * widthFrac;
-            const startX = p.x - totalW/2;
-            const step = totalW / (totalSlots+1);
-            for(let i=0;i<show;i++) children.push({x:startX+step*(i+1), px:p.x, ell:false});
-            if(hasMore) children.push({x:startX+step*(show+1), px:p.x, ell:true});
-        }
-        levels.push(children);
-    }
+        const y = topPad + (lv + 1) * rowH;
 
-    // Draw
-    for(let lv=1; lv<=s; lv++){
-        const y = 35 + lv*rowH;
-        const py = 35 + (lv-1)*rowH;
-        for(const nd of levels[lv]){
+        // How many dots to show (cap for readability)
+        const maxDots = Math.min(pool, 12);
+        const hasMore = pool > maxDots;
+        const totalShown = maxDots + (hasMore ? 1 : 0); // +1 for "..." indicator
+
+        // Row width: shrinks proportionally to pool shrinkage (visual drainage)
+        const baseFrac = 0.9;
+        const frac = formula === 'ns' ? baseFrac : baseFrac * (pool / n);
+        const rowW = Math.max(cw * frac, 100);
+        const startX = cx - rowW / 2;
+        const spacing = rowW / (maxDots + 1);
+
+        // Draw fan lines from previous highlighted node to each dot in this row
+        for (let i = 0; i < maxDots; i++) {
+            const dotX = startX + spacing * (i + 1);
             ctx.beginPath();
-            ctx.moveTo(nd.px, py+R+2);
-            ctx.lineTo(nd.x, y-R-2);
-            ctx.strokeStyle = linec; ctx.lineWidth = 1; ctx.stroke();
-            if(nd.ell){
-                ctx.fillStyle = muted; ctx.font = '13px Inter,sans-serif'; ctx.textAlign = 'center';
-                ctx.fillText('\u22ef', nd.x, y+4);
-            } else {
-                ctx.beginPath(); ctx.arc(nd.x, y, R, 0, Math.PI*2);
-                ctx.fillStyle = 'rgba(167,139,250,0.1)'; ctx.fill();
-                ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
-            }
+            ctx.moveTo(prevHighlightX, prevY + R + 2);
+            ctx.lineTo(dotX, y - R - 1);
+            ctx.strokeStyle = i === 0 ? lineHi : linec;
+            ctx.lineWidth = i === 0 ? 1.5 : 0.7;
+            ctx.stroke();
         }
-        const pool = poolAt(lv-1);
-        ctx.fillStyle = text2; ctx.font = '12px Inter,sans-serif'; ctx.textAlign = 'right';
-        ctx.fillText('Round '+lv+': '+pool+' choices', cw-4, y+4);
-        if(formula!=='ns' && lv>1){
-            ctx.fillStyle = red; ctx.font = '10px Inter,sans-serif';
-            ctx.fillText('pool \u22121', cw-4, y+16);
+
+        // Draw dots
+        for (let i = 0; i < maxDots; i++) {
+            const dotX = startX + spacing * (i + 1);
+            ctx.beginPath();
+            ctx.arc(dotX, y, R, 0, Math.PI * 2);
+            ctx.fillStyle = i === 0 ? accentHi : accentDim;
+            ctx.fill();
+            ctx.strokeStyle = i === 0 ? accent : 'rgba(167,139,250,0.4)';
+            ctx.lineWidth = i === 0 ? 1.5 : 1;
+            ctx.stroke();
         }
+
+        // "..." if truncated
+        if (hasMore) {
+            const ellX = startX + spacing * (maxDots + 1);
+            ctx.fillStyle = muted;
+            ctx.font = '12px Inter,sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('\u22ef', ellX, y);
+        }
+
+        // Right label
+        ctx.fillStyle = text2;
+        ctx.font = '11px Inter,sans-serif';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Round ' + (lv + 1) + ': ' + pool, cw - 4, y);
+
+        // Shrinkage indicator
+        if (formula !== 'ns' && lv > 0) {
+            ctx.fillStyle = red;
+            ctx.font = '9px Inter,sans-serif';
+            ctx.fillText('\u22121', cw - 4, y + 13);
+        }
+
+        // Update highlight for next level
+        prevHighlightX = startX + spacing;
+        prevY = y;
     }
 
-    // Root
-    ctx.beginPath(); ctx.arc(cw/2, 35, R+3, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba(167,139,250,0.15)'; ctx.fill();
-    ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#fafafa'; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('Pool: '+n, cw/2, 39);
+    // Total at bottom
+    const totalY = topPad + s * rowH + 40;
+    let parts = [], total = 1;
+    for (let i = 0; i < (S || 3); i++) { const p = poolAt(i); parts.push(p); total *= p; }
 
-    // Total
-    const totalY = 35 + (s+0.7)*rowH;
-    let parts=[], total=1;
-    for(let i=0;i<s;i++){ const p=poolAt(i); parts.push(p); total*=p; }
-    ctx.fillStyle = green; ctx.font = 'bold 14px Inter,sans-serif'; ctx.textAlign = 'center';
-    if(formula==='ncr'){
-        ctx.fillText(parts.join(' \u00d7 ')+' = '+fmtBig(total)+' ordered', cw/2, totalY);
-        const fact = factorial(s);
-        ctx.fillStyle = text2; ctx.font = '12px Inter,sans-serif';
-        ctx.fillText('\u00f7 '+s+'! = \u00f7 '+fmtBig(fact)+' = '+fmtBig(total/fact)+' groups', cw/2, totalY+20);
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+    if (formula === 'ncr') {
+        ctx.fillStyle = green;
+        ctx.font = 'bold 13px Inter,sans-serif';
+        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + '  ordered', cx, totalY - 10);
+        const fact = factorial(S || 3);
+        ctx.fillStyle = text2;
+        ctx.font = '12px Inter,sans-serif';
+        ctx.fillText('\u00f7 ' + (S||3) + '! = \u00f7 ' + fmtBig(fact) + ' = ' + fmtBig(total / fact) + ' groups', cx, totalY + 10);
     } else {
-        ctx.fillText(parts.join(' \u00d7 ')+' = '+fmtBig(total)+' ways', cw/2, totalY);
+        ctx.fillStyle = green;
+        ctx.font = 'bold 13px Inter,sans-serif';
+        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + ' ways', cx, totalY);
     }
-
-    // Update note
-    const names={ns:'N\u02E2',npr:'nPr',ncr:'nCr'};
-    document.getElementById('tree-note').textContent = names[formula]+' with N='+n+', S='+s+' \u2014 adjust above to explore.';
 }
 
 /* === STEP 2: PROCESS (pure procedure, no numbers) === */
@@ -484,6 +522,7 @@ function dropData(n, s){
     if(formula!=='ns' && s>n) return;
     N=n; S=s; solved=true;
     stepBtns[2].classList.add('done');
+    drawTreeViz(); // Redraw tree with new data
 }
 document.getElementById('btn-drop').addEventListener('click',()=>{
     const n=parseInt(document.getElementById('in-n').value);
@@ -558,8 +597,13 @@ document.getElementById('btn-reset').addEventListener('click',()=>{
     document.getElementById('blueprint-result').classList.add('hidden');
     document.getElementById('process-body').innerHTML='';
     document.getElementById('derivation-box').innerHTML='';
+    document.getElementById('tree-intro').textContent='Pick a formula in Step 1 and drop data in Step 3 to see the web.';
+    document.getElementById('tree-note').textContent='';
     ['in-n','in-s'].forEach(id=>document.getElementById(id).value='');
     stepBtns.forEach(b=>b.classList.remove('done'));
+    const canvas=document.getElementById('tree-canvas');
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     showStep(1);
 });
 
