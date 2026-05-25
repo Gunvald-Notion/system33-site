@@ -10,7 +10,7 @@
         :root{
             --bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;
             --border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;
-            --accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;
+            --accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;
             --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
         }
         body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -51,17 +51,8 @@
         .grid-2x2 .corner{background:var(--bg2)!important}
         .grid-2x2 .cell-active{background:rgba(167,139,250,.12)!important;box-shadow:inset 0 0 0 2px var(--accent)!important;color:var(--accent);font-weight:600}
         .grid-2x2 .cell-dim{opacity:.35}
-        .pool-vis{display:flex;gap:4px;flex-wrap:wrap;margin:16px 0;justify-content:center}
-        .pool-dot{width:28px;height:28px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--muted)}
-        .pool-dot.picked{background:rgba(167,139,250,.2);border-color:var(--accent);color:var(--accent)}
-        .pool-dot.gone{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red);opacity:.4}
-        .round-spread{margin:16px 0}
-        .round-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:8px 0}
-        .round-chip{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.85rem;transition:all .3s}
-        .round-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
-        .round-chip.cancelled{border-color:rgba(239,68,68,.3);color:var(--red);opacity:.35;text-decoration:line-through}
-        .round-chip.surviving{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.06)}
-        .round-op{color:var(--muted);font-size:.9rem;font-weight:600}
+        .tree-wrap{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px 8px;margin:20px 0;overflow:hidden}
+        .tree-wrap canvas{display:block;margin:0 auto}
         .input-row{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap;align-items:flex-end}
         .input-group{display:flex;flex-direction:column;gap:4px}
         .input-group label{font-size:.75rem;color:var(--muted)}
@@ -85,10 +76,6 @@
         .formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
         .formula-ref-eq{font-size:.85rem;color:var(--text2);line-height:1.5}
         .formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:6px;line-height:1.5}
-        .move-nav{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
-        .move-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-family:inherit;font-size:.75rem;color:var(--muted);cursor:pointer;transition:all .2s}
-        .move-btn:hover{color:var(--text2);border-color:#3f3f46}
-        .move-btn.active{color:var(--accent);border-color:var(--accent)}
         footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
         footer a{color:var(--text2)}
         .hidden{display:none!important}
@@ -107,21 +94,12 @@
     <div class="hero-icon">⛓️</div>
     <div class="hero-badge">Galdr Spell &middot; Kap 3</div>
     <h1>Drainage</h1>
-    <p>A pool of N. Draw S. The pool shrinks with every pick. Count the ways &mdash; ordered or unordered, draining or refilling.</p>
+    <p>A pool of N. Draw S. The pool shrinks with every pick. Count the ways.</p>
 </div></section>
 
 <section class="section"><div class="container">
     <div class="principle">
-        <strong>The pool shrinks.</strong> Every pick removes one item from the pool. The next pick has fewer to choose from. The product of the shrinking choices is the count of distinct ways.
-    </div>
-</div></section>
-
-<!-- The Pool -->
-<section class="section"><div class="container">
-    <div class="section-label">The Pool</div>
-    <div id="pool-container" style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;text-align:center">
-        <div class="pool-vis" id="pool-vis"></div>
-        <p style="color:var(--muted);font-size:.82rem;margin-top:12px" id="pool-status">Enter N and S in Step 3 to see the pool</p>
+        <strong>The pool shrinks.</strong> Every pick removes one from the pool. The next pick has fewer to choose from. The product of the shrinking choices is the count.
     </div>
 </div></section>
 
@@ -138,28 +116,26 @@
     <!-- Step 1: Blueprint -->
     <div class="step-content" id="step-1">
         <h3>Step 1 &mdash; Two Questions</h3>
-        <p>Before touching any formula, answer two questions about the situation. The answers determine which path you walk.</p>
-
+        <p>Answer two questions. They determine the formula.</p>
         <div class="q-block">
-            <div class="q-label">Question 1 &mdash; Does order matter?</div>
+            <div class="q-label">Does order matter?</div>
             <div class="q-options" id="q1-opts">
                 <div class="q-opt" data-val="ordered">
                     <div class="q-opt-title">Yes &mdash; ordnet</div>
-                    <div class="q-opt-sub">Positions, ranks, roles. 1st ≠ 2nd.</div>
+                    <div class="q-opt-sub">Positions, ranks. 1st ≠ 2nd.</div>
                 </div>
                 <div class="q-opt" data-val="unordered">
                     <div class="q-opt-title">No &mdash; uordnet</div>
-                    <div class="q-opt-sub">Just a group. Who’s in, not who’s first.</div>
+                    <div class="q-opt-sub">Just a group. Who, not what order.</div>
                 </div>
             </div>
         </div>
-
         <div class="q-block">
-            <div class="q-label">Question 2 &mdash; Does the pool refill?</div>
+            <div class="q-label">Does the pool refill?</div>
             <div class="q-options" id="q2-opts">
                 <div class="q-opt" data-val="refills">
                     <div class="q-opt-title">Yes &mdash; med tilbakelegging</div>
-                    <div class="q-opt-sub">Same item can be picked again.</div>
+                    <div class="q-opt-sub">Item goes back. Same pool every round.</div>
                 </div>
                 <div class="q-opt" data-val="drains">
                     <div class="q-opt-title">No &mdash; uten tilbakelegging</div>
@@ -167,40 +143,30 @@
                 </div>
             </div>
         </div>
-
         <div class="grid-2x2" style="margin-top:20px">
             <table>
-                <tr>
-                    <th class="corner"></th>
-                    <th>Pool refills</th>
-                    <th>Pool drains</th>
-                </tr>
-                <tr>
-                    <th>Order matters</th>
-                    <td id="g-ns" class="cell-dim">N<sup>S</sup></td>
-                    <td id="g-npr" class="cell-dim">nPr = N!/(N−S)!</td>
-                </tr>
-                <tr>
-                    <th>Order doesn’t matter</th>
-                    <td id="g-na" class="cell-dim" style="color:var(--muted);font-style:italic">(ikke pensum)</td>
-                    <td id="g-ncr" class="cell-dim">nCr = N!/(S!(N−S)!)</td>
-                </tr>
+                <tr><th class="corner"></th><th>Pool refills</th><th>Pool drains</th></tr>
+                <tr><th>Order matters</th><td id="g-ns" class="cell-dim">N<sup>S</sup></td><td id="g-npr" class="cell-dim">nPr</td></tr>
+                <tr><th>Order doesn’t matter</th><td id="g-na" class="cell-dim" style="font-style:italic">(ikke pensum)</td><td id="g-ncr" class="cell-dim">nCr</td></tr>
             </table>
         </div>
         <p id="blueprint-result" class="hidden" style="margin-top:14px;color:var(--accent);font-size:.88rem;font-weight:500"></p>
     </div>
 
-    <!-- Step 2: Process (Round-Spread) -->
+    <!-- Step 2: Process (Round-Spread + Tree) -->
     <div class="step-content hidden" id="step-2">
         <h3 id="process-title">Step 2 &mdash; The Round-Spread</h3>
-        <p id="process-desc">Select a formula in Step 1 first, then enter data in Step 3. The Round-Spread cracks the formula into rounds you can watch happening.</p>
-        <div id="round-spread-box"></div>
+        <p id="process-desc">Select a formula in Step 1 to see the process.</p>
+        <div class="tree-wrap hidden" id="tree-wrap">
+            <canvas id="tree-canvas"></canvas>
+        </div>
+        <div id="spread-text"></div>
     </div>
 
     <!-- Step 3: Data -->
     <div class="step-content hidden" id="step-3">
         <h3>Step 3 &mdash; Drop the Data</h3>
-        <p>Read the problem. Find N (the pool) and S (the draw). Place them.</p>
+        <p>Find N (pool) and S (draw) in the problem.</p>
         <div class="input-row">
             <div class="input-group">
                 <label>N (pool size)</label>
@@ -230,7 +196,6 @@
     </div>
 </div></section>
 
-<!-- Reset -->
 <section class="section"><div class="container" style="text-align:center">
     <button class="action-btn secondary" id="btn-reset">&larr; Reset</button>
 </div></section>
@@ -239,49 +204,36 @@
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
     <div class="section-label">When Drainage Feeds the Probability House</div>
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px">When the problem asks for a <strong>probability</strong> &mdash; not just a count &mdash; you do two drainage walks:</p>
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:6px"><strong>Mulige</strong> &mdash; total ways. This is the denominator.</p>
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Gunstige</strong> &mdash; ways that satisfy the condition. This is the numerator.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px">When the problem asks for a <strong>probability</strong>:</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:6px"><strong>Mulige</strong> — total ways (denominator).</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Gunstige</strong> — ways that satisfy the condition (numerator).</p>
         <p style="color:var(--accent);font-size:.95rem;font-weight:600">P = gunstige / mulige</p>
-        <p style="color:var(--muted);font-size:.82rem;margin-top:10px">Drainage counts the ways. Laplace turns them into mass. The <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">Probability House</a> takes over for composition.</p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:10px">Drainage counts. Laplace converts to mass. The <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">Probability House</a> composes.</p>
     </div>
 </div></section>
 
 <!-- Formula Reference -->
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
     <div class="section-label">Formula Reference &mdash; Kap 3</div>
-
     <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">n!</span>
-            <span class="formula-ref-kap">Full drainage</span>
-        </div>
-        <div class="formula-ref-eq">n! = n × (n−1) × (n−2) × … × 2 × 1</div>
-        <div class="formula-ref-desc">Every item leaves the pool, one at a time. The total number of ways to empty the entire pool. nPr and nCr are built from n!.</div>
+        <div class="formula-ref-header"><span class="formula-ref-name">n!</span><span class="formula-ref-kap">Full drainage</span></div>
+        <div class="formula-ref-eq">n! = n × (n−1) × … × 1</div>
+        <div class="formula-ref-desc">Every item leaves the pool. nPr and nCr are built from n!.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">nPr &mdash; Permutations</span>
-            <span class="formula-ref-kap">Ordered drainage</span>
-        </div>
+        <div class="formula-ref-header"><span class="formula-ref-name">nPr — Permutations</span><span class="formula-ref-kap">Ordered</span></div>
         <div class="formula-ref-eq">nPr = N! / (N−S)! = N × (N−1) × … × (N−S+1)</div>
-        <div class="formula-ref-desc">S items leave a pool of N. Order matters. The (N−S)! on the bottom cancels the unused rounds. What survives is the S rounds you actually walked.</div>
+        <div class="formula-ref-desc">S items leave. Order matters. The (N−S)! cancels the unused rounds.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">nCr &mdash; Combinations</span>
-            <span class="formula-ref-kap">Unordered drainage</span>
-        </div>
-        <div class="formula-ref-eq">nCr = N! / (S! × (N−S)!) = nPr / S!</div>
-        <div class="formula-ref-desc">Same drainage as nPr, but order collapsed. Divide by S! to strip the costume-count &mdash; how many ways S items can be rearranged among themselves.</div>
+        <div class="formula-ref-header"><span class="formula-ref-name">nCr — Combinations</span><span class="formula-ref-kap">Unordered</span></div>
+        <div class="formula-ref-eq">nCr = N! / (S!(N−S)!) = nPr / S!</div>
+        <div class="formula-ref-desc">Same drainage as nPr, then ÷ S! to strip the costume-count.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">N<sup>S</sup></span>
-            <span class="formula-ref-kap">No drainage</span>
-        </div>
-        <div class="formula-ref-eq">N<sup>S</sup> = N × N × N × … (S times)</div>
-        <div class="formula-ref-desc">Pool refills after each pick. Every round has the same N choices. No shrinking. The non-draining cousin.</div>
+        <div class="formula-ref-header"><span class="formula-ref-name">N<sup>S</sup></span><span class="formula-ref-kap">No drainage</span></div>
+        <div class="formula-ref-eq">N<sup>S</sup> = N × N × … (S times)</div>
+        <div class="formula-ref-desc">Pool refills. Every round has the same N choices.</div>
     </div>
 </div></section>
 
@@ -289,21 +241,17 @@
 
 <script>
 /* === STATE === */
-let q1 = null; // 'ordered' | 'unordered'
-let q2 = null; // 'refills' | 'drains'
-let formula = null; // 'ns' | 'npr' | 'ncr'
-let N = null, S = null;
-let solved = false;
+let q1 = null, q2 = null, formula = null;
+let N = null, S = null, solved = false;
 
-/* === HELPERS === */
+function factorial(n){ let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
+function permut(n,s){ let r=1; for(let i=0;i<s;i++) r*=(n-i); return r; }
+function combin(n,s){ return permut(n,s)/factorial(s); }
 function fmtBig(n){
-    if(n===null||n===undefined) return '\u2014';
-    if(n > 999999999999) return n.toExponential(4);
+    if(n===null) return '\u2014';
+    if(n>999999999999) return n.toExponential(4);
     return n.toLocaleString('en-US');
 }
-function factorial(n){ let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
-function nPr(n,s){ let r=1; for(let i=0;i<s;i++) r*=(n-i); return r; }
-function nCr(n,s){ return nPr(n,s)/factorial(s); }
 
 /* === STEP NAV === */
 const stepBtns = document.querySelectorAll('.step-btn');
@@ -313,235 +261,292 @@ function showStep(n){
     stepBtns[n-1].classList.add('active');
     stepEls.forEach(s => s.classList.add('hidden'));
     stepEls[n-1].classList.remove('hidden');
-    if(n===2 && formula && solved) buildRoundSpread();
-    if(n===4 && formula && solved) showResult();
+    if(n===2) renderProcess();
+    if(n===4 && solved) showResult();
 }
 stepBtns.forEach(b => b.addEventListener('click', () => showStep(parseInt(b.dataset.step))));
 
 /* === STEP 1: BLUEPRINT === */
-const gridCells = { ns: document.getElementById('g-ns'), npr: document.getElementById('g-npr'), ncr: document.getElementById('g-ncr'), na: document.getElementById('g-na') };
-
+const gridCells = { ns:document.getElementById('g-ns'), npr:document.getElementById('g-npr'), ncr:document.getElementById('g-ncr'), na:document.getElementById('g-na') };
 function updateGrid(){
     Object.values(gridCells).forEach(c => { c.classList.remove('cell-active'); c.classList.add('cell-dim'); });
     formula = null;
-    if(q1 && q2){
-        if(q1==='ordered' && q2==='refills'){ formula='ns'; gridCells.ns.classList.add('cell-active'); gridCells.ns.classList.remove('cell-dim'); }
-        else if(q1==='ordered' && q2==='drains'){ formula='npr'; gridCells.npr.classList.add('cell-active'); gridCells.npr.classList.remove('cell-dim'); }
-        else if(q1==='unordered' && q2==='drains'){ formula='ncr'; gridCells.ncr.classList.add('cell-active'); gridCells.ncr.classList.remove('cell-dim'); }
-        else if(q1==='unordered' && q2==='refills'){ formula=null; gridCells.na.classList.add('cell-active'); gridCells.na.classList.remove('cell-dim'); }
-        const names = { ns:'N\u02E2 \u2014 pool refills, order matters', npr:'nPr \u2014 pool drains, order matters', ncr:'nCr \u2014 pool drains, order collapsed' };
+    if(q1&&q2){
+        if(q1==='ordered'&&q2==='refills'){ formula='ns'; gridCells.ns.classList.add('cell-active'); gridCells.ns.classList.remove('cell-dim'); }
+        else if(q1==='ordered'&&q2==='drains'){ formula='npr'; gridCells.npr.classList.add('cell-active'); gridCells.npr.classList.remove('cell-dim'); }
+        else if(q1==='unordered'&&q2==='drains'){ formula='ncr'; gridCells.ncr.classList.add('cell-active'); gridCells.ncr.classList.remove('cell-dim'); }
+        else{ gridCells.na.classList.add('cell-active'); gridCells.na.classList.remove('cell-dim'); }
         const el = document.getElementById('blueprint-result');
-        if(formula){ el.textContent = 'Formula: ' + names[formula]; el.classList.remove('hidden'); stepBtns[0].classList.add('done'); }
-        else if(q1==='unordered'&&q2==='refills'){ el.textContent = 'This combination (unordered + refills) is ikke pensum.'; el.classList.remove('hidden'); el.style.color='var(--muted)'; }
-        else { el.classList.add('hidden'); }
+        const names={ns:'N\u02E2 \u2014 pool refills, order matters',npr:'nPr \u2014 pool drains, order matters',ncr:'nCr \u2014 pool drains, order collapsed'};
+        if(formula){ el.textContent='Formula: '+names[formula]; el.classList.remove('hidden'); el.style.color='var(--accent)'; stepBtns[0].classList.add('done'); }
+        else{ el.textContent='Ikke pensum'; el.classList.remove('hidden'); el.style.color='var(--muted)'; }
     }
 }
-
-document.querySelectorAll('#q1-opts .q-opt').forEach(o => {
-    o.addEventListener('click', () => {
-        document.querySelectorAll('#q1-opts .q-opt').forEach(x => x.classList.remove('active'));
-        o.classList.add('active');
-        q1 = o.dataset.val;
-        updateGrid();
+document.querySelectorAll('#q1-opts .q-opt').forEach(o=>{
+    o.addEventListener('click',()=>{
+        document.querySelectorAll('#q1-opts .q-opt').forEach(x=>x.classList.remove('active'));
+        o.classList.add('active'); q1=o.dataset.val; updateGrid();
     });
 });
-document.querySelectorAll('#q2-opts .q-opt').forEach(o => {
-    o.addEventListener('click', () => {
-        document.querySelectorAll('#q2-opts .q-opt').forEach(x => x.classList.remove('active'));
-        o.classList.add('active');
-        q2 = o.dataset.val;
-        updateGrid();
+document.querySelectorAll('#q2-opts .q-opt').forEach(o=>{
+    o.addEventListener('click',()=>{
+        document.querySelectorAll('#q2-opts .q-opt').forEach(x=>x.classList.remove('active'));
+        o.classList.add('active'); q2=o.dataset.val; updateGrid();
     });
 });
 
-/* === POOL VIS === */
-function renderPool(){
-    const vis = document.getElementById('pool-vis');
-    const status = document.getElementById('pool-status');
-    if(!N || !S){ vis.innerHTML=''; status.textContent='Enter N and S in Step 3 to see the pool'; return; }
-    const maxDots = Math.min(N, 30);
-    vis.innerHTML = '';
-    for(let i=1; i<=maxDots; i++){
-        const dot = document.createElement('div');
-        dot.className = 'pool-dot';
-        if(i <= S) dot.classList.add('picked');
-        dot.textContent = i<=N ? i : '';
-        vis.appendChild(dot);
-    }
-    if(N > 30){
-        const more = document.createElement('div');
-        more.style.cssText = 'color:var(--muted);font-size:.8rem;padding:4px 8px';
-        more.textContent = `+${N-30} more`;
-        vis.appendChild(more);
-    }
-    const fnames = { ns:'N\u02E2', npr:'nPr', ncr:'nCr' };
-    status.textContent = `N = ${N} items in the pool \u00b7 S = ${S} drawn \u00b7 Formula: ${fnames[formula]||'\u2014'}`;
+/* === STEP 2: PROCESS + TREE === */
+function renderProcess(){
+    if(!formula){ document.getElementById('process-desc').textContent='Select a formula in Step 1 first.'; document.getElementById('tree-wrap').classList.add('hidden'); document.getElementById('spread-text').innerHTML=''; return; }
+    const n = N||10, s = S||3;
+    const names={ns:'N\u02E2 (pool refills)',npr:'nPr (ordered drainage)',ncr:'nCr (unordered drainage)'};
+    document.getElementById('process-title').textContent='Step 2 \u2014 '+names[formula];
+    const isDefault = !N;
+    document.getElementById('process-desc').textContent = isDefault ? 'Showing with default N=10, S=3. Enter your own values in Step 3.' : `N=${n}, S=${s}`;
+    drawTree(n, s);
+    buildSpreadText(n, s);
+    document.getElementById('tree-wrap').classList.remove('hidden');
 }
 
-/* === STEP 2: ROUND-SPREAD === */
-function buildRoundSpread(){
-    if(!formula || !N || !S) return;
-    const box = document.getElementById('round-spread-box');
-    const names = { ns:'N\u02E2 (pool refills)', npr:'nPr (ordered drainage)', ncr:'nCr (unordered drainage)' };
-    document.getElementById('process-title').textContent = 'Step 2 \u2014 Round-Spread: ' + names[formula];
+function drawTree(n, s){
+    const wrap = document.getElementById('tree-wrap');
+    const canvas = document.getElementById('tree-canvas');
+    const dpr = window.devicePixelRatio||1;
+    const cw = wrap.clientWidth - 34;
+    const sVis = Math.min(s, 5);
+    const rowH = 80;
+    const ch = (sVis+1)*rowH + 30;
+    canvas.width = cw*dpr; canvas.height = ch*dpr;
+    canvas.style.width = cw+'px'; canvas.style.height = ch+'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr,dpr); ctx.clearRect(0,0,cw,ch);
 
+    const R = 7;
+    const accent='#a78bfa', muted='#71717a', border='#27272a', green='#22c55e', red='#ef4444', text2='#a1a1aa';
+
+    function poolAt(round){ return formula==='ns' ? n : n-round; }
+
+    // Build node positions level by level
+    // Each level: array of {x, parentX, ellipsis}
+    // Strategy: only expand the leftmost parent at each level to keep it readable
+    // Show up to `show` children per expanded parent
+    const levels = [[{x:cw/2, parentX:null, ellipsis:false}]];
+    const showPerLevel = [Math.min(poolAt(0),6), Math.min(poolAt(1),5), Math.min(poolAt(2),4), Math.min(poolAt(3),3), Math.min(poolAt(4),3)];
+
+    for(let lv=0; lv<sVis; lv++){
+        const pool = poolAt(lv);
+        const parents = levels[lv];
+        const children = [];
+        // We expand up to 2 parents at level 0, 1 parent at deeper levels
+        const expandLimit = lv===0 ? 1 : 1;
+        let expanded = 0;
+
+        for(const p of parents){
+            if(p.ellipsis) continue;
+            if(expanded >= expandLimit){ continue; }
+            expanded++;
+
+            const show = showPerLevel[lv]||3;
+            const hasMore = pool > show;
+            const totalSlots = show + (hasMore?1:0);
+
+            // Width allocation shrinks with depth
+            const widthFrac = lv===0 ? 0.85 : (lv===1 ? 0.5 : (lv===2 ? 0.35 : 0.25));
+            const totalW = cw * widthFrac;
+            const startX = p.x - totalW/2;
+            const step = totalW / (totalSlots+1);
+
+            for(let i=0;i<show;i++){
+                children.push({x: startX+step*(i+1), parentX:p.x, ellipsis:false});
+            }
+            if(hasMore){
+                children.push({x: startX+step*(show+1), parentX:p.x, ellipsis:true});
+            }
+        }
+        levels.push(children);
+    }
+
+    // Draw lines + nodes
+    for(let lv=1; lv<=sVis; lv++){
+        const y = 35 + lv*rowH;
+        const py = 35 + (lv-1)*rowH;
+        for(const nd of levels[lv]){
+            // Line
+            ctx.beginPath();
+            ctx.moveTo(nd.parentX, py+R+2);
+            ctx.lineTo(nd.x, y-R-2);
+            ctx.strokeStyle = border;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            if(nd.ellipsis){
+                ctx.fillStyle = muted;
+                ctx.font = '13px Inter,sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('\u22ef', nd.x, y+4);
+            } else {
+                ctx.beginPath();
+                ctx.arc(nd.x, y, R, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(167,139,250,0.1)';
+                ctx.fill();
+                ctx.strokeStyle = accent;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+        }
+        // Level label
+        const pool = poolAt(lv-1);
+        ctx.fillStyle = text2;
+        ctx.font = '12px Inter,sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('Round '+lv+': '+pool+' choices', cw-4, y+4);
+        if(formula!=='ns' && lv>1){
+            ctx.fillStyle = red;
+            ctx.font = '10px Inter,sans-serif';
+            ctx.fillText('pool \u22121', cw-4, y+17);
+        }
+    }
+
+    // Root
+    ctx.beginPath();
+    ctx.arc(cw/2, 35, R+3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(167,139,250,0.15)';
+    ctx.fill();
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = '#fafafa';
+    ctx.font = 'bold 10px Inter,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Pool: '+n, cw/2, 39);
+
+    // Total line at bottom
+    const totalY = 35 + (sVis+0.7)*rowH;
+    let parts=[], total=1;
+    for(let i=0;i<s;i++){ const p=poolAt(i); parts.push(p); total*=p; }
+    ctx.fillStyle = green;
+    ctx.font = 'bold 14px Inter,sans-serif';
+    ctx.textAlign = 'center';
+    if(formula==='ncr'){
+        ctx.fillText(parts.join(' \u00d7 ')+' = '+fmtBig(total)+' ordered', cw/2, totalY);
+        const fact = factorial(s);
+        ctx.fillStyle = text2;
+        ctx.font = '12px Inter,sans-serif';
+        ctx.fillText('\u00f7 '+s+'! = \u00f7 '+fmtBig(fact)+' = '+fmtBig(total/fact)+' groups', cw/2, totalY+20);
+    } else {
+        ctx.fillText(parts.join(' \u00d7 ')+' = '+fmtBig(total)+' ways', cw/2, totalY);
+    }
+}
+
+function buildSpreadText(n, s){
+    const box = document.getElementById('spread-text');
     let html = '';
-
-    if(formula === 'ns'){
-        document.getElementById('process-desc').textContent = 'Pool refills every round. Every pick has the same N choices. No cancellation needed.';
-        html += '<div class="round-row">';
-        const maxShow = Math.min(S, 8);
-        for(let i=0; i<maxShow; i++){
-            if(i>0) html += '<span class="round-op">&times;</span>';
-            html += `<span class="round-chip surviving">${N}</span>`;
-        }
-        if(S > 8) html += '<span class="round-op"> \u2026 \u00d7 ' + N + '</span>';
-        html += '</div>';
-        html += `<p style="margin-top:12px;color:var(--text2);font-size:.88rem"><strong>${S} rounds</strong>, each with ${N} choices. Pool stays full.</p>`;
-    }
-    else if(formula === 'npr'){
-        document.getElementById('process-desc').textContent = 'Write N! as the full chain. Write (N\u2212S)! underneath. Cancel the common tail. What survives is the rounds you walked.';
-        // Top: full N!
-        html += '<div class="derivation"><div class="d-label">N! expanded</div>';
-        let topParts = [];
-        for(let i=N; i>=1; i--) topParts.push(i);
-        html += '<div class="d-line">' + topParts.join(' \u00d7 ') + '</div></div>';
-        // Bottom: (N-S)!
-        const bot = N - S;
-        html += '<div class="derivation"><div class="d-label">(N\u2212S)! = ' + bot + '! cancels</div>';
-        let botParts = [];
-        for(let i=bot; i>=1; i--) botParts.push(i);
-        html += '<div class="d-line" style="text-decoration:line-through;opacity:.4">' + botParts.join(' \u00d7 ') + '</div></div>';
-        // Surviving rounds
-        html += '<div class="derivation" style="border-color:rgba(34,197,94,.3)"><div class="d-label" style="color:var(--green)">Surviving rounds</div><div class="round-row">';
-        for(let i=0; i<S; i++){
-            if(i>0) html += '<span class="round-op">&times;</span>';
-            html += `<span class="round-chip surviving">Round ${i+1}: ${N-i}</span>`;
-        }
-        html += '</div>';
-        html += `<div class="d-line" style="margin-top:8px"><strong>${S} rounds.</strong> Pool shrinks from ${N} down to ${N-S+1}.</div></div>`;
-    }
-    else if(formula === 'ncr'){
-        document.getElementById('process-desc').textContent = 'Same drainage as nPr \u2014 cancel (N\u2212S)! from the bottom. Then divide by S! to strip the costume-count.';
-        // Surviving rounds (same as nPr)
-        html += '<div class="derivation" style="border-color:rgba(34,197,94,.3)"><div class="d-label" style="color:var(--green)">Surviving rounds (same as nPr)</div><div class="round-row">';
-        for(let i=0; i<S; i++){
-            if(i>0) html += '<span class="round-op">&times;</span>';
-            html += `<span class="round-chip surviving">${N-i}</span>`;
-        }
-        html += '</div>';
-        html += `<div class="d-line" style="margin-top:6px">${S} rounds \u2192 nPr = ${fmtBig(nPr(N,S))}</div></div>`;
-        // Costume count
-        html += '<div class="derivation" style="border-color:rgba(239,68,68,.3)"><div class="d-label" style="color:var(--red)">Costume-count: S! = ' + S + '!</div>';
-        let costumeParts = [];
-        for(let i=S; i>=1; i--) costumeParts.push(i);
-        html += '<div class="d-line">' + costumeParts.join(' \u00d7 ') + ' = ' + fmtBig(factorial(S)) + '</div>';
-        html += '<div class="d-line">Each group of ' + S + ' appeared ' + fmtBig(factorial(S)) + ' times wearing different sequence-costumes. Divide to strip them.</div></div>';
-        // Result
-        html += `<div class="derivation"><div class="d-label">nCr = nPr / S!</div><div class="d-line">${fmtBig(nPr(N,S))} \u00f7 ${fmtBig(factorial(S))} = <strong>${fmtBig(nCr(N,S))}</strong></div></div>`;
+    if(formula==='ns'){
+        html = '<div class="derivation"><div class="d-label">No drainage</div>';
+        html += '<div class="d-line">Every round has '+n+' choices. The pool refills after each pick.</div>';
+        html += '<div class="d-line">'+Array(Math.min(s,6)).fill(n).join(' \u00d7 ')+(s>6?' \u00d7 \u2026':'')+' = <strong>'+fmtBig(Math.pow(n,s))+'</strong></div></div>';
+    } else if(formula==='npr'){
+        html = '<div class="derivation"><div class="d-label">The pool shrinks each round</div>';
+        let parts=[];
+        for(let i=0;i<s;i++) parts.push(n-i);
+        html += '<div class="d-line">N!/(N\u2212S)! = '+n+'!/'+((n-s))+'!</div>';
+        html += '<div class="d-line">Cancel the bottom '+(n-s)+' factors. What survives:</div>';
+        html += '<div class="d-line"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(permut(n,s))+'</strong></div></div>';
+    } else if(formula==='ncr'){
+        html = '<div class="derivation"><div class="d-label">Same drainage as nPr, then collapse order</div>';
+        let parts=[];
+        for(let i=0;i<s;i++) parts.push(n-i);
+        html += '<div class="d-line">Drainage rounds: '+parts.join(' \u00d7 ')+' = '+fmtBig(permut(n,s))+' ordered</div>';
+        html += '<div class="d-line">Costume-count: '+s+'! = '+fmtBig(factorial(s))+'</div>';
+        html += '<div class="d-line"><strong>'+fmtBig(permut(n,s))+' \u00f7 '+fmtBig(factorial(s))+' = '+fmtBig(combin(n,s))+' groups</strong></div></div>';
     }
     box.innerHTML = html;
 }
 
 /* === STEP 3: DATA === */
 function dropData(n, s){
-    if(n<1 || s<0 || (!formula || formula!=='ns') && s>n) return;
-    N = n; S = s; solved = true;
+    if(n<1||s<1) return;
+    if(formula!=='ns' && s>n) return;
+    N=n; S=s; solved=true;
     stepBtns[2].classList.add('done');
-    renderPool();
 }
-
-document.getElementById('btn-drop').addEventListener('click', () => {
-    const n = parseInt(document.getElementById('in-n').value);
-    const s = parseInt(document.getElementById('in-s').value);
-    if(!isNaN(n) && !isNaN(s) && formula) dropData(n, s);
+document.getElementById('btn-drop').addEventListener('click',()=>{
+    const n=parseInt(document.getElementById('in-n').value);
+    const s=parseInt(document.getElementById('in-s').value);
+    if(!isNaN(n)&&!isNaN(s)&&formula) dropData(n,s);
 });
-document.getElementById('btn-example').addEventListener('click', () => {
-    document.getElementById('in-n').value = '10';
-    document.getElementById('in-s').value = '3';
-    if(formula) dropData(10, 3);
+document.getElementById('btn-example').addEventListener('click',()=>{
+    document.getElementById('in-n').value='10';
+    document.getElementById('in-s').value='3';
+    if(formula) dropData(10,3);
 });
 
 /* === STEP 4: RESULT === */
 function showResult(){
-    if(!formula || !solved) return;
+    if(!formula||!solved) return;
+    const n=N, s=S;
     const dbox = document.getElementById('derivation-box');
-    let derivHTML = '';
-    let name = '', formulaStr = '', value = 0, desc = '';
+    let dHTML='', name='', fStr='', value=0, desc='';
 
-    if(formula === 'ns'){
-        value = Math.pow(N, S);
-        name = 'N\u02E2 \u2014 Pool Refills';
-        desc = `Every round has ${N} choices. ${S} rounds. No shrinking.`;
-        let roundStr = Array(Math.min(S,6)).fill(N).join(' \u00d7 ');
-        if(S>6) roundStr += ' \u00d7 \u2026';
-        formulaStr = `${N}\u02E2 = ${roundStr}`;
-        derivHTML = `<div class="derivation"><div class="d-label">Computation</div>`;
-        derivHTML += `<div class="d-line">N = ${N}, S = ${S}</div>`;
-        derivHTML += `<div class="d-line">${N}<sup>${S}</sup> = ${fmtBig(value)}</div></div>`;
+    if(formula==='ns'){
+        value=Math.pow(n,s);
+        name='N\u02E2 \u2014 Pool Refills';
+        desc=s+' rounds, each with '+n+' choices. No shrinking.';
+        fStr=n+'\u02E2';
+        dHTML='<div class="derivation"><div class="d-label">Computation</div>';
+        dHTML+='<div class="d-line">'+Array(Math.min(s,6)).fill(n).join(' \u00d7 ')+(s>6?' \u00d7 \u2026':'')+'</div>';
+        dHTML+='<div class="d-line"><strong>= '+fmtBig(value)+'</strong></div></div>';
+    } else if(formula==='npr'){
+        value=permut(n,s);
+        name='nPr \u2014 Ordered Drainage';
+        desc=s+' items leave a pool of '+n+'. Order matters.';
+        let parts=[];
+        for(let i=0;i<s;i++) parts.push(n-i);
+        fStr=parts.join(' \u00d7 ');
+        dHTML='<div class="derivation"><div class="d-label">Where each round comes from</div>';
+        dHTML+='<div class="d-line">N! / (N\u2212S)! = '+n+'! / '+(n-s)+'!</div>';
+        dHTML+='<div class="d-line">Cancel '+(n-s)+'! from bottom. Surviving rounds:</div>';
+        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': '+(n-i)+' choices (pool lost '+i+')</div>';
+        dHTML+='<div class="d-line" style="margin-top:6px"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(value)+'</strong></div></div>';
+    } else if(formula==='ncr'){
+        const perm=permut(n,s), cost=factorial(s);
+        value=combin(n,s);
+        name='nCr \u2014 Unordered Drainage';
+        desc='Same '+s+' drainage rounds, then \u00f7 '+s+'! to collapse order.';
+        let parts=[];
+        for(let i=0;i<s;i++) parts.push(n-i);
+        fStr=fmtBig(perm)+' \u00f7 '+fmtBig(cost);
+        dHTML='<div class="derivation"><div class="d-label">Drainage (same as nPr)</div>';
+        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': '+(n-i)+' choices</div>';
+        dHTML+='<div class="d-line"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(perm)+' ordered</strong></div></div>';
+        dHTML+='<div class="derivation"><div class="d-label">Costume-count</div>';
+        let cp=[];
+        for(let i=s;i>=1;i--) cp.push(i);
+        dHTML+='<div class="d-line">'+s+'! = '+cp.join(' \u00d7 ')+' = '+fmtBig(cost)+'</div>';
+        dHTML+='<div class="d-line">Each group of '+s+' appeared '+fmtBig(cost)+' times in different orders</div></div>';
+        dHTML+='<div class="derivation"><div class="d-label">Result</div>';
+        dHTML+='<div class="d-line"><strong>'+fmtBig(perm)+' \u00f7 '+fmtBig(cost)+' = '+fmtBig(value)+' groups</strong></div></div>';
     }
-    else if(formula === 'npr'){
-        value = nPr(N, S);
-        name = 'nPr \u2014 Ordered Drainage';
-        desc = `${S} items leave a pool of ${N}. Order matters. Each round the pool shrinks by one.`;
-        // Show the fraction
-        derivHTML = `<div class="derivation"><div class="d-label">Where does each number come from?</div>`;
-        derivHTML += `<div class="d-line">N! / (N\u2212S)! = ${N}! / ${N-S}!</div>`;
-        derivHTML += `<div class="d-line">(N\u2212S)! = ${N-S}! cancels the bottom ${N-S} factors</div>`;
-        derivHTML += `<div class="d-line">What survives:</div>`;
-        let parts = [];
-        for(let i=0; i<S; i++) parts.push(`${N-i}`);
-        derivHTML += `<div class="d-line"><strong>${parts.join(' \u00d7 ')} = ${fmtBig(value)}</strong></div>`;
-        derivHTML += `<div class="d-line" style="margin-top:6px">Round 1: ${N} choices (full pool)</div>`;
-        for(let i=1; i<S; i++) derivHTML += `<div class="d-line">Round ${i+1}: ${N-i} choices (pool lost ${i})</div>`;
-        derivHTML += `</div>`;
-        let roundParts = [];
-        for(let i=0; i<S; i++) roundParts.push(N-i);
-        formulaStr = roundParts.join(' \u00d7 ');
-    }
-    else if(formula === 'ncr'){
-        const perm = nPr(N, S);
-        const costumes = factorial(S);
-        value = nCr(N, S);
-        name = 'nCr \u2014 Unordered Drainage';
-        desc = `Same ${S} rounds of drainage as nPr, then divide by S! = ${fmtBig(costumes)} to strip the costume-count.`;
-        derivHTML = `<div class="derivation"><div class="d-label">Step 1: Same drainage as nPr</div>`;
-        let parts = [];
-        for(let i=0; i<S; i++) parts.push(`${N-i}`);
-        derivHTML += `<div class="d-line">${parts.join(' \u00d7 ')} = ${fmtBig(perm)}</div>`;
-        derivHTML += `<div class="d-line">${S} rounds, pool shrinking from ${N} to ${N-S+1}</div></div>`;
-        derivHTML += `<div class="derivation"><div class="d-label">Step 2: Where does S! come from?</div>`;
-        let costParts = [];
-        for(let i=S; i>=1; i--) costParts.push(i);
-        derivHTML += `<div class="d-line">S! = ${S}! = ${costParts.join(' \u00d7 ')} = ${fmtBig(costumes)}</div>`;
-        derivHTML += `<div class="d-line">Each group of ${S} appeared ${fmtBig(costumes)} times in the nPr count, wearing ${fmtBig(costumes)} different sequence-costumes</div></div>`;
-        derivHTML += `<div class="derivation"><div class="d-label">Step 3: Divide</div>`;
-        derivHTML += `<div class="d-line">nCr = nPr / S! = ${fmtBig(perm)} \u00f7 ${fmtBig(costumes)} = <strong>${fmtBig(value)}</strong></div></div>`;
-        formulaStr = `${fmtBig(perm)} \u00f7 ${fmtBig(costumes)}`;
-    }
-
-    dbox.innerHTML = derivHTML;
-    document.getElementById('formula-title').textContent = 'Step 4 \u2014 ' + (formula==='ns'?'N\u02E2':formula==='npr'?'nPr':'nCr');
-    document.getElementById('formula-desc').textContent = desc;
-    document.getElementById('result-name').textContent = name;
-    document.getElementById('result-formula').textContent = formulaStr;
-    document.getElementById('result-value').textContent = fmtBig(value);
+    dbox.innerHTML=dHTML;
+    document.getElementById('formula-title').textContent='Step 4 \u2014 '+(formula==='ns'?'N\u02E2':formula==='npr'?'nPr':'nCr');
+    document.getElementById('formula-desc').textContent=desc;
+    document.getElementById('result-name').textContent=name;
+    document.getElementById('result-formula').textContent=fStr;
+    document.getElementById('result-value').textContent=fmtBig(value);
     stepBtns[3].classList.add('done');
 }
 
 /* === RESET === */
-document.getElementById('btn-reset').addEventListener('click', () => {
-    q1=null; q2=null; formula=null; N=null; S=null; solved=false;
-    document.querySelectorAll('.q-opt').forEach(o => o.classList.remove('active'));
-    Object.values(gridCells).forEach(c => { c.classList.remove('cell-active'); c.classList.add('cell-dim'); });
+document.getElementById('btn-reset').addEventListener('click',()=>{
+    q1=null;q2=null;formula=null;N=null;S=null;solved=false;
+    document.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('active'));
+    Object.values(gridCells).forEach(c=>{c.classList.remove('cell-active');c.classList.add('cell-dim');});
     document.getElementById('blueprint-result').classList.add('hidden');
-    document.getElementById('round-spread-box').innerHTML = '';
-    document.getElementById('derivation-box').innerHTML = '';
-    document.getElementById('pool-vis').innerHTML = '';
-    document.getElementById('pool-status').textContent = 'Enter N and S in Step 3 to see the pool';
-    document.getElementById('process-desc').textContent = 'Select a formula in Step 1 first, then enter data in Step 3.';
-    ['in-n','in-s'].forEach(id => document.getElementById(id).value='');
-    stepBtns.forEach(b => b.classList.remove('done'));
+    document.getElementById('tree-wrap').classList.add('hidden');
+    document.getElementById('spread-text').innerHTML='';
+    document.getElementById('derivation-box').innerHTML='';
+    ['in-n','in-s'].forEach(id=>document.getElementById(id).value='');
+    stepBtns.forEach(b=>b.classList.remove('done'));
     showStep(1);
 });
 
