@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏠 Probability House — Galdr Spell | System 33</title>
-    <meta name="description" content="Interactive visualization of the Probability House — two forces, four rooms, one conservation law. Komplement, multiplikasjon, addisjon, oppsplitting, Bayes.">
+    <meta name="description" content="Interactive visualization of the Probability House — walk four formula paths through a single four-room table.">
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
         :root{
@@ -35,7 +35,8 @@
         .cell-derived{color:var(--green)!important;font-weight:600;background:rgba(34,197,94,.06)!important}
         .cell-locked{color:var(--accent)!important;font-weight:700;background:rgba(167,139,250,.06)!important}
         .cell-highlight{box-shadow:inset 0 0 0 2px var(--accent)!important}
-        .cell-barrier{background:rgba(59,130,246,.12)!important;box-shadow:inset 0 0 0 2px var(--blue)!important}
+        .cell-path{background:rgba(59,130,246,.1)!important;box-shadow:inset 0 0 0 2px var(--blue)!important}
+        .cell-path-active{background:rgba(167,139,250,.12)!important;box-shadow:inset 0 0 0 2px var(--accent)!important}
         .corner{background:var(--bg2)!important}
         .step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
         .step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.8rem;color:var(--text2);cursor:pointer;transition:all .2s}
@@ -48,6 +49,12 @@
         .step-content p:last-child{margin-bottom:0}
         .step-content strong{color:var(--text)}
         .step-content em{color:var(--muted)}
+        .path-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+        .path-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+        .path-card:hover{border-color:#3f3f46;background:rgba(228,228,231,.03)}
+        .path-card.active{border-color:var(--accent);background:rgba(167,139,250,.08)}
+        .path-card-name{font-size:.95rem;font-weight:600;margin-bottom:4px}
+        .path-card-eq{font-size:.78rem;color:var(--muted);line-height:1.4}
         .move-nav{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
         .move-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-family:inherit;font-size:.75rem;color:var(--muted);cursor:pointer;transition:all .2s}
         .move-btn:hover{color:var(--text2);border-color:#3f3f46}
@@ -62,14 +69,11 @@
         .action-btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
         .action-btn.secondary:hover{background:rgba(228,228,231,.04)}
         .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-        .readout-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-        .readout-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s}
-        .readout-card:hover{border-color:var(--accent)}
-        .readout-name{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-        .readout-book{font-size:.75rem;color:var(--accent);margin-bottom:4px}
-        .readout-formula{font-size:.8rem;color:var(--text2);margin-bottom:6px;line-height:1.5}
-        .readout-value{font-size:1.15rem;font-weight:700}
-        .walk-log{font-size:.85rem;color:var(--text2);line-height:2;font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:-.01em}
+        .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
+        .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+        .result-box-formula{font-size:.9rem;color:var(--text2);margin-bottom:8px;line-height:1.5}
+        .result-box-value{font-size:1.4rem;font-weight:700}
+        .walk-log{font-size:.85rem;color:var(--text2);line-height:2;font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:-.01em;margin-top:12px}
         .walk-log .log-line{opacity:0;animation:fadeIn .4s ease forwards}
         @keyframes fadeIn{to{opacity:1}}
         .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;font-size:.9rem;color:var(--text2);line-height:1.6}
@@ -85,7 +89,7 @@
         .hidden{display:none!important}
         @media(max-width:520px){
             .hero{padding:32px 0 20px}
-            .readout-grid{grid-template-columns:1fr}
+            .path-grid{grid-template-columns:1fr}
             .input-row{flex-direction:column;align-items:stretch}
             .input-group input{width:100%}
             .house-table{font-size:.82rem}
@@ -100,67 +104,16 @@
     <div class="hero-icon">🏠</div>
     <div class="hero-badge">Galdr Spell &middot; Kap 2 + Kap 4</div>
     <h1>The Probability House</h1>
-    <p>Two forces. Four rooms. One conservation law. Every formula in Kap 2 and Kap 4 is a readout of this one house.</p>
+    <p>Two forces. Four rooms. One conservation law. Four paths through the same house &mdash; each one a different formula.</p>
 </div></section>
 
 <section class="section"><div class="container">
     <div class="principle">
-        <strong>The whole is one.</strong> Probability mass is conserved. Whatever flows into one room must come out of another. The four rooms together always sum to 1.
+        <strong>The whole is one.</strong> Probability mass is conserved. The four rooms together always sum to 1. Every formula in Kap 2 + Kap 4 is a path through this house.
     </div>
 </div></section>
 
-<!-- Five Formulas from the Book -->
-<section class="section"><div class="container">
-    <div class="section-label">Formulas from the book</div>
-    <p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">The house covers five named formulas from HSM126. Each one is a <strong>readout</strong> &mdash; a way of reading cells from the filled house.</p>
-
-    <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">1. Komplement</span>
-            <span class="formula-ref-kap">Kap 2</span>
-        </div>
-        <div class="formula-ref-eq">P(A&prime;) = 1 &minus; P(A)</div>
-        <div class="formula-ref-desc">The complement. What doesn&rsquo;t fire. Read from the row-sum column &mdash; the &Sigma; rad margin gives P(A), then subtract from 1.</div>
-    </div>
-
-    <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">2. Addisjon</span>
-            <span class="formula-ref-kap">Kap 2</span>
-        </div>
-        <div class="formula-ref-eq">P(A &cup; B) = P(A) + P(B) &minus; P(A &cap; B)</div>
-        <div class="formula-ref-desc">The union. Everything where at least one fires. Three rooms of the house &mdash; A&cap;B, A&cap;B&prime;, A&prime;&cap;B &mdash; gathered together.</div>
-    </div>
-
-    <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">3. Multiplikasjon</span>
-            <span class="formula-ref-kap">Kap 4</span>
-        </div>
-        <div class="formula-ref-eq">P(A &cap; B) = P(A | B) &middot; P(B)</div>
-        <div class="formula-ref-desc">The intersection rewritten. The joint probability is the conditional times the margin. This is the <strong>barrier</strong> &mdash; shrink the dome to B, then measure A inside it, then scale back to the full dome.</div>
-    </div>
-
-    <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">4. Oppsplitting</span>
-            <span class="formula-ref-kap">Kap 4</span>
-        </div>
-        <div class="formula-ref-eq">P(B) = P(B | A) &middot; P(A) + P(B | A&prime;) &middot; P(A&prime;)</div>
-        <div class="formula-ref-desc">Total probability. Split B into two channels: what B looks like inside A, and what B looks like inside A&prime;. Weight each by its lane width. The column sum from the house.</div>
-    </div>
-
-    <div class="formula-ref">
-        <div class="formula-ref-header">
-            <span class="formula-ref-name">5. Bayes</span>
-            <span class="formula-ref-kap">Kap 4</span>
-        </div>
-        <div class="formula-ref-eq">P(A | B) = P(B | A) &middot; P(A) / P(B)</div>
-        <div class="formula-ref-desc">The reversal. You know the forward conditional P(B|A). Bayes flips the anchor &mdash; same intersection, different denominator. Diagnosis from evidence.</div>
-    </div>
-</div></section>
-
-<!-- The House (always visible) -->
+<!-- The House -->
 <section class="section"><div class="container">
     <div class="section-label">The House</div>
     <div class="house-wrapper">
@@ -173,27 +126,27 @@
             </tr>
             <tr>
                 <th>A</th>
-                <td id="c-ab" class="cell-empty">&mdash;</td>
-                <td id="c-anb" class="cell-empty">&mdash;</td>
-                <td id="c-pa" class="cell-empty">&mdash;</td>
+                <td id="c-ab" class="cell-label">P(A&cap;B)</td>
+                <td id="c-anb" class="cell-label">P(A&cap;B&prime;)</td>
+                <td id="c-pa" class="cell-label">P(A)</td>
             </tr>
             <tr>
                 <th>ikke-A</th>
-                <td id="c-nab" class="cell-empty">&mdash;</td>
-                <td id="c-nanb" class="cell-empty">&mdash;</td>
-                <td id="c-pna" class="cell-empty">&mdash;</td>
+                <td id="c-nab" class="cell-label">P(A&prime;&cap;B)</td>
+                <td id="c-nanb" class="cell-label">P(A&prime;&cap;B&prime;)</td>
+                <td id="c-pna" class="cell-label">P(A&prime;)</td>
             </tr>
             <tr>
                 <th>&Sigma; kolonne</th>
-                <td id="c-pb" class="cell-empty">&mdash;</td>
-                <td id="c-pnb" class="cell-empty">&mdash;</td>
+                <td id="c-pb" class="cell-label">P(B)</td>
+                <td id="c-pnb" class="cell-label">P(B&prime;)</td>
                 <td id="c-total" class="cell-locked">1</td>
             </tr>
         </table>
     </div>
 </div></section>
 
-<!-- Steps -->
+<!-- Walk the Spell -->
 <section class="section"><div class="container">
     <div class="section-label">Walk the spell</div>
     <div class="step-nav">
@@ -203,33 +156,42 @@
         <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
     </div>
 
+    <!-- Step 1: Blueprint / Path Selection -->
     <div class="step-content" id="step-1">
-        <h3>Step 1 &mdash; Recognize the House</h3>
-        <p>Two events in the problem &mdash; A and B. Each one either fires or doesn&rsquo;t. Two forces &times; two states = <strong>four rooms</strong>.</p>
-        <p>When you read a problem and see two events discussed &mdash; <em>&ldquo;a student takes the bus (A), a student has homework (B)&rdquo;</em> &mdash; the house is already there. Your job is to see it.</p>
-        <p>The table above is the house. Four inner rooms. Row sums on the right. Column sums on the bottom. The corner is locked at <strong>1</strong> &mdash; always. That&rsquo;s the conservation law made visible.</p>
-    </div>
-
-    <div class="step-content hidden" id="step-2">
-        <h3>Step 2 &mdash; Build the Blueprint</h3>
-        <p>Construct the house <strong>number-blind</strong> &mdash; no data yet. Five moves, each adding structure to the table above.</p>
-        <div class="move-nav" id="move-nav">
-            <button class="move-btn active" data-move="1">Move 1</button>
-            <button class="move-btn" data-move="2">Move 2</button>
-            <button class="move-btn" data-move="3">Move 3</button>
-            <button class="move-btn" data-move="4">Move 4</button>
-            <button class="move-btn" data-move="5">Move 5</button>
+        <h3>Step 1 &mdash; Which path are you walking?</h3>
+        <p>The house is always the same. The path determines which rooms you read and in what order. Choose your formula:</p>
+        <div class="path-grid" id="path-grid">
+            <div class="path-card" data-path="addisjon">
+                <div class="path-card-name">Addisjon</div>
+                <div class="path-card-eq">P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)</div>
+            </div>
+            <div class="path-card" data-path="multiplikasjon">
+                <div class="path-card-name">Multiplikasjon</div>
+                <div class="path-card-eq">P(A&cap;B) = P(A|B) &middot; P(B)</div>
+            </div>
+            <div class="path-card" data-path="oppsplitting">
+                <div class="path-card-name">Oppsplitting</div>
+                <div class="path-card-eq">P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</div>
+            </div>
+            <div class="path-card" data-path="bayes">
+                <div class="path-card-name">Bayes</div>
+                <div class="path-card-eq">P(A|B) = P(B|A)&middot;P(A) / P(B)</div>
+            </div>
         </div>
-        <p id="m1"><strong>Name the two forces.</strong> Pick A and B from the problem. A runs down the rows. B runs across the columns. Each has a complement &mdash; ikke-A, ikke-B.</p>
-        <p id="m2" class="hidden"><strong>Add the row-sum column.</strong> &Sigma; rad on the right. P(A) and P(ikke-A) live here &mdash; the total mass in each row, regardless of column.</p>
-        <p id="m3" class="hidden"><strong>Add the column-sum row.</strong> &Sigma; kolonne at the bottom. P(B) and P(ikke-B) &mdash; mass in each column, regardless of row.</p>
-        <p id="m4" class="hidden"><strong>Lock the whole-house &Sigma; at 1.</strong> Bottom-right corner. The total mass in the entire house. Always 1. The conservation law.</p>
-        <p id="m5" class="hidden"><strong>Name the four rooms.</strong> Each inner cell is an intersection. Top-left: A&cap;B. Top-right: A&cap;ikke-B. Bottom-left: ikke-A&cap;B. Bottom-right: ikke-A&cap;ikke-B. The full blueprint.</p>
+        <p id="path-hint" class="hidden" style="margin-top:12px;color:var(--accent);font-size:.85rem"></p>
     </div>
 
+    <!-- Step 2: Process -->
+    <div class="step-content hidden" id="step-2">
+        <h3 id="process-title">Step 2 &mdash; Process</h3>
+        <div class="move-nav" id="move-nav"></div>
+        <div id="move-desc"></div>
+    </div>
+
+    <!-- Step 3: Data -->
     <div class="step-content hidden" id="step-3">
         <h3>Step 3 &mdash; Drop the Data</h3>
-        <p>Enter the values given in the problem. Place them carefully &mdash; <strong>only what the text tells you.</strong> Don&rsquo;t compute anything yet.</p>
+        <p>Enter the values given in the problem. The house fills what it can from the conservation law.</p>
         <div class="input-row">
             <div class="input-group">
                 <label>P(A)</label>
@@ -245,56 +207,22 @@
             </div>
         </div>
         <div class="btn-row">
-            <button class="action-btn" id="btn-drop">Drop data</button>
+            <button class="action-btn" id="btn-drop">Drop data &amp; solve</button>
             <button class="action-btn secondary" id="btn-example">Example (0.7, 0.4, 0.2)</button>
             <button class="action-btn secondary" id="btn-random">Random</button>
         </div>
+        <div class="walk-log" id="walk-log"></div>
     </div>
 
+    <!-- Step 4: Formula -->
     <div class="step-content hidden" id="step-4">
-        <h3>Step 4 &mdash; Walk the Conservation Law</h3>
-        <p>The house finishes itself. Every remaining cell is forced by the conservation law &mdash; rows sum to their margin, columns sum to their margin, everything sums to 1.</p>
-        <button class="action-btn" id="btn-solve">Solve the house</button>
-        <div class="walk-log" id="walk-log" style="margin-top:16px"></div>
-    </div>
-</div></section>
-
-<!-- Readouts -->
-<section class="section hidden" id="sec-readouts"><div class="container">
-    <div class="section-label">Readouts &mdash; the five formulas</div>
-    <p style="color:var(--text2);font-size:.9rem;margin-bottom:16px">Each formula is a <strong>readout</strong> of the filled house. Hover a card to see which cells it reads.</p>
-    <div class="readout-grid" id="readout-grid"></div>
-</div></section>
-
-<!-- Kap 4: The Barrier -->
-<section class="section hidden" id="sec-barrier"><div class="container">
-    <div class="section-label">Kap 4 &mdash; The Barrier (Betinget Sannsynlighet)</div>
-    <div class="principle">
-        <strong>The conditional is a barrier.</strong> P(A|B) means: shrink the dome from &Omega; down to B. B becomes the new whole. Inside that smaller dome, how much is also A? Two moves, always in that order.
-    </div>
-    <div class="step-content">
-        <h3>The Barrier Process</h3>
-        <p><strong>Move 1 &mdash; Shrink the dome.</strong> The full house has four rooms summing to 1. When you condition on B, you collapse to the B-column only. The B-column becomes your new dome. Its total is P(B).</p>
-        <p><strong>Move 2 &mdash; Measure inside.</strong> Inside the B-column, find the A&cap;B room. Its density relative to the new dome is P(A&cap;B) / P(B). That&rsquo;s P(A|B).</p>
-        <p>The formula P(A|B) = P(A&cap;B) / P(B) is not a definition you memorize &mdash; it&rsquo;s a <strong>readout</strong>. You see the B-column, you see the A&cap;B room inside it, and you read the ratio.</p>
-        <div class="btn-row">
-            <button class="action-btn" id="btn-barrier">Show the barrier on the house</button>
-            <button class="action-btn secondary" id="btn-clear-barrier">Clear barrier</button>
+        <h3 id="formula-title">Step 4 &mdash; Formula</h3>
+        <p id="formula-desc"></p>
+        <div class="result-box" id="result-box">
+            <div class="result-box-name" id="result-name"></div>
+            <div class="result-box-formula" id="result-formula"></div>
+            <div class="result-box-value" id="result-value"></div>
         </div>
-    </div>
-    <div class="step-content" style="margin-top:16px">
-        <h3>Bayes &mdash; Flip the Anchor</h3>
-        <p>You know P(B|A) &mdash; the forward conditional. You need P(A|B) &mdash; the reverse. Same intersection room, but the dome switches from the A-row to the B-column.</p>
-        <p><strong>Forward:</strong> P(B|A) = P(A&cap;B) / P(A) &mdash; dome is the A-row.</p>
-        <p><strong>Reverse:</strong> P(A|B) = P(A&cap;B) / P(B) &mdash; dome is the B-column.</p>
-        <p>Same numerator, different denominator. That&rsquo;s Bayes. The house makes it visible: one room, two ways to frame it.</p>
-    </div>
-    <div class="step-content" style="margin-top:16px">
-        <h3>Oppsplitting &mdash; Total Probability</h3>
-        <p>The column sum P(B) can be split into two channels:</p>
-        <p><strong>P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</strong></p>
-        <p>This is the oppsplitting formula. In the house: the B-column has two rooms. Each room&rsquo;s mass is the conditional times the row margin. Sum the two rooms and you get the column total.</p>
-        <p>When you need P(B) for a Bayes denominator but the problem only gives you conditionals and margins &mdash; this is how you build it.</p>
     </div>
 </div></section>
 
@@ -303,74 +231,266 @@
     <button class="action-btn secondary" id="btn-reset">&larr; Reset house</button>
 </div></section>
 
+<!-- Formula Reference (bottom) -->
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">Formula Reference &mdash; Kap 2 + Kap 4</div>
+    <p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">The five named formulas from the book. Each one is a readout of the filled house.</p>
+
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">Komplement</span>
+            <span class="formula-ref-kap">Kap 2</span>
+        </div>
+        <div class="formula-ref-eq">P(A&prime;) = 1 &minus; P(A)</div>
+        <div class="formula-ref-desc">The complement. Read from the &Sigma; rad margin. Already known &mdash; the simplest conservation law readout.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">Addisjon</span>
+            <span class="formula-ref-kap">Kap 2</span>
+        </div>
+        <div class="formula-ref-eq">P(A &cup; B) = P(A) + P(B) &minus; P(A &cap; B)</div>
+        <div class="formula-ref-desc">The union. Three rooms of the house gathered together. The overlap subtracted because it was counted twice.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">Multiplikasjon</span>
+            <span class="formula-ref-kap">Kap 4</span>
+        </div>
+        <div class="formula-ref-eq">P(A &cap; B) = P(A | B) &middot; P(B)</div>
+        <div class="formula-ref-desc">The barrier formula. Shrink the dome to B, measure A inside, scale back. The intersection rewritten as conditional times margin.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">Oppsplitting</span>
+            <span class="formula-ref-kap">Kap 4</span>
+        </div>
+        <div class="formula-ref-eq">P(B) = P(B|A) &middot; P(A) + P(B|A&prime;) &middot; P(A&prime;)</div>
+        <div class="formula-ref-desc">Total probability. Split the B-column into two lanes weighted by row margins. Used to build P(B) for a Bayes denominator.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header">
+            <span class="formula-ref-name">Bayes</span>
+            <span class="formula-ref-kap">Kap 4</span>
+        </div>
+        <div class="formula-ref-eq">P(A|B) = P(B|A) &middot; P(A) / P(B)</div>
+        <div class="formula-ref-desc">The reversal. You know the forward conditional. Bayes flips the anchor &mdash; same intersection, different denominator.</div>
+    </div>
+</div></section>
+
 <footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 
 <script>
-/* ── State ── */
+/* === PATH DEFINITIONS === */
+const PATHS = {
+    addisjon: {
+        name: 'Addisjon',
+        kap: 'Kap 2',
+        hint: 'Three rooms gathered. The overlap subtracted once.',
+        blueprint: ['ab','anb','nab'],
+        moves: [
+            { title:'Move 1 \u2014 Take all of A', text:'The A-row holds everything where A fires. Its total is P(A) in the \u03a3 rad margin. This includes both A\u2229B and A\u2229B\u2032.', hl:['ab','anb','pa'] },
+            { title:'Move 2 \u2014 Take all of B', text:'The B-column holds everything where B fires. Its total is P(B) in the \u03a3 kolonne margin. This includes both A\u2229B and A\u2032\u2229B.', hl:['ab','nab','pb'] },
+            { title:'Move 3 \u2014 Subtract the overlap', text:'A\u2229B got counted twice \u2014 once in the A-row, once in the B-column. Subtract it back. P(A\u222aB) = P(A) + P(B) \u2212 P(A\u2229B).', hl:['ab'] }
+        ],
+        compute: function(S){
+            const v = +(S.pa + S.pb - S.pab).toFixed(6);
+            return { name:'Addisjon (Union)', formula:`P(A\u222aB) = ${fmt(S.pa)} + ${fmt(S.pb)} \u2212 ${fmt(S.pab)}`, value:fmt(v), hl:['ab','anb','nab'], desc:'The three rooms where at least one event fires. Read directly from the filled house.' };
+        }
+    },
+    multiplikasjon: {
+        name: 'Multiplikasjon',
+        kap: 'Kap 4',
+        hint: 'The barrier. Shrink the dome to B, measure A inside, scale back.',
+        blueprint: ['ab','nab','pb'],
+        moves: [
+            { title:'Move 1 \u2014 Shrink the dome to B', text:'The full house has four rooms summing to 1. Condition on B: collapse to the B-column only. The B-column becomes your new dome. Its total is P(B).', hl:['ab','nab','pb'] },
+            { title:'Move 2 \u2014 Measure A inside B', text:'Inside the B-column, find the A\u2229B room. Its density relative to the new dome is P(A\u2229B) / P(B). That\u2019s P(A|B) \u2014 the conditional.', hl:['ab'] },
+            { title:'Move 3 \u2014 Read the intersection', text:'Rearrange: P(A\u2229B) = P(A|B) \u00b7 P(B). The intersection is the conditional times the margin. The barrier formula.', hl:['ab','pb'] }
+        ],
+        compute: function(S){
+            const pagb = S.pb > 0 ? +(S.pab / S.pb).toFixed(6) : 0;
+            return { name:'Multiplikasjon (Barrier)', formula:`P(A\u2229B) = P(A|B) \u00b7 P(B) = ${fmt(pagb)} \u00b7 ${fmt(S.pb)}`, value:fmt(S.pab), hl:['ab','pb'], desc:'The dome shrank to B. A\u2019s density inside that smaller dome, scaled back to the full house. P(A|B) = '+fmt(pagb) };
+        }
+    },
+    oppsplitting: {
+        name: 'Oppsplitting',
+        kap: 'Kap 4',
+        hint: 'Split the B-column into two lanes. Weight each by its row margin.',
+        blueprint: ['ab','nab','pb'],
+        moves: [
+            { title:'Move 1 \u2014 See the B-column as two lanes', text:'The B-column has two rooms: A\u2229B (top) and A\u2032\u2229B (bottom). Together they sum to P(B) \u2014 the column total.', hl:['ab','nab'] },
+            { title:'Move 2 \u2014 Rewrite each lane', text:'A\u2229B = P(B|A) \u00b7 P(A) \u2014 the conditional times the row margin. A\u2032\u2229B = P(B|A\u2032) \u00b7 P(A\u2032) \u2014 same logic, other row.', hl:['ab','pa','nab','pna'] },
+            { title:'Move 3 \u2014 Sum the two lanes', text:'P(B) = P(B|A)\u00b7P(A) + P(B|A\u2032)\u00b7P(A\u2032). Two channels weighted by their lane widths. This is how you build P(B) when the problem only gives you conditionals.', hl:['pb'] }
+        ],
+        compute: function(S){
+            const pbga = S.pa > 0 ? +(S.pab / S.pa).toFixed(6) : 0;
+            const nab = +(S.pb - S.pab).toFixed(6);
+            const pna = +(1 - S.pa).toFixed(6);
+            const pbgna = pna > 0 ? +(nab / pna).toFixed(6) : 0;
+            return { name:'Oppsplitting (Total Probability)', formula:`P(B) = ${fmt(pbga)}\u00b7${fmt(S.pa)} + ${fmt(pbgna)}\u00b7${fmt(pna)}`, value:fmt(S.pb), hl:['ab','nab','pb'], desc:`Two lanes: P(B|A)=${fmt(pbga)} through the A-lane (width ${fmt(S.pa)}), P(B|A\u2032)=${fmt(pbgna)} through the A\u2032-lane (width ${fmt(pna)}).` };
+        }
+    },
+    bayes: {
+        name: 'Bayes',
+        kap: 'Kap 4',
+        hint: 'Same intersection, flip the anchor. Forward to reverse.',
+        blueprint: ['ab','pa','pb'],
+        moves: [
+            { title:'Move 1 \u2014 The forward conditional', text:'You know P(B|A): dome is the A-row, measure B inside it. P(B|A) = P(A\u2229B) / P(A).', hl:['ab','pa'] },
+            { title:'Move 2 \u2014 Flip the anchor', text:'You need P(A|B): dome flips to the B-column. Same intersection room (A\u2229B), but now the denominator is P(B) instead of P(A).', hl:['ab','pb'] },
+            { title:'Move 3 \u2014 The Bayes formula', text:'P(A|B) = P(B|A) \u00b7 P(A) / P(B). Same numerator rewritten: the intersection expressed through the forward conditional. If P(B) isn\u2019t given, use oppsplitting to build it.', hl:['ab','pa','pb'] }
+        ],
+        compute: function(S){
+            const pbga = S.pa > 0 ? +(S.pab / S.pa).toFixed(6) : 0;
+            const pagb = S.pb > 0 ? +(S.pab / S.pb).toFixed(6) : 0;
+            return { name:'Bayes (Reversal)', formula:`P(A|B) = P(B|A)\u00b7P(A) / P(B) = ${fmt(pbga)}\u00b7${fmt(S.pa)} / ${fmt(S.pb)}`, value:fmt(pagb), hl:['ab','pa','pb'], desc:`Forward: P(B|A) = ${fmt(pbga)} (dome = A-row). Reverse: P(A|B) = ${fmt(pagb)} (dome = B-column). Same room, different frame.` };
+        }
+    }
+};
+
+/* === STATE === */
 let S = { pa:null, pb:null, pab:null, solved:false };
+let activePath = null;
+let activeMove = 0;
+
 const C = {};
 ['ab','anb','nab','nanb','pa','pna','pb','pnb','total'].forEach(k => C[k] = document.getElementById('c-'+k));
 
-/* ── Helpers ── */
+/* === HELPERS === */
 function fmt(n){ if(n===null||n===undefined) return '\u2014'; const r = Math.round(n*10000)/10000; return r === Math.floor(r) ? r.toFixed(0) : r.toFixed(4).replace(/0+$/,'').replace(/\.$/, ''); }
-function clearHL(){ Object.values(C).forEach(c => { c.classList.remove('cell-highlight'); c.classList.remove('cell-barrier'); }); }
+function clearHL(){ Object.values(C).forEach(c => { c.classList.remove('cell-highlight','cell-path','cell-path-active'); }); }
+function hlCells(keys, cls){ clearHL(); keys.forEach(k => { if(C[k]) C[k].classList.add(cls || 'cell-path'); }); }
 
-/* ── Table states ── */
-function showBlank(){
-    Object.values(C).forEach(c => { c.textContent = '\u2014'; c.className = 'cell-empty'; });
+/* === TABLE STATES === */
+function showLabels(){
+    C.ab.textContent = 'P(A\u2229B)'; C.ab.className = 'cell-label';
+    C.anb.textContent = "P(A\u2229B')"; C.anb.className = 'cell-label';
+    C.nab.textContent = "P(A'\u2229B)"; C.nab.className = 'cell-label';
+    C.nanb.textContent = "P(A'\u2229B')"; C.nanb.className = 'cell-label';
+    C.pa.textContent = 'P(A)'; C.pa.className = 'cell-label';
+    C.pna.textContent = "P(A')"; C.pna.className = 'cell-label';
+    C.pb.textContent = 'P(B)'; C.pb.className = 'cell-label';
+    C.pnb.textContent = "P(B')"; C.pnb.className = 'cell-label';
     C.total.textContent = '1'; C.total.className = 'cell-locked';
 }
 
-function showBlueprint(move){
-    showBlank();
-    if(move >= 2){ C.pa.textContent = 'P(A)'; C.pa.className = 'cell-label'; C.pna.textContent = "P(A')"; C.pna.className = 'cell-label'; }
-    if(move >= 3){ C.pb.textContent = 'P(B)'; C.pb.className = 'cell-label'; C.pnb.textContent = "P(B')"; C.pnb.className = 'cell-label'; }
-    if(move >= 4){ C.total.textContent = '1'; C.total.className = 'cell-locked'; }
-    if(move >= 5){
-        C.ab.textContent = 'P(A\u2229B)'; C.ab.className = 'cell-label';
-        C.anb.textContent = "P(A\u2229B')"; C.anb.className = 'cell-label';
-        C.nab.textContent = "P(A'\u2229B)"; C.nab.className = 'cell-label';
-        C.nanb.textContent = "P(A'\u2229B')"; C.nanb.className = 'cell-label';
-    }
+function fillHouse(){
+    if(S.pa===null) return;
+    const {pa,pb,pab} = S;
+    const panb = +(pa-pab).toFixed(6);
+    const nab = +(pb-pab).toFixed(6);
+    const pna = +(1-pa).toFixed(6);
+    const pnb = +(1-pb).toFixed(6);
+    const nanb = +(pna-nab).toFixed(6);
+    S.panb=panb; S.nab=nab; S.pna=pna; S.pnb=pnb; S.nanb=nanb;
+    C.ab.textContent=fmt(pab); C.ab.className='cell-given';
+    C.pa.textContent=fmt(pa); C.pa.className='cell-given';
+    C.pb.textContent=fmt(pb); C.pb.className='cell-given';
+    C.anb.textContent=fmt(panb); C.anb.className='cell-derived';
+    C.nab.textContent=fmt(nab); C.nab.className='cell-derived';
+    C.pna.textContent=fmt(pna); C.pna.className='cell-derived';
+    C.pnb.textContent=fmt(pnb); C.pnb.className='cell-derived';
+    C.nanb.textContent=fmt(nanb); C.nanb.className='cell-derived';
+    C.total.textContent='1'; C.total.className='cell-locked';
 }
 
-/* ── Step navigation ── */
+/* === STEP NAVIGATION === */
 const stepBtns = document.querySelectorAll('.step-btn');
-const steps = [1,2,3,4].map(i => document.getElementById('step-'+i));
+const stepEls = [1,2,3,4].map(i => document.getElementById('step-'+i));
 
 function showStep(n){
     stepBtns.forEach(b => b.classList.remove('active'));
     stepBtns[n-1].classList.add('active');
-    steps.forEach(s => s.classList.add('hidden'));
-    steps[n-1].classList.remove('hidden');
-    if(n===1) showBlank();
-    if(n===2){ showBlueprint(1); setMove(1); }
+    stepEls.forEach(s => s.classList.add('hidden'));
+    stepEls[n-1].classList.remove('hidden');
+    clearHL();
+    if(n===1 && activePath){
+        hlCells(PATHS[activePath].blueprint, 'cell-path');
+    }
+    if(n===2 && activePath){
+        showMove(activeMove);
+    }
+    if(n===4 && activePath && S.solved){
+        showResult();
+    }
 }
 stepBtns.forEach(b => b.addEventListener('click', () => showStep(parseInt(b.dataset.step))));
 
-/* ── Move navigation (Step 2) ── */
-const moveBtns = document.querySelectorAll('.move-btn');
-const moveDescs = [1,2,3,4,5].map(i => document.getElementById('m'+i));
+/* === PATH SELECTION (Step 1) === */
+const pathCards = document.querySelectorAll('.path-card');
+pathCards.forEach(card => {
+    card.addEventListener('click', () => {
+        activePath = card.dataset.path;
+        pathCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        const path = PATHS[activePath];
+        document.getElementById('path-hint').textContent = path.hint;
+        document.getElementById('path-hint').classList.remove('hidden');
+        hlCells(path.blueprint, 'cell-path');
+        stepBtns[0].classList.add('done');
+        buildMoves();
+    });
+});
 
-function setMove(m){
-    moveBtns.forEach(b => b.classList.remove('active'));
-    moveBtns[m-1].classList.add('active');
-    moveDescs.forEach(d => d.classList.add('hidden'));
-    moveDescs[m-1].classList.remove('hidden');
-    showBlueprint(m);
+/* === PROCESS MOVES (Step 2) === */
+function buildMoves(){
+    if(!activePath) return;
+    const path = PATHS[activePath];
+    document.getElementById('process-title').textContent = `Step 2 \u2014 Process: ${path.name}`;
+    const nav = document.getElementById('move-nav');
+    nav.innerHTML = '';
+    path.moves.forEach((m, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'move-btn' + (i===0?' active':'');
+        btn.textContent = `Move ${i+1}`;
+        btn.addEventListener('click', () => showMove(i));
+        nav.appendChild(btn);
+    });
+    activeMove = 0;
 }
-moveBtns.forEach(b => b.addEventListener('click', () => setMove(parseInt(b.dataset.move))));
 
-/* ── Drop data ── */
+function showMove(i){
+    if(!activePath) return;
+    const path = PATHS[activePath];
+    activeMove = i;
+    document.querySelectorAll('#move-nav .move-btn').forEach((b,j) => {
+        b.classList.toggle('active', j===i);
+    });
+    const desc = document.getElementById('move-desc');
+    const m = path.moves[i];
+    desc.innerHTML = `<p style="margin-bottom:6px"><strong>${m.title}</strong></p><p>${m.text}</p>`;
+    if(S.solved){
+        fillHouse();
+        hlCells(m.hl, 'cell-path-active');
+    } else {
+        showLabels();
+        hlCells(m.hl, 'cell-path');
+    }
+}
+
+/* === DATA (Step 3) === */
 function dropData(pa, pb, pab){
     if(pa<0||pa>1||pb<0||pb>1||pab<0||pab>1) return;
     if(pab > Math.min(pa,pb)+0.001) return;
-    S = { pa, pb, pab, solved:false };
-    showBlueprint(5);
-    C.ab.textContent = fmt(pab); C.ab.className = 'cell-given';
-    C.pa.textContent = fmt(pa); C.pa.className = 'cell-given';
-    C.pb.textContent = fmt(pb); C.pb.className = 'cell-given';
+    S = { pa, pb, pab, solved:true };
+    fillHouse();
     stepBtns[2].classList.add('done');
+
+    // Log the derivations
+    const log = document.getElementById('walk-log');
+    const panb = +(pa-pab).toFixed(6);
+    const nab = +(pb-pab).toFixed(6);
+    const pna = +(1-pa).toFixed(6);
+    const pnb = +(1-pb).toFixed(6);
+    const nanb = +(pna-nab).toFixed(6);
+    log.innerHTML = [
+        `P(A\u2229B') = ${fmt(pa)} \u2212 ${fmt(pab)} = ${fmt(panb)}`,
+        `P(A'\u2229B) = ${fmt(pb)} \u2212 ${fmt(pab)} = ${fmt(nab)}`,
+        `P(A') = 1 \u2212 ${fmt(pa)} = ${fmt(pna)}`,
+        `P(B') = 1 \u2212 ${fmt(pb)} = ${fmt(pnb)}`,
+        `P(A'\u2229B') = ${fmt(pna)} \u2212 ${fmt(nab)} = ${fmt(nanb)}`
+    ].map(t => `<div class="log-line" style="animation-delay:0s">${t}</div>`).join('');
 }
 
 document.getElementById('btn-drop').addEventListener('click', () => {
@@ -399,102 +519,40 @@ document.getElementById('btn-random').addEventListener('click', () => {
     dropData(pa,pb,pab);
 });
 
-/* ── Solve ── */
-document.getElementById('btn-solve').addEventListener('click', () => {
-    if(S.pa===null) return;
-    const {pa,pb,pab} = S;
-    const panb = +(pa - pab).toFixed(6);
-    const nab  = +(pb - pab).toFixed(6);
-    const pna  = +(1 - pa).toFixed(6);
-    const pnb  = +(1 - pb).toFixed(6);
-    const nanb = +(pna - nab).toFixed(6);
-
-    const chain = [
-        { k:'anb', v:panb, t:`P(A\u2229B') = P(A) \u2212 P(A\u2229B) = ${fmt(pa)} \u2212 ${fmt(pab)} = ${fmt(panb)}` },
-        { k:'nab', v:nab,  t:`P(A'\u2229B) = P(B) \u2212 P(A\u2229B) = ${fmt(pb)} \u2212 ${fmt(pab)} = ${fmt(nab)}` },
-        { k:'pna', v:pna,  t:`P(A') = 1 \u2212 P(A) = 1 \u2212 ${fmt(pa)} = ${fmt(pna)}` },
-        { k:'pnb', v:pnb,  t:`P(B') = 1 \u2212 P(B) = 1 \u2212 ${fmt(pb)} = ${fmt(pnb)}` },
-        { k:'nanb',v:nanb, t:`P(A'\u2229B') = P(A') \u2212 P(A'\u2229B) = ${fmt(pna)} \u2212 ${fmt(nab)} = ${fmt(nanb)}` }
-    ];
-    const log = document.getElementById('walk-log');
-    log.innerHTML = '';
-    chain.forEach((s,i) => {
-        setTimeout(() => {
-            C[s.k].textContent = fmt(s.v);
-            C[s.k].className = 'cell-derived';
-            const line = document.createElement('div');
-            line.className = 'log-line';
-            line.style.animationDelay = '0s';
-            line.textContent = s.t;
-            log.appendChild(line);
-            if(i === chain.length-1){
-                S.solved = true;
-                S.panb = panb; S.nab = nab; S.pna = pna; S.pnb = pnb; S.nanb = nanb;
-                stepBtns[3].classList.add('done');
-                buildReadouts(pa,pb,pab,panb,nab,pna,pnb,nanb);
-            }
-        }, (i+1)*450);
-    });
-});
-
-/* ── Readouts ── */
-function buildReadouts(pa,pb,pab,panb,nab,pna,pnb,nanb){
-    const sec = document.getElementById('sec-readouts');
-    sec.classList.remove('hidden');
-    const barrier = document.getElementById('sec-barrier');
-    barrier.classList.remove('hidden');
-
-    const paub = +(pa+pb-pab).toFixed(6);
-    const pagb = pb>0 ? +(pab/pb).toFixed(6) : 0;
-    const pbga = pa>0 ? +(pab/pa).toFixed(6) : 0;
-    const indep = Math.abs(pab - pa*pb) < 0.005;
-
-    const R = [
-        { name:'Komplement',      book:'Kap 2', f:"P(A') = 1 \u2212 P(A)", v:fmt(pna), hl:['pa','pna'], color:'var(--text)' },
-        { name:'Addisjon (Union)', book:'Kap 2', f:'P(A\u222aB) = P(A) + P(B) \u2212 P(A\u2229B)', v:fmt(paub), hl:['ab','anb','nab'], color:'var(--text)' },
-        { name:'Multiplikasjon',   book:'Kap 4', f:'P(A\u2229B) = P(A|B) \u00b7 P(B)', v:fmt(pab)+' = '+fmt(pagb)+' \u00b7 '+fmt(pb), hl:['ab','pb'], color:'var(--text)' },
-        { name:'Betinget (P(A|B))',book:'Kap 4', f:'P(A|B) = P(A\u2229B) / P(B)', v:fmt(pagb), hl:['ab','pb'], color:'var(--blue)' },
-        { name:'Bayes (Reversal)', book:'Kap 4', f:'P(A|B) = P(B|A)\u00b7P(A) / P(B)', v:fmt(pagb)+' = '+fmt(pbga)+'\u00b7'+fmt(pa)+' / '+fmt(pb), hl:['ab','pa','pb'], color:'var(--text)' },
-        { name:'Uavhengighet?',    book:'Kap 2+4', f:'P(A\u2229B) = P(A)\u00b7P(B)?', v:indep ? 'Ja \u2713' : 'Nei \u2014 '+fmt(pab)+' \u2260 '+fmt(+(pa*pb).toFixed(4)), hl:['ab','pa','pb'], color:indep?'var(--green)':'var(--red)' }
-    ];
-
-    const grid = document.getElementById('readout-grid');
-    grid.innerHTML = '';
-    R.forEach(r => {
-        const card = document.createElement('div');
-        card.className = 'readout-card';
-        card.innerHTML = `<div class="readout-name">${r.name}</div><div class="readout-book">${r.book}</div><div class="readout-formula">${r.f}</div><div class="readout-value" style="color:${r.color}">${r.v}</div>`;
-        card.addEventListener('mouseenter', () => { clearHL(); r.hl.forEach(k => C[k].classList.add('cell-highlight')); });
-        card.addEventListener('mouseleave', clearHL);
-        grid.appendChild(card);
-    });
+/* === FORMULA RESULT (Step 4) === */
+function showResult(){
+    if(!activePath || !S.solved) return;
+    const path = PATHS[activePath];
+    const r = path.compute(S);
+    document.getElementById('formula-title').textContent = `Step 4 \u2014 ${path.name}`;
+    document.getElementById('formula-desc').textContent = r.desc;
+    document.getElementById('result-name').textContent = r.name;
+    document.getElementById('result-formula').textContent = r.formula;
+    document.getElementById('result-value').textContent = r.value;
+    fillHouse();
+    hlCells(r.hl, 'cell-path-active');
+    stepBtns[3].classList.add('done');
 }
 
-/* ── Barrier visualization ── */
-document.getElementById('btn-barrier').addEventListener('click', () => {
-    if(!S.solved) return;
-    clearHL();
-    // Highlight the B-column as the barrier dome
-    C.ab.classList.add('cell-barrier');
-    C.nab.classList.add('cell-barrier');
-    C.pb.classList.add('cell-barrier');
-});
-
-document.getElementById('btn-clear-barrier').addEventListener('click', clearHL);
-
-/* ── Reset ── */
+/* === RESET === */
 document.getElementById('btn-reset').addEventListener('click', () => {
     S = { pa:null, pb:null, pab:null, solved:false };
-    showBlank();
-    document.getElementById('sec-readouts').classList.add('hidden');
-    document.getElementById('sec-barrier').classList.add('hidden');
+    activePath = null;
+    activeMove = 0;
+    showLabels();
+    clearHL();
     document.getElementById('walk-log').innerHTML = '';
     ['in-pa','in-pb','in-pab'].forEach(id => document.getElementById(id).value = '');
     stepBtns.forEach(b => b.classList.remove('done'));
+    pathCards.forEach(c => c.classList.remove('active'));
+    document.getElementById('path-hint').classList.add('hidden');
+    document.getElementById('move-nav').innerHTML = '';
+    document.getElementById('move-desc').innerHTML = '';
     showStep(1);
 });
 
-/* ── Init ── */
+/* === INIT === */
+showLabels();
 showStep(1);
 </script>
 </body>
