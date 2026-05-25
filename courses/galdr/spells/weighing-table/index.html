@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚖️ Weighing Table — Galdr Spell | System 33</title>
+    <meta name="description" content="Interactive visualization of the Weighing Table spell — variance and covariance as weighted walks.">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;
+            --border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;
+            --accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;
+            --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
+        }
+        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+        a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
+        .container{max-width:760px;margin:0 auto;padding:0 24px}
+        .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+        .hero{padding:48px 0 24px;text-align:center}
+        .hero-icon{font-size:3rem;margin-bottom:12px}
+        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
+        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+        .hero p{font-size:1rem;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
+        .section{padding:24px 0}
+        .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+        .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;font-size:.9rem;color:var(--text2);line-height:1.6}
+        .principle strong{color:var(--text)}
+        .mode-nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .mode-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:12px 22px;font-family:inherit;font-size:.85rem;color:var(--text2);cursor:pointer;transition:all .2s;font-weight:500}
+        .mode-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+        .step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.8rem;color:var(--text2);cursor:pointer;transition:all .2s}
+        .step-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .step-btn.done{border-color:var(--green);color:var(--green)}
+        .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+        .step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
+        .step-content p{color:var(--text2);font-size:.92rem;line-height:1.65;margin-bottom:10px}
+        .step-content p:last-child{margin-bottom:0}
+        .step-content strong{color:var(--text)}
+        .viz-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+        .viz-section h3{font-size:1rem;font-weight:600;margin-bottom:6px}
+        .viz-section p{color:var(--text2);font-size:.85rem;margin-bottom:12px}
+        .viz-wrap{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 8px;overflow:hidden}
+        .viz-wrap canvas{display:block;margin:0 auto}
+        .proc-block{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0}
+        .proc-block .proc-title{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+        .proc-step{font-size:.88rem;color:var(--text2);line-height:1.7;margin:4px 0;padding-left:6px}
+        .proc-step strong{color:var(--text)}
+        .data-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:14px 0}
+        .data-card .data-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+        .data-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}
+        .data-table th,.data-table td{border:1px solid var(--border);padding:8px 12px;text-align:center}
+        .data-table th{background:var(--bg2);color:var(--text2);font-weight:600;font-size:.78rem}
+        .derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2)}
+        .derivation .d-label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+        .derivation .d-line{margin:2px 0}
+        .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
+        .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+        .result-box-formula{font-size:.9rem;color:var(--text2);margin-bottom:8px;line-height:1.5}
+        .result-box-value{font-size:1.4rem;font-weight:700;margin-top:12px}
+        .formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px}
+        .formula-ref-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .formula-ref-name{font-size:.95rem;font-weight:600}
+        .formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
+        .formula-ref-eq{font-size:.85rem;color:var(--text2);line-height:1.5}
+        .formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:6px;line-height:1.5}
+        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
+        footer a{color:var(--text2)}
+        .hidden{display:none!important}
+        @media(max-width:520px){
+            .hero{padding:32px 0 20px}
+            .mode-nav{flex-direction:column}
+        }
+    </style>
+</head>
+<body>
+<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
+
+<section class="hero"><div class="container">
+    <div class="hero-icon">⚖️</div>
+    <div class="hero-badge">Galdr Spell &middot; Kap 5 + 6</div>
+    <h1>The Weighing Table</h1>
+    <p>Every value has a weight. Pile up the weighted distances from center. The pile is the answer.</p>
+</div></section>
+
+<section class="section"><div class="container">
+    <div class="principle">
+        <strong>Stand at the center.</strong> Measure how far each value sits from you. Square it. Weight it by probability. Pile it up. The pile tells you how spread the world is around you.
+    </div>
+</div></section>
+
+<!-- Mode Selector -->
+<section class="section"><div class="container">
+    <div class="section-label">Choose the Table</div>
+    <div class="mode-nav">
+        <button class="mode-btn active" data-mode="var">Kap 5 &mdash; Variance</button>
+        <button class="mode-btn" data-mode="cov">Kap 6 &mdash; Covariance</button>
+    </div>
+</div></section>
+
+<!-- Visualization -->
+<section class="section" id="viz-section"><div class="container">
+    <div class="section-label" id="viz-label">The Spread</div>
+    <div class="viz-section">
+        <h3 id="viz-title">Distance from Center</h3>
+        <p id="viz-desc">Each value's weighted squared distance from μ.</p>
+        <div class="viz-wrap" id="viz-wrap">
+            <canvas id="viz-canvas"></canvas>
+        </div>
+    </div>
+</div></section>
+
+<!-- Walk the Spell -->
+<section class="section"><div class="container">
+    <div class="section-label">Walk the spell</div>
+    <div class="step-nav" id="step-nav">
+        <button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
+        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
+        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
+        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
+    </div>
+    <div id="step-container"></div>
+</div></section>
+
+<!-- Laplace bridge -->
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">Connected Spells</div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Drainage</strong> counts the ways. <strong>Probability House</strong> builds the mass. <strong>Weighing Table</strong> measures the spread and the co-movement.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7">E[X] needs probabilities from the <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">Probability House</a>. Counting the ways to land on each value may need <a href="/courses/galdr/spells/drainage/" style="color:var(--accent)">Drainage</a>.</p>
+    </div>
+</div></section>
+
+<!-- Formula Reference -->
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">Formula Reference &mdash; Kap 5 + 6</div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">E[X] &mdash; Expected Value</span><span class="formula-ref-kap">Kap 5</span></div>
+        <div class="formula-ref-eq">&Sigma; x<sub>i</sub> &middot; P(x<sub>i</sub>) = &mu;</div>
+        <div class="formula-ref-desc">The center. Weighted average of all values. Every other formula measures from here.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">Var[X] &mdash; Variance</span><span class="formula-ref-kap">Kap 5</span></div>
+        <div class="formula-ref-eq">&Sigma; (x<sub>i</sub> &minus; &mu;)<sup>2</sup> &middot; P(x<sub>i</sub>)</div>
+        <div class="formula-ref-desc">Average squared distance from center, weighted by probability. How spread the values are.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">&sigma; &mdash; Standard Deviation</span><span class="formula-ref-kap">Kap 5</span></div>
+        <div class="formula-ref-eq">&sigma; = &radic;Var[X]</div>
+        <div class="formula-ref-desc">Square root of variance. Back to original units.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">Cov(X,E) &mdash; Covariance</span><span class="formula-ref-kap">Kap 6</span></div>
+        <div class="formula-ref-eq">&Sigma;&Sigma; (x<sub>i</sub> &minus; &mu;<sub>X</sub>)(e<sub>j</sub> &minus; &mu;<sub>E</sub>) &middot; P(x<sub>i</sub>, e<sub>j</sub>)</div>
+        <div class="formula-ref-desc">Do X and E move together? Walk every cell, check direction, weight, pile up.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">&rho; &mdash; Correlation</span><span class="formula-ref-kap">Kap 6</span></div>
+        <div class="formula-ref-eq">&rho; = Cov(X,E) / (&sigma;<sub>X</sub> &middot; &sigma;<sub>E</sub>)</div>
+        <div class="formula-ref-desc">Covariance scaled to [&minus;1, 1]. Removes unit dependency. Pure direction signal.</div>
+    </div>
+</div></section>
+
+<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+
+<script>
+/* === FIXED DATA === */
+/* Variance: X = {1, 2, 3}, P = {0.2, 0.5, 0.3} */
+const VAR_X = [1, 2, 3];
+const VAR_P = [0.2, 0.5, 0.3];
+const VAR_MU = 2.1; // E[X]
+const VAR_VAR = 0.49;
+const VAR_SD = 0.7;
+const VAR_CONTRIBS = [
+    { x:1, p:0.2, dist:-1.1, sq:1.21, w:0.242 },
+    { x:2, p:0.5, dist:-0.1, sq:0.01, w:0.005 },
+    { x:3, p:0.3, dist:0.9,  sq:0.81, w:0.243 }
+];
+
+/* Covariance: X={0,1}, E={0,1}, joint table */
+const COV_CELLS = [
+    { x:0, e:0, p:0.4, dx:-0.5, de:-0.5, prod:0.25,  vote:0.10,  zone:'together' },
+    { x:0, e:1, p:0.1, dx:-0.5, de:0.5,  prod:-0.25, vote:-0.025, zone:'opposite' },
+    { x:1, e:0, p:0.1, dx:0.5,  de:-0.5, prod:-0.25, vote:-0.025, zone:'opposite' },
+    { x:1, e:1, p:0.4, dx:0.5,  de:0.5,  prod:0.25,  vote:0.10,  zone:'together' }
+];
+const COV_MU_X = 0.5, COV_MU_E = 0.5, COV_COV = 0.15;
+
+let mode = 'var';
+let currentStep = 1;
+
+/* === MODE SWITCHING === */
+document.querySelectorAll('.mode-btn').forEach(b => {
+    b.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        mode = b.dataset.mode;
+        currentStep = 1;
+        document.querySelectorAll('.step-btn').forEach(s => s.classList.remove('done'));
+        renderAll();
+    });
+});
+
+/* === STEP NAV === */
+document.querySelectorAll('.step-btn').forEach(b => {
+    b.addEventListener('click', () => {
+        currentStep = parseInt(b.dataset.step);
+        renderStep();
+    });
+});
+
+function renderAll(){
+    drawViz();
+    renderStep();
+}
+
+function renderStep(){
+    document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.step-btn')[currentStep-1].classList.add('active');
+    const container = document.getElementById('step-container');
+
+    if(mode === 'var') renderVarStep(container);
+    else renderCovStep(container);
+}
+
+/* === VARIANCE STEPS === */
+function renderVarStep(el){
+    if(currentStep === 1){
+        el.innerHTML = '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
+            '<p>Recognize the question: <strong>how far do the values spread from the center?</strong></p>'+
+            '<p>Not any single value\u2019s distance \u2014 the average squared distance across all values, weighted by probability.</p>'+
+            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Formula: Var[X] = \u03A3 (x\u1D62 \u2212 \u03BC)\u00B2 \u00B7 P(x\u1D62)</p>'+
+            '</div>';
+    } else if(currentStep === 2){
+        el.innerHTML = '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
+            '<p>Three operations, in sequence.</p>'+
+            '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+            '<div class="proc-step"><strong>1.</strong> Find the center: E[X] = \u03A3 x\u1D62 \u00B7 P(x\u1D62) = \u03BC. Everything measures from here.</div>'+
+            '<div class="proc-step"><strong>2.</strong> For each value: measure distance from center (x\u1D62 \u2212 \u03BC), then square it. Squaring removes direction and amplifies big distances.</div>'+
+            '<div class="proc-step"><strong>3.</strong> Weight each squared distance by its probability. A likely value contributes more. Pile up with \u03A3.</div>'+
+            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Var[X] = \u03A3 (x\u1D62 \u2212 \u03BC)\u00B2 \u00B7 P(x\u1D62)</div>'+
+            '</div>'+
+            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
+            '<div class="proc-step">You\u2019re standing at the center of a room. Each value is a person at some distance. Each has a weight (probability). Measure distance, square it, multiply by weight, pile up. The pile is how spread the room is.</div>'+
+            '</div></div>';
+    } else if(currentStep === 3){
+        el.innerHTML = '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
+            '<p>X takes three values with these probabilities:</p>'+
+            '<div class="data-card"><table class="data-table">'+
+            '<tr><th>x\u1D62</th><td>1</td><td>2</td><td>3</td></tr>'+
+            '<tr><th>P(x\u1D62)</th><td>0.2</td><td>0.5</td><td>0.3</td></tr>'+
+            '</table></div>'+
+            '<p><strong>Center first:</strong> E[X] = 1\u00D70.2 + 2\u00D70.5 + 3\u00D70.3 = 0.2 + 1.0 + 0.9 = <strong>2.1</strong></p>'+
+            '<p>\u03BC = 2.1. Three values, three weights, one center. Ready to walk.</p>'+
+            '</div>';
+        markDone(2);
+    } else if(currentStep === 4){
+        let pile = 0;
+        let html = '<div class="step-content"><h3>Step 4 \u2014 Walk the Rounds</h3>'+
+            '<p>Stand at \u03BC = 2.1. Walk to each value, measure, square, weight, pile.</p>';
+        VAR_CONTRIBS.forEach((c, i) => {
+            pile += c.w;
+            html += '<div class="derivation"><div class="d-label">Round '+(i+1)+': x = '+c.x+'</div>'+
+                '<div class="d-line">Distance: '+c.x+' \u2212 2.1 = <strong>'+c.dist.toFixed(1)+'</strong></div>'+
+                '<div class="d-line">Square: ('+c.dist.toFixed(1)+')\u00B2 = '+c.sq.toFixed(2)+'</div>'+
+                '<div class="d-line">Weight: '+c.sq.toFixed(2)+' \u00D7 '+c.p+' = <strong>'+c.w.toFixed(3)+'</strong></div>'+
+                '<div class="d-line">Pile = '+pile.toFixed(3)+'</div></div>';
+        });
+        html += '<div class="result-box"><div class="result-box-name">Var[X]</div>'+
+            '<div class="result-box-formula">0.242 + 0.005 + 0.243</div>'+
+            '<div class="result-box-value">Var[X] = 0.49 &nbsp;&nbsp; \u03C3 = 0.7</div></div>';
+        html += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">Values 1 and 3 contribute almost equally (0.242 and 0.243) even though 3 is closer to center \u2014 because 1 has a bigger distance and the squaring amplified it. Value 2 contributes almost nothing (0.005) because it sits right next to the center.</p>';
+        html += '</div>';
+        el.innerHTML = html;
+        markDone(3);
+    }
+}
+
+/* === COVARIANCE STEPS === */
+function renderCovStep(el){
+    if(currentStep === 1){
+        el.innerHTML = '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
+            '<p>Recognize the question: <strong>when X moves, does E move with it?</strong></p>'+
+            '<p>Two variables on a plane. X runs along the bottom, E up the side. Every observation has both an X-value and an E-value. The formula checks whether they move in the same direction.</p>'+
+            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Formula: Cov(X,E) = \u03A3\u03A3 (x\u1D62 \u2212 \u03BC\u2093)(e\u2C7C \u2212 \u03BC\u2091) \u00B7 P(x\u1D62, e\u2C7C)</p>'+
+            '</div>';
+    } else if(currentStep === 2){
+        el.innerHTML = '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
+            '<p>Walk every cell on the joint table. At each cell, cast a vote.</p>'+
+            '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+            '<div class="proc-step"><strong>1.</strong> Find both centers: \u03BC\u2093 and \u03BC\u2091.</div>'+
+            '<div class="proc-step"><strong>2.</strong> For each cell (x\u1D62, e\u2C7C): measure X\u2019s distance from \u03BC\u2093 and E\u2019s distance from \u03BC\u2091.</div>'+
+            '<div class="proc-step"><strong>3.</strong> Multiply the two distances \u2014 the direction-detector. Same side of center = positive product. Opposite sides = negative.</div>'+
+            '<div class="proc-step"><strong>4.</strong> Weight by joint probability P(x\u1D62, e\u2C7C). Common combinations vote louder.</div>'+
+            '<div class="proc-step"><strong>5.</strong> Pile up all votes. Positive pile = they move together. Negative = they move apart.</div>'+
+            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Cov(X,E) = \u03A3\u03A3 (x\u1D62 \u2212 \u03BC\u2093)(e\u2C7C \u2212 \u03BC\u2091) \u00B7 P(x\u1D62, e\u2C7C)</div>'+
+            '</div>'+
+            '<div class="proc-block"><div class="proc-title">The four zones</div>'+
+            '<div class="proc-step">The center point (\u03BC\u2093, \u03BC\u2091) splits the plane into four zones. Top-right and bottom-left are \u201Ctogether\u201D zones (same side, positive product). Top-left and bottom-right are \u201Copposite\u201D zones (different sides, negative product).</div>'+
+            '</div></div>';
+    } else if(currentStep === 3){
+        el.innerHTML = '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
+            '<p>X \u2208 {0, 1}, E \u2208 {0, 1}. Four cells on the plane.</p>'+
+            '<div class="data-card"><div class="data-title">Joint probability table</div><table class="data-table">'+
+            '<tr><th></th><th>X = 0</th><th>X = 1</th></tr>'+
+            '<tr><th>E = 1</th><td>0.1</td><td>0.4</td></tr>'+
+            '<tr><th>E = 0</th><td>0.4</td><td>0.1</td></tr>'+
+            '</table></div>'+
+            '<p><strong>Centers:</strong> \u03BC\u2093 = 0.5, \u03BC\u2091 = 0.5</p>'+
+            '<p>Heavy mass (0.4) sits in the together zones. Light mass (0.1) in the opposite zones. You can already see the lean.</p>'+
+            '</div>';
+        markDone(2);
+    } else if(currentStep === 4){
+        const labels = ['Bottom-left (X=0, E=0)', 'Top-left (X=0, E=1)', 'Bottom-right (X=1, E=0)', 'Top-right (X=1, E=1)'];
+        const order = [0, 1, 2, 3];
+        let pile = 0;
+        let html = '<div class="step-content"><h3>Step 4 \u2014 Walk the Cells</h3>'+
+            '<p>Four cells. Four votes. Pile up the verdict.</p>';
+        order.forEach((idx, i) => {
+            const c = COV_CELLS[idx];
+            pile += c.vote;
+            const dir = c.zone === 'together' ? 'Same side \u2192 positive' : 'Opposite sides \u2192 negative';
+            const voteColor = c.vote > 0 ? 'var(--green)' : 'var(--red)';
+            html += '<div class="derivation"><div class="d-label">'+labels[i]+'</div>'+
+                '<div class="d-line">X distance: '+c.x+' \u2212 0.5 = '+c.dx.toFixed(1)+' &nbsp; E distance: '+c.e+' \u2212 0.5 = '+c.de.toFixed(1)+'</div>'+
+                '<div class="d-line">Direction-detector: ('+c.dx.toFixed(1)+')('+c.de.toFixed(1)+') = '+c.prod.toFixed(2)+' &nbsp; <span style="color:var(--muted)">'+dir+'</span></div>'+
+                '<div class="d-line">Weight: '+c.prod.toFixed(2)+' \u00D7 '+c.p+' = <strong style="color:'+voteColor+'">'+c.vote.toFixed(3)+'</strong></div>'+
+                '<div class="d-line">Pile = '+pile.toFixed(3)+'</div></div>';
+        });
+        html += '<div class="result-box"><div class="result-box-name">Cov(X,E)</div>'+
+            '<div class="result-box-formula">+0.10 \u2212 0.025 \u2212 0.025 + 0.10</div>'+
+            '<div class="result-box-value" style="color:var(--green)">Cov(X,E) = +0.15</div></div>';
+        html += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">Positive. The together votes won. When X moves up, E moves up. When X moves down, E moves down. They move as one.</p>';
+        html += '</div>';
+        el.innerHTML = html;
+        markDone(3);
+    }
+}
+
+function markDone(upTo){
+    document.querySelectorAll('.step-btn').forEach((b,i) => {
+        if(i < upTo) b.classList.add('done');
+    });
+}
+
+/* === VISUALIZATIONS === */
+function drawViz(){
+    if(mode === 'var') drawVarianceViz();
+    else drawCovarianceViz();
+}
+
+function drawVarianceViz(){
+    document.getElementById('viz-label').textContent = 'The Spread';
+    document.getElementById('viz-title').textContent = 'Distance from Center';
+    document.getElementById('viz-desc').textContent = 'Each value\u2019s weighted squared distance from \u03BC = 2.1.';
+
+    const wrap = document.getElementById('viz-wrap');
+    const canvas = document.getElementById('viz-canvas');
+    const dpr = window.devicePixelRatio || 1;
+    const cw = wrap.clientWidth - 18;
+    const ch = 260;
+    canvas.width = cw * dpr; canvas.height = ch * dpr;
+    canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr); ctx.clearRect(0, 0, cw, ch);
+
+    const accent = '#a78bfa', green = '#22c55e', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
+    const lineY = 80;
+    const barBase = 170;
+    const barMaxH = 70;
+    const padL = 60, padR = 60;
+    const rangeW = cw - padL - padR;
+
+    // Number line from 0 to 4
+    const xMin = 0, xMax = 4;
+    function toX(v){ return padL + (v - xMin) / (xMax - xMin) * rangeW; }
+
+    // Draw number line
+    ctx.beginPath();
+    ctx.moveTo(padL, lineY); ctx.lineTo(cw - padR, lineY);
+    ctx.strokeStyle = border; ctx.lineWidth = 1; ctx.stroke();
+
+    // Tick marks
+    for(let v = 0; v <= 4; v++){
+        const x = toX(v);
+        ctx.beginPath(); ctx.moveTo(x, lineY - 4); ctx.lineTo(x, lineY + 4);
+        ctx.strokeStyle = muted; ctx.lineWidth = 1; ctx.stroke();
+        ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillText(v.toString(), x, lineY + 8);
+    }
+
+    // Mu line
+    const muX = toX(VAR_MU);
+    ctx.beginPath();
+    ctx.setLineDash([4, 3]);
+    ctx.moveTo(muX, lineY - 30); ctx.lineTo(muX, lineY + 25);
+    ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = accent; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('\u03BC = 2.1', muX, lineY - 32);
+
+    // Dots on number line
+    VAR_CONTRIBS.forEach(c => {
+        const x = toX(c.x);
+        const r = 6 + c.p * 16; // size by probability
+        ctx.beginPath(); ctx.arc(x, lineY, r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(167,139,250,0.25)'; ctx.fill();
+        ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
+
+        // Label
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(c.x.toString(), x, lineY);
+
+        // Probability label below
+        ctx.fillStyle = muted; ctx.font = '9px Inter,sans-serif'; ctx.textBaseline = 'top';
+        ctx.fillText('P=' + c.p, x, lineY + r + 4);
+
+        // Distance arrow to mu
+        ctx.beginPath();
+        ctx.moveTo(x, lineY - r - 6);
+        ctx.lineTo(muX, lineY - r - 6);
+        ctx.strokeStyle = 'rgba(167,139,250,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+    });
+
+    // Bar chart: weighted squared distances
+    ctx.fillStyle = text2; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Weighted squared distance (contribution to pile)', cw / 2, barBase - barMaxH - 8);
+
+    const maxW = 0.243;
+    const barW = 50;
+    const barGap = 30;
+    const totalBarW = VAR_CONTRIBS.length * barW + (VAR_CONTRIBS.length - 1) * barGap;
+    const barStartX = (cw - totalBarW) / 2;
+
+    VAR_CONTRIBS.forEach((c, i) => {
+        const bx = barStartX + i * (barW + barGap);
+        const bh = (c.w / maxW) * barMaxH;
+        const by = barBase - bh;
+
+        // Bar
+        ctx.fillStyle = c.w > 0.1 ? 'rgba(167,139,250,0.35)' : 'rgba(167,139,250,0.1)';
+        ctx.fillRect(bx, by, barW, bh);
+        ctx.strokeStyle = accent; ctx.lineWidth = 1;
+        ctx.strokeRect(bx, by, barW, bh);
+
+        // Value label
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillText(c.w.toFixed(3), bx + barW / 2, barBase + 4);
+
+        // x label
+        ctx.fillStyle = muted; ctx.font = '9px Inter,sans-serif';
+        ctx.fillText('x=' + c.x, bx + barW / 2, barBase + 18);
+    });
+
+    // Total
+    ctx.fillStyle = green; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Pile = 0.49 \u2192 \u03C3 = 0.7', cw / 2, barBase + 34);
+}
+
+function drawCovarianceViz(){
+    document.getElementById('viz-label').textContent = 'The Plane';
+    document.getElementById('viz-title').textContent = 'Four Zones';
+    document.getElementById('viz-desc').textContent = 'Together zones (green) vs opposite zones (red). Dot size = probability.';
+
+    const wrap = document.getElementById('viz-wrap');
+    const canvas = document.getElementById('viz-canvas');
+    const dpr = window.devicePixelRatio || 1;
+    const cw = wrap.clientWidth - 18;
+    const ch = 340;
+    canvas.width = cw * dpr; canvas.height = ch * dpr;
+    canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr); ctx.clearRect(0, 0, cw, ch);
+
+    const accent = '#a78bfa', green = '#22c55e', red = '#ef4444', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
+
+    // Grid area
+    const pad = 60;
+    const gridSize = Math.min(cw - pad * 2, ch - 80);
+    const gx = (cw - gridSize) / 2;
+    const gy = 30;
+    const midGX = gx + gridSize / 2;
+    const midGY = gy + gridSize / 2;
+
+    // Zone backgrounds
+    // Top-left: opposite (X below, E above)
+    ctx.fillStyle = 'rgba(239,68,68,0.06)';
+    ctx.fillRect(gx, gy, gridSize / 2, gridSize / 2);
+    // Top-right: together
+    ctx.fillStyle = 'rgba(34,197,94,0.06)';
+    ctx.fillRect(midGX, gy, gridSize / 2, gridSize / 2);
+    // Bottom-left: together
+    ctx.fillStyle = 'rgba(34,197,94,0.06)';
+    ctx.fillRect(gx, midGY, gridSize / 2, gridSize / 2);
+    // Bottom-right: opposite
+    ctx.fillStyle = 'rgba(239,68,68,0.06)';
+    ctx.fillRect(midGX, midGY, gridSize / 2, gridSize / 2);
+
+    // Grid border
+    ctx.strokeStyle = border; ctx.lineWidth = 1;
+    ctx.strokeRect(gx, gy, gridSize, gridSize);
+
+    // Center lines (dashed)
+    ctx.beginPath(); ctx.setLineDash([4, 3]);
+    ctx.moveTo(midGX, gy); ctx.lineTo(midGX, gy + gridSize);
+    ctx.moveTo(gx, midGY); ctx.lineTo(gx + gridSize, midGY);
+    ctx.strokeStyle = accent; ctx.lineWidth = 1; ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Center label
+    ctx.fillStyle = accent; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('(\u03BC\u2093, \u03BC\u2091)', midGX + 4, midGY - 4);
+
+    // Axis labels
+    ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('X \u2192', gx + gridSize / 2, gy + gridSize + 8);
+    ctx.save(); ctx.translate(gx - 12, gy + gridSize / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('E \u2192', 0, 0); ctx.restore();
+
+    // Zone labels
+    ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = red; ctx.fillText('OPPOSITE', gx + gridSize * 0.25, gy + gridSize * 0.15);
+    ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: \u2212', gx + gridSize * 0.25, gy + gridSize * 0.22);
+    ctx.fillStyle = green; ctx.font = '10px Inter,sans-serif'; ctx.fillText('TOGETHER', gx + gridSize * 0.75, gy + gridSize * 0.15);
+    ctx.fillStyle = 'rgba(34,197,94,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: +', gx + gridSize * 0.75, gy + gridSize * 0.22);
+    ctx.fillStyle = green; ctx.font = '10px Inter,sans-serif'; ctx.fillText('TOGETHER', gx + gridSize * 0.25, gy + gridSize * 0.85);
+    ctx.fillStyle = 'rgba(34,197,94,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: +', gx + gridSize * 0.25, gy + gridSize * 0.92);
+    ctx.fillStyle = red; ctx.font = '10px Inter,sans-serif'; ctx.fillText('OPPOSITE', gx + gridSize * 0.75, gy + gridSize * 0.85);
+    ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: \u2212', gx + gridSize * 0.75, gy + gridSize * 0.92);
+
+    // Dots
+    const dotPositions = [
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.75, p: 0.4, label: 'P=0.4', color: green },  // X=0,E=0 together
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.35, p: 0.1, label: 'P=0.1', color: red },    // X=0,E=1 opposite
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.75, p: 0.1, label: 'P=0.1', color: red },    // X=1,E=0 opposite
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.35, p: 0.4, label: 'P=0.4', color: green }   // X=1,E=1 together
+    ];
+
+    dotPositions.forEach(d => {
+        const r = 8 + d.p * 30;
+        ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = d.color === green ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.15)';
+        ctx.fill();
+        ctx.strokeStyle = d.color; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(d.label, d.x, d.y);
+    });
+
+    // Axis value labels
+    ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('X=0', gx + gridSize * 0.25, gy + gridSize + 20);
+    ctx.fillText('X=1', gx + gridSize * 0.75, gy + gridSize + 20);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('E=0', gx - 8, gy + gridSize * 0.75);
+    ctx.fillText('E=1', gx - 8, gy + gridSize * 0.35);
+
+    // Result
+    ctx.fillStyle = green; ctx.font = 'bold 13px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Cov(X,E) = +0.15 \u2014 they move together', cw / 2, gy + gridSize + 38);
+}
+
+/* === INIT === */
+renderAll();
+</script>
+</body>
+</html>

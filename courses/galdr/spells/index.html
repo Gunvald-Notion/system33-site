@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 Galdr Spells | System 33</title>
-    <meta name="description" content="The six spells of Galdr — interactive formula-paths for HSM126 probability and statistics.">
+    <title>Galdr Spells | System 33</title>
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
         :root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
@@ -13,134 +12,69 @@
         .container{max-width:760px;margin:0 auto;padding:0 24px}
         .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
         .hero{padding:48px 0 24px;text-align:center}
-        .hero-icon{font-size:3rem;margin-bottom:12px}
-        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
-        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
-        .hero p{font-size:1rem;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
+        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;margin-bottom:14px}
+        .hero p{font-size:1rem;color:var(--text2);max-width:500px;margin:0 auto}
         .section{padding:24px 0}
         .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
-        .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 32px;font-size:.9rem;color:var(--text2);line-height:1.6}
-        .principle strong{color:var(--text)}
-        .spell-grid{display:grid;gap:16px}
-        .spell-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;transition:all .2s;display:block}
+        .spell-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+        .spell-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .2s;display:block}
         .spell-card:hover{border-color:#3f3f46;background:rgba(228,228,231,.03);opacity:1}
-        .spell-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-        .spell-card-icon{font-size:1.5rem}
-        .spell-card-tags{display:flex;gap:6px}
-        .spell-tag{font-size:.68rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
-        .spell-card h3{font-size:1.05rem;font-weight:600;margin-bottom:6px}
-        .spell-card p{color:var(--text2);font-size:.85rem;line-height:1.5;margin-bottom:8px}
-        .spell-card .formulas{font-size:.78rem;color:var(--muted)}
-        .spell-card.coming{opacity:.45;cursor:default}
-        .spell-card.coming:hover{border-color:var(--border);background:var(--bg-card)}
-        .spell-card .coming-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:6px}
-        .nav-links{display:flex;gap:16px;margin-top:32px;flex-wrap:wrap}
-        .nav-link{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;flex:1;min-width:200px;transition:all .2s}
-        .nav-link:hover{border-color:#3f3f46;opacity:1}
-        .nav-link-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-        .nav-link-title{font-size:.95rem;font-weight:600}
-        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:32px}
+        .spell-card.coming-soon{opacity:.4;pointer-events:none}
+        .spell-icon{font-size:1.8rem;margin-bottom:10px}
+        .spell-name{font-size:1rem;font-weight:600;margin-bottom:4px}
+        .spell-kap{font-size:.75rem;color:var(--muted);margin-bottom:6px}
+        .spell-desc{font-size:.82rem;color:var(--text2);line-height:1.5}
+        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:40px}
         footer a{color:var(--text2)}
     </style>
 </head>
 <body>
 <header class="site-header"><div class="container"><a href="/courses/galdr/">&larr; Galdr</a></div></header>
-
 <section class="hero"><div class="container">
-    <div class="hero-icon">🔮</div>
-    <div class="hero-badge">Galdr &middot; HSM126</div>
-    <h1>Spells</h1>
-    <p>Six spells, one per domain. Each spell is a four-step walk through the forces underneath a formula family.</p>
+    <h1>Galdr Spells</h1>
+    <p>Six interactive walkthroughs. Each spell breaks one chapter’s formulas into a four-step walk you can see happening.</p>
 </div></section>
-
 <section class="section"><div class="container">
-    <div class="principle">
-        <strong>The Four Steps.</strong> Blueprint &mdash; recognize the shape. Process &mdash; crack the formula into moves. Data &mdash; drop the values. Formula &mdash; walk the rounds and read the answer. Every spell follows the same walk.
-    </div>
-</div></section>
-
-<section class="section"><div class="container">
-    <div class="section-label">The Six Spells</div>
+    <div class="section-label">The six spells</div>
     <div class="spell-grid">
-        <a class="spell-card" href="/courses/galdr/spells/probability-house/">
-            <div class="spell-card-top">
-                <span class="spell-card-icon">🏠</span>
-                <div class="spell-card-tags"><span class="spell-tag">Kap 2</span><span class="spell-tag">Kap 4</span></div>
-            </div>
-            <h3>The Probability House</h3>
-            <p>Two forces, four rooms, one conservation law. Four formula-paths through the same house &mdash; Addisjon, Multiplikasjon, Oppsplitting, Bayes.</p>
-            <div class="formulas">P(A∪B) &middot; P(A∩B) &middot; P(A|B) &middot; Bayes &middot; Komplement</div>
+        <a href="/courses/galdr/spells/probability-house/" class="spell-card">
+            <div class="spell-icon">🏠</div>
+            <div class="spell-name">Probability House</div>
+            <div class="spell-kap">Kap 1 + 2</div>
+            <div class="spell-desc">Walk the cells. Every probability lives in a house of rows and columns.</div>
         </a>
-
-        <a class="spell-card" href="/courses/galdr/spells/drainage/">
-            <div class="spell-card-top">
-                <span class="spell-card-icon">⛓️</span>
-                <div class="spell-card-tags"><span class="spell-tag">Kap 3</span></div>
-            </div>
-            <h3>Drainage</h3>
-            <p>A pool of N, draw S. Two questions determine the formula: does order matter? does the pool refill? The Round-Spread cracks each formula into rounds.</p>
-            <div class="formulas">n! &middot; nPr &middot; nCr &middot; N<sup>S</sup> &middot; Laplace</div>
+        <a href="/courses/galdr/spells/drainage/" class="spell-card">
+            <div class="spell-icon">⛓️</div>
+            <div class="spell-name">Drainage</div>
+            <div class="spell-kap">Kap 3</div>
+            <div class="spell-desc">The pool shrinks. nPr, nCr, and Nˢ — count the ways to draw.</div>
         </a>
-
-        <div class="spell-card coming">
-            <div class="spell-card-top">
-                <span class="spell-card-icon">⚖️</span>
-                <div class="spell-card-tags"><span class="spell-tag">Kap 5</span><span class="spell-tag">Kap 6</span></div>
-            </div>
-            <h3>Weighing Table</h3>
-            <p>Random variables, expected value, variance. The forces of E(X) and Var(X) measured from probability distributions.</p>
-            <div class="formulas">E(X) &middot; Var(X) &middot; σ &middot; simultane fordelinger</div>
-            <div class="coming-label">Coming soon</div>
+        <a href="/courses/galdr/spells/weighing-table/" class="spell-card">
+            <div class="spell-icon">⚖️</div>
+            <div class="spell-name">The Weighing Table</div>
+            <div class="spell-kap">Kap 5 + 6</div>
+            <div class="spell-desc">Variance and covariance. Measure distance from center, weight it, pile it up.</div>
+        </a>
+        <div class="spell-card coming-soon">
+            <div class="spell-icon">🔔</div>
+            <div class="spell-name">Bell-Walk</div>
+            <div class="spell-kap">Kap 7</div>
+            <div class="spell-desc">The normal distribution. Walk the bell curve.</div>
         </div>
-
-        <div class="spell-card coming">
-            <div class="spell-card-top">
-                <span class="spell-card-icon">🔔</span>
-                <div class="spell-card-tags"><span class="spell-tag">Kap 7</span></div>
-            </div>
-            <h3>Bell-Walk</h3>
-            <p>Named distributions as bell-shapes. Binomial, Poisson, normal &mdash; each one a different way the bell forms from the forces underneath.</p>
-            <div class="formulas">Bin(n,p) &middot; Po(λ) &middot; N(μ,σ²) &middot; standardisering</div>
-            <div class="coming-label">Coming soon</div>
+        <div class="spell-card coming-soon">
+            <div class="spell-icon">📐</div>
+            <div class="spell-name">Wobble Frame</div>
+            <div class="spell-kap">Kap 8</div>
+            <div class="spell-desc">Confidence intervals. The frame that holds the estimate.</div>
         </div>
-
-        <div class="spell-card coming">
-            <div class="spell-card-top">
-                <span class="spell-card-icon">📐</span>
-                <div class="spell-card-tags"><span class="spell-tag">Kap 8</span></div>
-            </div>
-            <h3>Wobble Frame</h3>
-            <p>Estimation. The sample wobbles around the truth. Confidence intervals frame how wide the wobble reaches.</p>
-            <div class="formulas">x̄ &middot; s² &middot; KI &middot; t-fordeling &middot; df</div>
-            <div class="coming-label">Coming soon</div>
-        </div>
-
-        <div class="spell-card coming">
-            <div class="spell-card-top">
-                <span class="spell-card-icon">📏</span>
-                <div class="spell-card-tags"><span class="spell-tag">Kap 9</span><span class="spell-tag">Kap 10</span></div>
-            </div>
-            <h3>T_obs</h3>
-            <p>Hypothesis testing. The null is flat. The test statistic measures how far the data landed from flat. The p-value reads the verdict.</p>
-            <div class="formulas">H₀ &middot; H₁ &middot; t_obs &middot; p-verdi &middot; α &middot; χ²</div>
-            <div class="coming-label">Coming soon</div>
+        <div class="spell-card coming-soon">
+            <div class="spell-icon">📏</div>
+            <div class="spell-name">T_obs</div>
+            <div class="spell-kap">Kap 9 + 10</div>
+            <div class="spell-desc">Hypothesis testing. Measure the observed signal against noise.</div>
         </div>
     </div>
 </div></section>
-
-<section class="section"><div class="container">
-    <div class="nav-links">
-        <a class="nav-link" href="/courses/galdr/#rune-section">
-            <div class="nav-link-label">← Track 1</div>
-            <div class="nav-link-title">ᚱ Rune Quiz</div>
-        </a>
-        <a class="nav-link" href="/courses/galdr/">
-            <div class="nav-link-label">Hub</div>
-            <div class="nav-link-title">Galdr</div>
-        </a>
-    </div>
-</div></section>
-
 <footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 </body>
 </html>
