@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏠 Probability House — Galdr Spell | System 33</title>
+    <meta name="description" content="Interactive visualization of the Probability House — two forces, four rooms, one conservation law. Every formula in Kap 2 + Kap 4 is a readout of this house.">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;
+            --border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;
+            --accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;
+            --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
+        }
+        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+        a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
+        .container{max-width:760px;margin:0 auto;padding:0 24px}
+        .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+        .hero{padding:48px 0 24px;text-align:center}
+        .hero-icon{font-size:3rem;margin-bottom:12px}
+        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
+        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+        .hero p{font-size:1rem;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
+        .section{padding:24px 0}
+        .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+        .house-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;overflow-x:auto}
+        .house-table{width:100%;border-collapse:collapse;font-size:.95rem;table-layout:fixed;min-width:400px}
+        .house-table th,.house-table td{border:1px solid var(--border);padding:14px 8px;text-align:center;vertical-align:middle;transition:all .35s ease}
+        .house-table th{background:var(--bg2);color:var(--text2);font-weight:600;font-size:.8rem;letter-spacing:.03em}
+        .house-table td{min-height:52px;height:52px}
+        .cell-empty{color:#333;font-size:.8rem}
+        .cell-label{color:var(--muted);font-size:.8rem;font-style:italic}
+        .cell-given{color:var(--blue)!important;font-weight:600;background:rgba(59,130,246,.08)!important}
+        .cell-derived{color:var(--green)!important;font-weight:600;background:rgba(34,197,94,.06)!important}
+        .cell-locked{color:var(--accent)!important;font-weight:700;background:rgba(167,139,250,.06)!important}
+        .cell-highlight{box-shadow:inset 0 0 0 2px var(--accent)!important}
+        .corner{background:var(--bg2)!important}
+        .step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+        .step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.8rem;color:var(--text2);cursor:pointer;transition:all .2s}
+        .step-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .step-btn.done{border-color:var(--green);color:var(--green)}
+        .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+        .step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
+        .step-content p{color:var(--text2);font-size:.92rem;line-height:1.65;margin-bottom:10px}
+        .step-content p:last-child{margin-bottom:0}
+        .step-content strong{color:var(--text)}
+        .step-content em{color:var(--muted)}
+        .move-nav{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
+        .move-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-family:inherit;font-size:.75rem;color:var(--muted);cursor:pointer;transition:all .2s}
+        .move-btn:hover{color:var(--text2);border-color:#3f3f46}
+        .move-btn.active{color:var(--accent);border-color:var(--accent)}
+        .input-row{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap;align-items:flex-end}
+        .input-group{display:flex;flex-direction:column;gap:4px}
+        .input-group label{font-size:.75rem;color:var(--muted)}
+        .input-group input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:.9rem;color:var(--text);width:100px;text-align:center;transition:border-color .2s}
+        .input-group input:focus{outline:none;border-color:var(--accent)}
+        .action-btn{background:var(--text);color:var(--bg);border:none;border-radius:10px;padding:12px 20px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+        .action-btn:hover{opacity:.85}
+        .action-btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+        .action-btn.secondary:hover{background:rgba(228,228,231,.04)}
+        .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+        .readout-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+        .readout-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s}
+        .readout-card:hover{border-color:var(--accent)}
+        .readout-name{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+        .readout-formula{font-size:.8rem;color:var(--text2);margin-bottom:6px;line-height:1.5}
+        .readout-value{font-size:1.15rem;font-weight:700}
+        .walk-log{font-size:.85rem;color:var(--text2);line-height:2;font-family:'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:-.01em}
+        .walk-log .log-line{opacity:0;animation:fadeIn .4s ease forwards}
+        @keyframes fadeIn{to{opacity:1}}
+        .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:16px 0;font-size:.9rem;color:var(--text2);line-height:1.6}
+        .principle strong{color:var(--text)}
+        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
+        footer a{color:var(--text2)}
+        .hidden{display:none!important}
+        @media(max-width:520px){
+            .hero{padding:32px 0 20px}
+            .readout-grid{grid-template-columns:1fr}
+            .input-row{flex-direction:column;align-items:stretch}
+            .input-group input{width:100%}
+            .house-table{font-size:.82rem}
+            .house-table th,.house-table td{padding:10px 6px}
+        }
+    </style>
+</head>
+<body>
+<header class="site-header"><div class="container"><a href="/courses/galdr/">&larr; Galdr</a></div></header>
+
+<section class="hero"><div class="container">
+    <div class="hero-icon">🏠</div>
+    <div class="hero-badge">Galdr Spell &middot; Kap 2 + Kap 4</div>
+    <h1>The Probability House</h1>
+    <p>Two forces. Four rooms. One conservation law. Every formula in Kap 2 and Kap 4 is a readout of this one house.</p>
+</div></section>
+
+<section class="section"><div class="container">
+    <div class="principle">
+        <strong>The whole is one.</strong> Probability mass is conserved. Whatever flows into one room must come out of another. The four rooms together always sum to 1.
+    </div>
+</div></section>
+
+<!-- The House -->
+<section class="section"><div class="container">
+    <div class="section-label">The House</div>
+    <div class="house-wrapper">
+        <table class="house-table" id="house">
+            <tr>
+                <th class="corner"></th>
+                <th>B</th>
+                <th>ikke-B</th>
+                <th>&Sigma; rad</th>
+            </tr>
+            <tr>
+                <th>A</th>
+                <td id="c-ab" class="cell-empty">&mdash;</td>
+                <td id="c-anb" class="cell-empty">&mdash;</td>
+                <td id="c-pa" class="cell-empty">&mdash;</td>
+            </tr>
+            <tr>
+                <th>ikke-A</th>
+                <td id="c-nab" class="cell-empty">&mdash;</td>
+                <td id="c-nanb" class="cell-empty">&mdash;</td>
+                <td id="c-pna" class="cell-empty">&mdash;</td>
+            </tr>
+            <tr>
+                <th>&Sigma; kolonne</th>
+                <td id="c-pb" class="cell-empty">&mdash;</td>
+                <td id="c-pnb" class="cell-empty">&mdash;</td>
+                <td id="c-total" class="cell-locked">1</td>
+            </tr>
+        </table>
+    </div>
+</div></section>
+
+<!-- Steps -->
+<section class="section"><div class="container">
+    <div class="section-label">Walk the spell</div>
+    <div class="step-nav">
+        <button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
+        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
+        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
+        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
+    </div>
+
+    <div class="step-content" id="step-1">
+        <h3>Step 1 &mdash; Recognize the House</h3>
+        <p>Two events in the problem &mdash; A and B. Each one either fires or doesn&rsquo;t. Two forces &times; two states = <strong>four rooms</strong>.</p>
+        <p>When you read a problem and see two events discussed &mdash; <em>&ldquo;a student takes the bus (A), a student has homework (B)&rdquo;</em> &mdash; the house is already there. Your job is to see it.</p>
+        <p>The table above is the house. Four inner rooms. Row sums on the right. Column sums on the bottom. The corner is locked at <strong>1</strong> &mdash; always. That&rsquo;s the conservation law made visible.</p>
+    </div>
+
+    <div class="step-content hidden" id="step-2">
+        <h3>Step 2 &mdash; Build the Blueprint</h3>
+        <p>Construct the house <strong>number-blind</strong> &mdash; no data yet. Five moves, each adding structure to the table above.</p>
+        <div class="move-nav" id="move-nav">
+            <button class="move-btn active" data-move="1">Move 1</button>
+            <button class="move-btn" data-move="2">Move 2</button>
+            <button class="move-btn" data-move="3">Move 3</button>
+            <button class="move-btn" data-move="4">Move 4</button>
+            <button class="move-btn" data-move="5">Move 5</button>
+        </div>
+        <p id="m1"><strong>Name the two forces.</strong> Pick A and B from the problem. A runs down the rows. B runs across the columns. Each has a complement &mdash; ikke-A, ikke-B.</p>
+        <p id="m2" class="hidden"><strong>Add the row-sum column.</strong> &Sigma; rad on the right. P(A) and P(ikke-A) live here &mdash; the total mass in each row, regardless of column.</p>
+        <p id="m3" class="hidden"><strong>Add the column-sum row.</strong> &Sigma; kolonne at the bottom. P(B) and P(ikke-B) &mdash; mass in each column, regardless of row.</p>
+        <p id="m4" class="hidden"><strong>Lock the whole-house &Sigma; at 1.</strong> Bottom-right corner. The total mass in the entire house. Always 1. The conservation law.</p>
+        <p id="m5" class="hidden"><strong>Name the four rooms.</strong> Each inner cell is an intersection. Top-left: A&cap;B. Top-right: A&cap;ikke-B. Bottom-left: ikke-A&cap;B. Bottom-right: ikke-A&cap;ikke-B. The full blueprint.</p>
+    </div>
+
+    <div class="step-content hidden" id="step-3">
+        <h3>Step 3 &mdash; Drop the Data</h3>
+        <p>Enter the values given in the problem. Place them carefully &mdash; <strong>only what the text tells you.</strong> Don&rsquo;t compute anything yet.</p>
+        <div class="input-row">
+            <div class="input-group">
+                <label>P(A)</label>
+                <input type="number" id="in-pa" step="0.01" min="0" max="1" placeholder="0.7">
+            </div>
+            <div class="input-group">
+                <label>P(B)</label>
+                <input type="number" id="in-pb" step="0.01" min="0" max="1" placeholder="0.4">
+            </div>
+            <div class="input-group">
+                <label>P(A&cap;B)</label>
+                <input type="number" id="in-pab" step="0.01" min="0" max="1" placeholder="0.2">
+            </div>
+        </div>
+        <div class="btn-row">
+            <button class="action-btn" id="btn-drop">Drop data</button>
+            <button class="action-btn secondary" id="btn-example">Example (0.7, 0.4, 0.2)</button>
+            <button class="action-btn secondary" id="btn-random">Random</button>
+        </div>
+    </div>
+
+    <div class="step-content hidden" id="step-4">
+        <h3>Step 4 &mdash; Walk the Conservation Law</h3>
+        <p>The house finishes itself. Every remaining cell is forced by the conservation law &mdash; rows sum to their margin, columns sum to their margin, everything sums to 1.</p>
+        <button class="action-btn" id="btn-solve">Solve the house</button>
+        <div class="walk-log" id="walk-log" style="margin-top:16px"></div>
+    </div>
+</div></section>
+
+<!-- Readouts -->
+<section class="section hidden" id="sec-readouts"><div class="container">
+    <div class="section-label">Formula readouts</div>
+    <p style="color:var(--text2);font-size:.9rem;margin-bottom:16px">Every formula in Kap 2 + Kap 4 is a <strong>readout</strong> of the filled house. Hover a card to see which cells it reads.</p>
+    <div class="readout-grid" id="readout-grid"></div>
+</div></section>
+
+<!-- Reset -->
+<section class="section"><div class="container" style="text-align:center">
+    <button class="action-btn secondary" id="btn-reset">&larr; Reset house</button>
+</div></section>
+
+<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+
+<script>
+/* ── State ── */
+let S = { pa:null, pb:null, pab:null, solved:false };
+const C = {};
+['ab','anb','nab','nanb','pa','pna','pb','pnb','total'].forEach(k => C[k] = document.getElementById('c-'+k));
+
+/* ── Helpers ── */
+function fmt(n){ if(n===null||n===undefined) return '—'; const r = Math.round(n*10000)/10000; return r === Math.floor(r) ? r.toFixed(0) : r.toFixed(4).replace(/0+$/,'').replace(/\.$/, ''); }
+function clearHL(){ Object.values(C).forEach(c => c.classList.remove('cell-highlight')); }
+
+/* ── Table states ── */
+function showBlank(){
+    Object.values(C).forEach(c => { c.textContent = '—'; c.className = 'cell-empty'; });
+    C.total.textContent = '1'; C.total.className = 'cell-locked';
+}
+
+function showBlueprint(move){
+    showBlank();
+    if(move >= 2){ C.pa.textContent = 'P(A)'; C.pa.className = 'cell-label'; C.pna.textContent = "P(A')"; C.pna.className = 'cell-label'; }
+    if(move >= 3){ C.pb.textContent = 'P(B)'; C.pb.className = 'cell-label'; C.pnb.textContent = "P(B')"; C.pnb.className = 'cell-label'; }
+    if(move >= 4){ C.total.textContent = '1'; C.total.className = 'cell-locked'; }
+    if(move >= 5){
+        C.ab.textContent = 'P(A∩B)'; C.ab.className = 'cell-label';
+        C.anb.textContent = "P(A∩B')"; C.anb.className = 'cell-label';
+        C.nab.textContent = "P(A'∩B)"; C.nab.className = 'cell-label';
+        C.nanb.textContent = "P(A'∩B')"; C.nanb.className = 'cell-label';
+    }
+}
+
+/* ── Step navigation ── */
+const stepBtns = document.querySelectorAll('.step-btn');
+const steps = [1,2,3,4].map(i => document.getElementById('step-'+i));
+
+function showStep(n){
+    stepBtns.forEach(b => b.classList.remove('active'));
+    stepBtns[n-1].classList.add('active');
+    steps.forEach(s => s.classList.add('hidden'));
+    steps[n-1].classList.remove('hidden');
+    if(n===1) showBlank();
+    if(n===2){ showBlueprint(1); setMove(1); }
+}
+stepBtns.forEach(b => b.addEventListener('click', () => showStep(parseInt(b.dataset.step))));
+
+/* ── Move navigation (Step 2) ── */
+const moveBtns = document.querySelectorAll('.move-btn');
+const moveDescs = [1,2,3,4,5].map(i => document.getElementById('m'+i));
+
+function setMove(m){
+    moveBtns.forEach(b => b.classList.remove('active'));
+    moveBtns[m-1].classList.add('active');
+    moveDescs.forEach(d => d.classList.add('hidden'));
+    moveDescs[m-1].classList.remove('hidden');
+    showBlueprint(m);
+}
+moveBtns.forEach(b => b.addEventListener('click', () => setMove(parseInt(b.dataset.move))));
+
+/* ── Drop data ── */
+function dropData(pa, pb, pab){
+    if(pa<0||pa>1||pb<0||pb>1||pab<0||pab>1) return;
+    if(pab > Math.min(pa,pb)+0.001) return;
+    if(pa+pb-1 > pab+0.001) return; // can't have negative cell
+    S = { pa, pb, pab, solved:false };
+    showBlueprint(5);
+    C.ab.textContent = fmt(pab); C.ab.className = 'cell-given';
+    C.pa.textContent = fmt(pa); C.pa.className = 'cell-given';
+    C.pb.textContent = fmt(pb); C.pb.className = 'cell-given';
+    stepBtns[2].classList.add('done');
+}
+
+document.getElementById('btn-drop').addEventListener('click', () => {
+    const pa=parseFloat(document.getElementById('in-pa').value);
+    const pb=parseFloat(document.getElementById('in-pb').value);
+    const pab=parseFloat(document.getElementById('in-pab').value);
+    if(!isNaN(pa)&&!isNaN(pb)&&!isNaN(pab)) dropData(pa,pb,pab);
+});
+
+document.getElementById('btn-example').addEventListener('click', () => {
+    document.getElementById('in-pa').value='0.7';
+    document.getElementById('in-pb').value='0.4';
+    document.getElementById('in-pab').value='0.2';
+    dropData(0.7,0.4,0.2);
+});
+
+document.getElementById('btn-random').addEventListener('click', () => {
+    const pa = Math.round((0.15+Math.random()*0.7)*100)/100;
+    const pb = Math.round((0.15+Math.random()*0.7)*100)/100;
+    const lo = Math.max(0, pa+pb-1);
+    const hi = Math.min(pa, pb);
+    const pab = Math.round((lo+Math.random()*(hi-lo))*100)/100;
+    document.getElementById('in-pa').value=pa;
+    document.getElementById('in-pb').value=pb;
+    document.getElementById('in-pab').value=pab;
+    dropData(pa,pb,pab);
+});
+
+/* ── Solve ── */
+document.getElementById('btn-solve').addEventListener('click', () => {
+    if(S.pa===null) return;
+    const {pa,pb,pab} = S;
+    const panb = +(pa - pab).toFixed(6);
+    const nab  = +(pb - pab).toFixed(6);
+    const pna  = +(1 - pa).toFixed(6);
+    const pnb  = +(1 - pb).toFixed(6);
+    const nanb = +(pna - nab).toFixed(6);
+
+    const chain = [
+        { k:'anb', v:panb, t:`P(A∩B') = P(A) − P(A∩B) = ${fmt(pa)} − ${fmt(pab)} = ${fmt(panb)}` },
+        { k:'nab', v:nab,  t:`P(A'∩B) = P(B) − P(A∩B) = ${fmt(pb)} − ${fmt(pab)} = ${fmt(nab)}` },
+        { k:'pna', v:pna,  t:`P(A') = 1 − P(A) = 1 − ${fmt(pa)} = ${fmt(pna)}` },
+        { k:'pnb', v:pnb,  t:`P(B') = 1 − P(B) = 1 − ${fmt(pb)} = ${fmt(pnb)}` },
+        { k:'nanb',v:nanb, t:`P(A'∩B') = P(A') − P(A'∩B) = ${fmt(pna)} − ${fmt(nab)} = ${fmt(nanb)}` }
+    ];
+    const log = document.getElementById('walk-log');
+    log.innerHTML = '';
+    chain.forEach((s,i) => {
+        setTimeout(() => {
+            C[s.k].textContent = fmt(s.v);
+            C[s.k].className = 'cell-derived';
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.style.animationDelay = '0s';
+            line.textContent = s.t;
+            log.appendChild(line);
+            if(i === chain.length-1){
+                S.solved = true;
+                stepBtns[3].classList.add('done');
+                buildReadouts(pa,pb,pab,panb,nab,pna,pnb,nanb);
+            }
+        }, (i+1)*450);
+    });
+});
+
+/* ── Readouts ── */
+function buildReadouts(pa,pb,pab,panb,nab,pna,pnb,nanb){
+    const sec = document.getElementById('sec-readouts');
+    sec.classList.remove('hidden');
+    const paub = +(pa+pb-pab).toFixed(6);
+    const pagb = pb>0 ? +(pab/pb).toFixed(6) : 0;
+    const pbga = pa>0 ? +(pab/pa).toFixed(6) : 0;
+    const indep = Math.abs(pab - pa*pb) < 0.005;
+
+    const R = [
+        { name:'Union (Addisjon)',      f:'P(A∪B) = P(A) + P(B) − P(A∩B)', v:fmt(paub), hl:['ab','anb','nab'], color:'var(--text)' },
+        { name:'Conditional',           f:'P(A|B) = P(A∩B) / P(B)',         v:fmt(pagb), hl:['ab','pb'], color:'var(--text)' },
+        { name:'Bayes (Reversal)',       f:'P(B|A) = P(A∩B) / P(A)',         v:fmt(pbga), hl:['ab','pa'], color:'var(--text)' },
+        { name:'Complement',            f:"P(A') = 1 − P(A)",              v:fmt(pna),  hl:['pna','pa'], color:'var(--text)' },
+        { name:'Neither fires',         f:"P(A'∩B') = bottom-right room",   v:fmt(nanb), hl:['nanb'], color:'var(--text)' },
+        { name:'Independence?',         f:'P(A∩B) = P(A)·P(B)?',            v:indep ? 'Yes ✓' : 'No — '+fmt(pab)+' ≠ '+fmt(+(pa*pb).toFixed(4)), hl:['ab','pa','pb'], color:indep?'var(--green)':'var(--red)' }
+    ];
+
+    const grid = document.getElementById('readout-grid');
+    grid.innerHTML = '';
+    R.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'readout-card';
+        card.innerHTML = `<div class="readout-name">${r.name}</div><div class="readout-formula">${r.f}</div><div class="readout-value" style="color:${r.color}">${r.v}</div>`;
+        card.addEventListener('mouseenter', () => { clearHL(); r.hl.forEach(k => C[k].classList.add('cell-highlight')); });
+        card.addEventListener('mouseleave', clearHL);
+        grid.appendChild(card);
+    });
+}
+
+/* ── Reset ── */
+document.getElementById('btn-reset').addEventListener('click', () => {
+    S = { pa:null, pb:null, pab:null, solved:false };
+    showBlank();
+    document.getElementById('sec-readouts').classList.add('hidden');
+    document.getElementById('walk-log').innerHTML = '';
+    ['in-pa','in-pb','in-pab'].forEach(id => document.getElementById(id).value = '');
+    stepBtns.forEach(b => b.classList.remove('done'));
+    showStep(1);
+});
+
+/* ── Init ── */
+showStep(1);
+</script>
+</body>
+</html>
