@@ -125,7 +125,7 @@
     <div id="step-container"></div>
 </div></section>
 
-<!-- Laplace bridge -->
+<!-- Connected spells -->
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
     <div class="section-label">Connected Spells</div>
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
@@ -168,29 +168,23 @@
 
 <script>
 /* === FIXED DATA === */
-/* Variance: X = {1, 2, 3}, P = {0.2, 0.5, 0.3} */
 const VAR_X = [1, 2, 3];
 const VAR_P = [0.2, 0.5, 0.3];
-const VAR_MU = 2.1; // E[X]
-const VAR_VAR = 0.49;
-const VAR_SD = 0.7;
+const VAR_MU = 2.1;
 const VAR_CONTRIBS = [
     { x:1, p:0.2, dist:-1.1, sq:1.21, w:0.242 },
     { x:2, p:0.5, dist:-0.1, sq:0.01, w:0.005 },
     { x:3, p:0.3, dist:0.9,  sq:0.81, w:0.243 }
 ];
 
-/* Covariance: X={0,1}, E={0,1}, joint table */
 const COV_CELLS = [
     { x:0, e:0, p:0.4, dx:-0.5, de:-0.5, prod:0.25,  vote:0.10,  zone:'together' },
     { x:0, e:1, p:0.1, dx:-0.5, de:0.5,  prod:-0.25, vote:-0.025, zone:'opposite' },
     { x:1, e:0, p:0.1, dx:0.5,  de:-0.5, prod:-0.25, vote:-0.025, zone:'opposite' },
     { x:1, e:1, p:0.4, dx:0.5,  de:0.5,  prod:0.25,  vote:0.10,  zone:'together' }
 ];
-const COV_MU_X = 0.5, COV_MU_E = 0.5, COV_COV = 0.15;
 
-let mode = 'var';
-let currentStep = 1;
+let mode = 'var', currentStep = 1;
 
 /* === MODE SWITCHING === */
 document.querySelectorAll('.mode-btn').forEach(b => {
@@ -212,18 +206,14 @@ document.querySelectorAll('.step-btn').forEach(b => {
     });
 });
 
-function renderAll(){
-    drawViz();
-    renderStep();
-}
+function renderAll(){ drawViz(); renderStep(); }
 
 function renderStep(){
     document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.step-btn')[currentStep-1].classList.add('active');
-    const container = document.getElementById('step-container');
-
-    if(mode === 'var') renderVarStep(container);
-    else renderCovStep(container);
+    const el = document.getElementById('step-container');
+    if(mode === 'var') renderVarStep(el);
+    else renderCovStep(el);
 }
 
 /* === VARIANCE STEPS === */
@@ -231,20 +221,20 @@ function renderVarStep(el){
     if(currentStep === 1){
         el.innerHTML = '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
             '<p>Recognize the question: <strong>how far do the values spread from the center?</strong></p>'+
-            '<p>Not any single value\u2019s distance \u2014 the average squared distance across all values, weighted by probability.</p>'+
-            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Formula: Var[X] = \u03A3 (x\u1D62 \u2212 \u03BC)\u00B2 \u00B7 P(x\u1D62)</p>'+
+            '<p>Not any single value\u2019s distance \u2014 the average squared distance across all values, weighted by probability. That is the house you\u2019re in.</p>'+
+            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Var[X] = \u03A3 (x\u1D62 \u2212 \u03BC)\u00B2 \u00B7 P(x\u1D62)</p>'+
             '</div>';
     } else if(currentStep === 2){
         el.innerHTML = '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-            '<p>Three operations, in sequence.</p>'+
+            '<p>Three operations, in sequence. Imagine doing this in real life.</p>'+
             '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>1.</strong> Find the center: E[X] = \u03A3 x\u1D62 \u00B7 P(x\u1D62) = \u03BC. Everything measures from here.</div>'+
-            '<div class="proc-step"><strong>2.</strong> For each value: measure distance from center (x\u1D62 \u2212 \u03BC), then square it. Squaring removes direction and amplifies big distances.</div>'+
-            '<div class="proc-step"><strong>3.</strong> Weight each squared distance by its probability. A likely value contributes more. Pile up with \u03A3.</div>'+
+            '<div class="proc-step"><strong>1. Find the center.</strong> E[X] = \u03BC. You need this before anything else, because the whole formula measures distance <em>from</em> this point.</div>'+
+            '<div class="proc-step"><strong>2. Measure each value\u2019s distance.</strong> Take x\u1D62, subtract \u03BC. That is how far this value sits from center. Then square it \u2014 squaring removes direction (you only care about <em>how far</em>, not <em>which side</em>) and amplifies big distances.</div>'+
+            '<div class="proc-step"><strong>3. Weight and pile.</strong> Multiply by P(x\u1D62). A value that happens often contributes more. Then pile up all the weighted squared distances with \u03A3.</div>'+
             '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Var[X] = \u03A3 (x\u1D62 \u2212 \u03BC)\u00B2 \u00B7 P(x\u1D62)</div>'+
             '</div>'+
-            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
-            '<div class="proc-step">You\u2019re standing at the center of a room. Each value is a person at some distance. Each has a weight (probability). Measure distance, square it, multiply by weight, pile up. The pile is how spread the room is.</div>'+
+            '<div class="proc-block"><div class="proc-title">The room</div>'+
+            '<div class="proc-step">You\u2019re standing at the center of a room. Each possible value is a person standing somewhere. Some are close, some are far. Each person has a weight \u2014 how likely they are to show up. Measure distance, square it, multiply by weight, throw on the pile. The pile is how spread the room is.</div>'+
             '</div></div>';
     } else if(currentStep === 3){
         el.innerHTML = '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
@@ -260,11 +250,11 @@ function renderVarStep(el){
     } else if(currentStep === 4){
         let pile = 0;
         let html = '<div class="step-content"><h3>Step 4 \u2014 Walk the Rounds</h3>'+
-            '<p>Stand at \u03BC = 2.1. Walk to each value, measure, square, weight, pile.</p>';
+            '<p>Stand at \u03BC = 2.1. Walk to each value. Measure, square, weight, pile.</p>';
         VAR_CONTRIBS.forEach((c, i) => {
             pile += c.w;
             html += '<div class="derivation"><div class="d-label">Round '+(i+1)+': x = '+c.x+'</div>'+
-                '<div class="d-line">Distance: '+c.x+' \u2212 2.1 = <strong>'+c.dist.toFixed(1)+'</strong></div>'+
+                '<div class="d-line">Distance from center: '+c.x+' \u2212 2.1 = <strong>'+c.dist.toFixed(1)+'</strong></div>'+
                 '<div class="d-line">Square: ('+c.dist.toFixed(1)+')\u00B2 = '+c.sq.toFixed(2)+'</div>'+
                 '<div class="d-line">Weight: '+c.sq.toFixed(2)+' \u00D7 '+c.p+' = <strong>'+c.w.toFixed(3)+'</strong></div>'+
                 '<div class="d-line">Pile = '+pile.toFixed(3)+'</div></div>';
@@ -285,21 +275,21 @@ function renderCovStep(el){
         el.innerHTML = '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
             '<p>Recognize the question: <strong>when X moves, does E move with it?</strong></p>'+
             '<p>Two variables on a plane. X runs along the bottom, E up the side. Every observation has both an X-value and an E-value. The formula checks whether they move in the same direction.</p>'+
-            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Formula: Cov(X,E) = \u03A3\u03A3 (x\u1D62 \u2212 \u03BC\u2093)(e\u2C7C \u2212 \u03BC\u2091) \u00B7 P(x\u1D62, e\u2C7C)</p>'+
+            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Cov(X,E) = \u03A3\u03A3 (x\u1D62 \u2212 \u03BC\u2093)(e\u2C7C \u2212 \u03BC\u2091) \u00B7 P(x\u1D62, e\u2C7C)</p>'+
             '</div>';
     } else if(currentStep === 2){
         el.innerHTML = '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
             '<p>Walk every cell on the joint table. At each cell, cast a vote.</p>'+
             '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>1.</strong> Find both centers: \u03BC\u2093 and \u03BC\u2091.</div>'+
-            '<div class="proc-step"><strong>2.</strong> For each cell (x\u1D62, e\u2C7C): measure X\u2019s distance from \u03BC\u2093 and E\u2019s distance from \u03BC\u2091.</div>'+
-            '<div class="proc-step"><strong>3.</strong> Multiply the two distances \u2014 the direction-detector. Same side of center = positive product. Opposite sides = negative.</div>'+
-            '<div class="proc-step"><strong>4.</strong> Weight by joint probability P(x\u1D62, e\u2C7C). Common combinations vote louder.</div>'+
-            '<div class="proc-step"><strong>5.</strong> Pile up all votes. Positive pile = they move together. Negative = they move apart.</div>'+
+            '<div class="proc-step"><strong>1. Find both centers:</strong> \u03BC\u2093 and \u03BC\u2091.</div>'+
+            '<div class="proc-step"><strong>2. At each cell (x\u1D62, e\u2C7C):</strong> measure X\u2019s distance from \u03BC\u2093 and E\u2019s distance from \u03BC\u2091.</div>'+
+            '<div class="proc-step"><strong>3. Multiply the two distances</strong> \u2014 the direction-detector. Both on the same side of center? Positive product. Opposite sides? Negative. This multiplication tells you: did these two move the same way, or opposite ways?</div>'+
+            '<div class="proc-step"><strong>4. Weight by joint probability.</strong> A common combination gets a loud vote. A rare one gets a whisper.</div>'+
+            '<div class="proc-step"><strong>5. Pile up all votes.</strong> Positive pile = they move together. Negative = they move apart.</div>'+
             '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Cov(X,E) = \u03A3\u03A3 (x\u1D62 \u2212 \u03BC\u2093)(e\u2C7C \u2212 \u03BC\u2091) \u00B7 P(x\u1D62, e\u2C7C)</div>'+
             '</div>'+
             '<div class="proc-block"><div class="proc-title">The four zones</div>'+
-            '<div class="proc-step">The center point (\u03BC\u2093, \u03BC\u2091) splits the plane into four zones. Top-right and bottom-left are \u201Ctogether\u201D zones (same side, positive product). Top-left and bottom-right are \u201Copposite\u201D zones (different sides, negative product).</div>'+
+            '<div class="proc-step">The center point (\u03BC\u2093, \u03BC\u2091) splits the plane into four zones. Top-right and bottom-left are \u201Ctogether\u201D zones (same side, positive product). Top-left and bottom-right are \u201Copposite\u201D zones (different sides, negative product). Every cell falls into one of these zones. The formula walks every cell, checks which zone, weights by probability, piles up.</div>'+
             '</div></div>';
     } else if(currentStep === 3){
         el.innerHTML = '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
@@ -310,24 +300,24 @@ function renderCovStep(el){
             '<tr><th>E = 0</th><td>0.4</td><td>0.1</td></tr>'+
             '</table></div>'+
             '<p><strong>Centers:</strong> \u03BC\u2093 = 0.5, \u03BC\u2091 = 0.5</p>'+
-            '<p>Heavy mass (0.4) sits in the together zones. Light mass (0.1) in the opposite zones. You can already see the lean.</p>'+
+            '<p>Heavy mass (0.4) sits in the together zones. Light mass (0.1) in the opposite zones. You can already see the lean before you calculate.</p>'+
             '</div>';
         markDone(2);
     } else if(currentStep === 4){
         const labels = ['Bottom-left (X=0, E=0)', 'Top-left (X=0, E=1)', 'Bottom-right (X=1, E=0)', 'Top-right (X=1, E=1)'];
-        const order = [0, 1, 2, 3];
         let pile = 0;
         let html = '<div class="step-content"><h3>Step 4 \u2014 Walk the Cells</h3>'+
             '<p>Four cells. Four votes. Pile up the verdict.</p>';
-        order.forEach((idx, i) => {
+        [0,1,2,3].forEach((idx, i) => {
             const c = COV_CELLS[idx];
             pile += c.vote;
             const dir = c.zone === 'together' ? 'Same side \u2192 positive' : 'Opposite sides \u2192 negative';
             const voteColor = c.vote > 0 ? 'var(--green)' : 'var(--red)';
+            const voteWord = c.vote > 0 ? 'together' : 'apart';
             html += '<div class="derivation"><div class="d-label">'+labels[i]+'</div>'+
                 '<div class="d-line">X distance: '+c.x+' \u2212 0.5 = '+c.dx.toFixed(1)+' &nbsp; E distance: '+c.e+' \u2212 0.5 = '+c.de.toFixed(1)+'</div>'+
                 '<div class="d-line">Direction-detector: ('+c.dx.toFixed(1)+')('+c.de.toFixed(1)+') = '+c.prod.toFixed(2)+' &nbsp; <span style="color:var(--muted)">'+dir+'</span></div>'+
-                '<div class="d-line">Weight: '+c.prod.toFixed(2)+' \u00D7 '+c.p+' = <strong style="color:'+voteColor+'">'+c.vote.toFixed(3)+'</strong></div>'+
+                '<div class="d-line">Weight: '+c.prod.toFixed(2)+' \u00D7 '+c.p+' = <strong style="color:'+voteColor+'">'+c.vote.toFixed(3)+'</strong> \u2014 vote <em>'+voteWord+'</em></div>'+
                 '<div class="d-line">Pile = '+pile.toFixed(3)+'</div></div>';
         });
         html += '<div class="result-box"><div class="result-box-name">Cov(X,E)</div>'+
@@ -355,109 +345,148 @@ function drawViz(){
 function drawVarianceViz(){
     document.getElementById('viz-label').textContent = 'The Spread';
     document.getElementById('viz-title').textContent = 'Distance from Center';
-    document.getElementById('viz-desc').textContent = 'Each value\u2019s weighted squared distance from \u03BC = 2.1.';
+    document.getElementById('viz-desc').textContent = 'Three values, three distances from \u03BC = 2.1. Bar height = contribution to the pile.';
 
     const wrap = document.getElementById('viz-wrap');
     const canvas = document.getElementById('viz-canvas');
     const dpr = window.devicePixelRatio || 1;
     const cw = wrap.clientWidth - 18;
-    const ch = 260;
+    const ch = 370;
     canvas.width = cw * dpr; canvas.height = ch * dpr;
     canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr); ctx.clearRect(0, 0, cw, ch);
 
     const accent = '#a78bfa', green = '#22c55e', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
-    const lineY = 80;
-    const barBase = 170;
-    const barMaxH = 70;
-    const padL = 60, padR = 60;
-    const rangeW = cw - padL - padR;
 
-    // Number line from 0 to 4
-    const xMin = 0, xMax = 4;
+    /* --- TOP SECTION: Number line (simple, clean) --- */
+    const lineY = 55;
+    const padL = 50, padR = 50;
+    const rangeW = cw - padL - padR;
+    const xMin = 0.5, xMax = 3.5;
     function toX(v){ return padL + (v - xMin) / (xMax - xMin) * rangeW; }
 
-    // Draw number line
-    ctx.beginPath();
-    ctx.moveTo(padL, lineY); ctx.lineTo(cw - padR, lineY);
+    // Number line
+    ctx.beginPath(); ctx.moveTo(padL, lineY); ctx.lineTo(cw - padR, lineY);
     ctx.strokeStyle = border; ctx.lineWidth = 1; ctx.stroke();
 
-    // Tick marks
-    for(let v = 0; v <= 4; v++){
+    // Ticks at 1, 2, 3
+    [1, 2, 3].forEach(v => {
         const x = toX(v);
-        ctx.beginPath(); ctx.moveTo(x, lineY - 4); ctx.lineTo(x, lineY + 4);
-        ctx.strokeStyle = muted; ctx.lineWidth = 1; ctx.stroke();
-        ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        ctx.fillText(v.toString(), x, lineY + 8);
-    }
+        ctx.beginPath(); ctx.moveTo(x, lineY - 5); ctx.lineTo(x, lineY + 5);
+        ctx.strokeStyle = '#3f3f46'; ctx.lineWidth = 1; ctx.stroke();
+    });
 
-    // Mu line
+    // Mu marker
     const muX = toX(VAR_MU);
-    ctx.beginPath();
-    ctx.setLineDash([4, 3]);
-    ctx.moveTo(muX, lineY - 30); ctx.lineTo(muX, lineY + 25);
+    ctx.beginPath(); ctx.setLineDash([4, 3]);
+    ctx.moveTo(muX, lineY - 28); ctx.lineTo(muX, lineY + 28);
     ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = accent; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-    ctx.fillText('\u03BC = 2.1', muX, lineY - 32);
+    ctx.fillStyle = accent; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('\u03BC = 2.1', muX, lineY - 30);
 
-    // Dots on number line
+    // Value dots on the line
     VAR_CONTRIBS.forEach(c => {
         const x = toX(c.x);
-        const r = 6 + c.p * 16; // size by probability
+        const r = 14;
         ctx.beginPath(); ctx.arc(x, lineY, r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(167,139,250,0.25)'; ctx.fill();
+        ctx.fillStyle = 'rgba(167,139,250,0.2)'; ctx.fill();
         ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
-
-        // Label
-        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(c.x.toString(), x, lineY);
-
-        // Probability label below
-        ctx.fillStyle = muted; ctx.font = '9px Inter,sans-serif'; ctx.textBaseline = 'top';
-        ctx.fillText('P=' + c.p, x, lineY + r + 4);
-
-        // Distance arrow to mu
-        ctx.beginPath();
-        ctx.moveTo(x, lineY - r - 6);
-        ctx.lineTo(muX, lineY - r - 6);
-        ctx.strokeStyle = 'rgba(167,139,250,0.3)'; ctx.lineWidth = 1; ctx.stroke();
     });
 
-    // Bar chart: weighted squared distances
-    ctx.fillStyle = text2; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-    ctx.fillText('Weighted squared distance (contribution to pile)', cw / 2, barBase - barMaxH - 8);
-
-    const maxW = 0.243;
-    const barW = 50;
-    const barGap = 30;
-    const totalBarW = VAR_CONTRIBS.length * barW + (VAR_CONTRIBS.length - 1) * barGap;
-    const barStartX = (cw - totalBarW) / 2;
+    /* --- MIDDLE SECTION: Three "round cards" showing the calculation chain --- */
+    const cardTop = 110;
+    const cardH = 52;
+    const cardGap = 10;
+    const cardW = Math.min((cw - 40) / 3 - 8, 200);
+    const totalCardsW = 3 * cardW + 2 * 12;
+    const cardStartX = (cw - totalCardsW) / 2;
 
     VAR_CONTRIBS.forEach((c, i) => {
-        const bx = barStartX + i * (barW + barGap);
-        const bh = (c.w / maxW) * barMaxH;
-        const by = barBase - bh;
+        const cx = cardStartX + i * (cardW + 12);
+        const cy = cardTop;
 
-        // Bar
-        ctx.fillStyle = c.w > 0.1 ? 'rgba(167,139,250,0.35)' : 'rgba(167,139,250,0.1)';
-        ctx.fillRect(bx, by, barW, bh);
-        ctx.strokeStyle = accent; ctx.lineWidth = 1;
-        ctx.strokeRect(bx, by, barW, bh);
+        // Card background
+        ctx.fillStyle = 'rgba(167,139,250,0.05)';
+        ctx.strokeStyle = 'rgba(167,139,250,0.15)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, cx, cy, cardW, cardH, 6);
+        ctx.fill(); ctx.stroke();
 
         // Value label
-        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        ctx.fillText(c.w.toFixed(3), bx + barW / 2, barBase + 4);
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText('x = ' + c.x, cx + 8, cy + 7);
 
-        // x label
-        ctx.fillStyle = muted; ctx.font = '9px Inter,sans-serif';
-        ctx.fillText('x=' + c.x, bx + barW / 2, barBase + 18);
+        // P label
+        ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'right';
+        ctx.fillText('P = ' + c.p, cx + cardW - 8, cy + 7);
+
+        // Distance and square
+        ctx.fillStyle = text2; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText('dist: ' + c.dist.toFixed(1) + '  \u2192  sq: ' + c.sq.toFixed(2), cx + 8, cy + 25);
+
+        // Weighted result
+        ctx.fillStyle = accent; ctx.font = 'bold 10px Inter,sans-serif';
+        ctx.fillText('\u00D7' + c.p + ' = ' + c.w.toFixed(3), cx + 8, cy + 38);
     });
 
-    // Total
-    ctx.fillStyle = green; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText('Pile = 0.49 \u2192 \u03C3 = 0.7', cw / 2, barBase + 34);
+    /* --- BOTTOM SECTION: Horizontal bars showing contribution to pile --- */
+    const barTop = 185;
+    const barH = 28;
+    const barSpacing = 42;
+    const barLabelW = 50;
+    const maxBarW = cw - 160;
+    const maxW = 0.243;
+
+    ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Contribution to pile', cw / 2, barTop - 6);
+
+    VAR_CONTRIBS.forEach((c, i) => {
+        const by = barTop + i * barSpacing;
+        const bw = (c.w / maxW) * maxBarW;
+
+        // Label
+        ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText('x = ' + c.x, 55, by + barH / 2);
+
+        // Bar
+        const barX = 65;
+        ctx.fillStyle = c.w > 0.1 ? 'rgba(167,139,250,0.3)' : 'rgba(167,139,250,0.08)';
+        roundRect(ctx, barX, by, Math.max(bw, 4), barH, 4);
+        ctx.fill();
+        ctx.strokeStyle = c.w > 0.1 ? accent : 'rgba(167,139,250,0.3)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, barX, by, Math.max(bw, 4), barH, 4);
+        ctx.stroke();
+
+        // Value on bar
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText(c.w.toFixed(3), barX + Math.max(bw, 4) + 8, by + barH / 2);
+    });
+
+    /* --- TOTAL --- */
+    const totalY = barTop + 3 * barSpacing + 5;
+    ctx.fillStyle = green; ctx.font = 'bold 14px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Pile = 0.49', cw / 2, totalY);
+    ctx.fillStyle = text2; ctx.font = '12px Inter,sans-serif';
+    ctx.fillText('\u03C3 = \u221A0.49 = 0.7', cw / 2, totalY + 22);
+}
+
+function roundRect(ctx, x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
 }
 
 function drawCovarianceViz(){
@@ -477,7 +506,6 @@ function drawCovarianceViz(){
 
     const accent = '#a78bfa', green = '#22c55e', red = '#ef4444', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
 
-    // Grid area
     const pad = 60;
     const gridSize = Math.min(cw - pad * 2, ch - 80);
     const gx = (cw - gridSize) / 2;
@@ -486,41 +514,32 @@ function drawCovarianceViz(){
     const midGY = gy + gridSize / 2;
 
     // Zone backgrounds
-    // Top-left: opposite (X below, E above)
     ctx.fillStyle = 'rgba(239,68,68,0.06)';
     ctx.fillRect(gx, gy, gridSize / 2, gridSize / 2);
-    // Top-right: together
     ctx.fillStyle = 'rgba(34,197,94,0.06)';
     ctx.fillRect(midGX, gy, gridSize / 2, gridSize / 2);
-    // Bottom-left: together
     ctx.fillStyle = 'rgba(34,197,94,0.06)';
     ctx.fillRect(gx, midGY, gridSize / 2, gridSize / 2);
-    // Bottom-right: opposite
     ctx.fillStyle = 'rgba(239,68,68,0.06)';
     ctx.fillRect(midGX, midGY, gridSize / 2, gridSize / 2);
 
-    // Grid border
     ctx.strokeStyle = border; ctx.lineWidth = 1;
     ctx.strokeRect(gx, gy, gridSize, gridSize);
 
-    // Center lines (dashed)
     ctx.beginPath(); ctx.setLineDash([4, 3]);
     ctx.moveTo(midGX, gy); ctx.lineTo(midGX, gy + gridSize);
     ctx.moveTo(gx, midGY); ctx.lineTo(gx + gridSize, midGY);
     ctx.strokeStyle = accent; ctx.lineWidth = 1; ctx.stroke();
     ctx.setLineDash([]);
 
-    // Center label
     ctx.fillStyle = accent; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillText('(\u03BC\u2093, \u03BC\u2091)', midGX + 4, midGY - 4);
 
-    // Axis labels
     ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('X \u2192', gx + gridSize / 2, gy + gridSize + 8);
     ctx.save(); ctx.translate(gx - 12, gy + gridSize / 2); ctx.rotate(-Math.PI / 2);
     ctx.fillText('E \u2192', 0, 0); ctx.restore();
 
-    // Zone labels
     ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = red; ctx.fillText('OPPOSITE', gx + gridSize * 0.25, gy + gridSize * 0.15);
     ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: \u2212', gx + gridSize * 0.25, gy + gridSize * 0.22);
@@ -531,12 +550,11 @@ function drawCovarianceViz(){
     ctx.fillStyle = red; ctx.font = '10px Inter,sans-serif'; ctx.fillText('OPPOSITE', gx + gridSize * 0.75, gy + gridSize * 0.85);
     ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: \u2212', gx + gridSize * 0.75, gy + gridSize * 0.92);
 
-    // Dots
     const dotPositions = [
-        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.75, p: 0.4, label: 'P=0.4', color: green },  // X=0,E=0 together
-        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.35, p: 0.1, label: 'P=0.1', color: red },    // X=0,E=1 opposite
-        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.75, p: 0.1, label: 'P=0.1', color: red },    // X=1,E=0 opposite
-        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.35, p: 0.4, label: 'P=0.4', color: green }   // X=1,E=1 together
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.75, p: 0.4, label: 'P=0.4', color: green },
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.35, p: 0.1, label: 'P=0.1', color: red },
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.75, p: 0.1, label: 'P=0.1', color: red },
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.35, p: 0.4, label: 'P=0.4', color: green }
     ];
 
     dotPositions.forEach(d => {
@@ -549,7 +567,6 @@ function drawCovarianceViz(){
         ctx.fillText(d.label, d.x, d.y);
     });
 
-    // Axis value labels
     ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('X=0', gx + gridSize * 0.25, gy + gridSize + 20);
@@ -558,7 +575,6 @@ function drawCovarianceViz(){
     ctx.fillText('E=0', gx - 8, gy + gridSize * 0.75);
     ctx.fillText('E=1', gx - 8, gy + gridSize * 0.35);
 
-    // Result
     ctx.fillStyle = green; ctx.font = 'bold 13px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('Cov(X,E) = +0.15 \u2014 they move together', cw / 2, gy + gridSize + 38);
 }
