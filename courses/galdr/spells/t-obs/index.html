@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📏 T_obs — Galdr Spell | System 33</title>
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--green:#22c55e;--red:#ef4444;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+        a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
+        .container{max-width:760px;margin:0 auto;padding:0 24px}
+        .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+        .hero{padding:48px 0 24px;text-align:center}
+        .hero-icon{font-size:3rem;margin-bottom:12px}
+        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
+        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+        .hero p{font-size:1rem;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
+        .section{padding:24px 0}
+        .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+        .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;font-size:.9rem;color:var(--text2);line-height:1.6}
+        .principle strong{color:var(--text)}
+        .mode-nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .mode-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:12px 20px;font-family:inherit;font-size:.82rem;color:var(--text2);cursor:pointer;transition:all .2s;font-weight:500}
+        .mode-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+        .step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.8rem;color:var(--text2);cursor:pointer;transition:all .2s}
+        .step-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
+        .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .step-btn.done{border-color:var(--green);color:var(--green)}
+        .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+        .step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
+        .step-content p{color:var(--text2);font-size:.92rem;line-height:1.65;margin-bottom:10px}
+        .step-content p:last-child{margin-bottom:0}
+        .step-content strong{color:var(--text)}
+        .viz-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+        .viz-section h3{font-size:1rem;font-weight:600;margin-bottom:6px}
+        .viz-section p{color:var(--text2);font-size:.85rem;margin-bottom:12px}
+        .viz-wrap{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 8px;overflow:hidden}
+        .viz-wrap canvas{display:block;margin:0 auto}
+        .proc-block{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0}
+        .proc-block .proc-title{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+        .proc-step{font-size:.88rem;color:var(--text2);line-height:1.7;margin:4px 0;padding-left:6px}
+        .proc-step strong{color:var(--text)}
+        .data-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:14px 0}
+        .data-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}
+        .data-table th,.data-table td{border:1px solid var(--border);padding:8px 12px;text-align:center}
+        .data-table th{background:var(--bg2);color:var(--text2);font-weight:600;font-size:.78rem}
+        .derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2)}
+        .derivation .d-label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+        .derivation .d-line{margin:2px 0}
+        .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
+        .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+        .result-box-value{font-size:1.4rem;font-weight:700}
+        .result-box-desc{font-size:.85rem;color:var(--text2);margin-top:8px}
+        .formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px}
+        .formula-ref-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+        .formula-ref-name{font-size:.95rem;font-weight:600}
+        .formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
+        .formula-ref-eq{font-size:.85rem;color:var(--text2);line-height:1.5}
+        .formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:6px;line-height:1.5}
+        .recog-box{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+        .recog-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+        .recog-line{font-size:.88rem;color:var(--text2);line-height:1.9}
+        .recog-line strong{color:var(--text)}
+        .checklist-box{background:var(--bg-card);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:0 12px 12px 0;padding:20px 24px}
+        .checklist-item{font-size:.88rem;color:var(--text2);line-height:1.9}
+        .checklist-item strong{color:var(--text)}
+        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
+        footer a{color:var(--text2)}
+        @media(max-width:520px){.hero{padding:32px 0 20px}.mode-nav{flex-direction:column}}
+    </style>
+</head>
+<body>
+<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
+
+<section class="hero"><div class="container">
+    <div class="hero-icon">📏</div>
+    <div class="hero-badge">Galdr Spell &middot; Kap 9 + 10</div>
+    <h1>T<sub>obs</sub> &mdash; Distance in Wobbles</h1>
+    <p>The gap between a claim and a handful, measured in the bell's own ruler. One number tells you: forkast or behold.</p>
+</div></section>
+
+<section class="section"><div class="container">
+    <div class="principle">
+        <strong>Distance only means something when you state the unit.</strong> 12&thinsp;000 kroner is meaningless. It could be enormous or trivial. 12&thinsp;000 kroner in a field where the typical wobble is 6&thinsp;000 is <em>two wobbles.</em> Two wobbles is a coordinate you can read on the bell.
+    </div>
+    <div class="recog-box">
+        <div class="recog-title">Which test are you running?</div>
+        <div class="recog-line"><strong>&sigma; kjent</strong> &mdash; z-test. Wobble: &sigma;/&radic;n. Critical value from z-table.</div>
+        <div class="recog-line"><strong>&sigma; ukjent</strong> &mdash; t-test. Wobble: s/&radic;n. Critical value from t-table, df = n&minus;1.</div>
+        <div class="recog-line"><strong>&mu; &ne; &mu;&sub0;</strong> &mdash; tosidig (two-tailed). Rejection in both tails, &alpha;/2 each.</div>
+        <div class="recog-line"><strong>&mu; &gt; &mu;&sub0; or &mu; &lt; &mu;&sub0;</strong> &mdash; ensidig (one-tailed). All &alpha; in one tail.</div>
+    </div>
+</div></section>
+
+<section class="section"><div class="container">
+    <div class="section-label">Choose the test</div>
+    <div class="mode-nav">
+        <button class="mode-btn active" data-mode="t2">Tosidig t-test</button>
+        <button class="mode-btn" data-mode="t1">Ensidig t-test</button>
+        <button class="mode-btn" data-mode="z2">z-test (&sigma; kjent)</button>
+    </div>
+</div></section>
+
+<section class="section" id="viz-section"><div class="container">
+    <div class="section-label" id="viz-label">The Bell</div>
+    <div class="viz-section">
+        <h3 id="viz-title">Tosidig t-test</h3>
+        <p id="viz-desc">df = 24, &alpha; = 0.05. Rejection in both tails.</p>
+        <div class="viz-wrap" id="viz-wrap">
+            <canvas id="viz-canvas"></canvas>
+        </div>
+    </div>
+</div></section>
+
+<section class="section"><div class="container">
+    <div class="section-label">Walk the spell</div>
+    <div class="step-nav" id="step-nav">
+        <button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
+        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
+        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
+        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
+    </div>
+    <div id="step-container"></div>
+</div></section>
+
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">Eksamen Procedure</div>
+    <div class="checklist-box">
+        <div class="checklist-item"><strong>1. Set up H\u2080 and H\u2090.</strong> What is the claim? What is the alternative?</div>
+        <div class="checklist-item"><strong>2. &sigma; kjent or ukjent?</strong> &rarr; z-test or t-test</div>
+        <div class="checklist-item"><strong>3. Tosidig or ensidig?</strong> &rarr; determines where the rejection zone sits</div>
+        <div class="checklist-item"><strong>4. Find critical value</strong> from table (&alpha;, df)</div>
+        <div class="checklist-item"><strong>5. Calculate T<sub>obs</sub></strong> = (x&#772; &minus; &mu;\u2080) / (s/&radic;n)</div>
+        <div class="checklist-item"><strong>6. Compare.</strong> Past the wall &rarr; forkast. Inside &rarr; behold.</div>
+    </div>
+</div></section>
+
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">Connected Spells</div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Wobble Frame</strong> builds the frame. T<sub>obs</sub> flips the question: instead of framing the truth, you test a specific claim. The <a href="/courses/galdr/spells/wobble-frame/" style="color:var(--accent)">Wobble Frame</a> (Kap 8) is the mirror image.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Bell-Walk</strong> gives the bell. The <a href="/courses/galdr/spells/bell-walk/" style="color:var(--accent)">Bell-Walk</a> (Kap 7) is the foundation the test lives on.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7"><strong>Weighing Table</strong> gives &sigma; and s. The <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> (Kap 5+6) measures the spread that becomes the ruler.</p>
+    </div>
+</div></section>
+
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
+    <div class="section-label">Formula Reference &mdash; Kap 9 + 10</div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">T<sub>obs</sub> (&sigma; ukjent)</span><span class="formula-ref-kap">Kap 9</span></div>
+        <div class="formula-ref-eq">T<sub>obs</sub> = (x&#772; &minus; &mu;<sub>0</sub>) / (s/&radic;n)</div>
+        <div class="formula-ref-desc">The gap in wobbles. s/&radic;n is the ruler. Compare to t-critical with df = n&minus;1.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">z<sub>obs</sub> (&sigma; kjent)</span><span class="formula-ref-kap">Kap 9</span></div>
+        <div class="formula-ref-eq">z<sub>obs</sub> = (x&#772; &minus; &mu;<sub>0</sub>) / (&sigma;/&radic;n)</div>
+        <div class="formula-ref-desc">Same structure, but &sigma; is known. Compare to z-critical.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">Decision Rule</span><span class="formula-ref-kap">Kap 9&ndash;10</span></div>
+        <div class="formula-ref-eq">|T<sub>obs</sub>| &gt; t<sub>crit</sub> &rarr; Forkast H<sub>0</sub> &nbsp;&nbsp;|&nbsp;&nbsp; |T<sub>obs</sub>| &le; t<sub>crit</sub> &rarr; Behold H<sub>0</sub></div>
+        <div class="formula-ref-desc">Forkast = reject the claim. Behold = keep believing until stronger evidence arrives. Behold &ne; accept.</div>
+    </div>
+    <div class="formula-ref">
+        <div class="formula-ref-header"><span class="formula-ref-name">The Three Runes</span><span class="formula-ref-kap">Keep separate</span></div>
+        <div class="formula-ref-eq">&sigma; (truth) &nbsp;&ne;&nbsp; s (estimate) &nbsp;&ne;&nbsp; s/&radic;n (wobble of x&#772;)</div>
+        <div class="formula-ref-desc">&sigma; is the real spread. s estimates it. s/&radic;n is how much x&#772; wobbles. T<sub>obs</sub> counts wobbles, not sigmas.</div>
+    </div>
+</div></section>
+
+<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+
+<script>
+/* === STATE === */
+var mode='t2',currentStep=1;
+
+var CONF={
+    t2:{tobs:2.0,crits:[-2.064,2.064],oneTail:false,useT:true,df:24,
+        tobsL:'T_obs = 2.0',result:'behold',
+        resultL:'Behold H\u2080 \u2014 barely inside',
+        vizTitle:'Tosidig t-test',
+        vizDesc:'df = 24, \u03B1 = 0.05. Rejection in both tails (\u03B1/2 = 0.025 each).'},
+    t1:{tobs:2.0,crits:[1.711],oneTail:true,useT:true,df:24,
+        tobsL:'T_obs = 2.0',result:'forkast',
+        resultL:'Forkast H\u2080 \u2014 past the wall',
+        vizTitle:'Ensidig t-test',
+        vizDesc:'df = 24, \u03B1 = 0.05. Rejection in right tail only.'},
+    z2:{tobs:1.0,crits:[-1.96,1.96],oneTail:false,useT:false,df:30,
+        tobsL:'z_obs = 1.0',result:'behold',
+        resultL:'Behold H\u2080 \u2014 well inside',
+        vizTitle:'z-test (tosidig)',
+        vizDesc:'\u03C3 known, \u03B1 = 0.05. Normal bell, both tails.'}
+};
+
+/* === NAV === */
+document.querySelectorAll('.mode-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+        document.querySelectorAll('.mode-btn').forEach(function(x){x.classList.remove('active');});
+        b.classList.add('active');
+        mode=b.dataset.mode;
+        currentStep=1;
+        document.querySelectorAll('.step-btn').forEach(function(s){s.classList.remove('done');});
+        renderAll();
+    });
+});
+document.querySelectorAll('.step-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+        currentStep=parseInt(b.dataset.step);
+        renderStep();
+    });
+});
+
+function renderAll(){drawViz();renderStep();}
+function renderStep(){
+    document.querySelectorAll('.step-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.step-btn')[currentStep-1].classList.add('active');
+    var el=document.getElementById('step-container');
+    if(mode==='t2')el.innerHTML=t2Step(currentStep);
+    else if(mode==='t1')el.innerHTML=t1Step(currentStep);
+    else el.innerHTML=z2Step(currentStep);
+}
+function markDone(n){document.querySelectorAll('.step-btn').forEach(function(b,i){if(i<n)b.classList.add('done');});}
+
+/* === TOSIDIG t-TEST STEPS === */
+function t2Step(s){
+    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
+        '<p>They claim <strong>\u03BC = 120\u2009000</strong>. You have a sample. \u03C3 is unknown \u2192 <strong>t-test</strong>. The question is "is there a difference?" \u2192 <strong>two-tailed</strong>.</p>'+
+        '<p><strong>H\u2080:</strong> \u03BC = 120\u2009000 &nbsp;&nbsp; <strong>H\u2090:</strong> \u03BC \u2260 120\u2009000</p>'+
+        '<p>You\'re drawing a bell centered on the claim. Then placing your handful on it and asking: how rare is where it landed?</p>'+
+        '</div>';
+    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
+        '<p>Five steps, in order. Number-blind.</p>'+
+        '<div class="proc-block"><div class="proc-title">Construction</div>'+
+        '<div class="proc-step"><strong>1. Pour the foundation.</strong> Draw the bell centered on \u03BC\u2080. This is the world <em>if</em> H\u2080 is true.</div>'+
+        '<div class="proc-step"><strong>2. Set the width.</strong> The bell\'s tightness comes from s/\u221An. The wobble \u2014 the bell\'s own ruler.</div>'+
+        '<div class="proc-step"><strong>3. Mark the walls.</strong> \u03B1 determines the size of the rejection zones. Two-tailed: \u03B1/2 in each tail. The walls sit at \u00B1t<sub>\u03B1/2, df</sub>.</div>'+
+        '<div class="proc-step"><strong>4. Place the coordinate.</strong> T<sub>obs</sub> = (x\u0304 \u2212 \u03BC\u2080) / (s/\u221An). The gap in wobbles.</div>'+
+        '<div class="proc-step"><strong>5. Compare.</strong> T<sub>obs</sub> past the wall \u2192 forkast. Inside \u2192 behold.</div>'+
+        '</div></div>';
+    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
+        '<p>Ny markedsstrategi. Claim: gjennomsnittlig kvartalsomsetnin is 120\u2009000.</p>'+
+        '<div class="data-card"><table class="data-table">'+
+        '<tr><th>\u03BC\u2080</th><th>x\u0304</th><th>s</th><th>n</th><th>df</th><th>\u03B1</th></tr>'+
+        '<tr><td>120\u2009000</td><td>132\u2009000</td><td>30\u2009000</td><td>25</td><td>24</td><td>0.05</td></tr>'+
+        '</table></div>'+
+        '<p><strong>Wobble:</strong> s/\u221An = 30\u2009000/\u221A25</p>'+
+        '<p><strong>Gap:</strong> x\u0304 \u2212 \u03BC\u2080 = 132\u2009000 \u2212 120\u2009000</p>'+
+        '<p><strong>Critical value:</strong> t<sub>0.025, 24</sub> = \u00B12.064</p>'+
+        '</div>';}
+    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
+        '<div class="derivation"><div class="d-label">The wobble (ruler)</div>'+
+        '<div class="d-line">s/\u221An = 30\u2009000/\u221A25 = 30\u2009000/5 = <strong>6\u2009000</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">The raw gap</div>'+
+        '<div class="d-line">x\u0304 \u2212 \u03BC\u2080 = 132\u2009000 \u2212 120\u2009000 = <strong>12\u2009000</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">The coordinate</div>'+
+        '<div class="d-line">T<sub>obs</sub> = 12\u2009000 / 6\u2009000 = <strong>2.0</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">Two wobbles from the claim.</div></div>'+
+        '<div class="derivation"><div class="d-label">Compare</div>'+
+        '<div class="d-line">|T<sub>obs</sub>| = 2.0 &nbsp;&nbsp; vs &nbsp;&nbsp; t<sub>crit</sub> = 2.064</div>'+
+        '<div class="d-line">2.0 < 2.064 \u2192 <strong>inside the wall.</strong></div></div>'+
+        '<div class="result-box"><div class="result-box-name">Conclusion</div>'+
+        '<div class="result-box-value" style="color:var(--green)">Behold H\u2080</div>'+
+        '<div class="result-box-desc">Barely. The handful sits 2 wobbles from the claim, but the wall sits at 2.064. Not enough evidence to reject. 0.064 wobbles saved the claim.</div>'+
+        '</div></div>';
+}
+
+/* === ENSIDIG t-TEST STEPS === */
+function t1Step(s){
+    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
+        '<p>Same claim, same data. But now the question is <strong>"is it higher?"</strong> \u2192 <strong>one-tailed</strong>.</p>'+
+        '<p><strong>H\u2080:</strong> \u03BC = 120\u2009000 &nbsp;&nbsp; <strong>H\u2090:</strong> \u03BC > 120\u2009000</p>'+
+        '<p>All \u03B1 goes to the right tail. The wall moves closer to center because you\'re only watching one direction.</p>'+
+        '</div>';
+    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
+        '<p>Same five steps. One change: the wall placement.</p>'+
+        '<div class="proc-block"><div class="proc-title">The one-tailed difference</div>'+
+        '<div class="proc-step"><strong>Only one wall.</strong> All \u03B1 = 0.05 goes to the right tail. No left wall. You only reject if x\u0304 is <em>above</em> the claim.</div>'+
+        '<div class="proc-step"><strong>Wall sits at t<sub>\u03B1, df</sub></strong> (not \u03B1/2). \u03B1 = 0.05, df = 24 \u2192 t<sub>crit</sub> = 1.711.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">One-tailed is easier to reject \u2014 the wall is closer because all \u03B1 goes to one side.</div>'+
+        '</div></div>';
+    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
+        '<p>Exact same numbers as the two-tailed test. Only the hypothesis changed.</p>'+
+        '<div class="data-card"><table class="data-table">'+
+        '<tr><th>\u03BC\u2080</th><th>x\u0304</th><th>s</th><th>n</th><th>df</th><th>\u03B1</th></tr>'+
+        '<tr><td>120\u2009000</td><td>132\u2009000</td><td>30\u2009000</td><td>25</td><td>24</td><td>0.05</td></tr>'+
+        '</table></div>'+
+        '<p><strong>Critical value:</strong> t<sub>0.05, 24</sub> = 1.711 (one wall, right side)</p>'+
+        '<p>T<sub>obs</sub> is still 2.0 \u2014 same data, same calculation. Only the wall moved.</p>'+
+        '</div>';}
+    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
+        '<div class="derivation"><div class="d-label">Same T_obs</div>'+
+        '<div class="d-line">T<sub>obs</sub> = 12\u2009000 / 6\u2009000 = <strong>2.0</strong> (unchanged)</div></div>'+
+        '<div class="derivation"><div class="d-label">Compare \u2014 different wall</div>'+
+        '<div class="d-line">T<sub>obs</sub> = 2.0 &nbsp;&nbsp; vs &nbsp;&nbsp; t<sub>crit</sub> = 1.711</div>'+
+        '<div class="d-line">2.0 > 1.711 \u2192 <strong>past the wall.</strong></div></div>'+
+        '<div class="result-box"><div class="result-box-name">Conclusion</div>'+
+        '<div class="result-box-value" style="color:var(--red)">Forkast H\u2080</div>'+
+        '<div class="result-box-desc">Same data, same T<sub>obs</sub> = 2.0. But the wall moved from 2.064 to 1.711 because all \u03B1 went to one side. Now 2.0 is past the wall. Reject the claim \u2014 the new strategy increased revenue.</div>'+
+        '</div></div>';
+}
+
+/* === z-TEST STEPS === */
+function z2Step(s){
+    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
+        '<p>They claim <strong>\u03BC = 50</strong>. You have a sample. <strong>\u03C3 = 12 is known</strong> \u2192 z-test. "Is there a difference?" \u2192 two-tailed.</p>'+
+        '<p><strong>H\u2080:</strong> \u03BC = 50 &nbsp;&nbsp; <strong>H\u2090:</strong> \u03BC \u2260 50</p>'+
+        '<p>Same construction as the t-test, but the bell is normal (not t-shaped) and the wobble uses \u03C3 instead of s.</p>'+
+        '</div>';
+    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
+        '<p>Same five steps. Two substitutions.</p>'+
+        '<div class="proc-block"><div class="proc-title">z-test differences</div>'+
+        '<div class="proc-step"><strong>Wobble:</strong> \u03C3/\u221An (not s/\u221An). The true spread is known \u2014 no extra wobble from estimating it.</div>'+
+        '<div class="proc-step"><strong>Table:</strong> z-table (not t-table). No df needed \u2014 the normal bell is the normal bell.</div>'+
+        '<div class="proc-step"><strong>Formula:</strong> z<sub>obs</sub> = (x\u0304 \u2212 \u03BC\u2080) / (\u03C3/\u221An). Same structure, different letter.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">On eksamen: z-test is rarer. Most problems give s, not \u03C3. When they give \u03C3, it\'s always z.</div>'+
+        '</div></div>';
+    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
+        '<div class="data-card"><table class="data-table">'+
+        '<tr><th>\u03BC\u2080</th><th>x\u0304</th><th>\u03C3</th><th>n</th><th>\u03B1</th></tr>'+
+        '<tr><td>50</td><td>52</td><td>12</td><td>36</td><td>0.05</td></tr>'+
+        '</table></div>'+
+        '<p><strong>Wobble:</strong> \u03C3/\u221An = 12/\u221A36</p>'+
+        '<p><strong>Gap:</strong> x\u0304 \u2212 \u03BC\u2080 = 52 \u2212 50</p>'+
+        '<p><strong>Critical value:</strong> z<sub>0.025</sub> = \u00B11.96</p>'+
+        '</div>';}
+    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
+        '<div class="derivation"><div class="d-label">The wobble</div>'+
+        '<div class="d-line">\u03C3/\u221An = 12/\u221A36 = 12/6 = <strong>2</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">The raw gap</div>'+
+        '<div class="d-line">x\u0304 \u2212 \u03BC\u2080 = 52 \u2212 50 = <strong>2</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">The coordinate</div>'+
+        '<div class="d-line">z<sub>obs</sub> = 2 / 2 = <strong>1.0</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">One wobble from the claim.</div></div>'+
+        '<div class="derivation"><div class="d-label">Compare</div>'+
+        '<div class="d-line">|z<sub>obs</sub>| = 1.0 &nbsp;&nbsp; vs &nbsp;&nbsp; z<sub>crit</sub> = 1.96</div>'+
+        '<div class="d-line">1.0 < 1.96 \u2192 <strong>well inside the wall.</strong></div></div>'+
+        '<div class="result-box"><div class="result-box-name">Conclusion</div>'+
+        '<div class="result-box-value" style="color:var(--green)">Behold H\u2080</div>'+
+        '<div class="result-box-desc">One wobble from the claim. The wall sits at 1.96. Not even close. The sample doesn\'t provide evidence against the claim.</div>'+
+        '</div></div>';
+}
+
+/* === VISUALIZATION === */
+function drawViz(){
+    var c=CONF[mode];
+    document.getElementById('viz-title').textContent=c.vizTitle;
+    document.getElementById('viz-desc').textContent=c.vizDesc;
+    drawTest();
+}
+
+function drawTest(){
+    var c=CONF[mode];
+    var wrap=document.getElementById('viz-wrap');
+    var canvas=document.getElementById('viz-canvas');
+    var dpr=window.devicePixelRatio||1;
+    var cw=wrap.clientWidth-18;
+    var ch=300;
+    canvas.width=cw*dpr;canvas.height=ch*dpr;
+    canvas.style.width=cw+'px';canvas.style.height=ch+'px';
+    var ctx=canvas.getContext('2d');
+    ctx.scale(dpr,dpr);ctx.clearRect(0,0,cw,ch);
+
+    var accent='#a78bfa',green='#22c55e',red='#ef4444',muted='#71717a',border='#27272a';
+    var padL=30,padR=30,padTop=20,padBot=48;
+    var plotW=cw-padL-padR;
+    var plotH=ch-padTop-padBot;
+    var xMin=-4,xMax=4;
+
+    function tx(x){return padL+(x-xMin)/(xMax-xMin)*plotW;}
+    function pv(x){
+        if(c.useT) return Math.pow(1+x*x/c.df,-(c.df+1)/2);
+        return Math.exp(-0.5*x*x);
+    }
+    function ty(p){return ch-padBot-p*(plotH-10);}
+    var st=0.025;
+
+    // Rejection shading
+    ctx.fillStyle='rgba(239,68,68,0.08)';
+    if(c.oneTail){
+        ctx.beginPath();ctx.moveTo(tx(c.crits[0]),ch-padBot);
+        for(var x=c.crits[0];x<=xMax;x+=st)ctx.lineTo(tx(x),ty(pv(x)));
+        ctx.lineTo(tx(xMax),ch-padBot);ctx.closePath();ctx.fill();
+    } else {
+        ctx.beginPath();ctx.moveTo(tx(xMin),ch-padBot);
+        for(var x=xMin;x<=c.crits[0];x+=st)ctx.lineTo(tx(x),ty(pv(x)));
+        ctx.lineTo(tx(c.crits[0]),ch-padBot);ctx.closePath();ctx.fill();
+        ctx.beginPath();ctx.moveTo(tx(c.crits[1]),ch-padBot);
+        for(var x=c.crits[1];x<=xMax;x+=st)ctx.lineTo(tx(x),ty(pv(x)));
+        ctx.lineTo(tx(xMax),ch-padBot);ctx.closePath();ctx.fill();
+    }
+
+    // Acceptance shading
+    ctx.fillStyle='rgba(167,139,250,0.05)';
+    if(c.oneTail){
+        ctx.beginPath();ctx.moveTo(tx(xMin),ch-padBot);
+        for(var x=xMin;x<=c.crits[0];x+=st)ctx.lineTo(tx(x),ty(pv(x)));
+        ctx.lineTo(tx(c.crits[0]),ch-padBot);ctx.closePath();ctx.fill();
+    } else {
+        ctx.beginPath();ctx.moveTo(tx(c.crits[0]),ch-padBot);
+        for(var x=c.crits[0];x<=c.crits[1];x+=st)ctx.lineTo(tx(x),ty(pv(x)));
+        ctx.lineTo(tx(c.crits[1]),ch-padBot);ctx.closePath();ctx.fill();
+    }
+
+    // Full curve
+    ctx.beginPath();ctx.moveTo(tx(xMin),ty(pv(xMin)));
+    for(var x=xMin;x<=xMax;x+=st)ctx.lineTo(tx(x),ty(pv(x)));
+    ctx.strokeStyle=accent;ctx.lineWidth=2;ctx.stroke();
+
+    // Critical value walls
+    ctx.setLineDash([4,3]);ctx.strokeStyle='#fafafa';ctx.lineWidth=1;
+    c.crits.forEach(function(cv){
+        ctx.beginPath();ctx.moveTo(tx(cv),ty(pv(cv)));ctx.lineTo(tx(cv),ch-padBot);ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // Center dashed line
+    ctx.beginPath();ctx.setLineDash([3,4]);
+    ctx.moveTo(tx(0),ty(1)-5);ctx.lineTo(tx(0),ch-padBot);
+    ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+
+    // T_obs line
+    var tobsColor=c.result==='forkast'?red:green;
+    ctx.strokeStyle=tobsColor;ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(tx(c.tobs),ty(pv(c.tobs)));ctx.lineTo(tx(c.tobs),ch-padBot);ctx.stroke();
+
+    // Labels: center
+    ctx.fillStyle=accent;ctx.font='bold 10px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.fillText('\u03BC\u2080',tx(0),ch-padBot+4);
+
+    // Labels: critical values
+    ctx.fillStyle='#fafafa';ctx.font='10px Inter,sans-serif';
+    c.crits.forEach(function(cv){
+        ctx.textAlign='center';ctx.textBaseline='top';
+        var label=cv>0?'+'+cv.toFixed(3):cv.toFixed(3);
+        ctx.fillText(label,tx(cv),ch-padBot+4);
+    });
+
+    // Label: T_obs
+    ctx.fillStyle=tobsColor;ctx.font='bold 11px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='bottom';
+    ctx.fillText(c.tobsL,tx(c.tobs),ty(pv(c.tobs))-6);
+
+    // Zone labels
+    ctx.font='9px Inter,sans-serif';
+    ctx.fillStyle='rgba(239,68,68,0.6)';
+    if(c.oneTail){
+        ctx.fillText('Forkast',tx(3),ty(0.06));
+        ctx.fillStyle='rgba(167,139,250,0.4)';ctx.fillText('Behold',tx(-1),ty(0.3));
+    } else {
+        ctx.fillText('Forkast',tx(-3),ty(0.06));
+        ctx.fillText('Forkast',tx(3),ty(0.06));
+        ctx.fillStyle='rgba(167,139,250,0.4)';ctx.fillText('Behold',tx(0),ty(0.3));
+    }
+
+    // Result
+    var resColor=c.result==='forkast'?red:green;
+    ctx.fillStyle=resColor;ctx.font='bold 13px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.fillText(c.resultL,cw/2,ch-16);
+}
+
+/* === INIT === */
+renderAll();
+</script>
+</body>
+</html>
