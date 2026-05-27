@@ -1,299 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📈 Enkel &amp; Multippel Regresjon — Galdr Spell | System 33</title>
-    <meta name="description" content="The convergence spell. Energy at the center. Each predictor pulls from a direction. The score takes shape from the sum of forces.">
-    <style>
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;
-            --border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;
-            --accent:#f59e0b;--accent2:#fbbf24;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;
-            --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
-        }
-        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
-        a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
-        .container{max-width:840px;margin:0 auto;padding:0 24px}
-        .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
-        .hero{padding:48px 0 24px;text-align:center}
-        .hero-icon{font-size:3rem;margin-bottom:12px}
-        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
-        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
-        .hero p{font-size:1rem;color:var(--text2);max-width:580px;margin:0 auto;line-height:1.6}
-        .section{padding:24px 0}
-        .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
-        .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:18px 22px;margin:0 0 24px;font-size:.92rem;color:var(--text2);line-height:1.7}
-        .principle strong{color:var(--text)}
-        .conv-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
-        .conv-svg-wrap{display:flex;justify-content:center;background:radial-gradient(circle at center,rgba(245,158,11,.05),transparent 70%);border-radius:12px;padding:8px}
-        svg.conv{width:100%;max-width:560px;height:auto;display:block}
-        .arm-line{stroke:var(--border);stroke-width:1;stroke-dasharray:2,3}
-        .arm-vec{transition:all .35s ease}
-        .arm-label{fill:var(--text2);font-size:11px;text-anchor:middle;dominant-baseline:central;font-family:var(--font)}
-        .arm-magnitude{fill:var(--muted);font-size:10px;text-anchor:middle;dominant-baseline:central;font-family:'SF Mono',Menlo,monospace}
-        .center-y{font-size:18px;font-weight:700;text-anchor:middle;dominant-baseline:central;font-family:'SF Mono',Menlo,monospace}
-        .center-y-label{fill:var(--muted);font-size:9px;text-anchor:middle;dominant-baseline:central;letter-spacing:.08em;text-transform:uppercase}
-        .controls{margin-top:18px}
-        .control-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem}
-        .control-row:last-child{border:none}
-        .control-name{flex:0 0 auto;font-weight:600;width:56px;color:var(--text2)}
-        .control-coef{flex:0 0 auto;display:flex;align-items:center;gap:4px;font-size:.78rem;color:var(--muted)}
-        .control-coef input{width:54px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:4px 6px;color:var(--text);font-family:'SF Mono',Menlo,monospace;font-size:.75rem;text-align:center}
-        .control-coef input:focus{outline:none;border-color:var(--accent)}
-        .control-slider{flex:1;display:flex;align-items:center;gap:8px;min-width:140px}
-        .control-slider input[type=range]{flex:1;accent-color:var(--accent)}
-        .control-slider .val{width:42px;text-align:right;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;color:var(--text2)}
-        .control-contrib{flex:0 0 auto;width:68px;text-align:right;font-family:'SF Mono',Menlo,monospace;font-size:.8rem;font-weight:600}
-        .control-contrib.pos{color:var(--green)}
-        .control-contrib.neg{color:var(--red)}
-        .control-contrib.zero{color:var(--muted)}
-        .arm-buttons{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-        .arm-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-family:inherit;font-size:.75rem;color:var(--text2);cursor:pointer;transition:all .2s}
-        .arm-btn:hover{border-color:#3f3f46;color:var(--text)}
-        .arm-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.06)}
-        .path-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
-        .path-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all .2s}
-        .path-card:hover{border-color:#3f3f46;background:rgba(228,228,231,.03)}
-        .path-card.active{border-color:var(--accent);background:rgba(245,158,11,.06)}
-        .path-card-num{font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
-        .path-card-name{font-size:.92rem;font-weight:600;margin-bottom:6px}
-        .path-card-eq{font-size:.74rem;color:var(--text2);line-height:1.5;font-family:'SF Mono',Menlo,monospace}
-        .path-detail{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:18px 0}
-        .path-detail h3{font-size:1.05rem;margin-bottom:12px}
-        .path-detail .formula{background:var(--bg2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;margin:10px 0;font-family:'SF Mono',Menlo,monospace;font-size:.85rem;color:var(--text);overflow-x:auto}
-        .path-detail .desc{color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:10px}
-        .path-detail .move{margin:14px 0;padding-left:14px;border-left:2px solid var(--border)}
-        .path-detail .move-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:4px}
-        .path-detail .move-body{font-size:.85rem;color:var(--text2);line-height:1.65}
-        .step2-label{margin-top:18px;color:var(--muted);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
-        .formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px}
-        .formula-ref-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
-        .formula-ref-name{font-size:.95rem;font-weight:600}
-        .formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px;white-space:nowrap}
-        .formula-ref-eq{font-family:'SF Mono',Menlo,monospace;font-size:.85rem;color:var(--text2);line-height:1.6;background:var(--bg2);padding:10px 14px;border-radius:6px}
-        .formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:8px;line-height:1.55}
-        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
-        footer a{color:var(--text2)}
-        .hidden{display:none!important}
-        @media(max-width:600px){
-            .path-grid{grid-template-columns:1fr}
-            .control-row{flex-wrap:wrap}
-            .control-slider{flex:1 1 100%}
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📈 Enkel &amp; Multippel Regresjon — Galdr Spell | System 33</title>
+<meta name="description" content="The convergence spell. Energy at the center. Each predictor pulls from a direction. The score takes shape from the sum of forces.">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#f59e0b;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
+.container{max-width:840px;margin:0 auto;padding:0 24px}
+.site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+.hero{padding:48px 0 24px;text-align:center}
+.hero-icon{font-size:3rem;margin-bottom:12px}
+.hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+.hero p{font-size:1rem;color:var(--text2);max-width:580px;margin:0 auto;line-height:1.6}
+.section{padding:24px 0}
+.section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+.principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:18px 22px;margin:0 0 24px;font-size:.92rem;color:var(--text2);line-height:1.7}
+.principle strong{color:var(--text)}
+.conv-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.conv-svg-wrap{display:flex;justify-content:center;background:radial-gradient(circle at center,rgba(245,158,11,.05),transparent 70%);border-radius:12px;padding:8px}
+svg.conv{width:100%;max-width:560px;height:auto;display:block}
+.arm-line{stroke:var(--border);stroke-width:1;stroke-dasharray:2,3}
+.arm-vec{transition:all .35s ease}
+.arm-label{fill:var(--text2);font-size:11px;text-anchor:middle;dominant-baseline:central}
+.arm-magnitude{fill:var(--muted);font-size:10px;text-anchor:middle;dominant-baseline:central;font-family:'SF Mono',Menlo,monospace}
+.center-y{font-size:18px;font-weight:700;text-anchor:middle;dominant-baseline:central;font-family:'SF Mono',Menlo,monospace}
+.center-y-label{fill:var(--muted);font-size:9px;text-anchor:middle;dominant-baseline:central;letter-spacing:.08em;text-transform:uppercase}
+.controls{margin-top:18px}
+.control-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.control-row:last-child{border:none}
+.control-name{flex:0 0 auto;font-weight:600;width:56px;color:var(--text2)}
+.control-coef{flex:0 0 auto;display:flex;align-items:center;gap:4px;font-size:.78rem;color:var(--muted)}
+.control-coef input{width:54px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:4px 6px;color:var(--text);font-family:'SF Mono',Menlo,monospace;font-size:.75rem;text-align:center}
+.control-coef input:focus{outline:none;border-color:var(--accent)}
+.control-slider{flex:1;display:flex;align-items:center;gap:8px;min-width:140px}
+.control-slider input[type=range]{flex:1;accent-color:var(--accent)}
+.control-slider .val{width:42px;text-align:right;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;color:var(--text2)}
+.control-contrib{flex:0 0 auto;width:68px;text-align:right;font-family:'SF Mono',Menlo,monospace;font-size:.8rem;font-weight:600}
+.control-contrib.pos{color:var(--green)}
+.control-contrib.neg{color:var(--red)}
+.control-contrib.zero{color:var(--muted)}
+.arm-buttons{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.arm-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-family:inherit;font-size:.75rem;color:var(--text2);cursor:pointer;transition:all .2s}
+.arm-btn:hover{border-color:#3f3f46;color:var(--text)}
+.arm-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.06)}
+.path-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.path-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all .2s}
+.path-card:hover{border-color:#3f3f46;background:rgba(228,228,231,.03)}
+.path-card.active{border-color:var(--accent);background:rgba(245,158,11,.06)}
+.path-card-num{font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.path-card-name{font-size:.92rem;font-weight:600;margin-bottom:6px}
+.path-card-eq{font-size:.74rem;color:var(--text2);line-height:1.5;font-family:'SF Mono',Menlo,monospace}
+.path-detail{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:18px 0}
+.path-detail h3{font-size:1.05rem;margin-bottom:12px}
+.path-detail .formula{background:var(--bg2);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;margin:10px 0;font-family:'SF Mono',Menlo,monospace;font-size:.85rem;color:var(--text);overflow-x:auto}
+.path-detail .desc{color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:10px}
+.path-detail .move{margin:14px 0;padding-left:14px;border-left:2px solid var(--border)}
+.path-detail .move-title{font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.path-detail .move-body{font-size:.85rem;color:var(--text2);line-height:1.65}
+.formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px}
+.formula-ref-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
+.formula-ref-name{font-size:.95rem;font-weight:600}
+.formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px;white-space:nowrap}
+.formula-ref-eq{font-family:'SF Mono',Menlo,monospace;font-size:.85rem;color:var(--text2);line-height:1.6;background:var(--bg2);padding:10px 14px;border-radius:6px}
+.formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:8px;line-height:1.55}
+footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
+footer a{color:var(--text2)}
+.hidden{display:none!important}
+@media(max-width:600px){.path-grid{grid-template-columns:1fr}.control-row{flex-wrap:wrap}.control-slider{flex:1 1 100%}}
+</style>
 </head>
 <body>
 <header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
 
 <section class="hero"><div class="container">
-    <div class="hero-icon">📈</div>
-    <div class="hero-badge">Galdr Spell &middot; Kap 11</div>
-    <h1>Enkel &amp; Multippel Regresjon</h1>
-    <p>Energy converges at the center. Each predictor pulls from a direction. The score takes shape from the sum of all forces resolved at the convergence point.</p>
+<div class="hero-icon">📈</div>
+<div class="hero-badge">Galdr Spell &middot; Kap 11</div>
+<h1>Enkel &amp; Multippel Regresjon</h1>
+<p>Energy converges at the center. Each predictor pulls from a direction. The score takes shape from the sum of all forces resolved at the convergence point.</p>
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="principle">
-        <strong>First principle.</strong> A regression model is not a surface in a cloud. It is a <strong>convergence of forces</strong>. The intercept b̂₀ is the equilibrium &mdash; where the energy sits when no predictor fires. Every predictor Xⱼ is an arm of force radiating outward; its coefficient b̂ⱼ is the strength of pull per unit of input. When a predictor takes a value, its arm contributes b̂ⱼ&middot;xⱼ &mdash; positive pulls the center toward its direction, negative pulls it back. The final position of the energy is ŷ &mdash; the predicted score. Every other rune in Kap 11 is a way of reading this same convergence from a different angle.
-    </div>
+<div class="principle"><strong>First principle.</strong> A regression model is not a surface in a cloud. It is a <strong>convergence of forces</strong>. The intercept b̂₀ is the equilibrium &mdash; where the energy sits when no predictor fires. Every predictor Xⱼ is an arm of force radiating outward; its coefficient b̂ⱼ is the strength of pull per unit of input. When a predictor takes a value, its arm contributes b̂ⱼ&middot;xⱼ &mdash; positive pulls one way, negative pulls back. The final position of the energy is ŷ &mdash; the predicted score. Every other rune in Kap 11 reads this same convergence from a different angle.</div>
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="section-label">The Convergence</div>
-    <div class="conv-wrapper">
-        <div class="conv-svg-wrap">
-            <svg class="conv" viewBox="0 0 560 380" id="conv-svg"></svg>
-        </div>
-        <div class="arm-buttons">
-            <span style="color:var(--muted);font-size:.75rem;align-self:center;margin-right:8px">Antall variabler:</span>
-            <button class="arm-btn" data-k="1">1</button>
-            <button class="arm-btn active" data-k="2">2</button>
-            <button class="arm-btn" data-k="3">3</button>
-            <button class="arm-btn" data-k="4">4</button>
-            <button class="arm-btn" data-k="5">5</button>
-        </div>
-        <div class="controls" id="controls"></div>
-        <p style="color:var(--muted);font-size:.78rem;line-height:1.6;margin-top:14px;text-align:center">Slide an xⱼ value. Edit any b̂ⱼ. Watch the arm pull. Watch the center shift. The number inside the center is ŷ.</p>
-    </div>
+<div class="section-label">The Convergence</div>
+<div class="conv-wrapper">
+<div class="conv-svg-wrap"><svg class="conv" viewBox="0 0 560 380" id="conv-svg"></svg></div>
+<div class="arm-buttons">
+<span style="color:var(--muted);font-size:.75rem;align-self:center;margin-right:8px">Antall variabler:</span>
+<button class="arm-btn" data-k="1">1</button>
+<button class="arm-btn active" data-k="2">2</button>
+<button class="arm-btn" data-k="3">3</button>
+<button class="arm-btn" data-k="4">4</button>
+<button class="arm-btn" data-k="5">5</button>
+</div>
+<div class="controls" id="controls"></div>
+<p style="color:var(--muted);font-size:.78rem;line-height:1.6;margin-top:14px;text-align:center">Slide an xⱼ. Edit any b̂ⱼ. Watch each arm pull. Watch the center shift. The number inside the center is ŷ.</p>
+</div>
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="section-label">The Seven Runes &mdash; Step 1: Recognize</div>
-    <p style="color:var(--text2);font-size:.92rem;margin-bottom:18px">When yuh read an oppgavetekst about regresjon, the first move iz Step 1 &mdash; recognize which rune fires. Seven runes carry Kap 11 on the eksamen. Pick one tuh walk:</p>
-    <div class="path-grid" id="path-grid">
-        <div class="path-card" data-path="prediksjon"><div class="path-card-num">Rune 1</div><div class="path-card-name">Predikert ŷ</div><div class="path-card-eq">ŷ = b̂₀ + Σ b̂ⱼ&middot;xⱼ</div></div>
-        <div class="path-card" data-path="tolkning"><div class="path-card-num">Rune 2</div><div class="path-card-name">Tolkning av b̂ⱼ</div><div class="path-card-eq">Δy per enhet i xⱼ, alt annet likt</div></div>
-        <div class="path-card" data-path="r2"><div class="path-card-num">Rune 3</div><div class="path-card-name">R² &mdash; Forklart varians</div><div class="path-card-eq">R² = SSR / SST</div></div>
-        <div class="path-card" data-path="hypotese"><div class="path-card-num">Rune 4</div><div class="path-card-name">Nullhypotese H₀</div><div class="path-card-eq">H₀: bⱼ = 0    vs    H_A: bⱼ ≠ 0</div></div>
-        <div class="path-card" data-path="tts"><div class="path-card-num">Rune 5</div><div class="path-card-name">Testverdi t_TS</div><div class="path-card-eq">t_TS = (b̂ⱼ − βⱼ) / se(b̂ⱼ)</div></div>
-        <div class="path-card" data-path="stjerner"><div class="path-card-num">Rune 6</div><div class="path-card-name">Stjernenotasjon</div><div class="path-card-eq">* p&lt;0,1 &nbsp; ** p&lt;0,05 &nbsp; *** p&lt;0,01</div></div>
-        <div class="path-card" data-path="utelatt"><div class="path-card-num">Rune 7</div><div class="path-card-name">Utelatt Variabel</div><div class="path-card-eq">Δb̂ⱼ når Xz fjernes</div></div>
-    </div>
-    <div id="path-detail" class="hidden"></div>
+<div class="section-label">The Seven Runes &mdash; Step 1: Recognize</div>
+<p style="color:var(--text2);font-size:.92rem;margin-bottom:18px">When yuh read an oppgavetekst about regresjon, the first move iz Step 1 &mdash; recognize which rune fires. Seven runes carry Kap 11 on the eksamen. Pick one tuh walk:</p>
+<div class="path-grid" id="path-grid">
+<div class="path-card" data-path="prediksjon"><div class="path-card-num">Rune 1</div><div class="path-card-name">Predikert ŷ</div><div class="path-card-eq">ŷ = b̂₀ + Σ b̂ⱼ&middot;xⱼ</div></div>
+<div class="path-card" data-path="tolkning"><div class="path-card-num">Rune 2</div><div class="path-card-name">Tolkning av b̂ⱼ</div><div class="path-card-eq">Δy per enhet i xⱼ, alt annet likt</div></div>
+<div class="path-card" data-path="r2"><div class="path-card-num">Rune 3</div><div class="path-card-name">R² &mdash; Forklart varians</div><div class="path-card-eq">R² = SSR / SST</div></div>
+<div class="path-card" data-path="hypotese"><div class="path-card-num">Rune 4</div><div class="path-card-name">Nullhypotese H₀</div><div class="path-card-eq">H₀: bⱼ = 0    vs    H_A: bⱼ ≠ 0</div></div>
+<div class="path-card" data-path="tts"><div class="path-card-num">Rune 5</div><div class="path-card-name">Testverdi t_TS</div><div class="path-card-eq">t_TS = (b̂ⱼ − βⱼ) / se(b̂ⱼ)</div></div>
+<div class="path-card" data-path="stjerner"><div class="path-card-num">Rune 6</div><div class="path-card-name">Stjernenotasjon</div><div class="path-card-eq">* p&lt;0,1 &nbsp; ** p&lt;0,05 &nbsp; *** p&lt;0,01</div></div>
+<div class="path-card" data-path="utelatt"><div class="path-card-num">Rune 7</div><div class="path-card-name">Utelatt Variabel</div><div class="path-card-eq">Δb̂ⱼ når Xz fjernes</div></div>
+</div>
+<div id="path-detail" class="hidden"></div>
 </div></section>
 
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Formula Reference &mdash; Formelark Notation</div>
-    <p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">Canonical formulas from the eksamen formelark. Use these symbols verbatim &mdash; b̂ not β̂, t_TS not t_obs, df = n − k − 1 for multippel regresjon.</p>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Enkel lineær regresjon</span><span class="formula-ref-kap">Kap 11.1</span></div><div class="formula-ref-eq">Yⱼ = b₀ + b₁&middot;Xⱼ + εⱼ</div><div class="formula-ref-desc">One predictor, one arm. The simplest convergence.</div></div>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Multippel regresjon</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">Yⱼ = b₀ + b₁&middot;X₁ⱼ + b₂&middot;X₂ⱼ + ... + bₖ&middot;Xₖⱼ + εⱼ</div><div class="formula-ref-desc">k arms, k forces. Each coefficient holds its meaning when all others are held still.</div></div>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Testverdi (generelt)</span><span class="formula-ref-kap">Kap 9 + 11</span></div><div class="formula-ref-eq">t_TS = (utvalgsverdi − hypoteseverdi) / standardfeil<br>      = (θ̂ − θ₀) / se(θ̂)</div><div class="formula-ref-desc">Force measured in units of its own uncertainty. df = n − k − 1 for multippel regresjon. For coefficient signifikance, θ₀ = 0.</div></div>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">R² &amp; Justert R²</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">R² = SSR / SST = 1 − SSE / SST<br>R²_just = 1 − (1−R²)(n−1) / (n−k−1)</div><div class="formula-ref-desc">Fraction of Y-variance the convergence catches. Justert R² penalizes extra arms that don't earn their keep.</div></div>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">F-statistic (hele modellen)</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">F = MSR / MSE<br>  = (forklart varians / k) / (uforklart varians / (n−k−1))<br>df = (k, n−k−1)</div><div class="formula-ref-desc">Whole-model test. H₀: all bⱼ = 0. Reject when F &gt; F_CV at chosen α.</div></div>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">RSE — Residual standardfeil</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">RSE = √(Σeᵢ² / (n−k−1))</div><div class="formula-ref-desc">Average gap between data points and the convergence. Lower RSE means tighter convergence.</div></div>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">VIF — Variance Inflation Factor</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">VIFⱼ = 1 / (1 − R²ⱼ)</div><div class="formula-ref-desc">Multikollinearitet diagnostic. VIF &gt; 5–10 indicates the arms are pulling in nearly the same direction — coefficients become unstable.</div></div>
-    <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Konfidensintervall for b̂ⱼ</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">b̂ⱼ ± t_(α/2, n−k−1) &middot; se(b̂ⱼ)</div><div class="formula-ref-desc">Range where the true bⱼ likely sits, given the sample.</div></div>
+<div class="section-label">Formula Reference &mdash; Formelark Notation</div>
+<p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">Canonical formulas. Use these symbols verbatim &mdash; b̂ not β̂, t_TS not t_obs, df = n − k − 1 for multippel regresjon.</p>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Enkel lineær regresjon</span><span class="formula-ref-kap">Kap 11.1</span></div><div class="formula-ref-eq">Yⱼ = b₀ + b₁&middot;Xⱼ + εⱼ</div><div class="formula-ref-desc">One predictor, one arm. The simplest convergence.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Multippel regresjon</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">Yⱼ = b₀ + b₁&middot;X₁ⱼ + b₂&middot;X₂ⱼ + ... + bₖ&middot;Xₖⱼ + εⱼ</div><div class="formula-ref-desc">k arms, k forces. Each coefficient holds its meaning when all others are held still.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Testverdi (generelt)</span><span class="formula-ref-kap">Kap 9 + 11</span></div><div class="formula-ref-eq">t_TS = (utvalgsverdi − hypoteseverdi) / standardfeil<br>      = (θ̂ − θ₀) / se(θ̂)</div><div class="formula-ref-desc">Force in units of its own uncertainty. df = n − k − 1. For coefficient signifikance, θ₀ = 0.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">R² &amp; Justert R²</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">R² = SSR / SST = 1 − SSE / SST<br>R²_just = 1 − (1−R²)(n−1) / (n−k−1)</div><div class="formula-ref-desc">Fraction of Y-variance the convergence catches. Justert penalizes extra arms that don’t earn their keep.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">F-statistic (hele modellen)</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">F = MSR / MSE = (SSR/k) / (SSE/(n−k−1))<br>df = (k, n−k−1)</div><div class="formula-ref-desc">Whole-model test. H₀: all bⱼ = 0. Reject when F &gt; F_CV.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">RSE — Residual standardfeil</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">RSE = √(Σeᵢ² / (n−k−1))</div><div class="formula-ref-desc">Average gap between data points and the convergence.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">VIF — Variance Inflation Factor</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">VIFⱼ = 1 / (1 − R²ⱼ)</div><div class="formula-ref-desc">Multikollinearitet diagnostic. VIF &gt; 5–10 means the arms pull in nearly the same direction.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Konfidensintervall for b̂ⱼ</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">b̂ⱼ ± t_(α/2, n−k−1) &middot; se(b̂ⱼ)</div><div class="formula-ref-desc">Range where the true bⱼ likely sits, given the sample.</div></div>
 </div></section>
 
 <footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 
 <script>
 const PATHS = {
-    prediksjon: {
-        name: 'Predikert ŷ — The Convergence Itself',
-        formula: 'ŷ = b̂₀ + b̂₁·X₁ + b̂₂·X₂ + ... + b̂ₖ·Xₖ',
-        desc: `The most basic rune. Yuh have all the b̂ values from the regresjonstabell, an' a specific set of input values fer the predictors. The convergence iz a plug-an'-chug: each arm contributes b̂ⱼ·xⱼ, sum them all up, add the intercept b̂₀, an' the result iz ŷ. Every other rune in Kap 11 reads off this same convergence — this rune iz the floor.`,
-        moves: [
-            { title: 'Move 1 — Read the intercept b̂₀', body: `The intercept iz the equilibrium position of the energy when every predictor sits at zero. Read iz from the regresjonstabell — usually the row labeled (constant) or (intercept).` },
-            { title: 'Move 2 — Read each coefficient b̂ⱼ', body: `One per predictor. Each one tells yuh the strength an' direction of pull along iz arm. Positive = pull toward the arm's direction, negative = pull away.` },
-            { title: 'Move 3 — Multiply each arm: b̂ⱼ · xⱼ', body: `Fer the specific input values in the problem, compute the actual contribution from each arm. Watch units — if x₁ iz in tusen-kroner an' b̂₁ iz "per tusen-kroner", multiply straight; if there iz a unit mismatch, fix iz before yuh multiply.` },
-            { title: 'Move 4 — Sum all contributions', body: `ŷ = b̂₀ + (b̂₁·x₁) + (b̂₂·x₂) + ... + (b̂ₖ·xₖ). All forces resolve at the center. The number that comes out iz the predicted score.` }
-        ]
-    },
-    tolkning: {
-        name: 'Tolkning av b̂ⱼ — Read One Arm',
-        formula: 'b̂ⱼ = endring i Y per enhetsendring i Xⱼ, alt annet holdt likt',
-        desc: `The exam's most frequent Kap 11 question. Given a coefficient an' iz context, write ONE sentence explaining what iz means. The trap iz almost always UNITS. If x iz in kroner but b̂ iz "per tusen kr", the sentence has tuh translate. If y iz in hundre-tusen-kroner, the sentence has tuh carry tha'. Read the column headers. Read the variable definitions. Then translate.`,
-        moves: [
-            { title: 'Move 1 — Identify the units of Xⱼ', body: `Look at the variable definition. Iz iz "TV-spending in kroner" or "in tusen kr" or "in millioner"? The unit iz where most mistakes happen.` },
-            { title: 'Move 2 — Identify the units of Y', body: `Same fer the response variable. "Salg in hundre-tusen kr" iznt the same az "salg in kroner". The interpretation has tuh carry both units.` },
-            { title: 'Move 3 — Translate b̂ⱼ intuh plain words', body: `Template: "When Xⱼ increases by [one unit of Xⱼ], Y changes by b̂ⱼ [units of Y], all other predictors held still." Now substitute the actual units the problem gives yuh.` },
-            { title: 'Move 4 — Check the sign', body: `Positive b̂ⱼ means Y rises when Xⱼ rises. Negative means Y falls. State this clearly in the interpretation — direction iz az much of the answer az magnitude.` }
-        ]
-    },
-    r2: {
-        name: 'R² — How Much Energy the Model Catches',
-        formula: 'R² = SSR / SST = 1 − SSE / SST',
-        desc: `R² iz the fraction of total variance in Y the convergence explains. SST iz the total spread of Y around iz mean — the energy in the response variable. SSR iz what the model catches. SSE iz what leaks through az residual. R² ranges 0 tuh 1. R² = 0.7 means 70% of the energy iz caught by the arms.`,
-        moves: [
-            { title: 'Move 1 — Read R² from the regresjonstabell', body: `Usually a single number at the bottom of the table, labeled R² or R-squared or R².` },
-            { title: 'Move 2 — Translate intuh plain language', body: `Template: "[R² × 100]% of the variation in Y iz explained by the model." Tha's iz. No calculation needed unless yuh have tuh compute SSR/SST directly.` },
-            { title: 'Move 3 — Compare R² across models if asked', body: `Higher R² = more energy caught. But beware: addin' more arms always raises R² mechanically, even if the new arms don't earn their keep. R²_just (justert R²) penalizes this.` },
-            { title: 'Move 4 — Watch fer Adjusted R²', body: `R²_just = 1 − (1−R²)(n−1)/(n−k−1). Iz can be smaller than R², an' iz can even go negative fer bad models. The fair comparison metric when models have different k.` }
-        ]
-    },
-    hypotese: {
-        name: 'Nullhypotese H₀ — Formulate the Test',
-        formula: 'H₀: bⱼ = 0    vs    H_A: bⱼ ≠ 0',
-        desc: `The exam asks: "What iz the null hypothesis fer the coefficient on X₂?" The answer iz one line. The likhetstegnet always sits with H₀. If the test iz tosidig (default), H_A uses ≠. If iz iz ensidig, H_A uses > or <.`,
-        moves: [
-            { title: 'Move 1 — Identify which arm yuh\'re testing', body: `The question names a predictor — radio, sqft, age, or whatever. The hypothesis iz about THAT arm's coefficient, no' the others.` },
-            { title: 'Move 2 — Write H₀ with equality', body: `H₀: bⱼ = 0 (or whatever the hypoteseverdi iz — usually 0 fer signifikance testing, but could be a specific value like 5 if the question asks).` },
-            { title: 'Move 3 — Write H_A with the matching inequality', body: `Tosidig (default): H_A: bⱼ ≠ 0. Ensidig stor: H_A: bⱼ > 0. Ensidig liten: H_A: bⱼ < 0. The direction comes from the question — "har radio en positiv effekt?" → ensidig stor.` },
-            { title: 'Move 4 — State α an\' df', body: `α iz the chosen signifikansnivå (usually 5%). df = n − k − 1 fer multippel regresjon. State both so the t_CV iz reachable from the formelark table.` }
-        ]
-    },
-    tts: {
-        name: 'Testverdi t_TS — Force in Units of Uncertainty',
-        formula: 't_TS = (b̂ⱼ − βⱼ) / se(b̂ⱼ)     |     df = n − k − 1',
-        desc: `The test statistic measures how far b̂ⱼ sits from the hypothesized value (usually 0), measured in units of iz own standardfeil. Big |t_TS| = the arm's pull iz strong relative tuh iz uncertainty = signifikant. Small |t_TS| = the pull could be noise. Then compare tuh t_CV from formelark Table 6.`,
-        moves: [
-            { title: 'Move 1 — Read b̂ⱼ an\' se(b̂ⱼ) from the table', body: `Both numbers sit on the same row in the regresjonstabell. The coefficient column an' the standardfeil column.` },
-            { title: 'Move 2 — Subtract the hypoteseverdi', body: `Fer signifikance testing, βⱼ = 0, so the numerator iz just b̂ⱼ. Fer testing against a specific value (rare on this eksamen), subtract iz from b̂ⱼ.` },
-            { title: 'Move 3 — Divide by the standardfeil', body: `t_TS = b̂ⱼ / se(b̂ⱼ). The result iz dimensionless — pure force-tuh-uncertainty ratio.` },
-            { title: 'Move 4 — Compare tuh t_CV', body: `Look up t_CV in formelark Table 6 at df = n − k − 1 an' α/2 fer tosidig (or α fer ensidig). If |t_TS| > t_CV, forkast H₀. Otherwise behold H₀.` }
-        ]
-    },
-    stjerner: {
-        name: 'Stjernenotasjon — Read the Stars',
-        formula: '* p < 0,1     ** p < 0,05     *** p < 0,01',
-        desc: `Regresjonstabeller often print stars next tuh coefficients tuh signal signifikance. The legend iz almost always at the bottom of the table. More stars = stronger evidence against H₀: bⱼ = 0. No stars = the arm couldn't be distinguished from zero at standard α-levels. This exact question appeared on the 2025 eksamen.`,
-        moves: [
-            { title: 'Move 1 — Find the legend', body: `Bottom of the regresjonstabell. Look fer something like "* p<0.1, ** p<0.05, *** p<0.01" — the cutoffs may vary slightly but the three-tier pattern iz standard.` },
-            { title: 'Move 2 — Match stars tuh coefficients', body: `Each coefficient with stars has p-verdi below the corresponding threshold. Three stars = strongest. No stars = ikke signifikant ved vanlige nivåer.` },
-            { title: 'Move 3 — Translate tuh signifikansutsagn', body: `Three stars: signifikant ved 1%. Two stars: signifikant ved 5%. One star: signifikant ved 10%. No stars: ikke signifikant ved vanlige nivåer.` },
-            { title: 'Move 4 — Don\'t confuse stars with magnitude', body: `A coefficient can be big in magnitude an' have no stars (large se, noisy). Iz can be tiny an' have three stars (small se, precise). Stars are about signal-tuh-noise, no' size.` }
-        ]
-    },
-    utelatt: {
-        name: 'Utelatt Variabel — When an Arm Disappears',
-        formula: 'Δb̂ⱼ when Xz iz removed, if Cor(Xⱼ, Xz) ≠ 0',
-        desc: `The classic Kap 11 exam question: "Why does the coefficient on avis change when radio iz removed from the model?" Answer: when arms are correlated, removing one forces the others tuh absorb iz force. The remaining coefficient now carries the joint effect of both correlated variables, no' just iz own. This appeared on the 2025 eksamen.`,
-        moves: [
-            { title: 'Move 1 — Compare the two models side by side', body: `Model A has both Xⱼ an' Xz. Model B has only Xⱼ. Read b̂ⱼ from both. Note the difference.` },
-            { title: 'Move 2 — Check if Xⱼ an\' Xz are correlated', body: `If they vary tuhgether — fer example avis-spending an' radio-spending often move tuhgether in a marketing budget — they are correlated. Tha's the precondition fer the bias.` },
-            { title: 'Move 3 — Explain the shift', body: `Template: "When Xz iz removed, b̂ⱼ in Model B absorbs the force tha' was previously attributed tuh Xz in Model A, because Xⱼ an' Xz are correlated. The new b̂ⱼ iz a mix of the true effect of Xⱼ an' a portion of Xz's effect tha' now leaks through the Xⱼ-arm."` },
-            { title: 'Move 4 — Name the concept', body: `This iz utelatt variabel-skjevhet (omitted variable bias). Iz iz why every Kap 11 problem warns: a coefficient iz only valid "alt annet holdt likt" — when the other arms are present an' doin' their work.` }
-        ]
-    }
+ prediksjon: {
+  name: 'Predikert ŷ — The Convergence Itself',
+  formula: 'ŷ = b̂₀ + b̂₁·X₁ + b̂₂·X₂ + ... + b̂ₖ·Xₖ',
+  desc: `The foundation rune. Yuh have the b̂ values from the regresjonstabell, an the specific x-values fer the predictors. Each arm contributes b̂ⱼ·xⱼ, sum them all, add b̂₀, an the result iz ŷ. Every other rune in Kap 11 reads off this same convergence — this rune iz the floor.`,
+  moves: [
+   { title: 'Move 1 — Read the intercept b̂₀', body: `The intercept iz where the energy sits when every predictor iz at zero. Read iz from the regresjonstabell row labeled (constant) or (intercept).` },
+   { title: 'Move 2 — Read each coefficient b̂ⱼ', body: `One per predictor. Each tells yuh the strength an direction of pull along iz arm. Positive = pull one way, negative = pull back.` },
+   { title: 'Move 3 — Multiply each arm: b̂ⱼ · xⱼ', body: `Fer the x-values in the problem, compute each contribution. Watch units — if x₁ iz "tusen kr" but b̂₁ iz "per kr", fix the mismatch before multiplyin.` },
+   { title: 'Move 4 — Sum all contributions', body: `ŷ = b̂₀ + Σ b̂ⱼ·xⱼ. All forces resolve at the center. The number tha comes out iz the predicted score.` }
+  ]
+ },
+ tolkning: {
+  name: 'Tolkning av b̂ⱼ — Read One Arm',
+  formula: 'b̂ⱼ = endring i Y per enhetsendring i Xⱼ, alt annet holdt likt',
+  desc: `The exam’s most frequent Kap 11 question. Given a coefficient an iz context, write ONE sentence explaining what iz means. The trap iz almost always UNITS. Read column headers. Read variable definitions. Then translate.`,
+  moves: [
+   { title: 'Move 1 — Identify the units of Xⱼ', body: `Iz iz "TV-spending in kroner" or "in tusen kr" or "in millioner"? The unit iz where most mistakes happen.` },
+   { title: 'Move 2 — Identify the units of Y', body: `Same fer the response. "Salg i hundre-tusen kr" iznt the same az "salg i kroner". The interpretation has tuh carry both.` },
+   { title: 'Move 3 — Translate intuh plain words', body: `Template: "When Xⱼ øker med [én enhet av Xⱼ], endres Y med b̂ⱼ [enheter av Y], alt annet holdt likt." Substitute the actual units.` },
+   { title: 'Move 4 — Check the sign', body: `Positive = Y rises when Xⱼ rises. Negative = Y falls. State the direction az much az the magnitude.` }
+  ]
+ },
+ r2: {
+  name: 'R² — How Much Energy the Model Catches',
+  formula: 'R² = SSR / SST = 1 − SSE / SST',
+  desc: `R² iz the fraction of total variance in Y the convergence explains. SST iz total spread of Y. SSR iz what the model catches. SSE iz what leaks through. R² = 0.7 means 70% of the energy iz caught.`,
+  moves: [
+   { title: 'Move 1 — Read R² from the regresjonstabell', body: `Single number at the bottom, labeled R² or R-squared.` },
+   { title: 'Move 2 — Translate intuh plain language', body: `Template: "[R² × 100]% av variasjonen i Y forklares av modellen." Tha’s iz.` },
+   { title: 'Move 3 — Compare R² across models if asked', body: `Higher R² = more energy caught. But addin arms always raises R² mechanically. R²_just penalizes this.` },
+   { title: 'Move 4 — Watch fer Adjusted R²', body: `R²_just = 1 − (1−R²)(n−1)/(n−k−1). Can be smaller than R², can even go negative. The fair comparison metric.` }
+  ]
+ },
+ hypotese: {
+  name: 'Nullhypotese H₀ — Formulate the Test',
+  formula: 'H₀: bⱼ = 0    vs    H_A: bⱼ ≠ 0',
+  desc: `The exam asks: "What iz the null hypothesis fer the coefficient on X₂?" The answer iz one line. Likhetstegnet sits with H₀. Tosidig: ≠. Ensidig: > or <.`,
+  moves: [
+   { title: 'Move 1 — Identify which arm yuh’re testing', body: `The question names a predictor. The hypothesis iz about THAT arm’s coefficient, no the others.` },
+   { title: 'Move 2 — Write H₀ with equality', body: `H₀: bⱼ = 0 (or whatever the hypoteseverdi iz — usually 0).` },
+   { title: 'Move 3 — Write H_A with the matching inequality', body: `Tosidig: H_A: bⱼ ≠ 0. Ensidig stor: H_A: bⱼ > 0. Ensidig liten: H_A: bⱼ < 0. Direction comes from the question wording.` },
+   { title: 'Move 4 — State α an df', body: `α = chosen signifikansnivå (usually 5%). df = n − k − 1. State both so t_CV iz reachable from formelark Table 6.` }
+  ]
+ },
+ tts: {
+  name: 'Testverdi t_TS — Force in Units of Uncertainty',
+  formula: 't_TS = (b̂ⱼ − βⱼ) / se(b̂ⱼ)     |     df = n − k − 1',
+  desc: `t_TS measures how far b̂ⱼ sits from the hypothesized value (usually 0), in units of iz own standardfeil. Big |t_TS| = strong pull. Then compare tuh t_CV from formelark Table 6.`,
+  moves: [
+   { title: 'Move 1 — Read b̂ⱼ an se(b̂ⱼ) from the table', body: `Same row in the regresjonstabell. Coefficient column an standardfeil column.` },
+   { title: 'Move 2 — Subtract the hypoteseverdi', body: `Fer signifikance testing, βⱼ = 0, so numerator iz just b̂ⱼ.` },
+   { title: 'Move 3 — Divide by the standardfeil', body: `t_TS = b̂ⱼ / se(b̂ⱼ). Dimensionless.` },
+   { title: 'Move 4 — Compare tuh t_CV', body: `Table 6 at df = n−k−1 an α/2 (tosidig). If |t_TS| > t_CV, forkast H₀.` }
+  ]
+ },
+ stjerner: {
+  name: 'Stjernenotasjon — Read the Stars',
+  formula: '* p < 0,1     ** p < 0,05     *** p < 0,01',
+  desc: `Regresjonstabeller often print stars next tuh coefficients tuh signal signifikance. Legend at bottom. More stars = stronger evidence against H₀: bⱼ = 0. This exact question appeared on Vår 2025.`,
+  moves: [
+   { title: 'Move 1 — Find the legend', body: `Bottom of the regresjonstabell. Three-tier pattern iz standard.` },
+   { title: 'Move 2 — Match stars tuh coefficients', body: `Each coefficient with stars has p-verdi below the corresponding threshold.` },
+   { title: 'Move 3 — Translate tuh signifikansutsagn', body: `***: signifikant ved 1%. **: ved 5%. *: ved 10%. None: ikke signifikant ved vanlige nivåer.` },
+   { title: 'Move 4 — Don’t confuse stars with magnitude', body: `Big coefficient can have no stars (noisy). Tiny coefficient can have three (precise). Stars are signal-tuh-noise, no size.` }
+  ]
+ },
+ utelatt: {
+  name: 'Utelatt Variabel — When an Arm Disappears',
+  formula: 'Δb̂ⱼ when Xz iz removed, if Cor(Xⱼ, Xz) ≠ 0',
+  desc: `Classic Kap 11 question: "Why does the coefficient on avis change when radio iz removed?" When arms are correlated, removin one forces the others tuh absorb iz force. Appeared on Vår 2025.`,
+  moves: [
+   { title: 'Move 1 — Compare the two models side by side', body: `Model A has both Xⱼ an Xz. Model B has only Xⱼ. Read b̂ⱼ from both.` },
+   { title: 'Move 2 — Check if Xⱼ an Xz are correlated', body: `If they vary tuhgether (e.g. avis an radio in a marketing budget), they are correlated. Precondition fer the bias.` },
+   { title: 'Move 3 — Explain the shift', body: `Template: "Som følge av at Xz er utelatt, absorberer b̂ⱼ i Modell B kraften som tidligere ble tilskrevet Xz, fordi Xⱼ og Xz er korrelerte. Den nye b̂ⱼ er en blanding av Xⱼ’s sanne effekt og en andel av Xz’s effekt som nå lekker gjennom Xⱼ-armen."` },
+   { title: 'Move 4 — Name the concept', body: `Utelatt variabel-skjevhet (omitted variable bias). Why every Kap 11 coefficient iz valid kun "alt annet holdt likt".` }
+  ]
+ }
 };
 
-let k = 2;
-let intercept = 0;
-let arms = [];
+let k = 2, intercept = 0, arms = [];
 
 function setupArms(newK){
-    k = newK;
-    arms = [];
-    const defaults = [
-        { name: 'X₁', b: 1.5, x: 1 },
-        { name: 'X₂', b: -2.0, x: 1 },
-        { name: 'X₃', b: 0.8, x: 1 },
-        { name: 'X₄', b: -1.2, x: 0.5 },
-        { name: 'X₅', b: 2.5, x: 0.8 }
-    ];
-    for(let i=0; i<k; i++) arms.push({...defaults[i]});
-    renderControls();
-    renderSVG();
+ k = newK;
+ arms = [];
+ const defaults = [{name:'X₁',b:1.5,x:1},{name:'X₂',b:-2.0,x:1},{name:'X₃',b:0.8,x:1},{name:'X₄',b:-1.2,x:0.5},{name:'X₅',b:2.5,x:0.8}];
+ for(let i=0;i<k;i++) arms.push({...defaults[i]});
+ renderControls();
+ renderSVG();
 }
 
 function renderControls(){
-    const root = document.getElementById('controls');
-    let html = `<div class="control-row"><div class="control-name" style="color:var(--accent)">b̂₀</div><div class="control-coef"><span>intercept</span><input type="number" step="0.5" value="${intercept}" id="ctrl-intercept"></div><div class="control-slider"><span style="color:var(--muted);font-size:.75rem;flex:1">equilibrium — no predictors fired</span></div><div class="control-contrib zero" id="contrib-intercept">${intercept.toFixed(2)}</div></div>`;
-    arms.forEach((arm, i) => {
-        html += `<div class="control-row"><div class="control-name">${arm.name}</div><div class="control-coef"><span>b̂${i+1}</span><input type="number" step="0.1" value="${arm.b}" data-i="${i}" class="coef-input"></div><div class="control-slider"><input type="range" min="-3" max="3" step="0.1" value="${arm.x}" data-i="${i}" class="x-slider"><span class="val" id="xval-${i}">${arm.x.toFixed(1)}</span></div><div class="control-contrib" id="contrib-${i}">0.00</div></div>`;
-    });
-    root.innerHTML = html;
-    document.getElementById('ctrl-intercept').addEventListener('input', e => { intercept = parseFloat(e.target.value) || 0; renderSVG(); });
-    document.querySelectorAll('.coef-input').forEach(el => el.addEventListener('input', e => { const i = parseInt(e.target.dataset.i); arms[i].b = parseFloat(e.target.value) || 0; renderSVG(); }));
-    document.querySelectorAll('.x-slider').forEach(el => el.addEventListener('input', e => { const i = parseInt(e.target.dataset.i); arms[i].x = parseFloat(e.target.value); document.getElementById(`xval-${i}`).textContent = arms[i].x.toFixed(1); renderSVG(); }));
+ const root = document.getElementById('controls');
+ let html = `<div class="control-row"><div class="control-name" style="color:var(--accent)">b̂₀</div><div class="control-coef"><span>intercept</span><input type="number" step="0.5" value="${intercept}" id="ctrl-intercept"></div><div class="control-slider"><span style="color:var(--muted);font-size:.75rem;flex:1">equilibrium — no predictors fired</span></div><div class="control-contrib zero" id="contrib-intercept">${intercept.toFixed(2)}</div></div>`;
+ arms.forEach((arm,i)=>{
+  html += `<div class="control-row"><div class="control-name">${arm.name}</div><div class="control-coef"><span>b̂${i+1}</span><input type="number" step="0.1" value="${arm.b}" data-i="${i}" class="coef-input"></div><div class="control-slider"><input type="range" min="-3" max="3" step="0.1" value="${arm.x}" data-i="${i}" class="x-slider"><span class="val" id="xval-${i}">${arm.x.toFixed(1)}</span></div><div class="control-contrib" id="contrib-${i}">0.00</div></div>`;
+ });
+ root.innerHTML = html;
+ document.getElementById('ctrl-intercept').addEventListener('input', e => { intercept = parseFloat(e.target.value)||0; renderSVG(); });
+ document.querySelectorAll('.coef-input').forEach(el => el.addEventListener('input', e => { const i = parseInt(e.target.dataset.i); arms[i].b = parseFloat(e.target.value)||0; renderSVG(); }));
+ document.querySelectorAll('.x-slider').forEach(el => el.addEventListener('input', e => { const i = parseInt(e.target.dataset.i); arms[i].x = parseFloat(e.target.value); document.getElementById(`xval-${i}`).textContent = arms[i].x.toFixed(1); renderSVG(); }));
 }
 
 function renderSVG(){
-    const svg = document.getElementById('conv-svg');
-    const cx = 280, cy = 190, baseR = 38;
-    let yhat = intercept;
-    arms.forEach(arm => { yhat += arm.b * arm.x; });
-    const glowR = baseR + Math.min(Math.abs(yhat) * 4, 32);
-    const centerColor = yhat >= 0 ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.18)';
-    const centerStroke = yhat >= 0 ? '#22c55e' : '#ef4444';
-    const glowColor = yhat >= 0 ? 'rgba(34,197,94,0.35)' : 'rgba(239,68,68,0.35)';
-    let s = `<defs><filter id="blur"><feGaussianBlur stdDeviation="8"/></filter><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#22c55e"/></marker><marker id="an" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444"/></marker></defs>`;
-    s += `<circle cx="${cx}" cy="${cy}" r="${glowR}" fill="${glowColor}" filter="url(#blur)" opacity="0.55"/>`;
-    arms.forEach((arm, i) => {
-        const angle = -Math.PI/2 + (i * 2 * Math.PI / k);
-        const armLen = 130;
-        const ex = cx + Math.cos(angle) * armLen;
-        const ey = cy + Math.sin(angle) * armLen;
-        const contrib = arm.b * arm.x;
-        const contribEl = document.getElementById(`contrib-${i}`);
-        if(contribEl){
-            contribEl.textContent = (contrib >= 0 ? '+' : '') + contrib.toFixed(2);
-            contribEl.className = 'control-contrib ' + (Math.abs(contrib) < 0.01 ? 'zero' : (contrib > 0 ? 'pos' : 'neg'));
-        }
-        s += `<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" class="arm-line"/>`;
-        const vecScale = Math.min(Math.abs(contrib) * 14, armLen - 16);
-        const isPos = contrib >= 0;
-        const vx = cx + Math.cos(angle) * vecScale;
-        const vy = cy + Math.sin(angle) * vecScale;
-        const armColor = isPos ? '#22c55e' : '#ef4444';
-        const thickness = 2 + Math.min(Math.abs(contrib) * 0.4, 4);
-        s += `<line x1="${cx}" y1="${cy}" x2="${vx}" y2="${vy}" stroke="${armColor}" stroke-width="${thickness}" class="arm-vec" marker-end="url(#${isPos?'ap':'an'})" opacity="${Math.abs(contrib) < 0.01 ? 0.2 : 0.85}"/>`;
-        const lx = cx + Math.cos(angle) * (armLen + 22);
-        const ly = cy + Math.sin(angle) * (armLen + 22);
-        s += `<text x="${lx}" y="${ly}" class="arm-label">${arm.name}</text>`;
-        s += `<text x="${lx}" y="${ly + 13}" class="arm-magnitude">${(contrib >= 0 ? '+' : '')}${contrib.toFixed(2)}</text>`;
-    });
-    s += `<circle cx="${cx}" cy="${cy}" r="${baseR}" fill=
+ const svg = document.getElementById('conv-svg');
+ const cx = 280, cy = 190, baseR = 38;
+ let yhat = intercept;
+ arms.forEach(arm => { yhat += arm.b * arm.x; });
+ const glowR = baseR + Math.min(Math.abs(yhat)*4, 32);
+ const centerColor = yhat >= 0 ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.18)';
+ const centerStroke = yhat >= 0 ? '#22c55e' : '#ef4444';
+ const glowColor = yhat >= 0 ? 'rgba(34,197,94,0.40)' : 'rgba(239,68,68,0.40)';
+ let s = `<defs><filter id="blur"><feGaussianBlur stdDeviation="8"/></filter><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#22c55e"/></marker><marker id="an" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444"/></marker></defs>`;
+ s += `<circle cx="${cx}" cy="${cy}" r="${glowR}" fill="${glowColor}" filter="url(#blur)" opacity="0.6"/>`;
+ arms.forEach((arm,i) => {
+  const angle = -Math.PI/2 + (i * 2 * Math.PI / k);
+  const armLen = 130;
+  const ex = cx + Math.cos(angle)*armLen;
+  const ey = cy + Math.sin(angle)*armLen;
+  const contrib = arm.b * arm.x;
+  const ce = document.getElementById(`contrib-${i}`);
+  if(ce){
+   ce.textContent = (contrib >= 0 ? '+' : '') + contrib.toFixed(2);
+   ce.className = 'control-contrib ' + (Math.abs(contrib) < 0.01 ? 'zero' : (contrib > 0 ? 'pos' : 'neg'));
+  }
+  s += `<line x1="${cx}" y1="${cy}" x2="${ex}" y2="${ey}" class="arm-line"/>`;
+  const vecScale = Math.min(Math.abs(contrib)*14, armLen - 16);
+  const isPos = contrib >= 0;
+  const vx = cx + Math.cos(angle)*vecScale;
+  const vy = cy + Math.sin(angle)*vecScale;
+  const armColor = isPos ? '#22c55e' : '#ef4444';
+  const thickness = 2 + Math.min(Math.abs(contrib)*0.4, 4);
+  s += `<line x1="${cx}" y1="${cy}" x2="${vx}" y2="${vy}" stroke="${armColor}" stroke-width="${thickness}" class="arm-vec" marker-end="url(#${isPos?'ap':'an'})" opacity="${Math.abs(contrib)<0.01?0.2:0.85}"/>`;
+  const lx = cx + Math.cos(angle)*(armLen+22);
+  const ly = cy + Math.sin(angle)*(armLen+22);
+  s += `<text x="${lx}" y="${ly}" class="arm-label">${arm.name}</text>`;
+  s += `<text x="${lx}" y="${ly+13}" class="arm-magnitude">${(contrib>=0?'+':'')}${contrib.toFixed(2)}</text>`;
+ });
+ s += `<circle cx="${cx}" cy="${cy}" r="${baseR}" fill="${centerColor}" stroke="${centerStroke}" stroke-width="2"/>`;
+ s += `<text x="${cx}" y="${cy-9}" class="center-y-label">ŷ</text>`;
+ s += `<text x="${cx}" y="${cy+8}" class="center-y" fill="${centerStroke}">${yhat.toFixed(2)}</text>`;
+ svg.innerHTML = s;
+ const ie = document.getElementById('contrib-intercept');
+ if(ie){
+  ie.textContent = (intercept >= 0 ? '+' : '') + intercept.toFixed(2);
+  ie.className = 'control-contrib ' + (Math.abs(intercept) < 0.01 ? 'zero' : (intercept > 0 ? 'pos' : 'neg'));
+ }
+}
+
+document.querySelectorAll('.path-card').forEach(card => {
+ card.addEventListener('click', () => {
+  document.querySelectorAll('.path-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  const path = PATHS[card.dataset.path];
+  const detail = document.getElementById('path-detail');
+  detail.classList.remove('hidden');
+  const moves = path.moves.map(m => `<div class="move"><div class="move-title">${m.title}</div><div class="move-body">${m.body}</div></div>`).join('');
+  detail.innerHTML = `<h3>${path.name}</h3><div class="formula">${path.formula}</div><div class="desc">${path.desc}</div><div style="margin-top:18px;color:var(--muted);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase">Step 2 — Process</div>${moves}`;
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+ });
+});
+
+document.querySelectorAll('.arm-btn').forEach(btn => {
+ btn.addEventListener('click', () => {
+  document.querySelectorAll('.arm-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  setupArms(parseInt(btn.dataset.k));
+ });
+});
+
+setupArms(2);
+</script>
+</body>
+</html>
