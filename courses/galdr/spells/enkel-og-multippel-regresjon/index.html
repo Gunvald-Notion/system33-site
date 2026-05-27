@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>📈 Enkel &amp; Multippel Regresjon — Galdr Formation | System 33</title>
-<meta name="description" content="The convergence formation. Walk the four Galdr steps. Pick a form, read iz blueprint, process the moves, drop the data, read the formula filled.">
+<meta name="description" content="The convergence formation. Pick a form, walk the four Galdr steps, read each piece of the formula az iz iz built.">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#f59e0b;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+:root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#f59e0b;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--purple:#a78bfa;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
 a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
 .container{max-width:760px;margin:0 auto;padding:0 24px}
@@ -21,6 +21,11 @@ a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:
 .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
 .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;font-size:.9rem;color:var(--text2);line-height:1.65}
 .principle strong{color:var(--text)}
+.mode-nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.mode-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.78rem;color:var(--text2);cursor:pointer;transition:all .2s;font-weight:500}
+.mode-btn:hover:not(:disabled){background:rgba(228,228,231,.04);border-color:#3f3f46}
+.mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.08)}
+.mode-btn:disabled{opacity:.4;cursor:not-allowed}
 .conv-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
 .conv-svg-wrap{display:flex;justify-content:center;background:radial-gradient(circle at center,rgba(245,158,11,.04),transparent 70%);border-radius:12px;padding:8px;min-height:280px}
 svg.conv{width:100%;max-width:560px;height:auto;display:block}
@@ -34,36 +39,36 @@ svg.conv{width:100%;max-width:560px;height:auto;display:block}
 .step-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
 .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.08)}
 .step-btn.done{border-color:var(--green);color:var(--green)}
-.step-btn:disabled{opacity:.4;cursor:not-allowed}
 .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
 .step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
 .step-content p{color:var(--text2);font-size:.92rem;line-height:1.65;margin-bottom:10px}
 .step-content p:last-child{margin-bottom:0}
 .step-content strong{color:var(--text)}
 .step-content em{color:var(--muted)}
-.path-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
-.path-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all .2s;text-align:left}
-.path-card:hover{border-color:#3f3f46;background:rgba(228,228,231,.03)}
-.path-card.active{border-color:var(--accent);background:rgba(245,158,11,.08)}
-.path-card.locked{opacity:.45;cursor:not-allowed;pointer-events:none}
-.path-card-num{font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
-.path-card-name{font-size:.92rem;font-weight:600;margin-bottom:6px}
-.path-card-eq{font-size:.74rem;color:var(--text2);line-height:1.5;font-family:'SF Mono',Menlo,monospace}
-.path-card-soon{font-size:.65rem;color:var(--muted);margin-top:6px;letter-spacing:.06em;text-transform:uppercase}
-.move-nav{display:flex;gap:6px;margin:16px 0;flex-wrap:wrap}
-.move-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-family:inherit;font-size:.75rem;color:var(--muted);cursor:pointer;transition:all .2s}
-.move-btn:hover{color:var(--text2);border-color:#3f3f46}
-.move-btn.active{color:var(--accent);border-color:var(--accent)}
-.move-desc{margin-top:12px}
-.move-desc .move-title-h{font-size:.95rem;font-weight:600;margin-bottom:6px;color:var(--text)}
-.move-desc p{font-size:.9rem;line-height:1.7}
-.input-row{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap;align-items:flex-end}
+.formula-viz{display:flex;align-items:flex-start;justify-content:center;gap:8px;padding:24px 8px 16px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin:14px 0 20px}
+.formula-lhs,.formula-op{font-family:'SF Mono',Menlo,monospace;font-size:1.15rem;color:var(--text);padding-top:8px}
+.piece{display:inline-flex;flex-direction:column;align-items:stretch;gap:3px;padding:0 2px;text-align:center}
+.piece-text{font-family:'SF Mono',Menlo,monospace;font-size:1.05rem;padding:6px 10px;white-space:nowrap;color:var(--text)}
+.piece-brace{width:100%;height:14px;display:block}
+.piece[data-color="muted"] .piece-brace{color:var(--text2)}
+.piece[data-color="orange"] .piece-brace{color:var(--accent)}
+.piece[data-color="blue"] .piece-brace{color:var(--blue)}
+.piece[data-color="purple"] .piece-brace{color:var(--purple)}
+.piece-label{font-size:.66rem;font-family:var(--font);color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;white-space:nowrap;font-weight:600}
+.piece[data-color="orange"] .piece-label{color:var(--accent)}
+.piece[data-color="blue"] .piece-label{color:var(--blue)}
+.piece[data-color="purple"] .piece-label{color:var(--purple)}
+.proc-block{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0}
+.proc-title{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;font-weight:600}
+.proc-step{font-size:.88rem;color:var(--text2);line-height:1.7;margin:8px 0;padding-left:4px}
+.proc-step strong{color:var(--text)}
+.input-row{display:flex;gap:12px;margin:8px 0 12px;flex-wrap:wrap;align-items:flex-end}
 .input-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
-.input-group label{font-size:.74rem;color:var(--muted)}
+.input-group label{font-size:.72rem;color:var(--muted)}
 .input-group input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-family:inherit;font-size:.88rem;color:var(--text);width:100%;text-align:center;transition:border-color .2s}
 .input-group input:focus{outline:none;border-color:var(--accent)}
 .input-section-label{font-size:.7rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin:14px 0 4px;font-weight:600}
-.action-btn{background:var(--text);color:var(--bg);border:none;border-radius:10px;padding:12px 20px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:opacity .2s}
+.action-btn{background:var(--text);color:var(--bg);border:none;border-radius:10px;padding:11px 18px;font-family:inherit;font-size:.84rem;font-weight:600;cursor:pointer;transition:opacity .2s}
 .action-btn:hover{opacity:.85}
 .action-btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
 .action-btn.secondary:hover{background:rgba(228,228,231,.04)}
@@ -71,24 +76,21 @@ svg.conv{width:100%;max-width:560px;height:auto;display:block}
 .derivation{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2);font-family:'SF Mono',Menlo,monospace}
 .derivation .d-label{color:var(--accent);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;font-family:var(--font);font-weight:600}
 .derivation .d-line{margin:2px 0}
-.derivation .d-line strong{color:var(--text);font-weight:600}
+.derivation .d-line strong{color:var(--text)}
 .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
 .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
-.result-box-formula{font-size:.9rem;color:var(--text2);margin-bottom:8px;line-height:1.5;font-family:'SF Mono',Menlo,monospace}
-.result-box-value{font-size:1.5rem;font-weight:700;color:var(--accent);margin-top:12px;font-family:'SF Mono',Menlo,monospace}
-.blueprint-body{margin-top:14px;font-size:.9rem;color:var(--text2);line-height:1.7}
-.blueprint-body p{margin-bottom:10px}
-.blueprint-body strong{color:var(--text)}
+.result-box-value{font-size:1.6rem;font-weight:700;color:var(--accent);font-family:'SF Mono',Menlo,monospace}
+.result-box-desc{font-size:.88rem;color:var(--text2);margin-top:10px;line-height:1.6}
 .formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px}
 .formula-ref-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
 .formula-ref-name{font-size:.95rem;font-weight:600}
 .formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px;white-space:nowrap}
 .formula-ref-eq{font-family:'SF Mono',Menlo,monospace;font-size:.85rem;color:var(--text2);line-height:1.6;background:var(--bg2);padding:10px 14px;border-radius:6px}
 .formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:8px;line-height:1.55}
+.empty-step{text-align:center;color:var(--muted);font-size:.9rem;padding:24px 0;font-style:italic}
 footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
 footer a{color:var(--text2)}
-.hidden{display:none!important}
-@media(max-width:600px){.path-grid{grid-template-columns:1fr}.input-row{flex-direction:column}}
+@media(max-width:600px){.input-row{flex-direction:column}.formula-viz{padding:18px 4px 14px;gap:6px}.piece-text{font-size:.92rem;padding:5px 6px}}
 </style>
 </head>
 <body>
@@ -98,89 +100,54 @@ footer a{color:var(--text2)}
 <div class="hero-icon">📈</div>
 <div class="hero-badge">Galdr Formation &middot; Kap 11</div>
 <h1>Enkel &amp; Multippel Regresjon</h1>
-<p>The convergence formation. Walk the four Galdr steps. Each form iz a different reading of the same convergence.</p>
+<p>The convergence formation. Pick a form, walk the four Galdr steps, watch each piece of the formula build.</p>
 </div></section>
 
 <section class="section"><div class="container">
-<div class="principle"><strong>First principle.</strong> A regression model iz not a surface in a cloud. It iz a <strong>convergence of forces</strong>. Each predictor Xⱼ iz an arm of force radiatin’ from the center at iz own angle &mdash; iz own axis of the space. With k predictors the actual map lives in k+1 dimensions; the diagram flattens those axes ontuh one plane so the eye can hold them, but the geometry iz preserved &mdash; <strong>each new variable opens another direction the bead can be pulled</strong>. The intercept b̂₀ iz the equilibrium scalar. Each arm contributes b̂ⱼ·xⱼ, an the bead migrates by tha vector sum. The POSITION shows where forces resolve geometrically; the NUMBER inside iz the scalar ŷ.</div>
+<div class="principle"><strong>First principle.</strong> A regression model iz not a surface in a cloud. It iz a <strong>convergence of forces</strong>. Each predictor X<sub>j</sub> iz an arm of force radiating from the center at iz own angle &mdash; iz own axis of the space. With k predictors the actual map lives in k+1 dimensions; the diagram flattens those axes onto one plane so the eye can hold them, but the geometry iz preserved &mdash; <strong>each new variable opens another direction the bead can be pulled</strong>. The intercept b̂₀ iz the equilibrium scalar. Each arm contributes b̂ⱼ·xⱼ, an the bead migrates by the vector sum.</div>
+</div></section>
+
+<section class="section"><div class="container">
+<div class="section-label">Choose the form</div>
+<div class="mode-nav">
+<button class="mode-btn active" data-mode="prediksjon">Form 1 — Predikert ŷ</button>
+<button class="mode-btn" data-mode="tolkning" disabled>Form 2 — Tolkning av b̂ⱼ</button>
+<button class="mode-btn" data-mode="r2" disabled>Form 3 — R²</button>
+<button class="mode-btn" data-mode="hypotese" disabled>Form 4 — H₀</button>
+<button class="mode-btn" data-mode="tts" disabled>Form 5 — t_TS</button>
+<button class="mode-btn" data-mode="stjerner" disabled>Form 6 — Stjerner</button>
+<button class="mode-btn" data-mode="utelatt" disabled>Form 7 — Utelatt</button>
+</div>
 </div></section>
 
 <section class="section"><div class="container">
 <div class="section-label">The Convergence</div>
 <div class="conv-wrapper">
 <div class="conv-svg-wrap"><svg class="conv" viewBox="0 0 560 380" id="conv-svg"></svg></div>
-<p class="conv-caption" id="conv-caption">Pick a form below. The diagram resolves az yuh walk through the four Galdr steps.</p>
+<p class="conv-caption" id="conv-caption">Walk through the four steps below. Drop data in Step 3 to resolve the bead.</p>
 </div>
 </div></section>
 
 <section class="section"><div class="container">
 <div class="section-label">Walk the formation</div>
-
 <div class="step-nav">
-<button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
-<button class="step-btn" data-step="2" disabled>Step 2 &mdash; Process</button>
-<button class="step-btn" data-step="3" disabled>Step 3 &mdash; Data</button>
-<button class="step-btn" data-step="4" disabled>Step 4 &mdash; Formula</button>
+<button class="step-btn active" data-step="1">Step 1 — Blueprint</button>
+<button class="step-btn" data-step="2">Step 2 — Process</button>
+<button class="step-btn" data-step="3">Step 3 — Data</button>
+<button class="step-btn" data-step="4">Step 4 — Formula</button>
 </div>
-
-<div class="step-content" id="step-1">
-<h3>Step 1 &mdash; Which form are yuh walking?</h3>
-<p>The convergence iz always the same shape &mdash; intercept at the center, predictors az arms of force radiatin’ outward. The FORM tells yuh which property of the convergence yuh’re readin’. Pick one tuh walk:</p>
-<div class="path-grid" id="path-grid">
-<div class="path-card" data-path="prediksjon"><div class="path-card-num">Form 1</div><div class="path-card-name">Predikert ŷ</div><div class="path-card-eq">ŷ = b̂₀ + Σ b̂ⱼ·xⱼ</div></div>
-<div class="path-card locked"><div class="path-card-num">Form 2</div><div class="path-card-name">Tolkning av b̂ⱼ</div><div class="path-card-eq">Δy per enhet i xⱼ</div><div class="path-card-soon">Next commit</div></div>
-<div class="path-card locked"><div class="path-card-num">Form 3</div><div class="path-card-name">R²</div><div class="path-card-eq">SSR / SST</div><div class="path-card-soon">Soon</div></div>
-<div class="path-card locked"><div class="path-card-num">Form 4</div><div class="path-card-name">Nullhypotese H₀</div><div class="path-card-eq">H₀: bⱼ = 0</div><div class="path-card-soon">Soon</div></div>
-<div class="path-card locked"><div class="path-card-num">Form 5</div><div class="path-card-name">Testverdi t_TS</div><div class="path-card-eq">(b̂ⱼ − βⱼ) / se(b̂ⱼ)</div><div class="path-card-soon">Soon</div></div>
-<div class="path-card locked"><div class="path-card-num">Form 6</div><div class="path-card-name">Stjernenotasjon</div><div class="path-card-eq">* ** ***</div><div class="path-card-soon">Soon</div></div>
-<div class="path-card locked"><div class="path-card-num">Form 7</div><div class="path-card-name">Utelatt Variabel</div><div class="path-card-eq">Δb̂ⱼ when Xz fjernes</div><div class="path-card-soon">Soon</div></div>
-</div>
-<div id="blueprint-detail" class="hidden blueprint-body"></div>
-</div>
-
-<div class="step-content hidden" id="step-2">
-<h3 id="process-title">Step 2 &mdash; Process</h3>
-<p>Build the form move-by-move. Number-blind. Yuh’re learning the structure, no the arithmetic.</p>
-<div class="move-nav" id="move-nav"></div>
-<div class="move-desc" id="move-desc"></div>
-</div>
-
-<div class="step-content hidden" id="step-3">
-<h3>Step 3 &mdash; Drop the Data</h3>
-<p>Now the numbers enter. From the regresjonstabell, read the intercept an each coefficient. From the problem text, read each x-value. Match units carefulleh.</p>
-<div id="data-inputs"></div>
-<div class="btn-row">
-<button class="action-btn" id="btn-drop">Drop data &amp; resolve</button>
-<button class="action-btn secondary" id="btn-example">Example values</button>
-</div>
-</div>
-
-<div class="step-content hidden" id="step-4">
-<h3 id="formula-title">Step 4 &mdash; Formula</h3>
-<p id="formula-desc"></p>
-<div id="derivation-box"></div>
-<div class="result-box" id="result-box">
-<div class="result-box-name" id="result-name"></div>
-<div class="result-box-formula" id="result-formula"></div>
-<div class="result-box-value" id="result-value"></div>
-</div>
-</div>
-
-</div></section>
-
-<section class="section"><div class="container" style="text-align:center">
-<button class="action-btn secondary" id="btn-reset">&larr; Reset</button>
+<div id="step-container"></div>
 </div></section>
 
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-<div class="section-label">Formula Reference &mdash; Formelark Notation</div>
+<div class="section-label">Formula Reference — Formelark Notation</div>
 <p style="color:var(--text2);font-size:.9rem;margin-bottom:20px">Canonical formulas. b̂ not β̂, t_TS not t_obs, df = n − k − 1 fer multippel regresjon.</p>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Enkel lineær regresjon</span><span class="formula-ref-kap">Kap 11.1</span></div><div class="formula-ref-eq">Yⱼ = b₀ + b₁·Xⱼ + εⱼ</div><div class="formula-ref-desc">One predictor, one arm.</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Multippel regresjon</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">Yⱼ = b₀ + b₁·X₁ⱼ + b₂·X₂ⱼ + ... + bₖ·Xₖⱼ + εⱼ</div><div class="formula-ref-desc">k arms, k forces. Each coefficient holds when all others are held still.</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Testverdi (generelt)</span><span class="formula-ref-kap">Kap 9 + 11</span></div><div class="formula-ref-eq">t_TS = (θ̂ − θ₀) / se(θ̂)</div><div class="formula-ref-desc">Force in units of iz own uncertainty. df = n − k − 1.</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">R² &amp; Justert R²</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">R² = SSR/SST = 1 − SSE/SST<br>R²_just = 1 − (1−R²)(n−1)/(n−k−1)</div><div class="formula-ref-desc">Fraction of Y-variance the convergence catches.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Multippel regresjon</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">Yⱼ = b₀ + b₁·X₁ⱼ + b₂·X₂ⱼ + ... + bₖ·Xₖⱼ + εⱼ</div><div class="formula-ref-desc">k arms, k forces.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Testverdi</span><span class="formula-ref-kap">Kap 9 + 11</span></div><div class="formula-ref-eq">t_TS = (θ̂ − θ₀) / se(θ̂)</div><div class="formula-ref-desc">Force in units of iz own uncertainty.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">R² &amp; Justert R²</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">R² = SSR/SST = 1 − SSE/SST</div><div class="formula-ref-desc">Fraction of Y-variance the convergence catches.</div></div>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">F-statistic</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">F = MSR/MSE = (SSR/k) / (SSE/(n−k−1))</div><div class="formula-ref-desc">Whole-model test. H₀: all bⱼ = 0.</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">RSE</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">RSE = √(Σeᵢ² / (n−k−1))</div><div class="formula-ref-desc">Residual standardfeil &mdash; average gap.</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">RSE</span><span class="formula-ref-kap">Kap 11.3</span></div><div class="formula-ref-eq">RSE = √(Σeᵢ² / (n−k−1))</div><div class="formula-ref-desc">Residual standardfeil.</div></div>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">VIF</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">VIFⱼ = 1 / (1 − R²ⱼ)</div><div class="formula-ref-desc">Multikollinearitet. VIF &gt; 5–10 means arms pull in nearly the same direction.</div></div>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Konfidensintervall</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">b̂ⱼ ± t_(α/2, n−k−1)·se(b̂ⱼ)</div><div class="formula-ref-desc">Range where the true bⱼ likely sits.</div></div>
 </div></section>
@@ -188,274 +155,48 @@ footer a{color:var(--text2)}
 <footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Formations</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 
 <script>
-const ARM_COLORS = ['#f59e0b','#3b82f6','#a78bfa','#22c55e','#ec4899'];
+var mode='prediksjon',currentStep=1;
+var ARM_COLORS=['#f59e0b','#3b82f6','#a78bfa','#22c55e','#ec4899'];
+var S={intercept:null,arms:null,solved:false};
 
-const PATHS = {
- prediksjon: {
-  name: 'Predikert ŷ',
-  kap: 'Kap 11.1 + 11.8',
-  hint: 'The foundation form. Yuh have b̂-values from the regresjonstabell an specific x-values from the problem. Each arm contributes b̂ⱼ·xⱼ; sum them all plus b̂₀; the result iz ŷ.',
-  blueprint: '<p><strong>What we recognize:</strong> The oppgave gives yuh a regresjonstabell &mdash; an intercept row an a coefficient column &mdash; plus specific x-values fer each predictor in the problem text. The signal phrase iz usualleh <em>“predikér Y når X₁ = ... og X₂ = ...”</em> or <em>“estimér Y fer en kunde med ...”</em>.</p><p><strong>Wha’ we’re building:</strong> A single scalar — just one number, ŷ. The model haz already been trained somewhere; we don’t re-train. We plug specific x-values intuh a model tha’ already exists an read out the prediction. ŷ iz no the formula; iz the formula evaluated at one specific point in the space.</p><p><strong>Wha’ the score iz about:</strong> The intercept b̂₀ iz the baseline &mdash; where Y would sit when every predictor iz at zero. Each coefficient b̂ⱼ iz the strength an direction of pull along iz arm. The x-value scales tha’ pull. Sum the intercept plus all the arm-contributions an yuh have ŷ. The score iz literalleh where the forces resolve, written az a number.</p><p><strong>Why we do this:</strong> Form 1 iz the bread-an-butter operation of regresjon. Every other Kap 11 form reads off some property of this same convergence &mdash; Form 2 reads ONE arm in plain words, Form 3 reads how much energy the model catches, Form 5 reads whether one arm’s pull iz strong enough tuh trust. But Form 1 IZ the convergence in operation. Tha’s why iz iz first.</p>',
-  demoArms: [{name:'TV',color:'#f59e0b'},{name:'Radio',color:'#3b82f6'}],
-  moves: [
-   {title:'Move 1 — Read intercept b̂₀',text:'Find the <strong>(constant)</strong> or <strong>(intercept)</strong> row in the regresjonstabell. The number sitting there iz b̂₀. This iz the equilibrium scalar &mdash; where Y sits when every predictor iz at zero. The bead’s home before any arm pulls.'},
-   {title:'Move 2 — Read each coefficient b̂ⱼ',text:'One per predictor row in the regresjonstabell. Each iz the strength an direction of pull along iz arm. Positive = the arm pulls Y up when Xⱼ rises. Negative = the arm pulls Y down when Xⱼ rises.'},
-   {title:'Move 3 — Identify each x-value',text:'From the <em>problem text</em>, no from the table. The problem says somethin’ like <em>“predikér Y når X₁ = 2 og X₂ = 1”</em>. Match units tuh column headers &mdash; <strong>tusen kr ≠ kr</strong>. Unit mismatches are where most errors enter on the eksamen.'},
-   {title:'Move 4 — Multiply each arm: b̂ⱼ · xⱼ',text:'Each arm’s contribution iz the product of iz coefficient an the specific x-value. <strong>Forward when positive, backward when negative.</strong> This iz where the geometric pull becomes a scalar.'},
-   {title:'Move 5 — Sum all contributions plus intercept',text:'ŷ = b̂₀ + Σ b̂ⱼ·xⱼ. All forces resolve at the bead. The number inside the bead iz the predicted score &mdash; the model’s answer fer this specific situation.'}
-  ],
-  dataFields: {
-   intercept: {label:'b̂₀ (intercept)',example:2.0},
-   arms: [
-    {name:'TV',bExample:1.5,xExample:2.0},
-    {name:'Radio',bExample:0.5,xExample:1.0}
-   ]
-  },
-  compute: function(S){
-   const armResults = S.arms.map(a => ({name:a.name, b:a.b, x:a.x, c:+(a.b*a.x).toFixed(4)}));
-   const sumContribs = armResults.reduce((s,a)=>s+a.c,0);
-   const yhat = +(S.intercept + sumContribs).toFixed(4);
-   return {
-    name:'Form 1 — Predikert ŷ',
-    derivations: [
-     {label:'From the regresjonstabell', lines:[
-      `b̂₀ = ${fmt(S.intercept)}  ← (constant) row`,
-      ...armResults.map(a => `b̂_${a.name} = ${fmt(a.b)}  ← coefficient row`)
-     ]},
-     {label:'From the problem text', lines:
-      armResults.map(a => `x_${a.name} = ${fmt(a.x)}  ← given value`)
-     },
-     {label:'Each arm contributes b̂ⱼ · xⱼ', lines:
-      armResults.map(a => `${a.name}: ${fmt(a.b)} · ${fmt(a.x)} = ${fmt(a.c)}`)
-     },
-     {label:'Sum intercept + all contributions', lines:[
-      `ŷ = b̂₀ + Σ b̂ⱼ·xⱼ`,
-      `ŷ = ${fmt(S.intercept)} + ${armResults.map(a => fmt(a.c)).join(' + ')}`,
-      `ŷ = ${fmt(yhat)}`
-     ]}
-    ],
-    formula: `ŷ = ${fmt(S.intercept)} + ${armResults.map(a => `${fmt(a.b)}·${fmt(a.x)}`).join(' + ')}`,
-    value: fmt(yhat),
-    desc: 'The model evaluated at specific x-values. Each arm contributes iz pull; the intercept iz the baseline. The sum iz ŷ &mdash; the predicted score.'
-   };
+var PATHS={
+ prediksjon:{
+  name:'Predikert \u0177',
+  demoArms:[{name:'TV',color:'#f59e0b'},{name:'Radio',color:'#3b82f6'}],
+  dataFields:{
+   intercept:{example:2.0},
+   arms:[{name:'TV',bExample:1.5,xExample:2.0},{name:'Radio',bExample:0.5,xExample:1.0}]
   }
  }
 };
 
-let S = { intercept:null, arms:null, solved:false };
-let activePath = null;
-let activeMove = 0;
-let activeStep = 1;
+function fmt(n){if(n===null||n===undefined||isNaN(n))return '\u2014';var r=Math.round(n*10000)/10000;if(r===Math.floor(r))return r.toFixed(2);return r.toFixed(4).replace(/0+$/,'').replace(/\.$/,'')}
 
-function fmt(n){ if(n===null||n===undefined||isNaN(n)) return '\u2014'; const r = Math.round(n*10000)/10000; if(r===Math.floor(r)) return r.toFixed(2); return r.toFixed(4).replace(/0+$/,'').replace(/\.$/,''); }
-
-function hexToRgb(hex){const h=hex.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
-
-function blendRgb(items){
- let r=0,g=0,b=0,w=0;
- items.forEach(it => { const wt=Math.abs(it.weight); if(wt<0.001) return; const [cr,cg,cb]=hexToRgb(it.color); r+=cr*wt; g+=cg*wt; b+=cb*wt; w+=wt; });
- if(w<0.001) return [113,113,122];
- return [Math.round(r/w),Math.round(g/w),Math.round(b/w)];
-}
+function hexToRgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function blendRgb(items){var r=0,g=0,b=0,w=0;items.forEach(function(it){var wt=Math.abs(it.weight);if(wt<0.001)return;var c=hexToRgb(it.color);r+=c[0]*wt;g+=c[1]*wt;b+=c[2]*wt;w+=wt});if(w<0.001)return [113,113,122];return [Math.round(r/w),Math.round(g/w),Math.round(b/w)]}
 
 function renderSVG(){
- const svg = document.getElementById('conv-svg');
- const cx=280, cy=190, baseR=34, armLen=130, scale=22;
-
- if(!activePath){
-  svg.innerHTML = `<circle cx="${cx}" cy="${cy}" r="${baseR}" fill="rgba(113,113,122,0.08)" stroke="rgba(113,113,122,0.4)" stroke-width="2" stroke-dasharray="4,4"/><text x="${cx}" y="${cy-6}" class="center-y-label">awaiting</text><text x="${cx}" y="${cy+10}" class="center-y" style="font-size:13px;fill:var(--muted)">form</text>`;
-  return;
- }
-
- const path = PATHS[activePath];
- const armSpec = S.arms || path.demoArms.map(a => ({name:a.name,b:0,x:0}));
- const k = armSpec.length;
- const intercept = S.intercept !== null ? S.intercept : 0;
- let yhat = intercept, dx=0, dy=0;
- const contribs = [];
- armSpec.forEach((arm,i) => {
-  const angle = -Math.PI/2 + (i * 2 * Math.PI / k);
-  const c = (arm.b||0) * (arm.x||0);
-  yhat += c; dx += c*Math.cos(angle); dy += c*Math.sin(angle);
-  contribs.push({i, angle, c, color:ARM_COLORS[i], name:arm.name});
+ var svg=document.getElementById('conv-svg');
+ var cx=280,cy=190,baseR=34,armLen=130,scale=22;
+ var path=PATHS[mode];
+ if(!path){svg.innerHTML='';return}
+ var armSpec=S.arms||path.demoArms.map(function(a){return {name:a.name,b:0,x:0}});
+ var k=armSpec.length;
+ var intercept=S.intercept!==null?S.intercept:0;
+ var yhat=intercept,dx=0,dy=0,contribs=[];
+ armSpec.forEach(function(arm,i){
+  var angle=-Math.PI/2+(i*2*Math.PI/k);
+  var c=(arm.b||0)*(arm.x||0);
+  yhat+=c;dx+=c*Math.cos(angle);dy+=c*Math.sin(angle);
+  contribs.push({i:i,angle:angle,c:c,color:ARM_COLORS[i],name:arm.name})
  });
- let bdx=dx*scale, bdy=dy*scale;
- const maxOffset = armLen - 8;
- const offsetMag = Math.hypot(bdx,bdy);
- if(offsetMag > maxOffset){ bdx = bdx*maxOffset/offsetMag; bdy = bdy*maxOffset/offsetMag; }
- const beadX = cx+bdx, beadY = cy+bdy;
- const [br,bg,bb] = S.solved ? blendRgb(contribs.map(c=>({weight:c.c,color:c.color}))) : [113,113,122];
- const beadStroke = `rgb(${br},${bg},${bb})`;
- const beadFill = S.solved ? `rgba(${br},${bg},${bb},0.22)` : 'rgba(113,113,122,0.08)';
- const beadGlow = `rgba(${br},${bg},${bb},${S.solved?0.45:0.15})`;
-
- let s = `<defs><filter id="blur"><feGaussianBlur stdDeviation="8"/></filter>`;
- contribs.forEach((c,i) => { s += `<marker id="ap-${i}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="${c.color}"/></marker>`; });
- s += `</defs>`;
-
- contribs.forEach(c => {
-  const ax1=cx+Math.cos(c.angle)*armLen, ay1=cy+Math.sin(c.angle)*armLen;
-  const ax2=cx-Math.cos(c.angle)*armLen*0.35, ay2=cy-Math.sin(c.angle)*armLen*0.35;
-  s += `<line x1="${ax2}" y1="${ay2}" x2="${ax1}" y2="${ay1}" stroke="${c.color}" stroke-width="1" stroke-dasharray="2,3" opacity="0.32"/>`;
- });
-
- const glowR = baseR + (S.solved ? Math.min(Math.abs(yhat)*3.5,30) : 0);
- s += `<circle cx="${beadX}" cy="${beadY}" r="${glowR}" fill="${beadGlow}" filter="url(#blur)" opacity="${S.solved?0.7:0.3}"/>`;
-
- contribs.forEach((c,i) => {
-  if(S.solved && Math.abs(c.c) > 0.001){
-   const sign = c.c >= 0 ? 1 : -1;
-   const vlen = Math.abs(c.c) * scale;
-   const vx=cx+Math.cos(c.angle)*vlen*sign, vy=cy+Math.sin(c.angle)*vlen*sign;
-   const thickness = 2 + Math.min(Math.abs(c.c)*0.5, 4.5);
-   s += `<line x1="${cx}" y1="${cy}" x2="${vx}" y2="${vy}" stroke="${c.color}" stroke-width="${thickness}" marker-end="url(#ap-${i})" opacity="0.92" stroke-linecap="round"/>`;
-  }
-  const lx=cx+Math.cos(c.angle)*(armLen+22), ly=cy+Math.sin(c.angle)*(armLen+22);
-  s += `<text x="${lx}" y="${ly}" class="arm-label" style="fill:${c.color}">${c.name}</text>`;
-  if(S.solved){ s += `<text x="${lx}" y="${ly+13}" class="arm-magnitude" style="fill:${c.color};opacity:0.75">${(c.c>=0?'+':'')}${fmt(c.c)}</text>`; }
- });
-
- s += `<circle cx="${beadX}" cy="${beadY}" r="${baseR}" fill="${beadFill}" stroke="${beadStroke}" stroke-width="2.5" stroke-dasharray="${S.solved?'none':'4,4'}"/>`;
- s += `<text x="${beadX}" y="${beadY-9}" class="center-y-label">ŷ</text>`;
- if(S.solved){ s += `<text x="${beadX}" y="${beadY+8}" class="center-y" fill="${beadStroke}">${fmt(yhat)}</text>`; }
- else { s += `<text x="${beadX}" y="${beadY+8}" class="center-y" style="font-size:13px;fill:var(--muted)">?</text>`; }
-
- svg.innerHTML = s;
-}
-
-function setCaption(text){ document.getElementById('conv-caption').innerHTML = text; }
-
-const stepBtns = document.querySelectorAll('.step-btn');
-const stepEls = [1,2,3,4].map(i => document.getElementById('step-'+i));
-
-function showStep(n){
- if(n>1 && !activePath) return;
- if(n>3 && !S.solved) return;
- activeStep = n;
- stepBtns.forEach(b => b.classList.remove('active'));
- stepBtns[n-1].classList.add('active');
- stepEls.forEach(s => s.classList.add('hidden'));
- stepEls[n-1].classList.remove('hidden');
- if(n===1){
-  setCaption(activePath ? `Form chosen: <strong style="color:var(--accent)">${PATHS[activePath].name}</strong>. Read the blueprint, then click Step 2 — Process.` : 'Pick a form below. The diagram resolves az yuh walk through the four Galdr steps.');
- }
- if(n===2){ showMove(0); setCaption('Step 2 — walk the moves number-blind. The arms are labeled; no values yet. Click Step 3 — Data when ready.'); }
- if(n===3){ setCaption('Step 3 — drop the numbers in. The arms an bead resolve once yuh hit “Drop data & resolve”.'); }
- if(n===4){ setCaption(`Step 4 — the formula filled. ŷ = <strong style="color:var(--accent)">${PATHS[activePath].compute(S).value}</strong>.`); }
- renderSVG();
-}
-stepBtns.forEach(b => b.addEventListener('click', () => { if(!b.disabled) showStep(parseInt(b.dataset.step)); }));
-
-const pathCards = document.querySelectorAll('.path-card:not(.locked)');
-pathCards.forEach(card => {
- card.addEventListener('click', () => {
-  activePath = card.dataset.path;
-  document.querySelectorAll('.path-card').forEach(c => c.classList.remove('active'));
-  card.classList.add('active');
-  const path = PATHS[activePath];
-  document.getElementById('blueprint-detail').innerHTML = `<div class="section-label" style="color:var(--accent);margin:18px 0 6px">Form chosen — ${path.name}</div>${path.blueprint}`;
-  document.getElementById('blueprint-detail').classList.remove('hidden');
-  stepBtns[0].classList.add('done');
-  stepBtns[1].disabled = false;
-  buildDataInputs(path);
-  S = { intercept:null, arms:null, solved:false };
-  stepBtns[2].disabled = true; stepBtns[3].disabled = true;
-  stepBtns[2].classList.remove('done'); stepBtns[3].classList.remove('done');
-  renderSVG();
-  setCaption(`Form chosen: <strong style="color:var(--accent)">${path.name}</strong>. Read the blueprint below, then click Step 2 — Process.`);
- });
-});
-
-function showMove(i){
- if(!activePath) return;
- const path = PATHS[activePath];
- activeMove = i;
- const nav = document.getElementById('move-nav');
- if(nav.innerHTML === ''){
-  nav.innerHTML = path.moves.map((m,j) => `<button class="move-btn${j===0?' active':''}" data-i="${j}">Move ${j+1}</button>`).join('');
-  nav.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', () => showMove(parseInt(btn.dataset.i))));
- }
- nav.querySelectorAll('.move-btn').forEach((b,j) => b.classList.toggle('active', j===i));
- const m = path.moves[i];
- document.getElementById('move-desc').innerHTML = `<div class="move-title-h">${m.title}</div><p>${m.text}</p>`;
- document.getElementById('process-title').textContent = `Step 2 — Process: ${path.name}`;
-}
-
-function buildDataInputs(path){
- const root = document.getElementById('data-inputs');
- let html = `<div class="input-section-label">From the regresjonstabell</div><div class="input-row"><div class="input-group"><label>${path.dataFields.intercept.label}</label><input type="number" step="0.1" id="in-intercept" placeholder="${path.dataFields.intercept.example}"></div>`;
- path.dataFields.arms.forEach((a,i) => { html += `<div class="input-group"><label>b̂_${a.name}</label><input type="number" step="0.1" id="in-b-${i}" placeholder="${a.bExample}"></div>`; });
- html += `</div><div class="input-section-label">From the problem text</div><div class="input-row">`;
- path.dataFields.arms.forEach((a,i) => { html += `<div class="input-group"><label>x_${a.name}</label><input type="number" step="0.1" id="in-x-${i}" placeholder="${a.xExample}"></div>`; });
- html += `</div>`;
- root.innerHTML = html;
-}
-
-function dropData(){
- if(!activePath) return;
- const path = PATHS[activePath];
- const intercept = parseFloat(document.getElementById('in-intercept').value);
- if(isNaN(intercept)) return;
- const arms = [];
- for(let i=0; i<path.dataFields.arms.length; i++){
-  const b = parseFloat(document.getElementById('in-b-'+i).value);
-  const x = parseFloat(document.getElementById('in-x-'+i).value);
-  if(isNaN(b)||isNaN(x)) return;
-  arms.push({name:path.dataFields.arms[i].name, b, x});
- }
- S = { intercept, arms, solved:true };
- stepBtns[2].classList.add('done');
- stepBtns[3].disabled = false;
- renderSVG();
- renderResult();
- showStep(4);
-}
-
-function renderResult(){
- if(!activePath || !S.solved) return;
- const path = PATHS[activePath];
- const r = path.compute(S);
- document.getElementById('formula-title').textContent = `Step 4 — ${path.name}`;
- document.getElementById('formula-desc').textContent = r.desc;
- document.getElementById('derivation-box').innerHTML = r.derivations.map(d => `<div class="derivation"><div class="d-label">${d.label}</div>${d.lines.map(l => `<div class="d-line">${l}</div>`).join('')}</div>`).join('');
- document.getElementById('result-name').textContent = r.name;
- document.getElementById('result-formula').textContent = r.formula;
- document.getElementById('result-value').textContent = r.value;
- stepBtns[3].classList.add('done');
-}
-
-document.getElementById('btn-drop').addEventListener('click', dropData);
-document.getElementById('btn-example').addEventListener('click', () => {
- if(!activePath) return;
- const path = PATHS[activePath];
- document.getElementById('in-intercept').value = path.dataFields.intercept.example;
- path.dataFields.arms.forEach((a,i) => {
-  document.getElementById('in-b-'+i).value = a.bExample;
-  document.getElementById('in-x-'+i).value = a.xExample;
- });
- dropData();
-});
-
-document.getElementById('btn-reset').addEventListener('click', () => {
- S = { intercept:null, arms:null, solved:false };
- activePath = null; activeMove = 0;
- document.querySelectorAll('.path-card').forEach(c => c.classList.remove('active'));
- document.getElementById('blueprint-detail').classList.add('hidden');
- document.getElementById('blueprint-detail').innerHTML = '';
- document.getElementById('move-nav').innerHTML = '';
- document.getElementById('move-desc').innerHTML = '';
- document.getElementById('data-inputs').innerHTML = '';
- document.getElementById('derivation-box').innerHTML = '';
- document.getElementById('result-name').textContent = '';
- document.getElementById('result-formula').textContent = '';
- document.getElementById('result-value').textContent = '';
- stepBtns.forEach((b,i) => { b.classList.remove('done','active'); if(i>0) b.disabled = true; });
- stepBtns[0].classList.add('active');
- showStep(1);
-});
-
-renderSVG();
-showStep(1);
-</script>
-</body>
-</html>
+ var bdx=dx*scale,bdy=dy*scale;
+ var maxOff=armLen-8;var off=Math.hypot(bdx,bdy);
+ if(off>maxOff){bdx=bdx*maxOff/off;bdy=bdy*maxOff/off}
+ var beadX=cx+bdx,beadY=cy+bdy;
+ var rgb=S.solved?blendRgb(contribs.map(function(c){return {weight:c.c,color:c.color}})):[113,113,122];
+ var beadStroke='rgb('+rgb[0]+','+rgb[1]+','+rgb[2]+')';
+ var beadFill=S.solved?'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0.22)':'rgba(113,113,122,0.08)';
+ var beadGlow='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+(S.solved?0.45:0.15)+')';
+ var s='<defs><filter id="blur"><feGaussianBlur stdDeviation="8"/></filter>';
+ contribs.forEach(function(c,i){s+='<marker id="ap-'+i+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5"
