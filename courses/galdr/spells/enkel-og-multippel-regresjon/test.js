@@ -1,4 +1,4 @@
-// test.js — Forms 1-5 live; 6-7 placeholder
+// test.js — Forms 1-7 all live
 var TS = {};
 var testWasActive = false;
 var TVCOL='#f59e0b', RADCOL='#3b82f6';
@@ -317,9 +317,131 @@ function f5testNew(){
  rstep();
 }
 
-// ============ Placeholder for Forms 6-7 ============
+// ============ FORM 6 — Stjernenotasjon ============
+function f6testEnsure(){
+ if(!TS[6]){
+  var tier = Math.floor(Math.random()*4);
+  var p;
+  if(tier===0) p = 0.05 + Math.random()*0.45;
+  else if(tier===1) p = 0.011 + Math.random()*0.038;
+  else if(tier===2) p = 0.0011 + Math.random()*0.0088;
+  else p = 0.0001 + Math.random()*0.0008;
+  p = Math.round(p*10000)/10000;
+  TS[6] = {p: p, checked:false, correct:null, userChoice:null};
+ }
+}
+function f6test(){
+ var t = TS[6];
+ var correctTier;
+ if(t.p < 0.001) correctTier = '***';
+ else if(t.p < 0.01) correctTier = '**';
+ else if(t.p < 0.05) correctTier = '*';
+ else correctTier = 'ns';
+ var html = '<div class="step-content">';
+ html += '<h3>Test — Stjernenotasjon</h3>';
+ html += '<p>Same four moves az Form 6. Read p-value, find the tightest threshold iz crosses, assign stars, state verdict.</p>';
+ html += '<div class="input-section-label">Fresh problem</div>';
+ html += '<table class="data-table"><tbody>';
+ html += '<tr><td style="color:'+TVCOL+'">p-value</td><td style="color:'+TVCOL+'">'+t.p.toFixed(4)+'</td></tr>';
+ html += '</tbody></table>';
+ html += '<div class="derivation"><div class="d-label">Threshold ladder</div><div style="font-family:\'SF Mono\',Menlo,monospace;line-height:1.8">';
+ html += 'p < <span style="color:'+RADCOL+'">0.001</span> → *** (highly significant)<br>';
+ html += 'p < <span style="color:'+RADCOL+'">0.01</span> → **<br>';
+ html += 'p < <span style="color:'+RADCOL+'">0.05</span> → *<br>';
+ html += 'p ≥ <span style="color:'+RADCOL+'">0.05</span> → ns (not significant)';
+ html += '</div></div>';
+ html += '<div style="display:flex;gap:8px;align-items:center;margin:14px 0;flex-wrap:wrap">';
+ html += '<button class="action-btn" onclick="f6testCheck(\'***\')">***</button>';
+ html += '<button class="action-btn" onclick="f6testCheck(\'**\')">**</button>';
+ html += '<button class="action-btn" onclick="f6testCheck(\'*\')">*</button>';
+ html += '<button class="action-btn" onclick="f6testCheck(\'ns\')">ns</button>';
+ html += '<button class="action-btn secondary" onclick="f6testNew()">New problem</button>';
+ html += '</div>';
+ if(t.checked){
+  if(t.correct){
+   html += '<div class="result-box blue"><div class="result-box-name">Correct</div><div class="result-box-value" style="color:#22c55e">'+correctTier+' ✓</div><div class="result-box-desc">p = '+t.p.toFixed(4)+' falls in the <strong>'+correctTier+'</strong> tier. Press <em>New problem</em> fer fresh numbers.</div></div>';
+  } else {
+   html += '<div class="result-box"><div class="result-box-name">Not quite</div><div class="result-box-value" style="color:#dc2626">'+t.userChoice+'</div><div class="result-box-desc">p = '+t.p.toFixed(4)+' — walk the ladder top-down: the first threshold iz beats wins. The right tier iz <strong>'+correctTier+'</strong>. Try again or press <em>New problem</em>.</div></div>';
+  }
+ }
+ html += '</div>';
+ return html;
+}
+function f6testCheck(choice){
+ var t = TS[6];
+ t.userChoice = choice;
+ var correctTier;
+ if(t.p < 0.001) correctTier = '***';
+ else if(t.p < 0.01) correctTier = '**';
+ else if(t.p < 0.05) correctTier = '*';
+ else correctTier = 'ns';
+ t.checked = true;
+ t.correct = choice === correctTier;
+ rstep();
+}
+function f6testNew(){
+ TS[6] = null;
+ f6testEnsure();
+ rstep();
+}
+
+// ============ FORM 7 — Utelatt Variabel ============
+function f7testEnsure(){
+ if(!TS[7]){
+  var bj = Math.round((-2 + Math.random()*4)*100)/100;
+  var offset = Math.round((-1.5 + Math.random()*3)*100)/100;
+  if(Math.abs(offset) < 0.30){ offset = offset >= 0 ? 0.30 : -0.30; }
+  var aj = Math.round((bj + offset)*100)/100;
+  TS[7] = {bj: bj, aj: aj, checked:false, correct:null, userAnswer:''};
+ }
+}
+function f7test(){
+ var t = TS[7];
+ var correctDb = Math.round((t.aj - t.bj)*100)/100;
+ var html = '<div class="step-content">';
+ html += '<h3>Test — Utelatt Variabel (Δbⱼ)</h3>';
+ html += '<p>Same four moves az Form 7. Pick the omitted variable Xz, read aⱼ (slope WITHOUT Xz, biased), read bⱼ (slope WITH Xz, unbiased), subtract.</p>';
+ html += '<div class="input-section-label">Fresh problem</div>';
+ html += '<table class="data-table"><tbody>';
+ html += '<tr><td style="color:'+TVCOL+'">aⱼ (slope WITHOUT Xz — biased)</td><td style="color:'+TVCOL+'">'+t.aj+'</td></tr>';
+ html += '<tr><td style="color:'+RADCOL+'">bⱼ (slope WITH Xz — unbiased)</td><td style="color:'+RADCOL+'">'+t.bj+'</td></tr>';
+ html += '</tbody></table>';
+ html += '<div class="derivation"><div class="d-label">Yer task</div><div>Δbⱼ = <span style="color:'+TVCOL+'">aⱼ</span> − <span style="color:'+RADCOL+'">bⱼ</span> = ?</div></div>';
+ html += '<div style="display:flex;gap:10px;align-items:center;margin:14px 0;flex-wrap:wrap">';
+ html += '<label style="color:var(--text2);font-size:.95rem;font-family:\'SF Mono\',Menlo,monospace">Δbⱼ =</label>';
+ html += '<input id="f7ti" type="number" step="0.01" value="'+(t.userAnswer||'')+'" style="background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 14px;font:inherit;font-family:\'SF Mono\',Menlo,monospace;font-size:1rem;width:140px"/>';
+ html += '<button class="action-btn" onclick="f7testCheck()">Check</button>';
+ html += '<button class="action-btn secondary" onclick="f7testNew()">New problem</button>';
+ html += '</div>';
+ if(t.checked){
+  if(t.correct){
+   html += '<div class="result-box blue"><div class="result-box-name">Correct</div><div class="result-box-value" style="color:#22c55e">Δbⱼ = '+correctDb.toFixed(2)+' ✓</div><div class="result-box-desc">Yuh subtracted <span style="color:'+RADCOL+'">'+t.bj+'</span> from <span style="color:'+TVCOL+'">'+t.aj+'</span> an got '+correctDb.toFixed(2)+' — tha iz how much the omitted variable biased the slope. Press <em>New problem</em> fer fresh numbers.</div></div>';
+  } else {
+   html += '<div class="result-box"><div class="result-box-name">Not quite</div><div class="result-box-value" style="color:#dc2626">Δbⱼ = '+correctDb.toFixed(2)+'</div><div class="result-box-desc">Δbⱼ = <span style="color:'+TVCOL+'">aⱼ</span> − <span style="color:'+RADCOL+'">bⱼ</span> = <span style="color:'+TVCOL+'">'+t.aj+'</span> − <span style="color:'+RADCOL+'">'+t.bj+'</span> = <strong>'+correctDb.toFixed(2)+'</strong>.</div></div>';
+  }
+ }
+ html += '</div>';
+ return html;
+}
+function f7testCheck(){
+ var input = document.getElementById('f7ti');
+ var ans = parseFloat(input.value);
+ var t = TS[7];
+ t.userAnswer = input.value;
+ var correctDb = t.aj - t.bj;
+ t.checked = true;
+ t.correct = !isNaN(ans) && Math.abs(ans - correctDb) < 0.02;
+ rstep();
+}
+function f7testNew(){
+ TS[7] = null;
+ f7testEnsure();
+ rstep();
+}
+
+// ============ Fallback fer unknown forms ============
 function fNtestPlaceholder(n){
- return '<div class="step-content"><h3>Test — Form '+n+'</h3><div class="empty-step">Form '+n+' test iz under construction. Forms 1-5 tests are live now — click any of those forms an then the Test pill.</div></div>';
+ return '<div class="step-content"><h3>Test — Form '+n+'</h3><div class="empty-step">No test defined fer form '+n+'.</div></div>';
 }
 
 // ============ Wire up ============
@@ -334,6 +456,8 @@ function fNtestPlaceholder(n){
    else if(form===3){ f3testEnsure(); el.innerHTML = f3test(); }
    else if(form===4){ f4testEnsure(); el.innerHTML = f4test(); }
    else if(form===5){ f5testEnsure(); el.innerHTML = f5test(); }
+   else if(form===6){ f6testEnsure(); el.innerHTML = f6test(); }
+   else if(form===7){ f7testEnsure(); el.innerHTML = f7test(); }
    else { el.innerHTML = fNtestPlaceholder(form); }
    testWasActive = true;
   } else {
