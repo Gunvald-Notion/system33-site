@@ -95,7 +95,7 @@ footer a{color:var(--text2)}
 <button class="mode-btn" onclick="switchForm(4)">Form 4 — H₀</button>
 <button class="mode-btn" onclick="switchForm(5)">Form 5 — t_TS</button>
 <button class="mode-btn" onclick="switchForm(6)">Form 6 — Stjerner</button>
-<button class="mode-btn" disabled>Form 7 — Utelatt</button>
+<button class="mode-btn" onclick="switchForm(7)">Form 7 — Utelatt</button>
 </div></div></section>
 <section class="section"><div class="container"><div class="section-label">The Convergence</div><div class="conv-wrapper"><div class="conv-svg-wrap"><svg class="conv" viewBox="0 0 560 380" id="conv-svg"></svg></div><p class="conv-caption" id="conv-caption">Walk through the four steps. Drop data in Step 3 tuh resolve the bead.</p></div></div></section>
 <section class="section"><div class="container"><div class="section-label">Walk the formation</div><div class="step-nav">
@@ -111,10 +111,12 @@ footer a{color:var(--text2)}
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Nullhypotese fer bⱼ</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">H₀: bⱼ = 0   vs   H_A: bⱼ ≠ 0   ·   α-nivå satt før test  ·  df = n − k − 1</div></div>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Testverdi</span><span class="formula-ref-kap">Kap 11</span></div><div class="formula-ref-eq">t_TS = (θ̂ − θ₀) / se(θ̂)</div></div>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">F-statistic</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">F = MSR/MSE = (SSR/k) / (SSE/(n−k−1))</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Utelatt variabel</span><span class="formula-ref-kap">Kap 11</span></div><div class="formula-ref-eq">Δbⱼ = aⱼ(uten Xz) − bⱼ(med Xz)</div></div>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">VIF</span><span class="formula-ref-kap">Kap 11.8</span></div><div class="formula-ref-eq">VIFⱼ = 1 / (1 − R²ⱼ)</div></div>
 <div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Konfidensintervall</span><span class="formula-ref-kap">Kap 11.5</span></div><div class="formula-ref-eq">bⱼ ± t_(α/2, n−k−1)·se(bⱼ)</div></div>
 </div></section>
 <footer><div class="container">Built by Gunvald · Part of <a href="https://system33.io">system33.io</a> · <a href="/courses/galdr/spells/">Formations</a></div></footer>
 <script src="app.js"></script>
 <script src="form5.js"></script>
-<script src="form6.js"></script></body></html>
+<script src="form6.js"></script>
+<script src="form7.js"></script></body></html>
