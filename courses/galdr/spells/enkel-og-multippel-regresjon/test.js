@@ -173,7 +173,7 @@ function f3test(){
   if(t.correct){
    html += '<div class="result-box blue"><div class="result-box-name">Correct</div><div class="result-box-value" style="color:#22c55e">R² = '+correctR2.toFixed(3)+' ✓</div><div class="result-box-desc">Yuh divided <span style="color:'+TVCOL+'">'+t.ssr+'</span> by '+t.sst+' an got '+correctR2.toFixed(3)+' — meaning '+ssrPct+'% of the variance iz explained by the model. Press <em>New problem</em> fer fresh numbers.</div></div>';
   } else {
-   html += '<div class="result-box"><div class="result-box-name">Not quite</div><div class="result-box-value" style="color:#dc2626">R² = '+correctR2.toFixed(3)+'</div><div class="result-box-desc">R² = <span style="color:'+TVCOL+'">SSR</span> / SST = <span style="color:'+TVCOL+'">'+t.ssr+'</span> / '+t.sst+' = <strong>'+correctR2.toFixed(3)+'</strong>. Accepts anythin' within 0.01 of the answer.</div></div>';
+   html += '<div class="result-box"><div class="result-box-name">Not quite</div><div class="result-box-value" style="color:#dc2626">R² = '+correctR2.toFixed(3)+'</div><div class="result-box-desc">R² = <span style="color:'+TVCOL+'">SSR</span> / SST = <span style="color:'+TVCOL+'">'+t.ssr+'</span> / '+t.sst+' = <strong>'+correctR2.toFixed(3)+'</strong>. Accepts a value within 0.01 of the correct answer.</div></div>';
   }
  }
  html += '</div>';
