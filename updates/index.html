@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updates | System 33</title>
+    <meta name="description" content="Get system33 updates. Know when a new method drops. No spam.">
+    <meta property="og:title" content="Get system33 updates">
+    <meta property="og:description" content="Know when a new method drops — no spam.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://system33.io/updates/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Get system33 updates">
+    <meta name="twitter:description" content="Know when a new method drops — no spam.">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --bg-card: #18181b;
+            --border: #27272a;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-glow: rgba(228, 228, 231, 0.08);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.7; }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .site-header { padding: 24px 0 0; }
+        .site-header a { color: var(--text-muted); font-size: 0.85rem; }
+        .hero { padding: 64px 0 28px; text-align: center; }
+        .hero h1 {
+            font-size: clamp(2.25rem, 6vw, 3.25rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .section { padding: 8px 0 56px; }
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px;
+            overflow: hidden;
+        }
+        .form-embed {
+            width: 100%;
+            height: 820px;
+            border: 0;
+            border-radius: 8px;
+            display: block;
+            background: var(--bg-secondary);
+        }
+        .form-fallback {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .form-fallback a { color: var(--text-secondary); }
+        .footer {
+            padding: 48px 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-left { font-size: 0.85rem; color: var(--text-muted); }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { font-size: 0.85rem; color: var(--text-secondary); }
+        @media (max-width: 480px) {
+            .hero { padding: 48px 0 24px; }
+            .form-embed { height: 80vh; min-height: 640px; }
+            .footer { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="/">← system33.io</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Get system33 updates</h1>
+            <p>Know when a new method drops — no spam.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="form-card">
+                <!-- Swap FORM_EMBED_URL below with the Notion form share URL -->
+                <iframe class="form-embed" src="FORM_EMBED_URL" title="System 33 updates signup" loading="lazy"></iframe>
+            </div>
+            <p class="form-fallback">Form not loading? <a href="FORM_EMBED_URL" target="_blank" rel="noopener">Open it in a new tab ↗</a></p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer">
+                <div class="footer-left">
+                    © 2026 System 33. MIT License.
+                </div>
+                <div class="footer-links">
+                    <a href="/">Home</a>
+                    <a href="https://github.com/Gunvald-Notion" target="_blank" rel="noopener">GitHub</a>
+                    <a href="https://www.linkedin.com/in/gunvald7/" target="_blank" rel="noopener">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
