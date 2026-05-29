@@ -242,6 +242,22 @@ function binFormula(filled){
         pc(m4,'Move 4 \u00B7 weight','a')+
         '</div>';
 }
+function hypFormula(filled){
+    var m1=filled?'715':'C(M, k)';
+    var m2=filled?'715':'C(N\u2212M, n\u2212k)';
+    var m3=filled?'1\u202F562\u202F275':'C(N, n)';
+    var m4=filled?'0.3272':'P(X=k)';
+    return '<div class="formula-viz">'+
+        '<span class="formula-lhs">P(X = k) =</span>'+
+        pc(m1,'Move 1 \u00B7 glowing','m')+
+        '<span class="formula-op">\u00D7</span>'+
+        pc(m2,'Move 2 \u00B7 dark','o')+
+        '<span class="formula-op">\u00F7</span>'+
+        pc(m3,'Move 3 \u00B7 all hands','b')+
+        '<span class="formula-op">=</span>'+
+        pc(m4,'Move 4 \u00B7 weight','a')+
+        '</div>';
+}
 
 /* === BINOMIAL STEPS === */
 function binStep(s){
@@ -319,38 +335,74 @@ function binStep(s){
 /* === HYPERGEOMETRIC STEPS === */
 function hypStep(s){
     if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p>They gave you <strong>exact counts of types in a pool</strong>. M glowing out of N total. You draw n. No percentage \u2014 just numbers. The pool shrinks with every draw.</p>'+
-        '<p>You\'re asking: how much energy sits at k glowing in your hand?</p>'+
+        '<p><strong>What this distribution is for.</strong> They gave you <strong>exact counts of types in a finite pool</strong> \u2014 M glowing out of N total \u2014 and you draw n without putting any back. No percentage anywhere, just whole numbers, and the pool shrinks with every draw. The job is to find how much weight sits on one exact outcome: pulling k glowing into your hand.</p>'+
+        '<p><strong>How it works.</strong> This is pure counting. Favorable arrangements over all possible arrangements, gunstige over mulige. Count the ways to pick k glowing from the M that exist, multiply by the ways to fill the rest of the hand from the dark pile, then divide by the total ways to draw n from N. That fraction is the weight on door k.</p>'+
+        '<p><strong>Why it is able to do that.</strong> Because every draw changes what is left, no single percentage stays true from one pull to the next. So instead of a percentage you count: how many hands hold exactly k glowing, set against how many hands exist at all. Counting carries the shrinking pool on its own, with no probability needed.</p>'+
         '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = C(M,k) &middot; C(N\u2212M, n\u2212k) / C(N, n)</p>'+
+        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
+        '<div class="d-line"><strong>N</strong> \u2014 the total size of the pool (here 26)</div>'+
+        '<div class="d-line"><strong>M</strong> \u2014 how many glowing sit in the pool (here 13)</div>'+
+        '<div class="d-line"><strong>n</strong> \u2014 how many you draw (here 8)</div>'+
+        '<div class="d-line"><strong>k</strong> \u2014 the number of glowing you are asking about (here 4)</div>'+
+        '<div class="d-line"><strong>N\u2212M</strong> \u2014 the dark pile, what is left when the glowing are removed (here 13)</div>'+
+        '<div class="d-line"><strong>C(M, k)</strong> \u2014 how many ways to pick k glowing from M</div>'+
+        '<div class="d-line"><strong>C(N\u2212M, n\u2212k)</strong> \u2014 how many ways to fill the rest from the dark pile</div>'+
+        '<div class="d-line"><strong>C(N, n)</strong> \u2014 how many ways to draw n from the whole pool</div>'+
+        '<div class="d-line"><strong>P(X = k)</strong> \u2014 the weight sitting on door k</div></div>'+
         '</div>';
     if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>A fraction. Teller over nevner. Pure counting \u2014 no probability anywhere.</p>'+
-        '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-        '<div class="proc-step"><strong>1. C(M, k) \u2014 glowing pool.</strong> How many ways to pick k glowing from the M that exist. Drainage from the light side.</div>'+
-        '<div class="proc-step"><strong>2. C(N\u2212M, n\u2212k) \u2014 dark pool.</strong> How many ways to fill the rest with non-glowing. Drainage from the dark side.</div>'+
-        '<div class="proc-step"><strong>3. C(N, n) \u2014 all hands.</strong> Total ways to draw n from N. Alle verdener.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Gunstige over mulige. Three Drainages \u2014 two in the teller, one in the nevner.</div>'+
+        '<p>Two counts multiplied in the teller, one count in the nevner. Here is the shape before any numbers land.</p>'+
+        hypFormula(false)+
+        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
+        '<div class="proc-step"><strong>Move 1 \u2014 C(M, k), glowing pool.</strong> How many ways to pick k glowing from the M that exist. Drainage from the light side.</div>'+
+        '<div class="proc-step"><strong>Move 2 \u2014 C(N\u2212M, n\u2212k), dark pool.</strong> How many ways to fill the rest of the hand with non-glowing. Drainage from the dark side.</div>'+
+        '<div class="proc-step"><strong>Move 3 \u2014 C(N, n), all hands.</strong> Total ways to draw n from N, alle verdener. This is the nevner.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 divide. Glowing \u00D7 dark, over all hands = the weight sitting on that door. Gunstige over mulige.</div>'+
         '</div></div>';
     if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<div class="data-card"><table class="data-table">'+
+        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
+        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
         '<tr><th>N (total)</th><th>M (glowing)</th><th>n (drawn)</th><th>k (asking)</th><th>Center (nM/N)</th></tr>'+
         '<tr><td>26</td><td>13</td><td>8</td><td>4</td><td>4</td></tr>'+
         '</table></div>'+
-        '<p><strong>Three Drainages:</strong></p>'+
-        '<p>C(13, 4) \u2192 glowing pool</p>'+
-        '<p>C(13, 4) \u2192 dark pool</p>'+
-        '<p>C(26, 8) \u2192 all hands</p>'+
+        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
+        '<div class="d-line"><strong>N = 26</strong> \u2014 handed to you. The problem names the whole pool: twenty-six in total.</div>'+
+        '<div class="d-line"><strong>M = 13</strong> \u2014 handed to you. The problem says how many of the pool are glowing: thirteen.</div>'+
+        '<div class="d-line"><strong>n = 8</strong> \u2014 handed to you. The problem says how many you draw: eight.</div>'+
+        '<div class="d-line"><strong>k = 4</strong> \u2014 handed to you. This is the exact outcome the question asks about: four glowing.</div>'+
+        '<div class="d-line"><strong>N\u2212M = 13</strong> \u2014 not handed to you. You subtract to get it: 26 \u2212 13 = 13. Whatever is not glowing is the dark pile.</div>'+
+        '<div class="d-line"><strong>n\u2212k = 4</strong> \u2014 not handed to you. You subtract: 8 \u2212 4 = 4. The seats in the hand not taken by glowing are filled from the dark.</div>'+
+        '</div>'+
+        '<p><strong>The three pieces to build:</strong></p>'+
+        '<p>C(13, 4) \u2192 glowing pool, k from M</p>'+
+        '<p>C(13, 4) \u2192 dark pool, n\u2212k from N\u2212M</p>'+
+        '<p>C(26, 8) \u2192 all hands, n from N</p>'+
         '</div>';}
     markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        '<div class="derivation"><div class="d-label">Glowing pool</div>'+
-        '<div class="d-line">C(13, 4) = 13! \u00F7 (4! \u00B7 9!) = <strong>715</strong></div></div>'+
-        '<div class="derivation"><div class="d-label">Dark pool</div>'+
-        '<div class="d-line">C(13, 4) = <strong>715</strong></div></div>'+
-        '<div class="derivation"><div class="d-label">All hands</div>'+
-        '<div class="d-line">C(26, 8) = <strong>1\u202F562\u202F275</strong></div></div>'+
-        '<div class="result-box"><div class="result-box-name">P(X = 4)</div>'+
-        '<div class="result-box-value">(715 \u00D7 715) \u00F7 1\u202F562\u202F275 = 0.3272</div>'+
-        '<div class="result-box-desc">32.7% at center. The peak. Almost the same shape as binomial, but the shrinking pool squeezes the bell slightly tighter.</div>'+
+        hypFormula(true)+
+        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 glowing pool \u00B7 C(13, 4)</div>'+
+        '<div class="d-line">C(13, 4) = 13! \u00F7 (4! \u00B7 9!)</div>'+
+        '<div class="d-line">the 9! cancels the top \u2192 (13 \u00B7 12 \u00B7 11 \u00B7 10) \u00F7 (4 \u00B7 3 \u00B7 2 \u00B7 1)</div>'+
+        '<div class="d-line">top: 13 \u00B7 12 \u00B7 11 \u00B7 10 = 17160</div>'+
+        '<div class="d-line">bottom: 4 \u00B7 3 \u00B7 2 \u00B7 1 = 24</div>'+
+        '<div class="d-line">17160 \u00F7 24 = <strong style="color:#a78bfa">715</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">M and k feed this. 715 is how many ways four glowing can be picked from the thirteen that exist.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 dark pool \u00B7 C(13, 4)</div>'+
+        '<div class="d-line">first the dark pile: N \u2212 M = 26 \u2212 13 = 13</div>'+
+        '<div class="d-line">then the seats to fill: n \u2212 k = 8 \u2212 4 = 4</div>'+
+        '<div class="d-line">C(13, 4) = <strong style="color:#22c55e">715</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">same shape as Move 1, and here the same numbers by chance: four non-glowing picked from the thirteen dark.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 all hands \u00B7 C(26, 8)</div>'+
+        '<div class="d-line">C(26, 8) = 26! \u00F7 (8! \u00B7 18!)</div>'+
+        '<div class="d-line">C(26, 8) = <strong style="color:#3b82f6">1\u202F562\u202F275</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">N and n feed this. Every possible hand of eight drawn from the twenty-six, glowing or not.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 divide</div>'+
+        '<div class="d-line">teller: 715 \u00D7 715 = 511\u202F225</div>'+
+        '<div class="d-line">511\u202F225 \u00F7 1\u202F562\u202F275 = <strong style="color:#f59e0b">0.3272</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">glowing \u00D7 dark, over all hands = the weight on door 4.</div></div>'+
+        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X = 4)</div>'+
+        '<div class="result-box-value" style="color:#f59e0b">P(X = 4) = 0.3272</div>'+
+        '<div class="result-box-desc">32.7% at the center of the bell. The peak. Almost the same shape as binomial, but the shrinking pool squeezes the bell slightly tighter.</div>'+
         '</div></div>';
 }
 
