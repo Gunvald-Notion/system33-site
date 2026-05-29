@@ -274,6 +274,22 @@ function poiFormula(filled){
         pc(m4,'Move 4 \u00B7 weight','a')+
         '</div>';
 }
+function norFormula(filled){
+    var m1=filled?'10':'X\u2212\u03BC';
+    var m2=filled?'7':'\u03C3';
+    var m3=filled?'1.43':'z';
+    var m4=filled?'0.9236':'area';
+    return '<div class="formula-viz">'+
+        '<span class="formula-lhs">z =</span>'+
+        pc(m1,'Move 1 \u00B7 distance','m')+
+        '<span class="formula-op">\u00F7</span>'+
+        pc(m2,'Move 2 \u00B7 stretch','o')+
+        '<span class="formula-op">=</span>'+
+        pc(m3,'Move 3 \u00B7 z-score','b')+
+        '<span class="formula-op">\u2192</span>'+
+        pc(m4,'Move 4 \u00B7 area','a')+
+        '</div>';
+}
 
 /* === BINOMIAL STEPS === */
 function binStep(s){
@@ -496,42 +512,66 @@ function poiStep(s){
 /* === NORMAL STEPS === */
 function norStep(s){
     if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p>They told you directly (<strong>"normalfordelt"</strong>), or you\'re summing many independent things (sentralgrensesetningen). Continuous measurement \u2014 no discrete doors.</p>'+
-        '<p>You\'re asking: how much energy sits between two points on the bell?</p>'+
+        '<p><strong>What this distribution is for.</strong> They told you directly (<strong>normalfordelt</strong>), or you are summing many independent things (sentralgrensesetningen, the central limit). This is continuous measurement \u2014 no discrete doors, no counting. The job is to find how much of the bell sits on one side of where you stand: the area under the curve up to your point.</p>'+
+        '<p><strong>How it works.</strong> You cannot read the area off the raw measurement, because every normal bell has its own center and its own stretch. So you first convert your point to a standard score \u2014 how many stretches from center you stand. That number is z. Once you are on the standard bell, one fixed z-table holds the area for every possible point.</p>'+
+        '<p><strong>Why it is able to do that.</strong> Because every normal bell is the same shape, only shifted and scaled. Subtract the center and divide by the stretch, and any bell collapses onto the one standard bell where \u03BC = 0 and \u03C3 = 1. That is why a single table can answer every normal question \u2014 the standardizing is what makes them all the same curve.</p>'+
         '<p style="color:var(--accent);font-weight:500;margin-top:12px">z = (X \u2212 \u03BC) / \u03C3 &nbsp;&nbsp;\u2192&nbsp;&nbsp; z-table</p>'+
+        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
+        '<div class="d-line"><strong>\u03BC</strong> \u2014 the center of the bell, the average (here 180)</div>'+
+        '<div class="d-line"><strong>\u03C3</strong> \u2014 the stretch, one standard step out from center (here 7)</div>'+
+        '<div class="d-line"><strong>X</strong> \u2014 the point you are standing at (here 190)</div>'+
+        '<div class="d-line"><strong>X \u2212 \u03BC</strong> \u2014 the distance from center, how far your point sits from the middle</div>'+
+        '<div class="d-line"><strong>z</strong> \u2014 the standard score, that distance measured in stretches</div>'+
+        '<div class="d-line"><strong>area</strong> \u2014 the slice of the bell the z-table hands back, the weight up to your point</div></div>'+
         '</div>';
     if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>Two operations.</p>'+
-        '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-        '<div class="proc-step"><strong>1. (X \u2212 \u03BC) \u2014 distance from center.</strong> How far is this point from the middle of the bell? Negative if below, positive if above.</div>'+
-        '<div class="proc-step"><strong>2. \u00F7 \u03C3 \u2014 convert to standard units.</strong> Divide the distance by one stretch. Now you know how many stretches from center you are. The result is z \u2014 a number on the standard bell where \u03BC = 0 and \u03C3 = 1.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">The z-table gives you the area under the bell to the left of where you stand.</div>'+
+        '<p>One subtraction, one division, then a lookup. Here is the shape before any numbers land.</p>'+
+        norFormula(false)+
+        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
+        '<div class="proc-step"><strong>Move 1 \u2014 X \u2212 \u03BC, distance from center.</strong> How far is your point from the middle of the bell? Negative if below, positive if above.</div>'+
+        '<div class="proc-step"><strong>Move 2 \u2014 \u00F7 \u03C3, convert to stretches.</strong> Divide the distance by one stretch. Now the distance is measured in standard steps, not raw units.</div>'+
+        '<div class="proc-step"><strong>Move 3 \u2014 z, the standard score.</strong> The result lands you on the standard bell where \u03BC = 0 and \u03C3 = 1. This is the number the table reads.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 z-table. Look up z and the table hands back the area under the bell to the left of where you stand.</div>'+
         '</div>'+
         '<div class="proc-block"><div class="proc-title">The 68\u201395\u201399.7 rule</div>'+
         '<div class="proc-step">68% within \u00B11\u03C3. 95% within \u00B12\u03C3. 99.7% within \u00B13\u03C3. This gives you instant orientation before you even touch the z-table.</div>'+
         '</div></div>';
     if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<div class="data-card"><table class="data-table">'+
-        '<tr><th>\u03BC (center)</th><th>\u03C3 (stretch)</th><th>X (standing at)</th></tr>'+
-        '<tr><td>180</td><td>7</td><td>190</td></tr>'+
+        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
+        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
+        '<tr><th>\u03BC (center)</th><th>\u03C3 (stretch)</th><th>X (standing at)</th><th>Distance (X\u2212\u03BC)</th></tr>'+
+        '<tr><td>180</td><td>7</td><td>190</td><td>10</td></tr>'+
         '</table></div>'+
-        '<p>You\'re standing at 190 and asking: <strong>how much of the bell is below me?</strong></p>'+
-        '<p><strong>Two plugs:</strong></p>'+
-        '<p>X \u2212 \u03BC = 190 \u2212 180 \u2192 distance</p>'+
-        '<p>\u00F7 \u03C3 = \u00F7 7 \u2192 standardize</p>'+
+        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
+        '<div class="d-line"><strong>\u03BC = 180</strong> \u2014 handed to you. The problem names the center of the bell directly: the average is 180.</div>'+
+        '<div class="d-line"><strong>\u03C3 = 7</strong> \u2014 handed to you. The problem gives the stretch, one standard step from center: 7.</div>'+
+        '<div class="d-line"><strong>X = 190</strong> \u2014 handed to you. This is the point the question asks about: standing at 190.</div>'+
+        '<div class="d-line"><strong>X \u2212 \u03BC = 10</strong> \u2014 not handed to you. You subtract: 190 \u2212 180 = 10. Ten raw units above the center.</div>'+
+        '</div>'+
+        '<p><strong>The pieces to build:</strong></p>'+
+        '<p>190 \u2212 180 \u2192 distance, X minus \u03BC</p>'+
+        '<p>\u00F7 7 \u2192 standardize, distance over \u03C3</p>'+
+        '<p>z-table \u2192 area, look up the z-score</p>'+
         '</div>';}
     markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        '<div class="derivation"><div class="d-label">Distance from center</div>'+
-        '<div class="d-line">190 \u2212 180 = <strong>10</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">Ten units above center.</div></div>'+
-        '<div class="derivation"><div class="d-label">Convert to stretches</div>'+
-        '<div class="d-line">10 \u00F7 7 = <strong>1.43</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">About one and a half stretches above center.</div></div>'+
-        '<div class="derivation"><div class="d-label">Z-table lookup</div>'+
-        '<div class="d-line">z = 1.43 \u2192 <strong>0.9236</strong></div></div>'+
-        '<div class="result-box"><div class="result-box-name">P(X \u2264 190)</div>'+
-        '<div class="result-box-value" style="color:var(--green)">92.4% of the bell sits below you</div>'+
-        '<div class="result-box-desc">You\'re standing on the right slope, above most of the weight. Only 7.6% of the energy is further right.</div>'+
+        norFormula(true)+
+        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 distance from center \u00B7 X \u2212 \u03BC</div>'+
+        '<div class="d-line">X \u2212 \u03BC = 190 \u2212 180</div>'+
+        '<div class="d-line">190 \u2212 180 = <strong style="color:#a78bfa">10</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">X and \u03BC feed this. Ten raw units above the center of the bell.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 convert to stretches \u00B7 \u00F7 \u03C3</div>'+
+        '<div class="d-line">one stretch is \u03C3 = 7</div>'+
+        '<div class="d-line">10 \u00F7 7 = <strong style="color:#22c55e">1.43</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">the distance divided by one stretch. Ten units is about one and a half stretches out.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 the standard score \u00B7 z</div>'+
+        '<div class="d-line">z = <strong style="color:#3b82f6">1.43</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">this is where you stand on the standard bell, \u03BC = 0 and \u03C3 = 1. The number the table reads.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 z-table lookup</div>'+
+        '<div class="d-line">z = 1.43 \u2192 <strong style="color:#f59e0b">0.9236</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">the table hands back the area to the left. 0.9236 of the bell sits below you.</div></div>'+
+        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X \u2264 190)</div>'+
+        '<div class="result-box-value" style="color:#f59e0b">P(X \u2264 190) = 0.9236</div>'+
+        '<div class="result-box-desc">92.4% of the bell sits below you. You are standing on the right slope, above most of the weight. Only 7.6% of the energy is further right.</div>'+
         '</div></div>';
 }
 
