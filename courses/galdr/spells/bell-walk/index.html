@@ -271,14 +271,27 @@ function binStep(s){
         '</div>';}
     markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
         binFormula(true)+
-        '<div class="derivation"><div class="d-label">Move 1 \u2014 patterns</div>'+
-        '<div class="d-line">C(10, 6) = 10! \u00F7 (6! \u00B7 4!) = <strong>210</strong></div></div>'+
-        '<div class="derivation"><div class="d-label">Move 2 \u2014 success energy</div>'+
-        '<div class="d-line">0.6<sup>6</sup> = 0.6 \u00D7 0.6 \u00D7 0.6 \u00D7 0.6 \u00D7 0.6 \u00D7 0.6 = <strong>0.04666</strong></div></div>'+
-        '<div class="derivation"><div class="d-label">Move 3 \u2014 failure energy</div>'+
-        '<div class="d-line">0.4<sup>4</sup> = 0.4 \u00D7 0.4 \u00D7 0.4 \u00D7 0.4 = <strong>0.0256</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">Move 1 \u2014 patterns \u00B7 C(10, 6)</div>'+
+        '<div class="d-line">C(10, 6) = 10! \u00F7 (6! \u00B7 4!)</div>'+
+        '<div class="d-line">the 6! cancels the top \u2192 (10 \u00B7 9 \u00B7 8 \u00B7 7) \u00F7 (4 \u00B7 3 \u00B7 2 \u00B7 1)</div>'+
+        '<div class="d-line">top: 10 \u00B7 9 \u00B7 8 \u00B7 7 = 5040</div>'+
+        '<div class="d-line">bottom: 4 \u00B7 3 \u00B7 2 \u00B7 1 = 24</div>'+
+        '<div class="d-line">5040 \u00F7 24 = <strong>210</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">Move 2 \u2014 success energy \u00B7 0.6<sup>6</sup></div>'+
+        '<div class="d-line">0.6 \u00D7 0.6 = 0.36</div>'+
+        '<div class="d-line">0.36 \u00D7 0.6 = 0.216</div>'+
+        '<div class="d-line">0.216 \u00D7 0.6 = 0.1296</div>'+
+        '<div class="d-line">0.1296 \u00D7 0.6 = 0.07776</div>'+
+        '<div class="d-line">0.07776 \u00D7 0.6 = <strong>0.046656</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">Move 3 \u2014 failure energy \u00B7 0.4<sup>4</sup></div>'+
+        '<div class="d-line">0.4 \u00D7 0.4 = 0.16</div>'+
+        '<div class="d-line">0.16 \u00D7 0.4 = 0.064</div>'+
+        '<div class="d-line">0.064 \u00D7 0.4 = <strong>0.0256</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">Move 4 \u2014 multiply the three</div>'+
+        '<div class="d-line">210 \u00D7 0.046656 = 9.798</div>'+
+        '<div class="d-line">9.798 \u00D7 0.0256 = <strong>0.2508</strong></div></div>'+
         '<div class="result-box"><div class="result-box-name">Move 4 \u2014 P(X = 6)</div>'+
-        '<div class="result-box-value">210 \u00D7 0.04666 \u00D7 0.0256 = 0.2508</div>'+
+        '<div class="result-box-value">P(X = 6) = 0.2508</div>'+
         '<div class="result-box-desc">25.1% at the center of the bell. The peak. The heaviest door. Move one step away and the weight drops.</div>'+
         '</div></div>';
 }
