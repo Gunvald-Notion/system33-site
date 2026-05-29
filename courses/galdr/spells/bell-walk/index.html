@@ -258,6 +258,22 @@ function hypFormula(filled){
         pc(m4,'Move 4 \u00B7 weight','a')+
         '</div>';
 }
+function poiFormula(filled){
+    var m1=filled?'4096':'\u03BB<sup>k</sup>';
+    var m2=filled?'0.0183':'e<sup>\u2212\u03BB</sup>';
+    var m3=filled?'720':'k!';
+    var m4=filled?'0.1042':'P(X=k)';
+    return '<div class="formula-viz">'+
+        '<span class="formula-lhs">P(X = k) =</span>'+
+        pc(m1,'Move 1 \u00B7 raw energy','m')+
+        '<span class="formula-op">\u00D7</span>'+
+        pc(m2,'Move 2 \u00B7 the void','o')+
+        '<span class="formula-op">\u00F7</span>'+
+        pc(m3,'Move 3 \u00B7 factorial','b')+
+        '<span class="formula-op">=</span>'+
+        pc(m4,'Move 4 \u00B7 weight','a')+
+        '</div>';
+}
 
 /* === BINOMIAL STEPS === */
 function binStep(s){
@@ -409,40 +425,71 @@ function hypStep(s){
 /* === POISSON STEPS === */
 function poiStep(s){
     if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p>They gave you an <strong>average rate</strong> (\u03BB) over a <strong>window</strong>. No fixed count of tries. No box. Just things arriving on their own time.</p>'+
-        '<p>You\'re asking: how much energy sits at count k \u2014 how far from the rhythm?</p>'+
+        '<p><strong>What this distribution is for.</strong> They gave you an <strong>average rate</strong> (\u03BB, lambda) over a <strong>window</strong> \u2014 events arriving on their own time. No fixed count of tries, no box, no percentage per try. Just a rhythm and a window. The job is to find how much weight sits on one exact count: k events landing in the window.</p>'+
+        '<p><strong>How it works.</strong> Three forces decide the weight. The rhythm raised to the count pushes energy outward. The void, the chance of total silence, pulls everything back down. The factorial strips out ordering, because the same events in a different order are the same outcome. Multiply the first two, divide by the third, and you have the weight on door k.</p>'+
+        '<p><strong>Why it is able to do that.</strong> Because events arrive independently and the window is fixed, the chance of one specific timeline with k events is the rhythm multiplied k times, scaled by the weight of silence. Every ordering of those k events is the same outcome, so you fold them together by dividing by k!. That is what leaves a clean weight on the count.</p>'+
         '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = \u03BB<sup>k</sup> &middot; e<sup>\u2212\u03BB</sup> / k!</p>'+
+        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
+        '<div class="d-line"><strong>\u03BB</strong> \u2014 the average rate over the window (here 4)</div>'+
+        '<div class="d-line"><strong>k</strong> \u2014 the exact count you are asking about (here 6)</div>'+
+        '<div class="d-line"><strong>\u03BB<sup>k</sup></strong> \u2014 the rhythm raised to the count, raw energy</div>'+
+        '<div class="d-line"><strong>e<sup>\u2212\u03BB</sup></strong> \u2014 the void, the chance of total silence in the window</div>'+
+        '<div class="d-line"><strong>k!</strong> \u2014 the factorial, all the orderings of k events folded into one</div>'+
+        '<div class="d-line"><strong>P(X = k)</strong> \u2014 the weight sitting on door k</div></div>'+
         '</div>';
     if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>Three forces.</p>'+
-        '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-        '<div class="proc-step"><strong>1. \u03BB<sup>k</sup> \u2014 raw energy.</strong> The rhythm raised to the count. This pushes you away from center. The further from the average, the more the rhythm multiplies into itself.</div>'+
-        '<div class="proc-step"><strong>2. e<sup>\u2212\u03BB</sup> \u2014 the void.</strong> The weight of silence. The probability that nothing shows up in the whole window. Everything that happened had to climb out of this.</div>'+
-        '<div class="proc-step"><strong>3. k! \u2014 the factorial.</strong> Strips out ordering. A raindrop at minute 2 then minute 7 is the same as minute 7 then minute 2. Divide by all the arrangements.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Energy pushes out. Void pulls back. Factorial cleans up. What survives is the weight.</div>'+
+        '<p>Two forces multiplied, one that divides them down. Here is the shape before any numbers land.</p>'+
+        poiFormula(false)+
+        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
+        '<div class="proc-step"><strong>Move 1 \u2014 \u03BB<sup>k</sup>, raw energy.</strong> The rhythm raised to the count. The further past center you stand, the more the rhythm multiplies into itself.</div>'+
+        '<div class="proc-step"><strong>Move 2 \u2014 e<sup>\u2212\u03BB</sup>, the void.</strong> The weight of silence, the chance nothing shows up in the whole window. Everything that happened had to climb out of this.</div>'+
+        '<div class="proc-step"><strong>Move 3 \u2014 k!, the factorial.</strong> Strips out ordering. An event at minute 2 then minute 7 is the same as minute 7 then minute 2, so divide by all the arrangements.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 combine. Raw energy \u00D7 void, over the factorial = the weight sitting on that door.</div>'+
         '</div></div>';
     if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<div class="data-card"><table class="data-table">'+
+        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
+        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
         '<tr><th>\u03BB (rhythm)</th><th>k (count)</th><th>Center (\u03BB)</th></tr>'+
         '<tr><td>4</td><td>6</td><td>4</td></tr>'+
         '</table></div>'+
-        '<p>Standing at k = 6 \u2014 <strong>two steps past center.</strong></p>'+
-        '<p><strong>Three plugs:</strong></p>'+
-        '<p>4<sup>6</sup> \u2192 raw energy</p>'+
-        '<p>e<sup>\u22124</sup> \u2192 the void</p>'+
-        '<p>6! \u2192 the factorial</p>'+
+        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
+        '<div class="d-line"><strong>\u03BB = 4</strong> \u2014 handed to you. The problem gives the average rate over the window directly: four on average.</div>'+
+        '<div class="d-line"><strong>k = 6</strong> \u2014 handed to you. This is the exact count the question asks about: six events.</div>'+
+        '<div class="d-line"><strong>Center = 4</strong> \u2014 not handed as a separate number. For Poisson the center is just the rhythm itself, so \u03BB = 4 is also the middle of the bell. Standing at k = 6 is two steps past center.</div>'+
+        '</div>'+
+        '<p><strong>The three pieces to build:</strong></p>'+
+        '<p>4<sup>6</sup> \u2192 raw energy, \u03BB raised to k</p>'+
+        '<p>e<sup>\u22124</sup> \u2192 the void, e to the minus \u03BB</p>'+
+        '<p>6! \u2192 the factorial, k!</p>'+
         '</div>';}
     markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        '<div class="derivation"><div class="d-label">Raw energy</div>'+
-        '<div class="d-line">4<sup>6</sup> = 4 \u00D7 4 \u00D7 4 \u00D7 4 \u00D7 4 \u00D7 4 = <strong>4096</strong></div></div>'+
-        '<div class="derivation"><div class="d-label">The void</div>'+
-        '<div class="d-line">e<sup>\u22124</sup> \u2248 <strong>0.0183</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">Only 1.83% chance of total silence. Busy rhythm.</div></div>'+
-        '<div class="derivation"><div class="d-label">The factorial</div>'+
-        '<div class="d-line">6! = 6 \u00D7 5 \u00D7 4 \u00D7 3 \u00D7 2 \u00D7 1 = <strong>720</strong></div></div>'+
-        '<div class="result-box"><div class="result-box-name">P(X = 6)</div>'+
-        '<div class="result-box-value">(4096 \u00D7 0.0183) \u00F7 720 = 0.1042</div>'+
-        '<div class="result-box-desc">10.4% two steps past center. Still catching real weight \u2014 about one in ten windows looks like this. Move to door 10 and the energy nearly vanishes.</div>'+
+        poiFormula(true)+
+        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 raw energy \u00B7 4<sup>6</sup></div>'+
+        '<div class="d-line">4 \u00D7 4 = 16</div>'+
+        '<div class="d-line">16 \u00D7 4 = 64</div>'+
+        '<div class="d-line">64 \u00D7 4 = 256</div>'+
+        '<div class="d-line">256 \u00D7 4 = 1024</div>'+
+        '<div class="d-line">1024 \u00D7 4 = <strong style="color:#a78bfa">4096</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">\u03BB raised to k. The rhythm 4 multiplied by itself six times, one for each event.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 the void \u00B7 e<sup>\u22124</sup></div>'+
+        '<div class="d-line">e<sup>\u22124</sup> = 1 \u00F7 e<sup>4</sup></div>'+
+        '<div class="d-line">e<sup>4</sup> \u2248 54.598</div>'+
+        '<div class="d-line">1 \u00F7 54.598 = <strong style="color:#22c55e">0.018316</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">keep the unrounded 0.018316 for the final multiply. Rounding to 0.0183 too early drifts the answer off by a hair.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 the factorial \u00B7 6!</div>'+
+        '<div class="d-line">6 \u00D7 5 = 30</div>'+
+        '<div class="d-line">30 \u00D7 4 = 120</div>'+
+        '<div class="d-line">120 \u00D7 3 = 360</div>'+
+        '<div class="d-line">360 \u00D7 2 = 720</div>'+
+        '<div class="d-line">720 \u00D7 1 = <strong style="color:#3b82f6">720</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">all the orderings of six events folded into one. Order does not matter, so divide them out.</div></div>'+
+        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 combine</div>'+
+        '<div class="d-line">teller: 4096 \u00D7 0.018316 = 75.02</div>'+
+        '<div class="d-line">75.02 \u00F7 720 = <strong style="color:#f59e0b">0.1042</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">raw energy \u00D7 void, over the factorial = the weight on door 6.</div></div>'+
+        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X = 6)</div>'+
+        '<div class="result-box-value" style="color:#f59e0b">P(X = 6) = 0.1042</div>'+
+        '<div class="result-box-desc">10.4% two steps past center. Still catching real weight \u2014 about one in ten windows looks like this. Move out to door 10 and the energy nearly vanishes.</div>'+
         '</div></div>';
 }
 
