@@ -5,6 +5,7 @@
     function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
     function r2(n){return Math.round(n*100)/100;}
     function r4(n){return Math.round(n*10000)/10000;}
+    function rdp(n,dp){var f=Math.pow(10,dp);return Math.round(n*f)/f;}
     function sv(n){return r2(n).toString();}
 
     function genZ(){
@@ -55,11 +56,24 @@
             centerLabel:'p\u0302',phat:phat,center:phat*100,spreadLabel:null,
             stretchName:'z',stretch:cc.z,conf:cc.p,df:null,
             wobbleProp:wp,Eprop:Ep,wobble:wp*100,
-            E:Ep*100,left:(phat-Ep)*100,right:(phat+Ep)*100,unit:'%',tol:0.2,
+            E:Ep*100,left:(phat-Ep)*100,right:(phat+Ep)*100,unit:'%',tol:0.15,
             ans:{e:false,frame:false}};
     }
 
     function gen(m){if(m==='zki')return genZ();if(m==='tki')return genT();if(m==='pki')return genP();return null;}
+
+    /* Acceptance band for E: spans the answers you get from rounding the wobble
+       to 2, 3, 4 decimals or keeping it exact. For the mean intervals the wobble
+       is exact, so the band collapses to a single value. */
+    function eBand(d){
+        if(d.isProp){
+            var ws=[d.wobbleProp,rdp(d.wobbleProp,4),rdp(d.wobbleProp,3),rdp(d.wobbleProp,2)];
+            var lo=Infinity,hi=-Infinity;
+            for(var i=0;i<ws.length;i++){var e=d.stretch*ws[i]*100;if(e<lo)lo=e;if(e>hi)hi=e;}
+            return {lo:lo,hi:hi};
+        }
+        return {lo:d.E,hi:d.E};
+    }
 
     function dataCard(d){
         if(d.mode==='zki'){
@@ -88,19 +102,21 @@
     function eWalk(d){
         if(d.isProp){
             return '<div class="d-line">wobble = \u221A(p\u0302(1\u2212p\u0302)/n) = \u221A('+d.phat+' \u00D7 '+r2(1-d.phat)+' / '+d.n+') = '+r4(d.wobbleProp)+'</div>'+
-                '<div class="d-line">E = z \u00D7 wobble = '+d.stretch+' \u00D7 '+r4(d.wobbleProp)+' = '+r4(d.Eprop)+' \u2192 '+sv(d.E)+'%</div>';
+                '<div class="d-line">E = z \u00D7 wobble = '+d.stretch+' \u00D7 '+r4(d.wobbleProp)+' = '+r4(d.Eprop)+' \u2192 '+sv(d.E)+'%</div>'+
+                '<div class="d-line" style="color:var(--muted)">Keep 4 decimals in the wobble - rounding it early is what shifts E around.</div>';
         }
         return '<div class="d-line">wobble = '+d.spreadLabel+'/\u221An = '+sv(d.spread)+'/'+d.sqrtN+' = '+sv(d.wobble)+'</div>'+
             '<div class="d-line">E = '+d.stretchName+' \u00D7 wobble = '+d.stretch+' \u00D7 '+sv(d.wobble)+' = '+sv(d.E)+'</div>';
     }
 
     function u(d){return d.unit;}
+    function bnd(lo,hi,d){if(Math.abs(hi-lo)<0.005)return sv(lo)+u(d);return sv(lo)+u(d)+' to '+sv(hi)+u(d);}
 
     function testHtml(m){
         var d=TS[m];
         if(!d)return '<div class="step-content"><h3>Test</h3><p>Loading.</p></div>';
         return '<div class="step-content"><h3>Test</h3>'+
-            '<p>Fresh random data each attempt. Build the confidence interval in two moves: first the margin, then the walls.</p>'+
+            '<p>Fresh random data each attempt. Build the confidence interval in two moves: first the margin, then the walls. Round to 2 decimals - a range of reasonable rounding is accepted, and it is shown to you when you check.</p>'+
             dataCard(d)+
             '<div class="derivation"><div class="d-label">Step 1 \u2014 the margin of error</div>'+
             '<div class="d-line">'+formulaLine(d)+'</div>'+
@@ -127,12 +143,14 @@
         if(eBtn)eBtn.addEventListener('click',function(){
             var val=parseFloat(eIn.value);
             if(isNaN(val)){eFb.innerHTML='<span style="color:var(--muted)">Enter a number first.</span>';return;}
-            if(Math.abs(val-d.E)<=d.tol){
+            var eb=eBand(d);var C=d.tol;
+            var alo=eb.lo-C,ahi=eb.hi+C;
+            if(val>=alo&&val<=ahi){
                 d.ans.e=true;
-                eFb.innerHTML='<span style="color:var(--green)">Correct. E = '+sv(d.E)+u(d)+'.</span>';
+                eFb.innerHTML='<span style="color:var(--green)">Correct. E \u2248 '+sv(d.E)+u(d)+' (accepted '+bnd(alo,ahi,d)+').</span>';
                 frameWrap.style.display='block';
             }else{
-                eFb.innerHTML='<span style="color:var(--red)">Not quite. The walk:</span>'+eWalk(d);
+                eFb.innerHTML='<span style="color:var(--red)">Not quite \u2014 accepted range is '+bnd(alo,ahi,d)+'. The walk:</span>'+eWalk(d);
             }
         });
         var lIn=document.getElementById('wf-left-in');
@@ -143,13 +161,16 @@
             var lv=parseFloat(lIn.value);
             var rv=parseFloat(rIn.value);
             if(isNaN(lv)||isNaN(rv)){fFb.innerHTML='<span style="color:var(--muted)">Enter both walls first.</span>';return;}
-            var lok=Math.abs(lv-d.left)<=d.tol;
-            var rok=Math.abs(rv-d.right)<=d.tol;
+            var eb=eBand(d);var C=d.tol;
+            var lLo=d.center-eb.hi-C,lHi=d.center-eb.lo+C;
+            var rLo=d.center+eb.lo-C,rHi=d.center+eb.hi+C;
+            var lok=lv>=lLo&&lv<=lHi;
+            var rok=rv>=rLo&&rv<=rHi;
             if(lok&&rok){
                 d.ans.frame=true;
                 fFb.innerHTML='<span style="color:var(--green)">Correct. KI = ['+sv(d.left)+u(d)+' , '+sv(d.right)+u(d)+'].</span>';
             }else{
-                fFb.innerHTML='<span style="color:var(--red)">Look again.</span>'+
+                fFb.innerHTML='<span style="color:var(--red)">Look again \u2014 accepted left '+bnd(lLo,lHi,d)+', accepted right '+bnd(rLo,rHi,d)+'.</span>'+
                     '<div class="d-line">Left = '+d.centerLabel+' \u2212 E = '+sv(d.center)+u(d)+' \u2212 '+sv(d.E)+u(d)+' = '+sv(d.left)+u(d)+'</div>'+
                     '<div class="d-line">Right = '+d.centerLabel+' + E = '+sv(d.center)+u(d)+' + '+sv(d.E)+u(d)+' = '+sv(d.right)+u(d)+'</div>';
             }
