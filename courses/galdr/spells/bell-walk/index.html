@@ -246,9 +246,17 @@ function binFormula(filled){
 /* === BINOMIAL STEPS === */
 function binStep(s){
     if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p>They gave you a <strong>count of tries</strong> (n) and a <strong>probability per try</strong> (p). Count + percentage = binomial.</p>'+
-        '<p>You\'re asking: how much energy sits at door k \u2014 how far is k from the center np?</p>'+
+        '<p><strong>What this distribution is for.</strong> They gave you a fixed <strong>count of tries</strong> (n) and a <strong>probability per try</strong> (p) that stays the same every time. Count plus percentage, with the tries independent, is the signature of binomial. The job is to find how much weight sits on one exact outcome: getting k successes out of n tries.</p>'+
+        '<p><strong>How it works.</strong> Every try is the same biased coin. You are asking for the chance of landing exactly k successes. Three forces decide that weight: how many arrangements give k successes, how costly those k successes are, and how costly the n\u2212k failures are. Multiply the three and you have the weight on door k.</p>'+
+        '<p><strong>Why it is able to do that.</strong> Because the tries do not affect each other, the chance of one specific sequence is just p multiplied k times and (1\u2212p) multiplied n\u2212k times. Every sequence with k successes carries that same chance, so you count how many such sequences exist and multiply. That count is C(n, k).</p>'+
         '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = C(n,k) &middot; p<sup>k</sup> &middot; (1\u2212p)<sup>n\u2212k</sup></p>'+
+        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
+        '<div class="d-line"><strong>n</strong> \u2014 the count of tries (here 10 walks)</div>'+
+        '<div class="d-line"><strong>p</strong> \u2014 the chance of success on one try (here 0.6)</div>'+
+        '<div class="d-line"><strong>k</strong> \u2014 the number of successes you are asking about (here 6)</div>'+
+        '<div class="d-line"><strong>1\u2212p</strong> \u2014 the chance of failure, the flip of p (here 0.4)</div>'+
+        '<div class="d-line"><strong>C(n, k)</strong> \u2014 how many arrangements give k successes among n tries</div>'+
+        '<div class="d-line"><strong>P(X = k)</strong> \u2014 the weight sitting on door k</div></div>'+
         '</div>';
     if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
         '<p>Three pieces multiplied into one weight. Here is the shape before any numbers land.</p>'+
@@ -260,14 +268,21 @@ function binStep(s){
         '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 multiply. Patterns \u00D7 success-energy \u00D7 failure-energy = the weight sitting on that door.</div>'+
         '</div></div>';
     if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<div class="data-card"><table class="data-table">'+
+        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
+        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
         '<tr><th>n (tries)</th><th>p (per try)</th><th>k (asking about)</th><th>Center (np)</th></tr>'+
         '<tr><td>10</td><td>0.6</td><td>6</td><td>6</td></tr>'+
         '</table></div>'+
-        '<p><strong>Three plugs:</strong></p>'+
-        '<p>C(10, 6) \u2192 pattern counter</p>'+
-        '<p>0.6<sup>6</sup> \u2192 success energy</p>'+
-        '<p>0.4<sup>4</sup> \u2192 failure energy</p>'+
+        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
+        '<div class="d-line"><strong>n = 10</strong> \u2014 handed to you. The problem says ten walks, ten tries. This is the count.</div>'+
+        '<div class="d-line"><strong>p = 0.6</strong> \u2014 handed to you. The problem gives the success chance per try directly: 60 percent.</div>'+
+        '<div class="d-line"><strong>k = 6</strong> \u2014 handed to you. This is the exact outcome the question asks about: six successes.</div>'+
+        '<div class="d-line"><strong>1\u2212p = 0.4</strong> \u2014 not handed to you. You flip p to get it: 1 \u2212 0.6 = 0.4. If a success costs 0.6, a failure is whatever is left, the other 40 percent.</div>'+
+        '</div>'+
+        '<p><strong>The three pieces to build:</strong></p>'+
+        '<p>C(10, 6) \u2192 pattern counter, from n and k</p>'+
+        '<p>0.6<sup>6</sup> \u2192 success energy, p raised to k</p>'+
+        '<p>0.4<sup>4</sup> \u2192 failure energy, the flip raised to n\u2212k</p>'+
         '</div>';}
     markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
         binFormula(true)+
@@ -276,20 +291,25 @@ function binStep(s){
         '<div class="d-line">the 6! cancels the top \u2192 (10 \u00B7 9 \u00B7 8 \u00B7 7) \u00F7 (4 \u00B7 3 \u00B7 2 \u00B7 1)</div>'+
         '<div class="d-line">top: 10 \u00B7 9 \u00B7 8 \u00B7 7 = 5040</div>'+
         '<div class="d-line">bottom: 4 \u00B7 3 \u00B7 2 \u00B7 1 = 24</div>'+
-        '<div class="d-line">5040 \u00F7 24 = <strong>210</strong></div></div>'+
+        '<div class="d-line">5040 \u00F7 24 = <strong>210</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">n and k feed this. 210 is how many ways six successes can sit among ten tries.</div></div>'+
         '<div class="derivation"><div class="d-label">Move 2 \u2014 success energy \u00B7 0.6<sup>6</sup></div>'+
         '<div class="d-line">0.6 \u00D7 0.6 = 0.36</div>'+
         '<div class="d-line">0.36 \u00D7 0.6 = 0.216</div>'+
         '<div class="d-line">0.216 \u00D7 0.6 = 0.1296</div>'+
         '<div class="d-line">0.1296 \u00D7 0.6 = 0.07776</div>'+
-        '<div class="d-line">0.07776 \u00D7 0.6 = <strong>0.046656</strong></div></div>'+
+        '<div class="d-line">0.07776 \u00D7 0.6 = <strong>0.046656</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">p raised to k. The 0.6 came from the problem, multiplied by itself six times, one for each success.</div></div>'+
         '<div class="derivation"><div class="d-label">Move 3 \u2014 failure energy \u00B7 0.4<sup>4</sup></div>'+
+        '<div class="d-line">first flip p: 1 \u2212 0.6 = 0.4</div>'+
         '<div class="d-line">0.4 \u00D7 0.4 = 0.16</div>'+
         '<div class="d-line">0.16 \u00D7 0.4 = 0.064</div>'+
-        '<div class="d-line">0.064 \u00D7 0.4 = <strong>0.0256</strong></div></div>'+
+        '<div class="d-line">0.064 \u00D7 0.4 = <strong>0.0256</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">the flip raised to n\u2212k. Ten tries minus six successes leaves four failures, so 0.4 multiplied by itself four times.</div></div>'+
         '<div class="derivation"><div class="d-label">Move 4 \u2014 multiply the three</div>'+
         '<div class="d-line">210 \u00D7 0.046656 = 9.798</div>'+
-        '<div class="d-line">9.798 \u00D7 0.0256 = <strong>0.2508</strong></div></div>'+
+        '<div class="d-line">9.798 \u00D7 0.0256 = <strong>0.2508</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">patterns \u00D7 success energy \u00D7 failure energy = the weight on door 6.</div></div>'+
         '<div class="result-box"><div class="result-box-name">Move 4 \u2014 P(X = 6)</div>'+
         '<div class="result-box-value">P(X = 6) = 0.2508</div>'+
         '<div class="result-box-desc">25.1% at the center of the bell. The peak. The heaviest door. Move one step away and the weight drops.</div>'+
