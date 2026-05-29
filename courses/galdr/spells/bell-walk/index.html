@@ -242,54 +242,6 @@ function binFormula(filled){
         pc(m4,'Move 4 \u00B7 weight','a')+
         '</div>';
 }
-function hypFormula(filled){
-    var m1=filled?'715':'C(M, k)';
-    var m2=filled?'715':'C(N\u2212M, n\u2212k)';
-    var m3=filled?'1\u202F562\u202F275':'C(N, n)';
-    var m4=filled?'0.3272':'P(X=k)';
-    return '<div class="formula-viz">'+
-        '<span class="formula-lhs">P(X = k) =</span>'+
-        pc(m1,'Move 1 \u00B7 glowing','m')+
-        '<span class="formula-op">\u00D7</span>'+
-        pc(m2,'Move 2 \u00B7 dark','o')+
-        '<span class="formula-op">\u00F7</span>'+
-        pc(m3,'Move 3 \u00B7 all hands','b')+
-        '<span class="formula-op">=</span>'+
-        pc(m4,'Move 4 \u00B7 weight','a')+
-        '</div>';
-}
-function poiFormula(filled){
-    var m1=filled?'4096':'\u03BB<sup>k</sup>';
-    var m2=filled?'0.0183':'e<sup>\u2212\u03BB</sup>';
-    var m3=filled?'720':'k!';
-    var m4=filled?'0.1042':'P(X=k)';
-    return '<div class="formula-viz">'+
-        '<span class="formula-lhs">P(X = k) =</span>'+
-        pc(m1,'Move 1 \u00B7 energy','m')+
-        '<span class="formula-op">\u00D7</span>'+
-        pc(m2,'Move 2 \u00B7 void','o')+
-        '<span class="formula-op">\u00F7</span>'+
-        pc(m3,'Move 3 \u00B7 factorial','b')+
-        '<span class="formula-op">=</span>'+
-        pc(m4,'Move 4 \u00B7 weight','a')+
-        '</div>';
-}
-function norFormula(filled){
-    var m1=filled?'10':'X \u2212 \u03BC';
-    var m2=filled?'7':'\u03C3';
-    var m3=filled?'1.43':'z';
-    var m4=filled?'0.9236':'area';
-    return '<div class="formula-viz">'+
-        '<span class="formula-lhs">z =</span>'+
-        pc(m1,'Move 1 \u00B7 distance','m')+
-        '<span class="formula-op">\u00F7</span>'+
-        pc(m2,'Move 2 \u00B7 stretch','o')+
-        '<span class="formula-op">=</span>'+
-        pc(m3,'Move 3 \u00B7 z-score','b')+
-        '<span class="formula-op">\u2192</span>'+
-        pc(m4,'Move 4 \u00B7 area','a')+
-        '</div>';
-}
 
 /* === BINOMIAL STEPS === */
 function binStep(s){
@@ -367,132 +319,294 @@ function binStep(s){
 /* === HYPERGEOMETRIC STEPS === */
 function hypStep(s){
     if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p><strong>What this distribution is for.</strong> They gave you <strong>exact counts of types in a finite pool</strong> \u2014 M glowing out of N total \u2014 and you draw n without putting any back. Exact counts with no percentage, and a pool that shrinks with every draw, is the signature of hypergeometric. The job is to find how much weight sits on one exact outcome: holding k glowing in your hand.</p>'+
-        '<p><strong>How it works.</strong> Because nothing goes back, every draw changes what is left. You cannot raise a fixed percentage to a power the way binomial does. Instead you count: how many ways to pick your k glowing, how many ways to fill the rest of the hand with dark, and how many ways to draw the hand at all. Favourable arrangements over total arrangements.</p>'+
-        '<p><strong>Why it is able to do that.</strong> Every possible hand of n cards is equally likely, so the chance of a specific kind of hand is just the count of those hands divided by the count of all hands. That is why it is pure counting \u2014 gunstige over mulige \u2014 with no probability raised to anything.</p>'+
+        '<p>They gave you <strong>exact counts of types in a pool</strong>. M glowing out of N total. You draw n. No percentage \u2014 just numbers. The pool shrinks with every draw.</p>'+
+        '<p>You\'re asking: how much energy sits at k glowing in your hand?</p>'+
         '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = C(M,k) &middot; C(N\u2212M, n\u2212k) / C(N, n)</p>'+
-        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
-        '<div class="d-line"><strong>N</strong> \u2014 the total size of the pool (here 26)</div>'+
-        '<div class="d-line"><strong>M</strong> \u2014 how many in the pool are glowing, the type you want (here 13)</div>'+
-        '<div class="d-line"><strong>n</strong> \u2014 how many you draw into your hand (here 8)</div>'+
-        '<div class="d-line"><strong>k</strong> \u2014 the number of glowing you are asking about (here 4)</div>'+
-        '<div class="d-line"><strong>N\u2212M</strong> \u2014 the dark pool, everything not glowing (here 26 \u2212 13 = 13)</div>'+
-        '<div class="d-line"><strong>n\u2212k</strong> \u2014 the dark cards needed to fill the hand (here 8 \u2212 4 = 4)</div>'+
-        '<div class="d-line"><strong>C(N, n)</strong> \u2014 how many ways to draw the whole hand, the total field</div></div>'+
         '</div>';
     if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>Two counts on top, one count on the bottom. A fraction \u2014 favourable over possible. Here is the shape before any numbers land.</p>'+
-        hypFormula(false)+
-        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
-        '<div class="proc-step"><strong>Move 1 \u2014 C(M, k), glowing pool.</strong> How many ways to pick k glowing from the M that exist. Drainage from the light side.</div>'+
-        '<div class="proc-step"><strong>Move 2 \u2014 C(N\u2212M, n\u2212k), dark pool.</strong> How many ways to fill the rest of the hand with non-glowing. Drainage from the dark side.</div>'+
-        '<div class="proc-step"><strong>Move 3 \u2014 C(N, n), all hands.</strong> Total ways to draw n from N. Alle verdener \u2014 this is the denominator.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 divide. (glowing \u00D7 dark) \u00F7 all hands = the weight sitting on that door.</div>'+
+        '<p>A fraction. Teller over nevner. Pure counting \u2014 no probability anywhere.</p>'+
+        '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+        '<div class="proc-step"><strong>1. C(M, k) \u2014 glowing pool.</strong> How many ways to pick k glowing from the M that exist. Drainage from the light side.</div>'+
+        '<div class="proc-step"><strong>2. C(N\u2212M, n\u2212k) \u2014 dark pool.</strong> How many ways to fill the rest with non-glowing. Drainage from the dark side.</div>'+
+        '<div class="proc-step"><strong>3. C(N, n) \u2014 all hands.</strong> Total ways to draw n from N. Alle verdener.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Gunstige over mulige. Three Drainages \u2014 two in the teller, one in the nevner.</div>'+
         '</div></div>';
     if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
-        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
+        '<div class="data-card"><table class="data-table">'+
         '<tr><th>N (total)</th><th>M (glowing)</th><th>n (drawn)</th><th>k (asking)</th><th>Center (nM/N)</th></tr>'+
         '<tr><td>26</td><td>13</td><td>8</td><td>4</td><td>4</td></tr>'+
         '</table></div>'+
-        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
-        '<div class="d-line"><strong>N = 26</strong> \u2014 handed to you. The whole pool: 26 cards on the table.</div>'+
-        '<div class="d-line"><strong>M = 13</strong> \u2014 handed to you. Thirteen of the 26 are glowing, the type you care about.</div>'+
-        '<div class="d-line"><strong>n = 8</strong> \u2014 handed to you. You draw eight into your hand.</div>'+
-        '<div class="d-line"><strong>k = 4</strong> \u2014 handed to you. The question asks about holding exactly four glowing.</div>'+
-        '<div class="d-line"><strong>N\u2212M = 13</strong> \u2014 not handed to you. You subtract to get the dark pool: 26 \u2212 13 = 13.</div>'+
-        '<div class="d-line"><strong>n\u2212k = 4</strong> \u2014 not handed to you. The rest of the hand must be dark: 8 \u2212 4 = 4.</div>'+
-        '</div>'+
-        '<p><strong>The three pieces to build:</strong></p>'+
-        '<p>C(13, 4) \u2192 glowing pool, k from M</p>'+
-        '<p>C(13, 4) \u2192 dark pool, n\u2212k from N\u2212M</p>'+
-        '<p>C(26, 8) \u2192 all hands, n from N</p>'+
+        '<p><strong>Three Drainages:</strong></p>'+
+        '<p>C(13, 4) \u2192 glowing pool</p>'+
+        '<p>C(13, 4) \u2192 dark pool</p>'+
+        '<p>C(26, 8) \u2192 all hands</p>'+
         '</div>';}
     markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        hypFormula(true)+
-        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 glowing pool \u00B7 C(13, 4)</div>'+
-        '<div class="d-line">C(13, 4) = 13! \u00F7 (4! \u00B7 9!)</div>'+
-        '<div class="d-line">the 9! cancels the top \u2192 (13 \u00B7 12 \u00B7 11 \u00B7 10) \u00F7 (4 \u00B7 3 \u00B7 2 \u00B7 1)</div>'+
-        '<div class="d-line">top: 13 \u00B7 12 \u00B7 11 \u00B7 10 = 17160</div>'+
-        '<div class="d-line">bottom: 4 \u00B7 3 \u00B7 2 \u00B7 1 = 24</div>'+
-        '<div class="d-line">17160 \u00F7 24 = <strong style="color:#a78bfa">715</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">M and k feed this. 715 is how many ways four glowing can be chosen from the thirteen that exist.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 dark pool \u00B7 C(13, 4)</div>'+
-        '<div class="d-line">N\u2212M = 26 \u2212 13 = 13 dark cards, and you need n\u2212k = 4 of them</div>'+
-        '<div class="d-line">C(13, 4) = <strong style="color:#22c55e">715</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">same count by chance here, because the dark pool is also thirteen and you also need four.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 all hands \u00B7 C(26, 8)</div>'+
-        '<div class="d-line">C(26, 8) = 26! \u00F7 (8! \u00B7 18!)</div>'+
-        '<div class="d-line">= <strong style="color:#3b82f6">1\u202F562\u202F275</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">N and n feed this. Every possible eight-card hand drawn from the twenty-six.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 favourable over possible</div>'+
-        '<div class="d-line">top: 715 \u00D7 715 = 511\u202F225</div>'+
-        '<div class="d-line">511\u202F225 \u00F7 1\u202F562\u202F275 = <strong style="color:#f59e0b">0.3272</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">glowing \u00D7 dark, divided by all hands = the weight on door 4.</div></div>'+
-        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X = 4)</div>'+
-        '<div class="result-box-value" style="color:#f59e0b">P(X = 4) = 0.3272</div>'+
-        '<div class="result-box-desc">32.7% at the center of the bell. The peak. Almost the same shape as binomial, but the shrinking pool squeezes the bell slightly tighter.</div>'+
+        '<div class="derivation"><div class="d-label">Glowing pool</div>'+
+        '<div class="d-line">C(13, 4) = 13! \u00F7 (4! \u00B7 9!) = <strong>715</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">Dark pool</div>'+
+        '<div class="d-line">C(13, 4) = <strong>715</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">All hands</div>'+
+        '<div class="d-line">C(26, 8) = <strong>1\u202F562\u202F275</strong></div></div>'+
+        '<div class="result-box"><div class="result-box-name">P(X = 4)</div>'+
+        '<div class="result-box-value">(715 \u00D7 715) \u00F7 1\u202F562\u202F275 = 0.3272</div>'+
+        '<div class="result-box-desc">32.7% at center. The peak. Almost the same shape as binomial, but the shrinking pool squeezes the bell slightly tighter.</div>'+
         '</div></div>';
 }
 
 /* === POISSON STEPS === */
 function poiStep(s){
     if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p><strong>What this distribution is for.</strong> They gave you an <strong>average rate</strong> (\u03BB) over a <strong>window</strong> \u2014 events per hour, calls per day, drops per minute \u2014 with no fixed count of tries and no box. An average rate over a window, things arriving on their own time, is the signature of Poisson. The job is to find how much weight sits on one exact count: exactly k events in the window.</p>'+
-        '<p><strong>How it works.</strong> The rhythm \u03BB sets where the bell sits. To ask about a specific count k, three forces decide the weight: the rhythm raised to that count, the weight of total silence, and a factorial that strips out the order the events arrived in.</p>'+
-        '<p><strong>Why it is able to do that.</strong> Poisson is what binomial becomes when there are endless tiny chances each with a tiny probability \u2014 so many tries that only the average rate survives. The e<sup>\u2212\u03BB</sup> is the leftover of all those near-misses collapsing, and the factorial is there because the events have no built-in order.</p>'+
+        '<p>They gave you an <strong>average rate</strong> (\u03BB) over a <strong>window</strong>. No fixed count of tries. No box. Just things arriving on their own time.</p>'+
+        '<p>You\'re asking: how much energy sits at count k \u2014 how far from the rhythm?</p>'+
         '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = \u03BB<sup>k</sup> &middot; e<sup>\u2212\u03BB</sup> / k!</p>'+
-        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
-        '<div class="d-line"><strong>\u03BB</strong> \u2014 the average rate over the window, the rhythm (here 4)</div>'+
-        '<div class="d-line"><strong>k</strong> \u2014 the exact count you are asking about (here 6)</div>'+
-        '<div class="d-line"><strong>\u03BB<sup>k</sup></strong> \u2014 the rhythm raised to the count, the raw energy</div>'+
-        '<div class="d-line"><strong>e<sup>\u2212\u03BB</sup></strong> \u2014 the weight of total silence, the void everything climbs out of</div>'+
-        '<div class="d-line"><strong>k!</strong> \u2014 the factorial that strips out ordering</div>'+
-        '<div class="d-line"><strong>P(X = k)</strong> \u2014 the weight sitting on count k</div></div>'+
         '</div>';
     if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>Three forces multiplied and divided into one weight. Here is the shape before any numbers land.</p>'+
-        poiFormula(false)+
-        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
-        '<div class="proc-step"><strong>Move 1 \u2014 \u03BB<sup>k</sup>, raw energy.</strong> The rhythm raised to the count. This pushes you away from center \u2014 the further out, the more the rhythm multiplies into itself.</div>'+
-        '<div class="proc-step"><strong>Move 2 \u2014 e<sup>\u2212\u03BB</sup>, the void.</strong> The weight of silence \u2014 the chance nothing shows up in the whole window. Everything that happened had to climb out of this.</div>'+
-        '<div class="proc-step"><strong>Move 3 \u2014 k!, the factorial.</strong> Strips out ordering. A drop at minute 2 then minute 7 is the same as minute 7 then minute 2. Divide by all the arrangements.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 combine. (raw energy \u00D7 void) \u00F7 factorial = the weight sitting on that count.</div>'+
+        '<p>Three forces.</p>'+
+        '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+        '<div class="proc-step"><strong>1. \u03BB<sup>k</sup> \u2014 raw energy.</strong> The rhythm raised to the count. This pushes you away from center. The further from the average, the more the rhythm multiplies into itself.</div>'+
+        '<div class="proc-step"><strong>2. e<sup>\u2212\u03BB</sup> \u2014 the void.</strong> The weight of silence. The probability that nothing shows up in the whole window. Everything that happened had to climb out of this.</div>'+
+        '<div class="proc-step"><strong>3. k! \u2014 the factorial.</strong> Strips out ordering. A raindrop at minute 2 then minute 7 is the same as minute 7 then minute 2. Divide by all the arrangements.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Energy pushes out. Void pulls back. Factorial cleans up. What survives is the weight.</div>'+
         '</div></div>';
     if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
-        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
+        '<div class="data-card"><table class="data-table">'+
         '<tr><th>\u03BB (rhythm)</th><th>k (count)</th><th>Center (\u03BB)</th></tr>'+
         '<tr><td>4</td><td>6</td><td>4</td></tr>'+
         '</table></div>'+
-        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
-        '<div class="d-line"><strong>\u03BB = 4</strong> \u2014 handed to you. The problem gives the average rate over the window directly: four on average.</div>'+
-        '<div class="d-line"><strong>k = 6</strong> \u2014 handed to you. The exact count the question asks about: six events.</div>'+
-        '<div class="d-line"><strong>center = 4</strong> \u2014 not handed as a separate number. For Poisson the center just is \u03BB, so standing at k = 6 is two steps past center.</div>'+
-        '</div>'+
-        '<p><strong>The three pieces to build:</strong></p>'+
-        '<p>4<sup>6</sup> \u2192 raw energy, \u03BB raised to k</p>'+
-        '<p>e<sup>\u22124</sup> \u2192 the void, silence over the window</p>'+
-        '<p>6! \u2192 the factorial, ordering stripped out</p>'+
+        '<p>Standing at k = 6 \u2014 <strong>two steps past center.</strong></p>'+
+        '<p><strong>Three plugs:</strong></p>'+
+        '<p>4<sup>6</sup> \u2192 raw energy</p>'+
+        '<p>e<sup>\u22124</sup> \u2192 the void</p>'+
+        '<p>6! \u2192 the factorial</p>'+
         '</div>';}
     markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        poiFormula(true)+
-        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 raw energy \u00B7 4<sup>6</sup></div>'+
-        '<div class="d-line">4 \u00D7 4 = 16</div>'+
-        '<div class="d-line">16 \u00D7 4 = 64</div>'+
-        '<div class="d-line">64 \u00D7 4 = 256</div>'+
-        '<div class="d-line">256 \u00D7 4 = 1024</div>'+
-        '<div class="d-line">1024 \u00D7 4 = <strong style="color:#a78bfa">4096</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">\u03BB raised to k. The rhythm 4 multiplied by itself six times, one for each event.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 the void \u00B7 e<sup>\u22124</sup></div>'+
-        '<div class="d-line">e<sup>\u22124</sup> = 1 \u00F7 e<sup>4</sup> = 1 \u00F7 54.6</div>'+
-        '<div class="d-line">\u2248 <strong style="color:#22c55e">0.0183</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">only a 1.83% chance of total silence; unrounded it is 0.018316, which we keep for the final multiply.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 the factorial \u00B7 6!</div>'+
-        '<div class="d-line">6 \u00D7 5 \u00D7 4 \u00D7 3 \u00D7 2 \u00D7 1 = <strong style="color:#3b82f6">720</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">all the ways six events could be ordered, divided back out because order does not matter.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 combine the three</div>'+
-        '<div class="d-line">4096 \u00D7 0.018316 = 75.02</div>'+
-        '<div class="d-line">75.02 \u00F7 720 = <strong style="color:#f59e0b">0.1042</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">raw energy \u00D7 void, divided by factorial = the weight on count 6.</div></div>'+
-        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X
+        '<div class="derivation"><div class="d-label">Raw energy</div>'+
+        '<div class="d-line">4<sup>6</sup> = 4 \u00D7 4 \u00D7 4 \u00D7 4 \u00D7 4 \u00D7 4 = <strong>4096</strong></div></div>'+
+        '<div class="derivation"><div class="d-label">The void</div>'+
+        '<div class="d-line">e<sup>\u22124</sup> \u2248 <strong>0.0183</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">Only 1.83% chance of total silence. Busy rhythm.</div></div>'+
+        '<div class="derivation"><div class="d-label">The factorial</div>'+
+        '<div class="d-line">6! = 6 \u00D7 5 \u00D7 4 \u00D7 3 \u00D7 2 \u00D7 1 = <strong>720</strong></div></div>'+
+        '<div class="result-box"><div class="result-box-name">P(X = 6)</div>'+
+        '<div class="result-box-value">(4096 \u00D7 0.0183) \u00F7 720 = 0.1042</div>'+
+        '<div class="result-box-desc">10.4% two steps past center. Still catching real weight \u2014 about one in ten windows looks like this. Move to door 10 and the energy nearly vanishes.</div>'+
+        '</div></div>';
+}
+
+/* === NORMAL STEPS === */
+function norStep(s){
+    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
+        '<p>They told you directly (<strong>"normalfordelt"</strong>), or you\'re summing many independent things (sentralgrensesetningen). Continuous measurement \u2014 no discrete doors.</p>'+
+        '<p>You\'re asking: how much energy sits between two points on the bell?</p>'+
+        '<p style="color:var(--accent);font-weight:500;margin-top:12px">z = (X \u2212 \u03BC) / \u03C3 &nbsp;&nbsp;\u2192&nbsp;&nbsp; z-table</p>'+
+        '</div>';
+    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
+        '<p>Two operations.</p>'+
+        '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+        '<div class="proc-step"><strong>1. (X \u2212 \u03BC) \u2014 distance from center.</strong> How far is this point from the middle of the bell? Negative if below, positive if above.</div>'+
+        '<div class="proc-step"><strong>2. \u00F7 \u03C3 \u2014 convert to standard units.</strong> Divide the distance by one stretch. Now you know how many stretches from center you are. The result is z \u2014 a number on the standard bell where \u03BC = 0 and \u03C3 = 1.</div>'+
+        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">The z-table gives you the area under the bell to the left of where you stand.</div>'+
+        '</div>'+
+        '<div class="proc-block"><div class="proc-title">The 68\u201395\u201399.7 rule</div>'+
+        '<div class="proc-step">68% within \u00B11\u03C3. 95% within \u00B12\u03C3. 99.7% within \u00B13\u03C3. This gives you instant orientation before you even touch the z-table.</div>'+
+        '</div></div>';
+    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
+        '<div class="data-card"><table class="data-table">'+
+        '<tr><th>\u03BC (center)</th><th>\u03C3 (stretch)</th><th>X (standing at)</th></tr>'+
+        '<tr><td>180</td><td>7</td><td>190</td></tr>'+
+        '</table></div>'+
+        '<p>You\'re standing at 190 and asking: <strong>how much of the bell is below me?</strong></p>'+
+        '<p><strong>Two plugs:</strong></p>'+
+        '<p>X \u2212 \u03BC = 190 \u2212 180 \u2192 distance</p>'+
+        '<p>\u00F7 \u03C3 = \u00F7 7 \u2192 standardize</p>'+
+        '</div>';}
+    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
+        '<div class="derivation"><div class="d-label">Distance from center</div>'+
+        '<div class="d-line">190 \u2212 180 = <strong>10</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">Ten units above center.</div></div>'+
+        '<div class="derivation"><div class="d-label">Convert to stretches</div>'+
+        '<div class="d-line">10 \u00F7 7 = <strong>1.43</strong></div>'+
+        '<div class="d-line" style="color:var(--muted)">About one and a half stretches above center.</div></div>'+
+        '<div class="derivation"><div class="d-label">Z-table lookup</div>'+
+        '<div class="d-line">z = 1.43 \u2192 <strong>0.9236</strong></div></div>'+
+        '<div class="result-box"><div class="result-box-name">P(X \u2264 190)</div>'+
+        '<div class="result-box-value" style="color:var(--green)">92.4% of the bell sits below you</div>'+
+        '<div class="result-box-desc">You\'re standing on the right slope, above most of the weight. Only 7.6% of the energy is further right.</div>'+
+        '</div></div>';
+}
+
+/* === VISUALIZATION === */
+function drawViz(){
+    var labels={
+        bin:{title:'Binomial Bell',desc:'Bin(10, 0.6) \u2014 11 doors from 0 to 10. Standing at k = 6.'},
+        hyp:{title:'Hypergeometric Bell',desc:'Hyp(26, 13, 8) \u2014 9 doors from 0 to 8. Standing at k = 4.'},
+        poi:{title:'Poisson Bell',desc:'Po(4) \u2014 doors from 0 onward. Standing at k = 6.'},
+        nor:{title:'Normal Curve',desc:'N(180, 7\u00B2) \u2014 continuous. Standing at x = 190.'}
+    };
+    document.getElementById('viz-title').textContent=labels[mode].title;
+    document.getElementById('viz-desc').textContent=labels[mode].desc;
+    if(mode==='nor') drawNormal(); else drawBars();
+}
+
+function drawBars(){
+    var conf={
+        bin:{kMin:0,kMax:10,kH:6,mu:6,muL:'\u03BC = np = 6',fn:binP},
+        hyp:{kMin:0,kMax:8,kH:4,mu:4,muL:'\u03BC = nM/N = 4',fn:hypP},
+        poi:{kMin:0,kMax:12,kH:6,mu:4,muL:'\u03BC = \u03BB = 4',fn:poiP}
+    }[mode];
+    var wrap=document.getElementById('viz-wrap');
+    var canvas=document.getElementById('viz-canvas');
+    var dpr=window.devicePixelRatio||1;
+    var cw=wrap.clientWidth-18;
+    var ch=280;
+    canvas.width=cw*dpr;canvas.height=ch*dpr;
+    canvas.style.width=cw+'px';canvas.style.height=ch+'px';
+    var ctx=canvas.getContext('2d');
+    ctx.scale(dpr,dpr);ctx.clearRect(0,0,cw,ch);
+
+    var accent='#a78bfa',green='#22c55e',muted='#71717a',border='#27272a';
+    var padL=35,padR=15,padTop=30,padBot=30;
+    var plotW=cw-padL-padR;
+    var plotH=ch-padTop-padBot;
+    var nBars=conf.kMax-conf.kMin+1;
+    var barW=plotW/(nBars+1);
+    var maxP=0;
+    for(var k=conf.kMin;k<=conf.kMax;k++) maxP=Math.max(maxP,conf.fn(k));
+
+    // Axis
+    ctx.strokeStyle=border;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(padL,ch-padBot);ctx.lineTo(cw-padR,ch-padBot);ctx.stroke();
+
+    // Bars
+    for(var k=conf.kMin;k<=conf.kMax;k++){
+        var p=conf.fn(k);
+        var x=padL+(k-conf.kMin+1)*barW;
+        var h=Math.max(1,(p/maxP)*plotH*0.82);
+        var y=ch-padBot-h;
+        var bw=Math.max(4,barW*0.65);
+        var isHL=(k===conf.kH);
+        ctx.fillStyle=isHL?'rgba(167,139,250,0.35)':'rgba(167,139,250,0.08)';
+        rr(ctx,x-bw/2,y,bw,h,3);ctx.fill();
+        ctx.strokeStyle=isHL?accent:'rgba(167,139,250,0.2)';
+        ctx.lineWidth=isHL?1.5:1;
+        rr(ctx,x-bw/2,y,bw,h,3);ctx.stroke();
+        // K label
+        ctx.fillStyle=isHL?'#fafafa':muted;
+        ctx.font=(cw<400?'8':'10')+'px Inter,sans-serif';
+        ctx.textAlign='center';ctx.textBaseline='top';
+        ctx.fillText(k.toString(),x,ch-padBot+4);
+    }
+
+    // Mu line
+    var muX=padL+(conf.mu-conf.kMin+1)*barW;
+    ctx.beginPath();ctx.setLineDash([4,3]);
+    ctx.moveTo(muX,padTop+14);ctx.lineTo(muX,ch-padBot);
+    ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=accent;ctx.font='bold 11px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='bottom';
+    ctx.fillText(conf.muL,muX,padTop+10);
+
+    // Result
+    var hx=padL+(conf.kH-conf.kMin+1)*barW;
+    var hp=conf.fn(conf.kH);
+    ctx.fillStyle=green;ctx.font='bold 12px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.fillText('P(X = '+conf.kH+') = '+hp.toFixed(4),cw/2,ch-16);
+}
+
+function drawNormal(){
+    var wrap=document.getElementById('viz-wrap');
+    var canvas=document.getElementById('viz-canvas');
+    var dpr=window.devicePixelRatio||1;
+    var cw=wrap.clientWidth-18;
+    var ch=300;
+    canvas.width=cw*dpr;canvas.height=ch*dpr;
+    canvas.style.width=cw+'px';canvas.style.height=ch+'px';
+    var ctx=canvas.getContext('2d');
+    ctx.scale(dpr,dpr);ctx.clearRect(0,0,cw,ch);
+
+    var accent='#a78bfa',green='#22c55e',muted='#71717a',border='#27272a';
+    var mu=180,sig=7,xH=190;
+    var xMin=mu-4*sig,xMax=mu+4*sig;
+    var padL=30,padR=15,padTop=20,padBot=50;
+    var plotW=cw-padL-padR;
+    var plotH=ch-padTop-padBot;
+    var maxPDF=norPDF(mu);
+
+    function tx(x){return padL+(x-xMin)/(xMax-xMin)*plotW;}
+    function ty(pdf){return ch-padBot-(pdf/maxPDF)*plotH*0.88;}
+
+    // Shaded area
+    ctx.beginPath();
+    ctx.moveTo(tx(xMin),ch-padBot);
+    for(var x=xMin;x<=xH;x+=0.5) ctx.lineTo(tx(x),ty(norPDF(x)));
+    ctx.lineTo(tx(xH),ch-padBot);
+    ctx.closePath();
+    ctx.fillStyle='rgba(167,139,250,0.12)';ctx.fill();
+
+    // Full curve
+    ctx.beginPath();
+    ctx.moveTo(tx(xMin),ty(norPDF(xMin)));
+    for(var x=xMin;x<=xMax;x+=0.5) ctx.lineTo(tx(x),ty(norPDF(x)));
+    ctx.strokeStyle=accent;ctx.lineWidth=2;ctx.stroke();
+
+    // Sigma ticks
+    for(var s=-3;s<=3;s++){
+        var sx=mu+s*sig;
+        ctx.beginPath();ctx.moveTo(tx(sx),ch-padBot);ctx.lineTo(tx(sx),ch-padBot+5);
+        ctx.strokeStyle=border;ctx.lineWidth=1;ctx.stroke();
+        ctx.fillStyle=muted;ctx.font='9px Inter,sans-serif';
+        ctx.textAlign='center';ctx.textBaseline='top';
+        if(s===0) ctx.fillText('\u03BC',tx(sx),ch-padBot+7);
+        else ctx.fillText((s>0?'+':'')+s+'\u03C3',tx(sx),ch-padBot+7);
+    }
+
+    // Mu line
+    ctx.beginPath();ctx.setLineDash([4,3]);
+    ctx.moveTo(tx(mu),padTop+12);ctx.lineTo(tx(mu),ch-padBot);
+    ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=accent;ctx.font='bold 11px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='bottom';
+    ctx.fillText('\u03BC = 180',tx(mu),padTop+8);
+
+    // X highlight line
+    ctx.beginPath();ctx.setLineDash([3,3]);
+    ctx.moveTo(tx(xH),padTop+24);ctx.lineTo(tx(xH),ch-padBot);
+    ctx.strokeStyle='#fafafa';ctx.lineWidth=1;ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#fafafa';ctx.font='bold 10px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='bottom';
+    ctx.fillText('x = 190',tx(xH),padTop+22);
+    ctx.fillStyle=muted;ctx.font='9px Inter,sans-serif';
+    ctx.fillText('z = 1.43',tx(xH),padTop+34);
+
+    // Area label inside the shaded region
+    ctx.fillStyle='rgba(167,139,250,0.5)';ctx.font='bold 14px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('92.4%',tx(mu-0.5*sig),ty(norPDF(mu))+45);
+
+    // Result
+    ctx.fillStyle=green;ctx.font='bold 12px Inter,sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.fillText('P(X \u2264 190) = 0.9236 \u2014 z = 1.43',cw/2,ch-18);
+}
+
+function rr(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+    ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
+    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+    ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
+    ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+}
+
+/* === INIT === */
+renderAll();
+</script>
+<script src="test.js"></script>
+</body>
+</html>
