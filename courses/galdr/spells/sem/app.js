@@ -61,4 +61,216 @@
     inner+=gauge(34,'CFI','good',0.95,1,d?res.cfi:null);
     inner+=gauge(74,'TLI','good',0.95,1,d?res.tli:null);
     inner+=gauge(118,'RMSEA','bad',0.06,0.15,d?res.rmsea:null);
-    inner+=gauge(158,'SRMR','b
+    inner+=gauge(158,'SRMR','bad',0.08,0.15,d?res.srmr:null);
+    return svg(inner,196);
+  }
+  function vizPath(){
+    var inner='';
+    inner+=ell(90,38,40,22,'&eta;&#8321;');
+    inner+=ell(270,38,40,22,'&eta;&#8322;');
+    inner+=ln(130,38,230,38,'&beta;',{accent:true,ly:-10,lx:-4});
+    inner+=rct(18,120,52,30,'X&#8321;');
+    inner+=rct(78,120,52,30,'X&#8322;');
+    inner+=rct(138,120,52,30,'X&#8323;');
+    inner+=ln(90,60,44,120,'',{});
+    inner+=ln(90,60,104,120,'',{});
+    inner+=ln(90,60,164,120,'',{});
+    inner+=rct(198,120,52,30,'Y&#8321;');
+    inner+=rct(258,120,52,30,'Y&#8322;');
+    inner+=rct(318,120,40,30,'Y&#8323;');
+    inner+=ln(270,60,224,120,'',{});
+    inner+=ln(270,60,284,120,'',{});
+    inner+=ln(270,60,338,120,'',{});
+    return svg(inner,170);
+  }
+
+  /* ---------- Forms ---------- */
+  var FORMS = {
+    1: {
+      name:'Factor Loadings',
+      viz:vizLambda,
+      caption:'A latent construct &eta; is measured by indicator X through the loading &lambda;. Whatever &lambda; can&rsquo;t explain leaks into the error &delta;.',
+      eq:'X = &lambda;&middot;&eta; + &delta;',
+      blueprint:'You can&rsquo;t put a ruler to a construct, so you measure indicators and ask how tightly each one tracks it. The standardized loading <strong>&lambda;</strong> is that grip. Its square <strong>&lambda;&sup2;</strong> is the share of the indicator&rsquo;s variance the construct explains; the remainder is measurement error &delta;.',
+      process:[
+        {t:'Read the loading', b:'Take the standardized &lambda; for the indicator (between &minus;1 and 1).'},
+        {t:'Square it', b:'&lambda;&sup2; is the share of that indicator&rsquo;s variance explained by the construct.'},
+        {t:'Find the leak', b:'1 &minus; &lambda;&sup2; is the measurement error &mdash; variance the construct does not account for.'},
+        {t:'Judge the grip', b:'Strong &gt; 0.70 &middot; moderate 0.40&ndash;0.70 &middot; weak &lt; 0.40.'}
+      ],
+      inputs:[{id:'lam', label:'Standardized loading &lambda;', ex:0.82}],
+      solve:function(v){
+        var lam=v.lam, lam2=lam*lam, err=1-lam2, a=Math.abs(lam);
+        var vc = a>0.70?['strongv','Strong indicator']:(a>=0.40?['modv','Moderate indicator']:['weakv','Weak indicator']);
+        var s='';
+        s+='<div class="rrow">&lambda; = <strong>'+f(lam)+'</strong></div>';
+        s+='<div class="rrow">Explained: &lambda;&sup2; = '+f(lam)+'&sup2; = <strong>'+f(lam2)+'</strong> &nbsp;('+pct(lam2)+')</div>';
+        s+='<div class="rrow">Error: 1 &minus; &lambda;&sup2; = <strong>'+f(err)+'</strong> &nbsp;('+pct(err)+')</div>';
+        s+='<span class="verdict '+vc[0]+'">'+vc[1]+'</span>';
+        return {summary:s, lam2:lam2};
+      }
+    },
+    2: {
+      name:'Mediation',
+      viz:vizMed,
+      caption:'&eta;&#8321; reaches &eta;&#8323; two ways: straight across (direct &beta;&#8323;) and through the mediator &eta;&#8322; (indirect &beta;&#8321;&middot;&beta;&#8322;).',
+      eq:'total = &beta;&#8323; + &beta;&#8321;&middot;&beta;&#8322;',
+      blueprint:'A construct can act on another directly, or through a construct in the middle. The <strong>indirect</strong> effect multiplies the two legs of the detour; the <strong>total</strong> effect adds the direct path to it.',
+      process:[
+        {t:'Direct effect', b:'&beta;&#8323; is the straight path &eta;&#8321; &rarr; &eta;&#8323;.'},
+        {t:'Indirect effect', b:'Multiply the two legs of the detour: &beta;&#8321;&middot;&beta;&#8322;.'},
+        {t:'Total effect', b:'Add them: total = direct + indirect.'},
+        {t:'Share mediated', b:'indirect / total &mdash; how much of the whole runs through the mediator.'}
+      ],
+      inputs:[
+        {id:'b1', label:'&beta;&#8321; (&eta;&#8321;&rarr;&eta;&#8322;)', ex:0.55},
+        {id:'b2', label:'&beta;&#8322; (&eta;&#8322;&rarr;&eta;&#8323;)', ex:0.40},
+        {id:'b3', label:'&beta;&#8323; (direct &eta;&#8321;&rarr;&eta;&#8323;)', ex:0.15}
+      ],
+      solve:function(v){
+        var ind=v.b1*v.b2, tot=v.b3+ind, share=tot!==0?ind/tot:0;
+        var s='';
+        s+='<div class="rrow">Indirect: &beta;&#8321;&middot;&beta;&#8322; = '+f(v.b1)+' &middot; '+f(v.b2)+' = <strong>'+f(ind)+'</strong></div>';
+        s+='<div class="rrow">Total: '+f(v.b3)+' + '+f(ind)+' = <strong>'+f(tot)+'</strong></div>';
+        s+='<div class="rrow">Share mediated: '+f(ind)+' / '+f(tot)+' = <strong>'+pct(share)+'</strong></div>';
+        return {summary:s};
+      }
+    },
+    3: {
+      name:'Fit Indices',
+      viz:vizFit,
+      caption:'Two indices reward fit (CFI, TLI &mdash; higher is better) and two punish misfit (RMSEA, SRMR &mdash; lower is better). The green zone is passing.',
+      eq:'CFI &ge; 0.95 &middot; TLI &ge; 0.95 &middot; RMSEA &le; 0.06 &middot; SRMR &le; 0.08',
+      blueprint:'No single number decides whether a model holds &mdash; you read several together. <strong>CFI</strong> and <strong>TLI</strong> climb toward 1 as fit improves; <strong>RMSEA</strong> and <strong>SRMR</strong> shrink toward 0. &chi;&sup2; over-rejects with large samples, so it is never read alone.',
+      process:[
+        {t:'CFI &ge; 0.95?', b:'Comparative fit index &mdash; higher is better.'},
+        {t:'TLI &ge; 0.95?', b:'Tucker&ndash;Lewis index &mdash; higher is better.'},
+        {t:'RMSEA &le; 0.06?', b:'Root mean square error of approximation &mdash; lower is better.'},
+        {t:'SRMR &le; 0.08?', b:'Standardized root mean square residual &mdash; lower is better.'}
+      ],
+      inputs:[
+        {id:'cfi', label:'CFI', ex:0.97},
+        {id:'tli', label:'TLI', ex:0.96},
+        {id:'rmsea', label:'RMSEA', ex:0.045},
+        {id:'srmr', label:'SRMR', ex:0.041}
+      ],
+      solve:function(v){
+        var c1=v.cfi>=0.95, c2=v.tli>=0.95, c3=v.rmsea<=0.06, c4=v.srmr<=0.08;
+        var pass=(c1?1:0)+(c2?1:0)+(c3?1:0)+(c4?1:0);
+        function mark(ok){ return ok?'<span class="ok">&#10003; pass</span>':'<span class="no">&#10007; fail</span>'; }
+        var s='';
+        s+='<table class="idx"><tr><th>Index</th><th>Value</th><th>Threshold</th><th></th></tr>';
+        s+='<tr><td>CFI</td><td>'+f(v.cfi)+'</td><td>&ge; 0.95</td><td>'+mark(c1)+'</td></tr>';
+        s+='<tr><td>TLI</td><td>'+f(v.tli)+'</td><td>&ge; 0.95</td><td>'+mark(c2)+'</td></tr>';
+        s+='<tr><td>RMSEA</td><td>'+f(v.rmsea)+'</td><td>&le; 0.06</td><td>'+mark(c3)+'</td></tr>';
+        s+='<tr><td>SRMR</td><td>'+f(v.srmr)+'</td><td>&le; 0.08</td><td>'+mark(c4)+'</td></tr>';
+        s+='</table>';
+        var vc = pass===4?['strongv','All four pass &mdash; good fit']:(pass>=2?['modv',pass+' of 4 pass &mdash; mixed']:['weakv',pass+' of 4 pass &mdash; poor fit']);
+        s+='<span class="verdict '+vc[0]+'">'+vc[1]+'</span>';
+        return {summary:s, cfi:v.cfi, tli:v.tli, rmsea:v.rmsea, srmr:v.srmr};
+      }
+    },
+    4: {
+      name:'Path Diagram',
+      viz:vizPath,
+      caption:'Ovals are latent constructs, rectangles are observed indicators, single arrows are regression paths. Each latent needs at least three indicators to be identified.',
+      eq:'loadings = latents &times; indicators each',
+      blueprint:'A path diagram is the model drawn out. <strong>Ovals</strong> hold latent constructs, <strong>rectangles</strong> hold the indicators you actually measured, a <strong>single arrow</strong> is a regression path and a <strong>double arrow</strong> is a covariance. A latent needs at least three indicators to be safely identified.',
+      process:[
+        {t:'Count the latents', b:'Each oval is one construct you cannot measure directly.'},
+        {t:'Check identification', b:'Every latent needs &ge; 3 indicators to be safely identified.'},
+        {t:'Count the loadings', b:'loadings = number of latents &times; indicators per latent.'},
+        {t:'Read the arrows', b:'Single arrow = regression path; double arrow = covariance.'}
+      ],
+      inputs:[
+        {id:'L', label:'Latent constructs', ex:2},
+        {id:'k', label:'Indicators per latent', ex:3}
+      ],
+      solve:function(v){
+        var L=Math.round(v.L), k=Math.round(v.k), loadings=L*k, idok=k>=3;
+        var s='';
+        s+='<div class="rrow">Latents: <strong>'+L+'</strong></div>';
+        s+='<div class="rrow">Indicators each: <strong>'+k+'</strong></div>';
+        s+='<div class="rrow">Loadings: '+L+' &times; '+k+' = <strong>'+loadings+'</strong></div>';
+        var vc = idok?['strongv','Each latent has &ge; 3 indicators &mdash; identified']:['weakv','Fewer than 3 indicators &mdash; under-identified'];
+        s+='<span class="verdict '+vc[0]+'">'+vc[1]+'</span>';
+        return {summary:s};
+      }
+    }
+  };
+
+  /* ---------- Engine ---------- */
+  var STEPS=['Blueprint','Process','Data','Formula','Test'];
+
+  function renderModes(){
+    var nav=el('mode-nav'), html='';
+    for(var i=1;i<=4;i++){ html+='<button class="mode-btn'+(i===form?' active':'')+'" data-form="'+i+'">'+FORMS[i].name+'</button>'; }
+    nav.innerHTML=html;
+    var btns=nav.querySelectorAll('.mode-btn');
+    for(var j=0;j<btns.length;j++){ btns[j].addEventListener('click', function(){ switchForm(parseInt(this.getAttribute('data-form'),10)); }); }
+  }
+  function renderViz(){
+    var fm=FORMS[form];
+    el('viz-stage').innerHTML = fm.viz(dropped, result);
+    el('viz-caption').innerHTML = fm.caption;
+  }
+  function renderStepNav(){
+    var nav=el('step-nav'), html='';
+    for(var i=1;i<=5;i++){ html+='<button class="step-btn'+(i===step?' active':'')+'" data-step="'+i+'">'+i+'. '+STEPS[i-1]+'</button>'; }
+    nav.innerHTML=html;
+    var btns=nav.querySelectorAll('.step-btn');
+    for(var j=0;j<btns.length;j++){ btns[j].addEventListener('click', function(){ setStep(parseInt(this.getAttribute('data-step'),10)); }); }
+  }
+  function renderStep(){
+    var fm=FORMS[form], c=el('step-container'), h='';
+    if(step===1){
+      h+='<div class="panel"><div class="step-h">Step 1 &middot; Blueprint</div>';
+      h+='<p>'+fm.blueprint+'</p>';
+      if(fm.eq) h+='<div class="eq">'+fm.eq+'</div>';
+      h+='</div>';
+    } else if(step===2){
+      h+='<div class="panel"><div class="step-h">Step 2 &middot; Process</div>';
+      for(var i=0;i<fm.process.length;i++){ h+='<div class="move"><div class="mt">'+(i+1)+'. '+fm.process[i].t+'</div><div class="mb">'+fm.process[i].b+'</div></div>'; }
+      h+='</div>';
+    } else if(step===3){
+      h+='<div class="panel"><div class="step-h">Step 3 &middot; Data</div>';
+      h+='<p class="sub">Enter the numbers, then drop them into the model.</p>';
+      h+='<div class="input-row">';
+      for(var k=0;k<fm.inputs.length;k++){ var inp=fm.inputs[k]; h+='<div class="input-group"><label>'+inp.label+'</label><input type="number" step="any" id="in-'+inp.id+'"></div>'; }
+      h+='</div>';
+      h+='<div class="btn-row"><button class="action-btn" id="btn-drop">Drop into model</button><button class="action-btn secondary" id="btn-ex">Use example</button></div>';
+      if(dropped&&result){ h+='<div class="hint">Dropped. Step 4 holds the result.</div>'; }
+      h+='</div>';
+    } else if(step===4){
+      h+='<div class="panel"><div class="step-h">Step 4 &middot; Formula</div>';
+      if(dropped&&result){ h+='<div class="result">'+result.summary+'</div>'; }
+      else { h+='<p class="sub">Nothing dropped yet. Go to Step 3, enter values, and drop them in.</p>'; }
+      h+='</div>';
+    } else {
+      h+='<div class="panel"><div class="step-h">Step 5 &middot; Test yourself</div><div id="test-host"></div></div>';
+    }
+    c.innerHTML=h;
+    if(step===3){ el('btn-drop').addEventListener('click', doDrop); el('btn-ex').addEventListener('click', useEx); }
+    if(step===5 && window.renderTest){ window.renderTest(form); }
+  }
+  function readInputs(){
+    var fm=FORMS[form], vals={};
+    for(var i=0;i<fm.inputs.length;i++){ var id=fm.inputs[i].id; var v=parseFloat(el('in-'+id).value); vals[id]=isNaN(v)?null:v; }
+    return vals;
+  }
+  function doDrop(){
+    var vals=readInputs(), fm=FORMS[form];
+    for(var i=0;i<fm.inputs.length;i++){ if(vals[fm.inputs[i].id]===null){ alert('Fill in every field first.'); return; } }
+    result=fm.solve(vals); dropped=true;
+    renderViz(); setStep(4);
+  }
+  function useEx(){
+    var fm=FORMS[form];
+    for(var i=0;i<fm.inputs.length;i++){ el('in-'+fm.inputs[i].id).value = fm.inputs[i].ex; }
+    doDrop();
+  }
+  function setStep(n){ step=n; renderStepNav(); renderStep(); }
+  function switchForm(n){ form=n; step=1; dropped=false; result=null; renderModes(); renderViz(); renderStepNav(); renderStep(); }
+  function init(){ renderModes(); renderViz(); renderStepNav(); renderStep(); }
+  init();
+})();
