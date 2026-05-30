@@ -36,15 +36,6 @@
         ans:pass, tol:0, unit:' of 4',
         deriv:'CFI '+(cfi>=0.95?'&#10003;':'&#10007;')+' &middot; TLI '+(tli>=0.95?'&#10003;':'&#10007;')+' &middot; RMSEA '+(rmsea<=0.06?'&#10003;':'&#10007;')+' &middot; SRMR '+(srmr<=0.08?'&#10003;':'&#10007;')+' &rarr; '+pass+' of 4'
       };
-    },
-    4:function(){
-      var L=Math.round(ri(2,3,0)), k=Math.round(ri(3,4,0)), ans=L*k;
-      return {
-        prompt:'A model has '+L+' latent constructs, each measured by '+k+' indicators. How many factor loadings does the measurement model estimate?',
-        hint:'loadings = latents &times; indicators each',
-        ans:ans, tol:0, unit:'',
-        deriv:L+' &times; '+k+' = '+ans+' loadings'
-      };
     }
   };
 
