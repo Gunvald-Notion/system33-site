@@ -18,7 +18,7 @@ fun:"Two people can earn the same average income and live completely different l
 "cov":{
 what:"Covariance asks whether two variables move together. Positive means they rise and fall as one, negative means one climbs while the other drops, near zero means they barely notice each other.",
 use:"Finance leans on it hard: do two stocks crash together or cushion each other? It also appears in any joint table where you want the direction of a relationship before scaling it into a correlation.",
-exam:"On the eksamen find both centers μₓ and μₑ first, walk every cell of the joint table, multiply the two distances, weight by the joint probability, then pile up. Correlation ρ is just this number divided by the two standard deviations.",
+exam:"On the eksamen find both centers μ<sub>X</sub> and μ<sub>Y</sub> first, walk every cell of the joint table, multiply the two distances, weight by the joint probability, then pile up. Correlation ρ is just this number divided by the two standard deviations. (We call the second variable Y, never E — E is Euler’s number from Kap 7.)",
 fun:"Covariance gives you the direction of the dance, not how tight. For the tightness you reach for correlation."
 }
 };
@@ -41,8 +41,8 @@ function genCov(){
 var a,b,c,d;
 do{a=ri(1,7);b=ri(1,7);c=ri(1,7);d=10-a-b-c;}while(d<1);
 var p00=a/10,p01=b/10,p10=c/10,p11=d/10;
-var mux=p10+p11,mue=p01+p11;
-return {mode:"cov",p00:p00,p01:p01,p10:p10,p11:p11,mux:mux,mue:mue,cov:p11-mux*mue};
+var mux=p10+p11,muy=p01+p11;
+return {mode:"cov",p00:p00,p01:p01,p10:p10,p11:p11,mux:mux,muy:muy,cov:p11-mux*muy};
 }
 
 function gen(m){return m==="var"?genVar():genCov();}
@@ -83,16 +83,16 @@ return t+q1+q2+'<div id="wt-work" style="margin-top:14px"></div>';
 }
 
 function covProblem(d){
-var t='<div class="data-card"><div class="data-title">Joint probability table P(X, E)</div><table class="data-table">'+
+var t='<div class="data-card"><div class="data-title">Joint probability table P(X, Y)</div><table class="data-table">'+
 '<tr><th></th><th>X = 0</th><th>X = 1</th></tr>'+
-'<tr><th>E = 1</th><td>'+d.p01+'</td><td>'+d.p11+'</td></tr>'+
-'<tr><th>E = 0</th><td>'+d.p00+'</td><td>'+d.p10+'</td></tr>'+
+'<tr><th>Y = 1</th><td>'+d.p01+'</td><td>'+d.p11+'</td></tr>'+
+'<tr><th>Y = 0</th><td>'+d.p00+'</td><td>'+d.p10+'</td></tr>'+
 '</table></div>';
 var q1='<p style="margin-top:12px"><strong>Stage 1.</strong> Find both centers. With 0/1 variables, μ is simply P(=1).</p>'+
-inputRow("wt-mux-in","μₓ =","wtCheckCenters()")+
-inputRow("wt-mue-in","μₑ =","wtCheckCenters()")+'<div id="wt-c-fb"></div>';
-var q2='<div id="wt-stage2" class="hidden"><p style="margin-top:14px"><strong>Stage 2.</strong> Walk all four cells: Cov(X,E) = ΣΣ (x − μₓ)(e − μₑ) · P(x, e).</p>'+
-inputRow("wt-cov-in","Cov(X,E) =","wtCheckCov()")+'<div id="wt-cov-fb"></div></div>';
+inputRow("wt-mux-in","μ<sub>X</sub> =","wtCheckCenters()")+
+inputRow("wt-muy-in","μ<sub>Y</sub> =","wtCheckCenters()")+'<div id="wt-c-fb"></div>';
+var q2='<div id="wt-stage2" class="hidden"><p style="margin-top:14px"><strong>Stage 2.</strong> Walk all four cells: Cov(X,Y) = ΣΣ (x − μ<sub>X</sub>)(y − μ<sub>Y</sub>) · P(x, y).</p>'+
+inputRow("wt-cov-in","Cov(X,Y) =","wtCheckCov()")+'<div id="wt-cov-fb"></div></div>';
 return t+q1+q2+'<div id="wt-work" style="margin-top:14px"></div>';
 }
 
@@ -110,21 +110,21 @@ return h;
 }
 
 function covWork(d){
-var cells=[["X=0, E=0",0,0,d.p00],["X=0, E=1",0,1,d.p01],["X=1, E=0",1,0,d.p10],["X=1, E=1",1,1,d.p11]];
+var cells=[["X=0, Y=0",0,0,d.p00],["X=0, Y=1",0,1,d.p01],["X=1, Y=0",1,0,d.p10],["X=1, Y=1",1,1,d.p11]];
 var h='<div class="derivation"><div class="d-label">Centers</div>'+
-'<div class="d-line">μₓ = P(X=1) = '+d.p10+' + '+d.p11+' = <strong>'+fmt(d.mux)+'</strong></div>'+
-'<div class="d-line">μₑ = P(E=1) = '+d.p01+' + '+d.p11+' = <strong>'+fmt(d.mue)+'</strong></div></div>';
+'<div class="d-line">μ<sub>X</sub> = P(X=1) = '+d.p10+' + '+d.p11+' = <strong>'+fmt(d.mux)+'</strong></div>'+
+'<div class="d-line">μ<sub>Y</sub> = P(Y=1) = '+d.p01+' + '+d.p11+' = <strong>'+fmt(d.muy)+'</strong></div></div>';
 var pile=0;
 cells.forEach(function(c){
-var dx=c[1]-d.mux,de=c[2]-d.mue,prod=dx*de,vote=prod*c[3];pile+=vote;
+var dx=c[1]-d.mux,dy=c[2]-d.muy,prod=dx*dy,vote=prod*c[3];pile+=vote;
 h+='<div class="derivation"><div class="d-label">'+c[0]+'</div>'+
-'<div class="d-line">('+c[1]+' − '+fmt(d.mux)+')('+c[2]+' − '+fmt(d.mue)+') = '+fmt(prod)+'</div>'+
+'<div class="d-line">('+c[1]+' − '+fmt(d.mux)+')('+c[2]+' − '+fmt(d.muy)+') = '+fmt(prod)+'</div>'+
 '<div class="d-line">× '+c[3]+' = <strong>'+fmt(vote)+'</strong>   pile = '+fmt(pile)+'</div></div>';
 });
 var col=d.cov>=0?"var(--green)":"var(--red)";
-var word=d.cov>=0?"Positive — X and E move together.":"Negative — X and E move apart.";
-h+='<div class="result-box"><div class="result-box-name">Cov(X,E)</div>'+
-'<div class="result-box-value" style="color:'+col+'">Cov(X,E) = '+fmt(d.cov)+'</div>'+
+var word=d.cov>=0?"Positive — X and Y move together.":"Negative — X and Y move apart.";
+h+='<div class="result-box"><div class="result-box-name">Cov(X,Y)</div>'+
+'<div class="result-box-value" style="color:'+col+'">Cov(X,Y) = '+fmt(d.cov)+'</div>'+
 '<div class="result-box-formula" style="margin-top:8px">'+word+'</div></div>';
 return h;
 }
@@ -143,15 +143,15 @@ else{fb("wt-var-fb",RED,"Not quite — check each squared distance. Walkthrough 
 document.getElementById("wt-work").innerHTML=varWork(d);
 };
 window.wtCheckCenters=function(){
-var d=TS[mode],mx=pf("wt-mux-in"),me=pf("wt-mue-in");
-if(isNaN(mx)||isNaN(me)){fb("wt-c-fb",RED,"Fill in both centers first.");return;}
-if(Math.abs(mx-d.mux)<0.015&&Math.abs(me-d.mue)<0.015){fb("wt-c-fb",GREEN,"Both right. μₓ = "+fmt(d.mux)+", μₑ = "+fmt(d.mue)+". Now the covariance.");var s=document.getElementById("wt-stage2");if(s)s.classList.remove("hidden");}
-else{fb("wt-c-fb",RED,"Not quite. μₓ is the sum of the X=1 column, μₑ the sum of the E=1 row.");}
+var d=TS[mode],mx=pf("wt-mux-in"),my=pf("wt-muy-in");
+if(isNaN(mx)||isNaN(my)){fb("wt-c-fb",RED,"Fill in both centers first.");return;}
+if(Math.abs(mx-d.mux)<0.015&&Math.abs(my-d.muy)<0.015){fb("wt-c-fb",GREEN,"Both right. μ<sub>X</sub> = "+fmt(d.mux)+", μ<sub>Y</sub> = "+fmt(d.muy)+". Now the covariance.");var s=document.getElementById("wt-stage2");if(s)s.classList.remove("hidden");}
+else{fb("wt-c-fb",RED,"Not quite. μ<sub>X</sub> is the sum of the X=1 column, μ<sub>Y</sub> the sum of the Y=1 row.");}
 };
 window.wtCheckCov=function(){
 var d=TS[mode],v=pf("wt-cov-in");
 if(isNaN(v)){fb("wt-cov-fb",RED,"Type a number first.");return;}
-if(Math.abs(v-d.cov)<0.02){fb("wt-cov-fb",GREEN,"Correct. Cov(X,E) = "+fmt(d.cov)+".");}
+if(Math.abs(v-d.cov)<0.02){fb("wt-cov-fb",GREEN,"Correct. Cov(X,Y) = "+fmt(d.cov)+".");}
 else{fb("wt-cov-fb",RED,"Not yet — walk all four cells. Walkthrough below.");}
 document.getElementById("wt-work").innerHTML=covWork(d);
 };
