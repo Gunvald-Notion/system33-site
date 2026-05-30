@@ -232,3 +232,359 @@ function renderVarStep(el){
             '<div class="proc-step"><strong>1. Find the center.</strong> E[X] = μ. You need this before anything else, because the whole formula measures distance <em>from</em> this point.</div>'+
             '<div class="proc-step"><strong>2. Measure each value’s distance.</strong> Take xᵢ, subtract μ. That is how far this value sits from center. Then square it — squaring removes direction (you only care about <em>how far</em>, not <em>which side</em>) and amplifies big distances.</div>'+
             '<div class="proc-step"><strong>3. Weight and pile.</strong> Multiply by P(xᵢ). A value that happens often contributes more. Then pile up all the weighted squared distances with Σ. That pile is Var[X].</div>'+
+            '<div class="proc-step"><strong>4. Fold back to a distance.</strong> The pile is in <em>squared</em>-units — it floats off the line as an area, not a length. Take its square root to land back on the axis. √Var = σ, the standard deviation: the typical distance from center, in the same units as the values.</div>'+
+            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Var[X] = Σ (xᵢ − μ)² · P(xᵢ)</div>'+
+            '<div class="proc-step" style="margin-top:4px;color:var(--accent)">σ = √Var[X]</div>'+
+            '</div>'+
+            '<div class="proc-block"><div class="proc-title">The room</div>'+
+            '<div class="proc-step">You’re standing at the center of a room. Each possible value is a person standing somewhere. Some are close, some are far. Each person has a weight — how likely they are to show up. Measure distance, square it, multiply by weight, throw on the pile. The pile is how spread the room is — and its square root is how far, on average, a person stands from you.</div>'+
+            '</div></div>';
+    } else if(currentStep === 3){
+        el.innerHTML = '<div class="step-content"><h3>Step 3 — The Data</h3>'+
+            '<p>X takes three values with these probabilities:</p>'+
+            '<div class="data-card"><table class="data-table">'+
+            '<tr><th>xᵢ</th><td>1</td><td>2</td><td>3</td></tr>'+
+            '<tr><th>P(xᵢ)</th><td>0.2</td><td>0.5</td><td>0.3</td></tr>'+
+            '</table></div>'+
+            '<p><strong>Center first:</strong> E[X] = 1×0.2 + 2×0.5 + 3×0.3 = 0.2 + 1.0 + 0.9 = <strong>2.1</strong></p>'+
+            '<p>μ = 2.1. Three values, three weights, one center. Ready to walk.</p>'+
+            '</div>';
+        markDone(2);
+    } else if(currentStep === 4){
+        let pile = 0;
+        let html = '<div class="step-content"><h3>Step 4 — Walk the Rounds</h3>'+
+            '<p>Stand at μ = 2.1. Walk to each value. Measure, square, weight, pile.</p>';
+        VAR_CONTRIBS.forEach((c, i) => {
+            pile += c.w;
+            html += '<div class="derivation"><div class="d-label">Round '+(i+1)+': x = '+c.x+'</div>'+
+                '<div class="d-line">Distance from center: '+c.x+' − 2.1 = <strong>'+c.dist.toFixed(1)+'</strong></div>'+
+                '<div class="d-line">Square: ('+c.dist.toFixed(1)+')² = '+c.sq.toFixed(2)+'</div>'+
+                '<div class="d-line">Weight: '+c.sq.toFixed(2)+' × '+c.p+' = <strong>'+c.w.toFixed(3)+'</strong></div>'+
+                '<div class="d-line">Pile = '+pile.toFixed(3)+'</div></div>';
+        });
+        html += '<div class="result-box"><div class="result-box-name">The pile — Var[X]</div>'+
+            '<div class="result-box-formula">0.242 + 0.005 + 0.243</div>'+
+            '<div class="result-box-value">Var[X] = 0.49</div></div>';
+        html += '<div class="derivation"><div class="d-label">Fold the pile back onto the line — σ</div>'+
+            '<div class="d-line">The pile is <strong>0.49</strong> — but look at the units. We <em>squared</em> every distance, so 0.49 lives in squared-space: an area floating off the number line, not a distance you can walk.</div>'+
+            '<div class="d-line">Undo the square. Take the root: <strong>√0.49 = 0.7</strong>.</div>'+
+            '<div class="d-line">That 0.7 is <strong>σ</strong> (sigma) — the <strong>standard deviation</strong>. It is the typical distance a value sits from the center μ = 2.1, measured back on the same axis as the values themselves. Not the gap between the values — the spread, folded back into a real step.</div></div>';
+        html += '<div class="result-box"><div class="result-box-name">σ — Standard Deviation</div>'+
+            '<div class="result-box-formula">σ = √Var[X] = √0.49</div>'+
+            '<div class="result-box-value">σ = 0.7 — typical distance from center</div></div>';
+        html += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">So the distribution <strong>breathes</strong>: from 2.1 − 0.7 = <strong>1.4</strong> out to 2.1 + 0.7 = <strong>2.8</strong>. That band around the center is where the weight mostly sits.</p>';
+        html += '<p style="color:var(--text2);font-size:.85rem;margin-top:10px">Values 1 and 3 contribute almost equally (0.242 and 0.243) even though 3 is closer to center — because 1 has a bigger distance and the squaring amplified it. Value 2 contributes almost nothing (0.005) because it sits right next to the center.</p>';
+        html += '</div>';
+        el.innerHTML = html;
+        markDone(3);
+    }
+}
+
+/* === COVARIANCE STEPS === */
+function renderCovStep(el){
+    if(currentStep === 1){
+        el.innerHTML = '<div class="step-content"><h3>Step 1 — Blueprint</h3>'+
+            '<p>Recognize the question: <strong>when X moves, does E move with it?</strong></p>'+
+            '<p>Two variables on a plane. X runs along the bottom, E up the side. Every observation has both an X-value and an E-value. The formula checks whether they move in the same direction.</p>'+
+            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Cov(X,E) = ΣΣ (xᵢ − μₓ)(eⱼ − μₑ) · P(xᵢ, eⱼ)</p>'+
+            '</div>';
+    } else if(currentStep === 2){
+        el.innerHTML = '<div class="step-content"><h3>Step 2 — The Process</h3>'+
+            '<p>Walk every cell on the joint table. At each cell, cast a vote.</p>'+
+            '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+            '<div class="proc-step"><strong>1. Find both centers:</strong> μₓ and μₑ.</div>'+
+            '<div class="proc-step"><strong>2. At each cell (xᵢ, eⱼ):</strong> measure X’s distance from μₓ and E’s distance from μₑ.</div>'+
+            '<div class="proc-step"><strong>3. Multiply the two distances</strong> — the direction-detector. Both on the same side of center? Positive product. Opposite sides? Negative. This multiplication tells you: did these two move the same way, or opposite ways?</div>'+
+            '<div class="proc-step"><strong>4. Weight by joint probability.</strong> A common combination gets a loud vote. A rare one gets a whisper.</div>'+
+            '<div class="proc-step"><strong>5. Pile up all votes.</strong> Positive pile = they move together. Negative = they move apart.</div>'+
+            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Cov(X,E) = ΣΣ (xᵢ − μₓ)(eⱼ − μₑ) · P(xᵢ, eⱼ)</div>'+
+            '</div>'+
+            '<div class="proc-block"><div class="proc-title">The four zones</div>'+
+            '<div class="proc-step">The center point (μₓ, μₑ) splits the plane into four zones. Top-right and bottom-left are “together” zones (same side, positive product). Top-left and bottom-right are “opposite” zones (different sides, negative product). Every cell falls into one of these zones. The formula walks every cell, checks which zone, weights by probability, piles up.</div>'+
+            '</div></div>';
+    } else if(currentStep === 3){
+        el.innerHTML = '<div class="step-content"><h3>Step 3 — The Data</h3>'+
+            '<p>X ∈ {0, 1}, E ∈ {0, 1}. Four cells on the plane.</p>'+
+            '<div class="data-card"><div class="data-title">Joint probability table</div><table class="data-table">'+
+            '<tr><th></th><th>X = 0</th><th>X = 1</th></tr>'+
+            '<tr><th>E = 1</th><td>0.1</td><td>0.4</td></tr>'+
+            '<tr><th>E = 0</th><td>0.4</td><td>0.1</td></tr>'+
+            '</table></div>'+
+            '<p><strong>Centers:</strong> μₓ = 0.5, μₑ = 0.5</p>'+
+            '<p>Heavy mass (0.4) sits in the together zones. Light mass (0.1) in the opposite zones. You can already see the lean before you calculate.</p>'+
+            '</div>';
+        markDone(2);
+    } else if(currentStep === 4){
+        const labels = ['Bottom-left (X=0, E=0)', 'Top-left (X=0, E=1)', 'Bottom-right (X=1, E=0)', 'Top-right (X=1, E=1)'];
+        let pile = 0;
+        let html = '<div class="step-content"><h3>Step 4 — Walk the Cells</h3>'+
+            '<p>Four cells. Four votes. Pile up the verdict.</p>';
+        [0,1,2,3].forEach((idx, i) => {
+            const c = COV_CELLS[idx];
+            pile += c.vote;
+            const dir = c.zone === 'together' ? 'Same side → positive' : 'Opposite sides → negative';
+            const voteColor = c.vote > 0 ? 'var(--green)' : 'var(--red)';
+            const voteWord = c.vote > 0 ? 'together' : 'apart';
+            html += '<div class="derivation"><div class="d-label">'+labels[i]+'</div>'+
+                '<div class="d-line">X distance: '+c.x+' − 0.5 = '+c.dx.toFixed(1)+' &nbsp; E distance: '+c.e+' − 0.5 = '+c.de.toFixed(1)+'</div>'+
+                '<div class="d-line">Direction-detector: ('+c.dx.toFixed(1)+')('+c.de.toFixed(1)+') = '+c.prod.toFixed(2)+' &nbsp; <span style="color:var(--muted)">'+dir+'</span></div>'+
+                '<div class="d-line">Weight: '+c.prod.toFixed(2)+' × '+c.p+' = <strong style="color:'+voteColor+'">'+c.vote.toFixed(3)+'</strong> — vote <em>'+voteWord+'</em></div>'+
+                '<div class="d-line">Pile = '+pile.toFixed(3)+'</div></div>';
+        });
+        html += '<div class="result-box"><div class="result-box-name">Cov(X,E)</div>'+
+            '<div class="result-box-formula">+0.10 − 0.025 − 0.025 + 0.10</div>'+
+            '<div class="result-box-value" style="color:var(--green)">Cov(X,E) = +0.15</div></div>';
+        html += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">Positive. The together votes won. When X moves up, E moves up. When X moves down, E moves down. They move as one.</p>';
+        html += '</div>';
+        el.innerHTML = html;
+        markDone(3);
+    }
+}
+
+function markDone(upTo){
+    document.querySelectorAll('.step-btn').forEach((b,i) => {
+        if(i < upTo) b.classList.add('done');
+    });
+}
+
+/* === VISUALIZATIONS === */
+function drawViz(){
+    if(mode === 'var') drawVarianceViz();
+    else drawCovarianceViz();
+}
+
+function drawVarianceViz(){
+    document.getElementById('viz-label').textContent = 'The Spread';
+    document.getElementById('viz-title').textContent = 'Distance from Center';
+    document.getElementById('viz-desc').textContent = 'Three values measured from μ = 2.1. The green span is σ = 0.7 — one typical step from center. Bars = each value’s contribution to the pile.';
+
+    const wrap = document.getElementById('viz-wrap');
+    const canvas = document.getElementById('viz-canvas');
+    const dpr = window.devicePixelRatio || 1;
+    const cw = wrap.clientWidth - 18;
+    const ch = 400;
+    canvas.width = cw * dpr; canvas.height = ch * dpr;
+    canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr); ctx.clearRect(0, 0, cw, ch);
+
+    const accent = '#a78bfa', green = '#22c55e', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
+
+    const lineY = 55;
+    const padL = 50, padR = 50;
+    const rangeW = cw - padL - padR;
+    const xMin = 0.5, xMax = 3.5;
+    function toX(v){ return padL + (v - xMin) / (xMax - xMin) * rangeW; }
+
+    ctx.beginPath(); ctx.moveTo(padL, lineY); ctx.lineTo(cw - padR, lineY);
+    ctx.strokeStyle = border; ctx.lineWidth = 1; ctx.stroke();
+
+    [1, 2, 3].forEach(v => {
+        const x = toX(v);
+        ctx.beginPath(); ctx.moveTo(x, lineY - 5); ctx.lineTo(x, lineY + 5);
+        ctx.strokeStyle = '#3f3f46'; ctx.lineWidth = 1; ctx.stroke();
+    });
+
+    const muX = toX(VAR_MU);
+    ctx.beginPath(); ctx.setLineDash([4, 3]);
+    ctx.moveTo(muX, lineY - 28); ctx.lineTo(muX, lineY + 28);
+    ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = accent; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('μ = 2.1', muX, lineY - 30);
+
+    VAR_CONTRIBS.forEach(c => {
+        const x = toX(c.x);
+        const r = 14;
+        ctx.beginPath(); ctx.arc(x, lineY, r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(167,139,250,0.2)'; ctx.fill();
+        ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(c.x.toString(), x, lineY);
+    });
+
+    const sig = 0.7;
+    const sLeft = toX(VAR_MU - sig), sRight = toX(VAR_MU + sig);
+    const bandY = 90;
+    ctx.strokeStyle = 'rgba(34,197,94,0.45)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(muX, lineY + 14); ctx.lineTo(muX, bandY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(sLeft, bandY); ctx.lineTo(sRight, bandY);
+    ctx.strokeStyle = green; ctx.lineWidth = 1.5; ctx.stroke();
+    [sLeft, muX, sRight].forEach(xx => {
+        ctx.beginPath(); ctx.moveTo(xx, bandY - 5); ctx.lineTo(xx, bandY + 5);
+        ctx.strokeStyle = green; ctx.lineWidth = 1.5; ctx.stroke();
+    });
+    ctx.fillStyle = green; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('← σ = 0.7', (sLeft + muX) / 2, bandY - 4);
+    ctx.fillText('σ = 0.7 →', (sRight + muX) / 2, bandY - 4);
+    ctx.fillStyle = text2; ctx.font = '10px Inter,sans-serif'; ctx.textBaseline = 'top';
+    ctx.fillText('1.4', sLeft, bandY + 7);
+    ctx.fillText('2.8', sRight, bandY + 7);
+
+    const cardTop = 124;
+    const cardH = 52;
+    const cardW = Math.min((cw - 40) / 3 - 8, 200);
+    const totalCardsW = 3 * cardW + 2 * 12;
+    const cardStartX = (cw - totalCardsW) / 2;
+
+    VAR_CONTRIBS.forEach((c, i) => {
+        const cx = cardStartX + i * (cardW + 12);
+        const cy = cardTop;
+        ctx.fillStyle = 'rgba(167,139,250,0.05)';
+        ctx.strokeStyle = 'rgba(167,139,250,0.15)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, cx, cy, cardW, cardH, 6);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText('x = ' + c.x, cx + 8, cy + 7);
+        ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'right';
+        ctx.fillText('P = ' + c.p, cx + cardW - 8, cy + 7);
+        ctx.fillStyle = text2; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText('dist: ' + c.dist.toFixed(1) + '  →  sq: ' + c.sq.toFixed(2), cx + 8, cy + 25);
+        ctx.fillStyle = accent; ctx.font = 'bold 10px Inter,sans-serif';
+        ctx.fillText('×' + c.p + ' = ' + c.w.toFixed(3), cx + 8, cy + 38);
+    });
+
+    const barTop = 199;
+    const barH = 28;
+    const barSpacing = 42;
+    const maxBarW = cw - 160;
+    const maxW = 0.243;
+
+    ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Contribution to pile', cw / 2, barTop - 6);
+
+    VAR_CONTRIBS.forEach((c, i) => {
+        const by = barTop + i * barSpacing;
+        const bw = (c.w / maxW) * maxBarW;
+        ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText('x = ' + c.x, 55, by + barH / 2);
+        const barX = 65;
+        ctx.fillStyle = c.w > 0.1 ? 'rgba(167,139,250,0.3)' : 'rgba(167,139,250,0.08)';
+        roundRect(ctx, barX, by, Math.max(bw, 4), barH, 4);
+        ctx.fill();
+        ctx.strokeStyle = c.w > 0.1 ? accent : 'rgba(167,139,250,0.3)';
+        ctx.lineWidth = 1;
+        roundRect(ctx, barX, by, Math.max(bw, 4), barH, 4);
+        ctx.stroke();
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        ctx.fillText(c.w.toFixed(3), barX + Math.max(bw, 4) + 8, by + barH / 2);
+    });
+
+    const totalY = barTop + 3 * barSpacing + 5;
+    ctx.fillStyle = green; ctx.font = 'bold 14px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Pile = 0.49', cw / 2, totalY);
+    ctx.fillStyle = text2; ctx.font = '12px Inter,sans-serif';
+    ctx.fillText('σ = √0.49 = 0.7 = typical step from μ', cw / 2, totalY + 22);
+}
+
+function roundRect(ctx, x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+}
+
+function drawCovarianceViz(){
+    document.getElementById('viz-label').textContent = 'The Plane';
+    document.getElementById('viz-title').textContent = 'Four Zones';
+    document.getElementById('viz-desc').textContent = 'Together zones (green) vs opposite zones (red). Dot size = probability.';
+
+    const wrap = document.getElementById('viz-wrap');
+    const canvas = document.getElementById('viz-canvas');
+    const dpr = window.devicePixelRatio || 1;
+    const cw = wrap.clientWidth - 18;
+    const ch = 340;
+    canvas.width = cw * dpr; canvas.height = ch * dpr;
+    canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr); ctx.clearRect(0, 0, cw, ch);
+
+    const accent = '#a78bfa', green = '#22c55e', red = '#ef4444', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
+
+    const pad = 60;
+    const gridSize = Math.min(cw - pad * 2, ch - 80);
+    const gx = (cw - gridSize) / 2;
+    const gy = 30;
+    const midGX = gx + gridSize / 2;
+    const midGY = gy + gridSize / 2;
+
+    ctx.fillStyle = 'rgba(239,68,68,0.06)';
+    ctx.fillRect(gx, gy, gridSize / 2, gridSize / 2);
+    ctx.fillStyle = 'rgba(34,197,94,0.06)';
+    ctx.fillRect(midGX, gy, gridSize / 2, gridSize / 2);
+    ctx.fillStyle = 'rgba(34,197,94,0.06)';
+    ctx.fillRect(gx, midGY, gridSize / 2, gridSize / 2);
+    ctx.fillStyle = 'rgba(239,68,68,0.06)';
+    ctx.fillRect(midGX, midGY, gridSize / 2, gridSize / 2);
+
+    ctx.strokeStyle = border; ctx.lineWidth = 1;
+    ctx.strokeRect(gx, gy, gridSize, gridSize);
+
+    ctx.beginPath(); ctx.setLineDash([4, 3]);
+    ctx.moveTo(midGX, gy); ctx.lineTo(midGX, gy + gridSize);
+    ctx.moveTo(gx, midGY); ctx.lineTo(gx + gridSize, midGY);
+    ctx.strokeStyle = accent; ctx.lineWidth = 1; ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = accent; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('(μₓ, μₑ)', midGX + 4, midGY - 4);
+
+    ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('X →', gx + gridSize / 2, gy + gridSize + 8);
+    ctx.save(); ctx.translate(gx - 12, gy + gridSize / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('E →', 0, 0); ctx.restore();
+
+    ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = red; ctx.fillText('OPPOSITE', gx + gridSize * 0.25, gy + gridSize * 0.15);
+    ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: −', gx + gridSize * 0.25, gy + gridSize * 0.22);
+    ctx.fillStyle = green; ctx.font = '10px Inter,sans-serif'; ctx.fillText('TOGETHER', gx + gridSize * 0.75, gy + gridSize * 0.15);
+    ctx.fillStyle = 'rgba(34,197,94,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: +', gx + gridSize * 0.75, gy + gridSize * 0.22);
+    ctx.fillStyle = green; ctx.font = '10px Inter,sans-serif'; ctx.fillText('TOGETHER', gx + gridSize * 0.25, gy + gridSize * 0.85);
+    ctx.fillStyle = 'rgba(34,197,94,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: +', gx + gridSize * 0.25, gy + gridSize * 0.92);
+    ctx.fillStyle = red; ctx.font = '10px Inter,sans-serif'; ctx.fillText('OPPOSITE', gx + gridSize * 0.75, gy + gridSize * 0.85);
+    ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: −', gx + gridSize * 0.75, gy + gridSize * 0.92);
+
+    const dotPositions = [
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.75, p: 0.4, label: 'P=0.4', color: green },
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.35, p: 0.1, label: 'P=0.1', color: red },
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.75, p: 0.1, label: 'P=0.1', color: red },
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.35, p: 0.4, label: 'P=0.4', color: green }
+    ];
+
+    dotPositions.forEach(d => {
+        const r = 8 + d.p * 30;
+        ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = d.color === green ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.15)';
+        ctx.fill();
+        ctx.strokeStyle = d.color; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(d.label, d.x, d.y);
+    });
+
+    ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('X=0', gx + gridSize * 0.25, gy + gridSize + 20);
+    ctx.fillText('X=1', gx + gridSize * 0.75, gy + gridSize + 20);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('E=0', gx - 8, gy + gridSize * 0.75);
+    ctx.fillText('E=1', gx - 8, gy + gridSize * 0.35);
+
+    ctx.fillStyle = green; ctx.font = 'bold 13px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Cov(X,E) = +0.15 — they move together', cw / 2, gy + gridSize + 38);
+}
+
+/* === INIT === */
+renderAll();
+</script>
+<script src="test.js"></script>
+</body>
+</html>
