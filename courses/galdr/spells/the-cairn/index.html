@@ -1,591 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🪨 The Cairn — Galdr Spell | System 33</title>
-    <meta name="description" content="Interactive walkthrough of the Cairn spell — descriptive statistics: center, spread, and the pair relationship on a sample you hold.">
-    <style>
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;
-            --border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;
-            --accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;
-            --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif
-        }
-        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
-        a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
-        .container{max-width:760px;margin:0 auto;padding:0 24px}
-        .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
-        .hero{padding:48px 0 24px;text-align:center}
-        .hero-icon{font-size:3rem;margin-bottom:12px}
-        .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
-        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
-        .hero p{font-size:1rem;color:var(--text2);max-width:540px;margin:0 auto;line-height:1.6}
-        .section{padding:24px 0}
-        .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
-        .principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;font-size:.9rem;color:var(--text2);line-height:1.6}
-        .principle strong{color:var(--text)}
-        .mode-nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
-        .mode-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:12px 22px;font-family:inherit;font-size:.85rem;color:var(--text2);cursor:pointer;transition:all .2s;font-weight:500}
-        .mode-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
-        .mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
-        .step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-        .step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.8rem;color:var(--text2);cursor:pointer;transition:all .2s}
-        .step-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
-        .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
-        .step-btn.done{border-color:var(--green);color:var(--green)}
-        .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
-        .step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
-        .step-content p{color:var(--text2);font-size:.92rem;line-height:1.65;margin-bottom:10px}
-        .step-content p:last-child{margin-bottom:0}
-        .step-content strong{color:var(--text)}
-        .viz-section{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
-        .viz-section h3{font-size:1rem;font-weight:600;margin-bottom:6px}
-        .viz-section p{color:var(--text2);font-size:.85rem;margin-bottom:12px}
-        .viz-wrap{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 8px;overflow:hidden}
-        .viz-wrap canvas{display:block;margin:0 auto}
-        .proc-block{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0}
-        .proc-block .proc-title{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-        .proc-step{font-size:.88rem;color:var(--text2);line-height:1.7;margin:4px 0;padding-left:6px}
-        .proc-step strong{color:var(--text)}
-        .data-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:14px 0}
-        .data-card .data-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-        .data-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}
-        .data-table th,.data-table td{border:1px solid var(--border);padding:8px 12px;text-align:center}
-        .data-table th{background:var(--bg2);color:var(--text2);font-weight:600;font-size:.78rem}
-        .derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2)}
-        .derivation .d-label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-        .derivation .d-line{margin:2px 0}
-        .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
-        .result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
-        .result-box-formula{font-size:.9rem;color:var(--text2);margin-bottom:8px;line-height:1.5}
-        .result-box-value{font-size:1.4rem;font-weight:700;margin-top:12px}
-        .formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px}
-        .formula-ref-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-        .formula-ref-name{font-size:.95rem;font-weight:600}
-        .formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px}
-        .formula-ref-eq{font-size:.85rem;color:var(--text2);line-height:1.5}
-        .formula-ref-desc{font-size:.82rem;color:var(--muted);margin-top:6px;line-height:1.5}
-        .calc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:12px 0}
-        .calc h4{font-size:.9rem;font-weight:600;margin-bottom:8px;color:var(--text)}
-        .calc p{font-size:.85rem;color:var(--text2);line-height:1.65;margin-bottom:8px}
-        .key{display:inline-block;background:var(--bg-card);border:1px solid #3f3f46;border-radius:5px;padding:1px 7px;font-size:.8rem;color:var(--text);font-weight:600}
-        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
-        footer a{color:var(--text2)}
-        .hidden{display:none!important}
-        @media(max-width:520px){
-            .hero{padding:32px 0 20px}
-            .mode-nav{flex-direction:column}
-        }
-    </style>
-</head>
-<body>
-<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
-
-<section class="hero"><div class="container">
-    <div class="hero-icon">🪨</div>
-    <div class="hero-badge">Galdr Spell &middot; Kap 1</div>
-    <h1>The Cairn</h1>
-    <p>Stack the stones you already gathered. Find where they balance, where the middle stone sits, and how far they scatter — then whether two piles rise and fall together.</p>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>🪨 The Cairn — Galdr Formation | System 33</title><meta name="description" content="Descriptive statistics as a Galdr formation — five formulas, each walked through four steps and four moves."><style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
+.container{max-width:760px;margin:0 auto;padding:0 24px}
+.site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+.hero{padding:48px 0 24px;text-align:center}
+.hero-icon{font-size:3rem;margin-bottom:12px}
+.hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;margin-bottom:14px}
+.hero p{font-size:1rem;color:var(--text2);max-width:540px;margin:0 auto}
+.section{padding:24px 0}
+.section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+.principle{background:var(--bg2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 24px;font-size:.9rem;color:var(--text2)}
+.principle strong{color:var(--text)}
+.principle a{color:var(--accent)}
+.mode-nav,.step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.mode-btn,.step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font:inherit;font-size:.78rem;color:var(--text2);cursor:pointer;transition:all .2s}
+.mode-btn:hover,.step-btn:hover{border-color:#3f3f46}
+.mode-btn.active,.step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+.step-btn.done{border-color:var(--green);color:var(--green)}
+.viz-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
+.viz-wrap{background:radial-gradient(circle at center,rgba(167,139,250,.04),transparent 70%);border-radius:12px;padding:8px;overflow:hidden}
+.viz-wrap canvas{display:block;margin:0 auto}
+.viz-caption{color:var(--muted);font-size:.82rem;text-align:center;margin-top:12px}
+.step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+.step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
+.step-content h4{font-size:.92rem;font-weight:600;margin:18px 0 8px;color:var(--text)}
+.step-content p{color:var(--text2);font-size:.92rem;margin-bottom:12px}
+.step-content strong{color:var(--text)}.step-content em{color:var(--muted)}
+.formula-viz{display:flex;align-items:flex-start;justify-content:center;gap:8px;padding:24px 8px 16px;flex-wrap:wrap;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin:14px 0 20px}
+.formula-lhs,.formula-op{font-family:'SF Mono',Menlo,monospace;font-size:1.1rem;padding-top:8px;color:var(--text2)}
+.piece{display:inline-flex;flex-direction:column;align-items:stretch;gap:3px;padding:0 2px;text-align:center}
+.piece-text{font-family:'SF Mono',Menlo,monospace;font-size:1rem;padding:6px 10px;white-space:nowrap;color:var(--text)}
+.piece-brace{width:100%;height:14px;display:block}
+.piece[data-c="m"] .piece-brace,.piece[data-c="m"] .piece-label{color:var(--text2)}
+.piece[data-c="o"] .piece-brace,.piece[data-c="o"] .piece-label{color:var(--accent)}
+.piece[data-c="o"] .piece-text{color:var(--accent)}
+.piece[data-c="b"] .piece-brace,.piece[data-c="b"] .piece-label{color:var(--blue)}
+.piece[data-c="b"] .piece-text{color:var(--blue)}
+.piece[data-c="a"] .piece-brace,.piece[data-c="a"] .piece-label{color:var(--accent)}
+.piece[data-c="a"] .piece-text{color:var(--accent);font-weight:700}
+.piece-label{font-size:.66rem;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;font-weight:600}
+.proc-block{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0}
+.proc-step{font-size:.88rem;color:var(--text2);line-height:1.7;margin:12px 0}
+.proc-step strong{color:var(--text)}
+.input-section-label{font-size:.7rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin:14px 0 6px;font-weight:600}
+.data-table{width:100%;border-collapse:collapse;margin:6px 0 14px;font-size:.86rem}
+.data-table th,.data-table td{padding:9px 14px;border:1px solid var(--border);text-align:left}
+.data-table th{background:var(--bg2);color:var(--text2);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.data-table td{color:var(--text2);font-family:'SF Mono',Menlo,monospace}
+.data-table td:first-child{color:var(--text);font-family:var(--font)}
+.action-btn{background:var(--accent);color:#0a0a0b;border:none;border-radius:10px;padding:11px 18px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+.action-btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2);font-family:'SF Mono',Menlo,monospace}
+.derivation .d-label{color:var(--accent);font-size:.7rem;text-transform:uppercase;margin-bottom:8px;font-family:var(--font);font-weight:600;letter-spacing:.05em}
+.derivation strong{color:var(--text)}
+.result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
+.result-box.blue{border-left-color:var(--blue)}.result-box.red{border-left-color:var(--red)}
+.result-box-name{font-size:.75rem;color:var(--muted);text-transform:uppercase;margin-bottom:12px;letter-spacing:.05em}
+.result-box-value{font-size:1.4rem;font-weight:700;color:var(--accent);font-family:'SF Mono',Menlo,monospace}
+.result-box.blue .result-box-value{color:var(--blue)}.result-box.red .result-box-value{color:var(--red)}
+.result-box-desc{font-size:.88rem;color:var(--text2);margin-top:10px;font-family:var(--font)}
+.empty-step{text-align:center;color:var(--muted);font-size:.9rem;padding:24px 0;font-style:italic}
+.calc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:12px 0}
+.calc h4{font-size:.9rem;font-weight:600;margin-bottom:8px;color:var(--text)}
+.calc p{font-size:.85rem;color:var(--text2);line-height:1.65;margin-bottom:8px}
+.key{display:inline-block;background:var(--bg-card);border:1px solid #3f3f46;border-radius:5px;padding:1px 7px;font-size:.8rem;color:var(--text);font-weight:600}
+.formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:10px}
+.formula-ref-header{display:flex;justify-content:space-between;margin-bottom:8px;gap:12px}
+.formula-ref-name{font-size:.92rem;font-weight:600}
+.formula-ref-kap{font-size:.7rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:100px;white-space:nowrap}
+.formula-ref-eq{font-family:'SF Mono',Menlo,monospace;font-size:.84rem;color:var(--text2);background:var(--bg2);padding:10px 14px;border-radius:6px}
+footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
+footer a{color:var(--text2)}
+@media(max-width:600px){.piece-text{font-size:.9rem;padding:5px 6px}.data-table{font-size:.78rem}.mode-nav{flex-direction:column}}
+</style></head><body>
+<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">← Galdr Formations</a></div></header>
+<section class="hero"><div class="container"><div class="hero-icon">🪨</div><div class="hero-badge">Galdr Formation · Kap 1</div><h1>The Cairn</h1><p>Describe the pile of data you already hold. Pick a formula, walk the four steps, watch each move build.</p></div></section>
+<section class="section"><div class="container"><div class="principle"><strong>First principle.</strong> The Cairn works on a <strong>sample you already gathered</strong> — a finished pile of numbers. It never forecasts; it describes. Every formula here is one of three questions about that pile: where is its <strong>center</strong>, how wide is its <strong>spread</strong>, and do two columns <strong>move together</strong>. The split that runs through the whole course: the Cairn counts real stones and divides by n (or n−1); the <a href="/courses/galdr/spells/weighing-table/">Weighing Table</a> weighs a distribution of what could happen by P(x). Same skeleton, different fuel.</div></div></section>
+<section class="section"><div class="container"><div class="section-label">Choose the formula</div><div class="mode-nav">
+<button class="mode-btn active" onclick="switchForm(1)">Form 1 — Mean X̄</button>
+<button class="mode-btn" onclick="switchForm(2)">Form 2 — Median, Quartiles &amp; Mode</button>
+<button class="mode-btn" onclick="switchForm(3)">Form 3 — Variance &amp; Sₓ</button>
+<button class="mode-btn" onclick="switchForm(4)">Form 4 — Covariance Sₓᵧ</button>
+<button class="mode-btn" onclick="switchForm(5)">Form 5 — Correlation Rₓᵧ</button>
+</div></div></section>
+<section class="section"><div class="container"><div class="section-label" id="viz-label">The Line</div><div class="viz-wrapper"><div class="viz-wrap"><canvas id="viz-canvas"></canvas></div><p class="viz-caption" id="viz-caption">Walk the four steps. Drop the data in Step 3 to resolve the pile.</p></div></div></section>
+<section class="section"><div class="container"><div class="section-label">Walk the formation</div><div class="step-nav">
+<button class="step-btn active" data-step="1">Step 1 — Blueprint</button>
+<button class="step-btn" data-step="2">Step 2 — Process</button>
+<button class="step-btn" data-step="3">Step 3 — Data</button>
+<button class="step-btn" data-step="4">Step 4 — Formula</button>
+<button class="step-btn" data-step="5">Test</button>
+</div><div id="step-container"></div></div></section>
+<section class="section"><div class="container"><div class="section-label">Check it on the Casio fx-82CW</div><div class="calc"><h4>Statistics app</h4><p>From <span class="key">HOME</span> open <strong>Statistics</strong>. Pick <strong>1-Variable</strong> for one column, or <strong>2-Variable</strong> (y=a+bx) for paired X and Y. Type each value, press <span class="key">=</span> after each; set the <strong>Frequency</strong> column on if values repeat.</p><p><strong>1-Variable</strong> reads out x̄ · Σx · Σx² · n · sₓ (sample, ÷n−1) · σₓ (population, ÷n) · minX · Q1 · Median · Q3 · maxX. <strong>2-Variable</strong> adds ȳ, sᵧ, and the line a+bx with <strong>r</strong> — that r is exactly Rₓᵧ.</p><p style="color:var(--muted)">The trap: <strong>sₓ</strong> is the sample one (n−1) the exam usually wants; <strong>σₓ</strong> is the population one (n). Same data, two buttons.</p></div></div></section>
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container"><div class="section-label">Formula Reference — Kap 1</div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Mean X̄</span><span class="formula-ref-kap">Center</span></div><div class="formula-ref-eq">X̄ = (1/n) · Σ xᵢ</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Weighted mean X̄ᵥ</span><span class="formula-ref-kap">Center</span></div><div class="formula-ref-eq">X̄ᵥ = Σ(xᵢ·wᵢ) / Σ wᵢ</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Median &amp; Quartiles</span><span class="formula-ref-kap">Center</span></div><div class="formula-ref-eq">median pos = (n+1)/2 · Q1 = (n+1)/4 · Q3 = 3(n+1)/4 · IQR = Q3−Q1</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Sample variance Sₓ²</span><span class="formula-ref-kap">Spread</span></div><div class="formula-ref-eq">Sₓ² = (1/(n−1)) · Σ (xᵢ − X̄)²</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Population variance S² &amp; bridge</span><span class="formula-ref-kap">Spread</span></div><div class="formula-ref-eq">S² = (1/n) · Σ (xᵢ − X̄)² · S = √((n−1)/n) · Sₓ</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Standard deviation Sₓ</span><span class="formula-ref-kap">Spread</span></div><div class="formula-ref-eq">Sₓ = √(Sₓ²)</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Sample covariance Sₓᵧ</span><span class="formula-ref-kap">Pairs</span></div><div class="formula-ref-eq">Sₓᵧ = (1/(n−1)) · Σ (xᵢ − X̄)(yᵢ − Ȳ)</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Correlation Rₓᵧ</span><span class="formula-ref-kap">Pairs</span></div><div class="formula-ref-eq">Rₓᵧ = Sₓᵧ / (Sₓ · Sᵧ) ∈ [−1, +1]</div></div>
 </div></section>
-
-<section class="section"><div class="container">
-    <div class="principle">
-        <strong>This is data you already hold.</strong> Not a forecast — a finished pile of numbers you went out and collected. The Cairn describes it: its center, its spread, and how two columns move together. The split that matters for the whole course — the Cairn counts real stones and divides by <strong>n</strong> (or <strong>n&minus;1</strong> for a sample); the <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> weighs a <em>distribution of what could happen</em> by probability. Same skeleton — center, spread, co-movement — different fuel.
-    </div>
-</div></section>
-
-<section class="section"><div class="container">
-    <div class="section-label">Choose the Measure</div>
-    <div class="mode-nav">
-        <button class="mode-btn active" data-mode="center">Center &mdash; mean, median, quartiles</button>
-        <button class="mode-btn" data-mode="spread">Spread &mdash; variance, &sigma;</button>
-        <button class="mode-btn" data-mode="pairs">Pairs &mdash; covariance, correlation</button>
-    </div>
-</div></section>
-
-<section class="section" id="viz-section"><div class="container">
-    <div class="section-label" id="viz-label">The Line</div>
-    <div class="viz-section">
-        <h3 id="viz-title">Where the stones sit</h3>
-        <p id="viz-desc">The sorted sample, its balance point, and its landmarks.</p>
-        <div class="viz-wrap" id="viz-wrap">
-            <canvas id="viz-canvas"></canvas>
-        </div>
-    </div>
-</div></section>
-
-<section class="section"><div class="container">
-    <div class="section-label">Walk the spell</div>
-    <div class="step-nav" id="step-nav">
-        <button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
-        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
-        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
-        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
-    </div>
-    <div id="step-container"></div>
-</div></section>
-
-<section class="section"><div class="container">
-    <div class="section-label">Check it on the Casio fx-82CW</div>
-    <div class="calc">
-        <h4>Statistics app</h4>
-        <p>From <span class="key">HOME</span> open <strong>Statistics</strong>. Pick <strong>1-Variable</strong> for one column, or <strong>2-Variable</strong> (y=a+bx) for paired X and Y. Type each value, press <span class="key">=</span> after each. If values repeat, switch the <strong>Frequency</strong> column on and enter counts.</p>
-        <p>Press <span class="key">OK</span> / the on-screen <strong>Statistics</strong> result to read the summary.</p>
-        <h4 style="margin-top:12px">1-Variable gives you</h4>
-        <p><strong>x&#772;</strong> mean &middot; <strong>&Sigma;x</strong> &middot; <strong>&Sigma;x&sup2;</strong> &middot; <strong>n</strong> &middot; <strong>s<sub>x</sub></strong> sample std (&divide; n&minus;1) &middot; <strong>&sigma;<sub>x</sub></strong> population std (&divide; n) &middot; <strong>minX, Q1, Median, Q3, maxX</strong>.</p>
-        <h4 style="margin-top:12px">2-Variable adds</h4>
-        <p><strong>y&#772;</strong>, <strong>s<sub>y</sub></strong>, and the regression line <strong>a + bx</strong> with <strong>r</strong> — that <strong>r</strong> is exactly the correlation R<sub>XY</sub>.</p>
-        <p style="color:var(--muted)">The trap: <strong>s<sub>x</sub></strong> is the sample one (n&minus;1) the exam usually wants; <strong>&sigma;<sub>x</sub></strong> is the population one (n). Same data, two buttons — read the one the question asks for.</p>
-    </div>
-</div></section>
-
-<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Connected Spells</div>
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px">The <strong>Cairn</strong> describes a sample you already have. The <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> does the same three moves — center, spread, co-movement — but on a probability distribution.</p>
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7">Tell them apart by the fuel: a <strong>list of observations</strong> (divide by n or n&minus;1) is the Cairn; a column of <strong>P(x)</strong> that sums to 1 is the Weighing Table.</p>
-    </div>
-</div></section>
-
-<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Formula Reference &mdash; Kap 1</div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">X&#772; &mdash; Mean</span><span class="formula-ref-kap">Center</span></div>
-        <div class="formula-ref-eq">X&#772; = (1/n) &middot; &Sigma; x<sub>i</sub></div>
-        <div class="formula-ref-desc">Add every value, divide by the count. The balance point — every stone pulls on it equally.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">X&#772;<sub>v</sub> &mdash; Weighted Mean</span><span class="formula-ref-kap">Center</span></div>
-        <div class="formula-ref-eq">X&#772;<sub>v</sub> = &Sigma;(x<sub>i</sub> &middot; w<sub>i</sub>) / &Sigma; w<sub>i</sub></div>
-        <div class="formula-ref-desc">When values carry different importance. Heavier weights drag the center toward them.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Median</span><span class="formula-ref-kap">Center</span></div>
-        <div class="formula-ref-eq">position = (n+1)/2 &nbsp; (average the two middle if n is even)</div>
-        <div class="formula-ref-desc">Sort first. The middle stone. Ignores how far the outliers reach — robust where the mean is dragged.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Quartiles &amp; IQR</span><span class="formula-ref-kap">Center</span></div>
-        <div class="formula-ref-eq">Q1 pos = (n+1)/4 &nbsp; Q3 pos = 3(n+1)/4 &nbsp; IQR = Q3 &minus; Q1</div>
-        <div class="formula-ref-desc">The quarter-marks. If a position lands between two stones, interpolate. IQR is the spread of the middle 50%.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Mode</span><span class="formula-ref-kap">Center</span></div>
-        <div class="formula-ref-eq">the most frequent value</div>
-        <div class="formula-ref-desc">The tallest stack. Modal percentage = (frequency of mode / n) &middot; 100%.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">S<sub>x</sub>&sup2; &mdash; Sample Variance</span><span class="formula-ref-kap">Spread</span></div>
-        <div class="formula-ref-eq">S<sub>x</sub>&sup2; = (1/(n&minus;1)) &middot; &Sigma;(x<sub>i</sub> &minus; X&#772;)&sup2;</div>
-        <div class="formula-ref-desc">Average squared distance from the mean. Divide by n&minus;1 because the mean ate one degree of freedom.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">S&sup2; &mdash; Population Variance</span><span class="formula-ref-kap">Spread</span></div>
-        <div class="formula-ref-eq">S&sup2; = (1/n) &middot; &Sigma;(x<sub>i</sub> &minus; X&#772;)&sup2;</div>
-        <div class="formula-ref-desc">Same pile, divided by n. Use it when the data <em>is</em> the whole population, not a sample.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">S &harr; S<sub>x</sub></span><span class="formula-ref-kap">Spread</span></div>
-        <div class="formula-ref-eq">S = &radic;((n&minus;1)/n) &middot; S<sub>x</sub></div>
-        <div class="formula-ref-desc">Population std is always slightly smaller than sample std. The gap shrinks toward zero as n grows.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">S<sub>x</sub> &mdash; Standard Deviation</span><span class="formula-ref-kap">Spread</span></div>
-        <div class="formula-ref-eq">S<sub>x</sub> = &radic;(S<sub>x</sub>&sup2;)</div>
-        <div class="formula-ref-desc">Square root of variance — folds the pile back onto the original scale. If the data is in kroner, so is S<sub>x</sub>.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">S<sub>XY</sub> &mdash; Sample Covariance</span><span class="formula-ref-kap">Pairs</span></div>
-        <div class="formula-ref-eq">S<sub>XY</sub> = (1/(n&minus;1)) &middot; &Sigma;(x<sub>i</sub> &minus; X&#772;)(y<sub>i</sub> &minus; Y&#772;)</div>
-        <div class="formula-ref-desc">For each pair, multiply X&rsquo;s distance from its mean by Y&rsquo;s. Positive = move together, negative = move apart.</div>
-    </div>
-    <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">R<sub>XY</sub> &mdash; Correlation</span><span class="formula-ref-kap">Pairs</span></div>
-        <div class="formula-ref-eq">R<sub>XY</sub> = S<sub>XY</sub> / (S<sub>x</sub> &middot; S<sub>y</sub>)</div>
-        <div class="formula-ref-desc">Covariance stripped of units onto [&minus;1, +1]. &plusmn;1 is a perfect line, 0 is no linear link.</div>
-    </div>
-</div></section>
-
-<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
-
-<script>
-/* === FIXED DATA === */
-const C = { x:[2,4,4,5,7,8,10], n:7, sum:40, mean:40/7, median:5, mode:4, q1:4, q3:8, iqr:4 };
-const S = { x:[25,30,35], n:3, mean:30, dev:[-5,0,5], sq:[25,0,25], sumsq:50, svar:25, sstd:5, pvar:50/3, pstd:Math.sqrt(50/3) };
-const P = { x:[25,30,35], y:[12,8,4], n:3, mx:30, my:8, dx:[-5,0,5], dy:[4,0,-4], prod:[-20,0,-20], sumprod:-40, sxy:-20, sx:5, sy:4, r:-1 };
-
-let mode = 'center', currentStep = 1;
-
-/* === MODE SWITCHING === */
-document.querySelectorAll('.mode-btn').forEach(b => {
-    b.addEventListener('click', () => {
-        document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
-        mode = b.dataset.mode;
-        currentStep = 1;
-        document.querySelectorAll('.step-btn').forEach(s => s.classList.remove('done'));
-        renderAll();
-    });
-});
-
-/* === STEP NAV === */
-document.querySelectorAll('.step-btn').forEach(b => {
-    b.addEventListener('click', () => {
-        currentStep = parseInt(b.dataset.step);
-        renderStep();
-    });
-});
-
-function renderAll(){ drawViz(); renderStep(); }
-
-function renderStep(){
-    document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
-    const btns = document.querySelectorAll('.step-btn');
-    if(btns[currentStep-1]) btns[currentStep-1].classList.add('active');
-    const el = document.getElementById('step-container');
-    if(mode === 'center') renderCenterStep(el);
-    else if(mode === 'spread') renderSpreadStep(el);
-    else renderPairsStep(el);
-}
-
-function markDone(upTo){
-    document.querySelectorAll('.step-btn').forEach((b,i) => { if(i < upTo) b.classList.add('done'); });
-}
-
-/* === CENTER STEPS === */
-function renderCenterStep(el){
-    if(currentStep === 1){
-        el.innerHTML = '<div class="step-content"><h3>Step 1 — Blueprint</h3>'+
-            '<p>Recognize the question: <strong>where does this pile of data sit, and what are its landmarks?</strong></p>'+
-            '<p>Four answers, not one. The <strong>mean</strong> — the balance point. The <strong>median</strong> — the middle stone once you sort. The <strong>mode</strong> — the value that shows up most. The <strong>quartiles</strong> — the quarter-marks that cut the line into four equal groups.</p>'+
-            '<p style="color:var(--accent);font-weight:500;margin-top:12px">X&#772; = (1/n) · Σ xᵢ</p>'+
-            '<p style="margin-top:12px">Mean and median answer the same question — <em>where is the middle?</em> — but the mean feels every value (so outliers drag it), while the median only counts positions (so it shrugs them off). When they disagree, the gap between them is telling you the data leans.</p>'+
-            '</div>';
-    } else if(currentStep === 2){
-        el.innerHTML = '<div class="step-content"><h3>Step 2 — The Process</h3>'+
-            '<p>One rule comes before everything: <strong>sort the data</strong>. Position-based measures are meaningless until the stones are in order.</p>'+
-            '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>Sort.</strong> Smallest to largest. Now every position means something.</div>'+
-            '<div class="proc-step"><strong>Mean (X&#772;).</strong> Add every value, divide by n. The balance point — where the line would tip on a fingertip.</div>'+
-            '<div class="proc-step"><strong>Median.</strong> Step to position (n+1)/2. If n is odd that lands on one stone; if even, average the two it sits between.</div>'+
-            '<div class="proc-step"><strong>Mode.</strong> The value that repeats most — the tallest stack of identical stones.</div>'+
-            '<div class="proc-step"><strong>Quartiles.</strong> Q1 at position (n+1)/4, Q3 at 3(n+1)/4. If the position falls between two stones, interpolate. IQR = Q3 − Q1, the spread of the middle half.</div>'+
-            '</div>'+
-            '<div class="proc-block"><div class="proc-title">The cairn</div>'+
-            '<div class="proc-step">Lay the stones in a row by size. The <strong>mean</strong> is where the row balances. The <strong>median</strong> is the stone you reach walking to the dead middle. The <strong>quartiles</strong> are the stones at the quarter and three-quarter marks. Mean listens to <em>distance</em>; median and quartiles only listen to <em>position</em>.</div>'+
-            '</div></div>';
-    } else if(currentStep === 3){
-        el.innerHTML = '<div class="step-content"><h3>Step 3 — The Data</h3>'+
-            '<p>Read what you were handed. No solving — just look. This sample is already sorted, n = 7.</p>'+
-            '<div class="data-card"><div class="data-title">Sample (sorted)</div><table class="data-table">'+
-            '<tr><th>position</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>'+
-            '<tr><th>xᵢ</th><td>2</td><td>4</td><td>4</td><td>5</td><td>7</td><td>8</td><td>10</td></tr>'+
-            '</table></div>'+
-            '<p>Seven values, already in order, so positions are ready to read. The value <strong>4</strong> appears twice — already a hint at the mode. The middle position is the 4th, sitting on <strong>5</strong>. Before any arithmetic you can feel the center near 5 or 6, with the lone 10 tugging the mean a little higher than the median. That hunch is all you take from this station.</p>'+
-            '</div>';
-        markDone(2);
-    } else if(currentStep === 4){
-        let h = '<div class="step-content"><h3>Step 4 — Run the Formula</h3>'+
-            '<p>Now the solve. Sort is already done, so we read the landmarks one by one.</p>';
-        h += '<div class="derivation"><div class="d-label">Mean — the balance point</div>'+
-            '<div class="d-line">X&#772; = (2+4+4+5+7+8+10) / 7 = 40 / 7 = <strong>5.71</strong></div></div>';
-        h += '<div class="derivation"><div class="d-label">Median — the middle position</div>'+
-            '<div class="d-line">position = (n+1)/2 = (7+1)/2 = 4 → the 4th value = <strong>5</strong></div></div>';
-        h += '<div class="derivation"><div class="d-label">Mode — most frequent</div>'+
-            '<div class="d-line">4 appears twice, every other value once → mode = <strong>4</strong></div></div>';
-        h += '<div class="derivation"><div class="d-label">Quartiles — the quarter-marks</div>'+
-            '<div class="d-line">Q1 position = (n+1)/4 = 8/4 = 2 → the 2nd value = <strong>4</strong></div>'+
-            '<div class="d-line">Q3 position = 3(n+1)/4 = 24/4 = 6 → the 6th value = <strong>8</strong></div>'+
-            '<div class="d-line">IQR = Q3 − Q1 = 8 − 4 = <strong>4</strong> (the middle half spans 4 units)</div></div>';
-        h += '<div class="result-box"><div class="result-box-name">The landmarks</div>'+
-            '<div class="result-box-formula">mean 5.71 · median 5 · mode 4 · Q1 4 · Q3 8 · IQR 4</div>'+
-            '<div class="result-box-value">X&#772; = 5.71, Median = 5</div></div>';
-        h += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">The mean (5.71) sits above the median (5) — the single 10 pulls the balance point right, but the middle stone does not budge. That gap is the fingerprint of a right-leaning tail.</p>';
-        h += '<p style="color:var(--text2);font-size:.85rem;margin-top:10px">Here Q1 and Q3 land on exact positions. When (n+1)/4 lands between two stones — say position 3.25 — you step 3 stones in, then add 0.25 of the gap to the next: interpolate.</p>';
-        h += '</div>';
-        el.innerHTML = h;
-        markDone(3);
-    }
-}
-
-/* === SPREAD STEPS === */
-function renderSpreadStep(el){
-    if(currentStep === 1){
-        el.innerHTML = '<div class="step-content"><h3>Step 1 — Blueprint</h3>'+
-            '<p>Recognize the question: <strong>how far do the values spread from the mean?</strong></p>'+
-            '<p>Same idea as the Weighing Table, but the fuel is a raw sample, not probabilities — so we count distances and divide, instead of weighting by P(x).</p>'+
-            '<p style="color:var(--accent);font-weight:500;margin-top:12px">S<sub>x</sub>² = (1/(n−1)) · Σ (xᵢ − X&#772;)²</p>'+
-            '<p style="margin-top:12px">The spell ends in <strong>S<sub>x</sub></strong>, the standard deviation — the typical distance a value sits from the mean, back in the original units. Variance is the pile you build on the way; S<sub>x</sub> is the answer you can pace out.</p>'+
-            '</div>';
-    } else if(currentStep === 2){
-        el.innerHTML = '<div class="step-content"><h3>Step 2 — The Process</h3>'+
-            '<p>Three stages, in sequence — the same three you walk in Step 4.</p>'+
-            '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>Stage 1 — Find the center (X&#772;).</strong> Sum ÷ n. You measure every distance <em>from</em> this point, so it comes first.</div>'+
-            '<div class="proc-step"><strong>Stage 2 — Build the pile.</strong> For each value: subtract the mean to get its distance, square it (kills the sign — you want how far, not which side — and amplifies big gaps), then sum all the squares with Σ.</div>'+
-            '<div class="proc-step"><strong>Stage 3 — Divide and fold.</strong> Divide the pile by <strong>n−1</strong> for a sample (or n for a whole population) → that is the variance. Then √ to fold it back onto the original scale → S<sub>x</sub>.</div>'+
-            '<div class="proc-step" style="margin-top:10px;color:var(--accent)">Stage 2+3: &nbsp; S<sub>x</sub>² = (1/(n−1)) · Σ (xᵢ − X&#772;)² &nbsp; → &nbsp; S<sub>x</sub> = √(S<sub>x</sub>²)</div>'+
-            '</div>'+
-            '<div class="proc-block"><div class="proc-title">Why n−1 — the slot that got spent</div>'+
-            '<div class="proc-step">You cannot make a new number from the data for free. To get the mean, the data spent one of its own degrees of freedom — once you know the mean and all but one value, the last value is forced. So only <strong>n−1</strong> distances are truly free to vary. Dividing by n−1 (not n) accounts for that spent slot. It is not a fudge — it is honest bookkeeping.</div>'+
-            '</div></div>';
-    } else if(currentStep === 3){
-        el.innerHTML = '<div class="step-content"><h3>Step 3 — The Data</h3>'+
-            '<p>Read what you were handed. A <strong>sample</strong> of three measurements — so this will be the n−1 version.</p>'+
-            '<div class="data-card"><div class="data-title">Sample</div><table class="data-table">'+
-            '<tr><th>xᵢ</th><td>25</td><td>30</td><td>35</td></tr>'+
-            '</table></div>'+
-            '<p>Three values, evenly placed 5 apart, with 30 sitting dead in the middle. Symmetric, so you can already see the mean will be 30 and the two ends will contribute equal squared distances. The middle value adds nothing to the spread — it sits right on the center. That hunch is all you take here.</p>'+
-            '</div>';
-        markDone(2);
-    } else if(currentStep === 4){
-        let h = '<div class="step-content"><h3>Step 4 — Run the Formula</h3>'+
-            '<p>The three stages, always in order.</p>';
-        h += '<div class="derivation"><div class="d-label">Stage 1 — Find the center</div>'+
-            '<div class="d-line">X&#772; = (25 + 30 + 35) / 3 = 90 / 3 = <strong>30</strong></div></div>';
-        h += '<p style="color:var(--text2);font-size:.9rem;margin-top:18px"><strong>Stage 2 — Build the pile.</strong> Distance from 30, squared, for each value.</p>';
-        h += '<div class="derivation"><div class="d-label">Squared distances</div>'+
-            '<div class="d-line">(25 − 30)² = (−5)² = 25</div>'+
-            '<div class="d-line">(30 − 30)² = (0)² = 0</div>'+
-            '<div class="d-line">(35 − 30)² = (5)² = 25</div>'+
-            '<div class="d-line">Pile = 25 + 0 + 25 = <strong>50</strong></div></div>';
-        h += '<p style="color:var(--text2);font-size:.9rem;margin-top:18px"><strong>Stage 3 — Divide and fold.</strong> This is a sample, so divide by n−1 = 2.</p>';
-        h += '<div class="derivation"><div class="d-label">Variance and standard deviation</div>'+
-            '<div class="d-line">S<sub>x</sub>² = 50 / (3 − 1) = 50 / 2 = <strong>25</strong></div>'+
-            '<div class="d-line">S<sub>x</sub> = √25 = <strong>5</strong> — the typical distance from the mean, in the same units as the data</div></div>';
-        h += '<div class="result-box"><div class="result-box-name">Result — sample spread</div>'+
-            '<div class="result-box-formula">S<sub>x</sub>² = 25</div>'+
-            '<div class="result-box-value">S<sub>x</sub> = 5</div></div>';
-        h += '<div class="derivation" style="margin-top:18px"><div class="d-label">If it were the whole population</div>'+
-            '<div class="d-line">Divide the same pile by n = 3 instead: S² = 50 / 3 = 16.67 → σ = √16.67 ≈ <strong>4.08</strong></div>'+
-            '<div class="d-line">Check the bridge: S = √((n−1)/n) · S<sub>x</sub> = √(2/3) · 5 ≈ 0.816 · 5 ≈ <strong>4.08</strong> ✓ — population spread is always the smaller of the two.</div></div>';
-        h += '</div>';
-        el.innerHTML = h;
-        markDone(3);
-    }
-}
-
-/* === PAIRS STEPS === */
-function renderPairsStep(el){
-    if(currentStep === 1){
-        el.innerHTML = '<div class="step-content"><h3>Step 1 — Blueprint</h3>'+
-            '<p>Recognize the question: <strong>when X moves, does Y move with it — in this sample?</strong></p>'+
-            '<p>Each observation is a pair (xᵢ, yᵢ). We check whether they sit on the same side of their own means or opposite sides.</p>'+
-            '<p style="color:var(--accent);font-weight:500;margin-top:12px">S<sub>XY</sub> = (1/(n−1)) · Σ (xᵢ − X&#772;)(yᵢ − Y&#772;)</p>'+
-            '<p style="margin-top:12px">The spell ends in <strong>two</strong> numbers: <strong>S<sub>XY</sub></strong>, the raw direction pile, and <strong>R<sub>XY</sub></strong>, that signal folded onto −1 to +1 so you can judge how <em>strong</em> the link is, not just its direction.</p>'+
-            '</div>';
-    } else if(currentStep === 2){
-        el.innerHTML = '<div class="step-content"><h3>Step 2 — The Process</h3>'+
-            '<p>Three stages, in sequence — the same three you walk in Step 4.</p>'+
-            '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>Stage 1 — Find both centers (X&#772;, Y&#772;).</strong> Each column has its own mean, found the Center way. You measure both distances from these two points.</div>'+
-            '<div class="proc-step"><strong>Stage 2 — Build the pile.</strong> For each pair: take X&rsquo;s distance from X&#772; and Y&rsquo;s distance from Y&#772;, multiply them (same side → +, opposite sides → −), sum all products, divide by n−1. That is S<sub>XY</sub>.</div>'+
-            '<div class="proc-step"><strong>Stage 3 — Fold to R<sub>XY</sub>.</strong> Raw covariance has mixed units and no fixed ceiling. Divide by each column&rsquo;s own spread — S<sub>x</sub> · S<sub>y</sub> — to land on −1 to +1.</div>'+
-            '<div class="proc-step" style="margin-top:10px;color:var(--accent)">Stage 3: &nbsp; R<sub>XY</sub> = S<sub>XY</sub> / (S<sub>x</sub> · S<sub>y</sub>)</div>'+
-            '</div>'+
-            '<div class="proc-block"><div class="proc-title">The product is a direction-detector</div>'+
-            '<div class="proc-step">Two distances multiplied. Both above their means (+ × +) or both below (− × −) → positive, they agree. One above and one below (+ × −) → negative, they disagree. The size says how loud; the sign says which way. Pile up all the votes and you have the direction of the relationship.</div>'+
-            '</div></div>';
-    } else if(currentStep === 3){
-        el.innerHTML = '<div class="step-content"><h3>Step 3 — The Data</h3>'+
-            '<p>Read what you were handed. Three paired observations — same n = 3 sample as Spread, now with a partner column Y.</p>'+
-            '<div class="data-card"><div class="data-title">Paired sample</div><table class="data-table">'+
-            '<tr><th>xᵢ</th><td>25</td><td>30</td><td>35</td></tr>'+
-            '<tr><th>yᵢ</th><td>12</td><td>8</td><td>4</td></tr>'+
-            '</table></div>'+
-            '<p>As X climbs 25 → 30 → 35, Y falls 12 → 8 → 4. They move in opposite directions, lockstep. Before any arithmetic you can feel a negative relationship — and because it is perfectly straight-line, you might even guess R<sub>XY</sub> = −1. That hunch is all you take here; Step 4 proves it.</p>'+
-            '</div>';
-        markDone(2);
-    } else if(currentStep === 4){
-        let h = '<div class="step-content"><h3>Step 4 — Run the Formula</h3>'+
-            '<p>The three stages, always in order.</p>';
-        h += '<div class="derivation"><div class="d-label">Stage 1 — Both centers</div>'+
-            '<div class="d-line">X&#772; = (25 + 30 + 35)/3 = <strong>30</strong></div>'+
-            '<div class="d-line">Y&#772; = (12 + 8 + 4)/3 = 24/3 = <strong>8</strong></div></div>';
-        h += '<p style="color:var(--text2);font-size:.9rem;margin-top:18px"><strong>Stage 2 — Build the pile.</strong> Each pair: X&rsquo;s distance × Y&rsquo;s distance.</p>';
-        h += '<div class="derivation"><div class="d-label">Products of paired distances</div>'+
-            '<div class="d-line">(25−30)(12−8) = (−5)(4) = −20 &nbsp; <span style="color:var(--muted)">opposite sides</span></div>'+
-            '<div class="d-line">(30−30)(8−8) = (0)(0) = 0</div>'+
-            '<div class="d-line">(35−30)(4−8) = (5)(−4) = −20 &nbsp; <span style="color:var(--muted)">opposite sides</span></div>'+
-            '<div class="d-line">Pile = −20 + 0 − 20 = −40</div>'+
-            '<div class="d-line">S<sub>XY</sub> = −40 / (n−1) = −40 / 2 = <strong>−20</strong></div></div>';
-        h += '<div class="result-box"><div class="result-box-name">Stage 2 result — covariance</div>'+
-            '<div class="result-box-formula">S<sub>XY</sub> = (1/(n−1)) Σ (xᵢ − X&#772;)(yᵢ − Y&#772;)</div>'+
-            '<div class="result-box-value" style="color:var(--red)">S<sub>XY</sub> = −20</div></div>';
-        h += '<p style="color:var(--text2);font-size:.9rem;margin-top:18px"><strong>Stage 3 — Fold to R<sub>XY</sub>.</strong> Need each column&rsquo;s own spread first.</p>';
-        h += '<div class="derivation"><div class="d-label">Each spread, then the fold</div>'+
-            '<div class="d-line">X: (25,30,35) → S<sub>x</sub> = 5 (from the Spread walk)</div>'+
-            '<div class="d-line">Y: distances (4,0,−4) → squares 16+0+16 = 32 → S<sub>y</sub>² = 32/2 = 16 → S<sub>y</sub> = <strong>4</strong></div>'+
-            '<div class="d-line">R<sub>XY</sub> = S<sub>XY</sub> / (S<sub>x</sub> · S<sub>y</sub>) = −20 / (5 · 4) = −20 / 20 = <strong>−1</strong></div></div>';
-        h += '<div class="result-box"><div class="result-box-name">Stage 3 result — correlation</div>'+
-            '<div class="result-box-formula">R<sub>XY</sub> = −20 / 20</div>'+
-            '<div class="result-box-value" style="color:var(--red)">R<sub>XY</sub> = −1 — perfect negative line</div></div>';
-        h += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">−1 is the floor: every point lies exactly on a downward straight line. As X rises, Y falls in perfect proportion. The covariance told you the <em>direction</em>; R<sub>XY</sub> told you it was as tight as a relationship can be.</p>';
-        h += '</div>';
-        el.innerHTML = h;
-        markDone(3);
-    }
-}
-
-/* === VISUALIZATIONS === */
-function drawViz(){
-    if(mode === 'center') drawCenterViz();
-    else if(mode === 'spread') drawSpreadViz();
-    else drawPairsViz();
-}
-
-function setupCanvas(h){
-    const wrap = document.getElementById('viz-wrap');
-    const canvas = document.getElementById('viz-canvas');
-    const dpr = window.devicePixelRatio || 1;
-    const cw = wrap.clientWidth - 18;
-    canvas.width = cw * dpr; canvas.height = h * dpr;
-    canvas.style.width = cw + 'px'; canvas.style.height = h + 'px';
-    const ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr); ctx.clearRect(0, 0, cw, h);
-    return { ctx, cw, ch:h };
-}
-
-function roundRect(ctx, x, y, w, h, r){
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
-}
-
-function drawCenterViz(){
-    document.getElementById('viz-label').textContent = 'The Line';
-    document.getElementById('viz-title').textContent = 'Where the stones sit';
-    document.getElementById('viz-desc').textContent = 'Seven sorted values. Purple = mean (5.71). Green = median (5). Markers below = Q1 and Q3.';
-    const { ctx, cw } = setupCanvas(260);
-    const accent = '#a78bfa', green = '#22c55e', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
-    const lineY = 90, padL = 40, padR = 40;
-    const xMin = 1, xMax = 11, rangeW = cw - padL - padR;
-    function toX(v){ return padL + (v - xMin) / (xMax - xMin) * rangeW; }
-    ctx.beginPath(); ctx.moveTo(padL, lineY); ctx.lineTo(cw - padR, lineY);
-    ctx.strokeStyle = border; ctx.lineWidth = 1; ctx.stroke();
-    for(let v = 2; v <= 10; v += 2){
-        const x = toX(v);
-        ctx.beginPath(); ctx.moveTo(x, lineY - 4); ctx.lineTo(x, lineY + 4); ctx.strokeStyle = '#3f3f46'; ctx.stroke();
-        ctx.fillStyle = muted; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        ctx.fillText(v.toString(), x, lineY + 8);
-    }
-    const counts = {};
-    C.x.forEach(v => {
-        counts[v] = (counts[v] || 0) + 1;
-        const x = toX(v), yy = lineY - 14 * counts[v];
-        ctx.beginPath(); ctx.arc(x, yy, 9, 0, Math.PI * 2);
-        ctx.fillStyle = (v === C.mode) ? 'rgba(34,197,94,0.18)' : 'rgba(167,139,250,0.18)'; ctx.fill();
-        ctx.strokeStyle = (v === C.mode) ? green : accent; ctx.lineWidth = 1.5; ctx.stroke();
-        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(v.toString(), x, yy);
-    });
-    const mX = toX(C.mean);
-    ctx.beginPath(); ctx.setLineDash([4,3]); ctx.moveTo(mX, lineY - 60); ctx.lineTo(mX, lineY + 22);
-    ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = accent; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-    ctx.fillText('mean 5.71', mX, lineY - 62);
-    const medX = toX(C.median);
-    ctx.beginPath(); ctx.moveTo(medX, lineY - 30); ctx.lineTo(medX, lineY + 14);
-    ctx.strokeStyle = green; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.fillStyle = green; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textBaseline = 'top';
-    ctx.fillText('median 5', medX, lineY + 22);
-    const q1X = toX(C.q1), q3X = toX(C.q3), qY = lineY + 44;
-    ctx.strokeStyle = muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(q1X, qY); ctx.lineTo(q3X, qY); ctx.stroke();
-    [q1X, q3X].forEach(xx => { ctx.beginPath(); ctx.moveTo(xx, qY - 4); ctx.lineTo(xx, qY + 4); ctx.stroke(); });
-    ctx.fillStyle = muted; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText('Q1=4', q1X, qY + 7); ctx.fillText('Q3=8', q3X, qY + 7);
-    ctx.fillText('IQR = 4', (q1X + q3X) / 2, qY - 16);
-}
-
-function drawSpreadViz(){
-    document.getElementById('viz-label').textContent = 'The Spread';
-    document.getElementById('viz-title').textContent = 'Distance from the mean';
-    document.getElementById('viz-desc').textContent = 'Three values around mean = 30. The green span is Sₓ = 5 — one typical step. Pile of squared distances = 50, ÷(n−1) = 25.';
-    const { ctx, cw } = setupCanvas(230);
-    const accent = '#a78bfa', green = '#22c55e', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
-    const lineY = 70, padL = 50, padR = 50;
-    const xMin = 22, xMax = 38, rangeW = cw - padL - padR;
-    function toX(v){ return padL + (v - xMin) / (xMax - xMin) * rangeW; }
-    ctx.beginPath(); ctx.moveTo(padL, lineY); ctx.lineTo(cw - padR, lineY);
-    ctx.strokeStyle = border; ctx.lineWidth = 1; ctx.stroke();
-    S.x.forEach(v => {
-        const x = toX(v);
-        ctx.beginPath(); ctx.arc(x, lineY, 13, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(167,139,250,0.18)'; ctx.fill();
-        ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke();
-        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(v.toString(), x, lineY);
-    });
-    const mX = toX(S.mean);
-    ctx.beginPath(); ctx.setLineDash([4,3]); ctx.moveTo(mX, lineY - 30); ctx.lineTo(mX, lineY + 30);
-    ctx.strokeStyle = accent; ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = accent; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-    ctx.fillText('mean = 30', mX, lineY - 32);
-    const sL = toX(S.mean - S.sstd), sR = toX(S.mean + S.sstd), bandY = 116;
-    ctx.strokeStyle = green; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(sL, bandY); ctx.lineTo(sR, bandY); ctx.stroke();
-    [sL, mX, sR].forEach(xx => { ctx.beginPath(); ctx.moveTo(xx, bandY - 5); ctx.lineTo(xx, bandY + 5); ctx.strokeStyle = green; ctx.stroke(); });
-    ctx.fillStyle = green; ctx.font = 'bold 10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
-    ctx.fillText('← Sₓ = 5', (sL + mX) / 2, bandY - 4); ctx.fillText('Sₓ = 5 →', (sR + mX) / 2, bandY - 4);
-    ctx.fillStyle = text2; ctx.font = '10px Inter,sans-serif'; ctx.textBaseline = 'top';
-    ctx.fillText('25', sL, bandY + 7); ctx.fillText('35', sR, bandY + 7);
-    ctx.fillStyle = green; ctx.font = 'bold 13px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText('pile 25 + 0 + 25 = 50  →  ÷(n−1)=2  →  Sₓ² = 25  →  Sₓ = 5', cw / 2, 150);
-}
-
-function drawPairsViz(){
-    document.getElementById('viz-label').textContent = 'The Plane';
-    document.getElementById('viz-title').textContent = 'Do they move together?';
-    document.getElementById('viz-desc').textContent = 'Each pair plotted around the crosshair (X&#772;=30, Y&#772;=8). Both off-center points land in opposite (red) zones → negative.';
-    const { ctx, cw } = setupCanvas(320);
-    const accent = '#a78bfa', green = '#22c55e', red = '#ef4444', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
-    const grid = Math.min(cw - 100, 250), gx = (cw - grid) / 2, gy = 24;
-    const xMin = 22, xMax = 38, yMin = 2, yMax = 14;
-    function toX(v){ return gx + (v - xMin) / (xMax - xMin) * grid; }
-    function toY(v){ return gy + grid - (v - yMin) / (yMax - yMin) * grid; }
-    const midX = toX(P.mx), midY = toY(P.my);
-    ctx.fillStyle = 'rgba(239,68,68,0.06)'; ctx.fillRect(gx, gy, midX - gx, midY - gy);
-    ctx.fillStyle = 'rgba(34,197,94,0.06)'; ctx.fillRect(midX, gy, gx + grid - midX, midY - gy);
-    ctx.fillStyle = 'rgba(34,197,94,0.06)'; ctx.fillRect(gx, midY, midX - gx, gy + grid - midY);
-    ctx.fillStyle = 'rgba(239,68,68,0.06)'; ctx.fillRect(midX, midY, gx + grid - midX, gy + grid - midY);
-    ctx.strokeStyle = border; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, grid, grid);
-    ctx.beginPath(); ctx.setLineDash([4,3]);
-    ctx.moveTo(midX, gy); ctx.lineTo(midX, gy + grid); ctx.moveTo(gx, midY); ctx.lineTo(gx + grid, midY);
-    ctx.strokeStyle = accent; ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = accent; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText('(X̄=30, Ȳ=8)', midX + 4, midY - 4);
-    ctx.fillStyle = red; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('OPPOSITE −', gx + (midX-gx)/2, gy + 12);
-    ctx.fillStyle = green; ctx.fillText('TOGETHER +', midX + (gx+grid-midX)/2, gy + 12);
-    for(let i = 0; i < P.n; i++){
-        const x = toX(P.x[i]), y = toY(P.y[i]);
-        const onCenter = (P.x[i] === P.mx && P.y[i] === P.my);
-        ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI * 2);
-        ctx.fillStyle = onCenter ? 'rgba(167,139,250,0.2)' : 'rgba(239,68,68,0.18)'; ctx.fill();
-        ctx.strokeStyle = onCenter ? accent : red; ctx.lineWidth = 2; ctx.stroke();
-        ctx.fillStyle = '#fafafa'; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('('+P.x[i]+','+P.y[i]+')', x, y - 16);
-    }
-    ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText('X →', gx + grid / 2, gy + grid + 8);
-    ctx.save(); ctx.translate(gx - 14, gy + grid / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('Y →', 0, 0); ctx.restore();
-    ctx.fillStyle = red; ctx.font = 'bold 12px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText('Sxy = −20  →  Rxy = −1 (perfect negative)', cw / 2, gy + grid + 26);
-}
-
-/* === INIT === */
-renderAll();
-window.addEventListener('resize', drawViz);
-</script>
+<footer><div class="container">Built by Gunvald · Part of <a href="https://system33.io">system33.io</a> · <a href="/courses/galdr/spells/">Formations</a></div></footer>
+<script src="app.js"></script>
 <script src="test.js"></script>
-</body>
-</html>
+</body></html>
