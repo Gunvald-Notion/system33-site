@@ -227,14 +227,13 @@ function renderVarStep(el){
             '</div>';
     } else if(currentStep === 2){
         el.innerHTML = '<div class="step-content"><h3>Step 2 — The Process</h3>'+
-            '<p>Four operations, in sequence. Imagine doing this in real life.</p>'+
+            '<p>Three stages, in sequence — the exact same three you will walk in Step 4. Each stage maps onto one piece of the formula.</p>'+
             '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>1. Find the center.</strong> E[X] = μ. You need this before anything else, because the whole formula measures distance <em>from</em> this point.</div>'+
-            '<div class="proc-step"><strong>2. Measure each value’s distance.</strong> Take xᵢ, subtract μ. That is how far this value sits from center. Then square it — squaring removes direction (you only care about <em>how far</em>, not <em>which side</em>) and amplifies big distances.</div>'+
-            '<div class="proc-step"><strong>3. Weight and pile.</strong> Multiply by P(xᵢ). A value that happens often contributes more. Then pile up all the weighted squared distances with Σ. That pile is Var[X].</div>'+
-            '<div class="proc-step"><strong>4. Fold back to a distance.</strong> The pile is in <em>squared</em>-units — it floats off the line as an area, not a length. Take its square root to land back on the axis. √Var = σ, the standard deviation: the typical distance from center, in the same units as the values.</div>'+
-            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Var[X] = Σ (xᵢ − μ)² · P(xᵢ)</div>'+
-            '<div class="proc-step" style="margin-top:4px;color:var(--accent)">σ = √Var[X]</div>'+
+            '<div class="proc-step"><strong>Stage 1 — Find the center (μ).</strong> E[X] = μ. You need this before anything else, because the whole formula measures distance <em>from</em> this point.</div>'+
+            '<div class="proc-step"><strong>Stage 2 — Build the pile (Var).</strong> For each value: subtract μ to get its distance, square it — squaring removes direction (you only care about <em>how far</em>, not <em>which side</em>) and amplifies big gaps — then multiply by P(xᵢ) to weight it. Sum every weighted square with Σ. That pile is Var[X].</div>'+
+            '<div class="proc-step"><strong>Stage 3 — Fold back to σ.</strong> The pile is in <em>squared</em>-units — an area floating off the line, not a length. Take its square root to land back on the axis. √Var = σ, the standard deviation: the typical distance from center, in the same units as the values.</div>'+
+            '<div class="proc-step" style="margin-top:10px;color:var(--accent)">Stage 2: &nbsp; Var[X] = Σ (xᵢ − μ)² · P(xᵢ)</div>'+
+            '<div class="proc-step" style="margin-top:4px;color:var(--accent)">Stage 3: &nbsp; σ = √Var[X]</div>'+
             '</div>'+
             '<div class="proc-block"><div class="proc-title">The room</div>'+
             '<div class="proc-step">You’re standing at the center of a room. Each possible value is a person standing somewhere. Some are close, some are far. Each person has a weight — how likely they are to show up. Measure distance, square it, multiply by weight, throw on the pile. The pile is how spread the room is — and its square root is how far, on average, a person stands from you.</div>'+
@@ -252,7 +251,7 @@ function renderVarStep(el){
         markDone(2);
     } else if(currentStep === 4){
         let html = '<div class="step-content"><h3>Step 4 — Run the Formula</h3>'+
-            '<p>Now the solve — three deliberate stages, always in this order. Each stage leans on the one before it, so you never start in the middle.</p>';
+            '<p>Now the solve — the same three stages from the Process, always in this order. Each stage leans on the one before it, so you never start in the middle.</p>';
         html += '<div class="derivation"><div class="d-label">Stage 1 — Find the center (μ)</div>'+
             '<div class="d-line">You cannot measure a distance until you know the point you measure <em>from</em>. So the first move, every time, is to find the center.</div>'+
             '<div class="d-line">μ = 1×0.2 + 2×0.5 + 3×0.3 = 0.2 + 1.0 + 0.9 = <strong>2.1</strong></div></div>';
