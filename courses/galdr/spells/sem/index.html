@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEM | Galdr Formation</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0b;--bg2:#111113;--card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--blue:#60a5fa;--green:#4ade80;--red:#f87171;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--mono:ui-monospace,'SF Mono',Menlo,monospace}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:var(--text2);text-decoration:none}a:hover{opacity:.7}
+.container{max-width:760px;margin:0 auto;padding:0 24px}
+.site-header{padding:24px 0 0}.site-header a{font-size:.85rem;color:var(--muted)}
+.hero{padding:40px 0 18px}
+.badge{display:inline-block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid var(--border);border-radius:999px;padding:3px 10px;margin-bottom:14px}
+.hero h1{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:700;letter-spacing:-.03em;margin-bottom:12px}
+.hero p{font-size:1rem;color:var(--text2);max-width:560px}
+.principle{background:rgba(167,139,250,.07);border:1px solid rgba(167,139,250,.25);border-radius:12px;padding:16px 18px;margin:18px 0 8px;font-size:.92rem;color:var(--text2)}
+.principle strong{color:var(--text)}
+.shell{padding:18px 0 8px}
+.mode-nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.mode-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);border-radius:9px;padding:9px 13px;font-size:.84rem;font-weight:500;cursor:pointer;transition:all .15s;font-family:var(--font)}
+.mode-btn:hover{border-color:#3f3f46;color:var(--text)}
+.mode-btn.active{background:var(--accent);color:#0a0a0b;border-color:var(--accent);font-weight:600}
+.viz-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:18px}
+#viz-caption{font-size:.82rem;color:var(--text2);margin-top:12px;text-align:center;line-height:1.5}
+.step-nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.step-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:7px 11px;font-size:.8rem;cursor:pointer;font-family:var(--font);transition:all .15s}
+.step-btn:hover{color:var(--text)}
+.step-btn.active{background:rgba(167,139,250,.12);border-color:var(--accent);color:var(--accent);font-weight:600}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.step-h{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.panel p{font-size:.92rem;color:var(--text2);margin-bottom:10px}
+.panel .sub{font-size:.86rem;color:var(--muted)}
+ul.bl{margin:6px 0 10px;padding-left:18px}ul.bl li{font-size:.9rem;color:var(--text2);margin-bottom:5px}
+ul.bl strong{color:var(--text)}
+.eq{font-family:var(--mono);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;margin:12px 0;text-align:center;font-size:1.02rem;color:var(--text)}
+.move{border-left:3px solid var(--accent);background:var(--bg2);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:10px}
+.move .mt{font-weight:600;font-size:.9rem;margin-bottom:3px;color:var(--text)}
+.move .mb{font-size:.88rem;color:var(--text2)}
+.result{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:15px 16px}
+.rrow{font-family:var(--mono);font-size:.9rem;margin-bottom:9px;color:var(--text);line-height:1.5}
+.rrow strong{color:var(--accent)}
+.verdict{display:inline-block;margin-top:4px;padding:5px 11px;border-radius:7px;font-size:.84rem;font-weight:600;font-family:var(--font)}
+.strongv{background:rgba(34,197,94,.15);color:var(--green)}
+.modv{background:rgba(250,204,21,.15);color:#facc15}
+.weakv{background:rgba(239,68,68,.15);color:var(--red)}
+table.idx{width:100%;border-collapse:collapse;font-size:.84rem;margin:10px 0}
+table.idx th{text-align:left;color:var(--muted);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--border)}
+table.idx td{padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text2)}
+.ok{color:var(--green);font-weight:600}.no{color:var(--red);font-weight:600}
+.input-row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:14px 0}
+.input-group{display:flex;flex-direction:column;gap:5px}
+.input-group label{font-size:.78rem;color:var(--text2)}
+input{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--text);font-size:.95rem;width:140px;font-family:var(--font)}
+input:focus{outline:none;border-color:var(--accent)}
+.btn-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.action-btn{background:var(--accent);color:#0a0a0b;border:none;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer;font-size:.88rem;font-family:var(--font)}
+.action-btn.secondary{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.action-btn:hover{opacity:.88}
+.hint{font-size:.82rem;color:var(--green);margin-top:10px}
+.derivation{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 14px;margin-top:14px;font-size:.88rem;color:var(--text2)}
+.d-label{font-weight:600;margin-bottom:5px}
+.d-line{line-height:1.6}
+.qprompt{font-size:.95rem;color:var(--text);margin-bottom:6px}
+.qh{color:var(--muted);font-size:.85rem}
+.refbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.refbox h3{font-size:.9rem;margin-bottom:10px;color:var(--text)}
+.refbox code{font-family:var(--mono);background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:.84rem;color:var(--accent)}
+.refrow{font-size:.86rem;color:var(--text2);margin-bottom:7px;line-height:1.5}
+.section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:30px 0 14px}
+footer{padding:30px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:36px}
+footer a{color:var(--text2)}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Formation</a></div></header>
+<section class="hero"><div class="container">
+<div class="badge">Kap 16 &middot; SEM</div>
+<h1>Structural Equation Models</h1>
+<p>The last chapter. Measuring what you can&rsquo;t put a ruler to &mdash; constructs that live in the respondent&rsquo;s head &mdash; and judging whether the model actually holds.</p>
+<div class="principle"><strong>Two kinds of variable.</strong> Observed ones you measure directly; latent ones you reach only through several indicators that move together. SEM ties them with two halves: a <strong>measurement model</strong> that turns indicators into a construct, and a <strong>structural model</strong> that lets constructs predict each other.</div>
+</div></section>
+<section class="shell"><div class="container">
+<div id="mode-nav" class="mode-nav"></div>
+<div class="viz-section"><div id="viz-stage"></div><div id="viz-caption"></div></div>
+<div id="step-nav" class="step-nav"></div>
+<div id="step-container"></div>
+</div></section>
+<section><div class="container">
+<div class="section-label">Reading the output &mdash; lavaan in R</div>
+<div class="refbox">
+<div class="refrow"><code>=~</code> &nbsp;&ldquo;is measured by&rdquo; &mdash; the measurement model (latent <code>=~</code> indicators).</div>
+<div class="refrow"><code>~</code> &nbsp;&ldquo;is regressed on&rdquo; &mdash; the structural model (outcome <code>~</code> predictor).</div>
+<div class="refrow"><code>~~</code> &nbsp;&ldquo;covaries with&rdquo;.</div>
+<div class="refrow"><code>cfa()</code> measurement model only &middot; <code>sem()</code> full model.</div>
+<div class="refrow"><code>summary(fit, fit.measures = TRUE, standardized = TRUE)</code> prints loadings, structural coefficients and the fit indices.</div>
+</div>
+<div class="section-label">Formula reference</div>
+<div class="refbox">
+<div class="refrow">Measurement model: &nbsp;<code>X = &lambda;&middot;&eta; + &delta;</code></div>
+<div class="refrow">Structural model: &nbsp;<code>&eta;&#8322; = &beta;&middot;&eta;&#8321; + &zeta;</code></div>
+<div class="refrow">Explained variance of an indicator: &nbsp;<code>&lambda;&sup2;</code> &nbsp;(strong &gt;0.70 &middot; moderate 0.40&ndash;0.70 &middot; weak &lt;0.40)</div>
+<div class="refrow">Indirect effect: &nbsp;<code>&beta;&#8321;&middot;&beta;&#8322;</code> &nbsp;&middot;&nbsp; Total: &nbsp;<code>direct + indirect</code></div>
+<div class="refrow">Fit thresholds: &nbsp;CFI &ge; 0.95 &middot; TLI &ge; 0.95 &middot; RMSEA &le; 0.06 &middot; SRMR &le; 0.08</div>
+</div>
+</div></section>
+<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Formation</a></div></footer>
+<script src="./app.js"></script>
+<script src="./test.js"></script>
+</body>
+</html>
