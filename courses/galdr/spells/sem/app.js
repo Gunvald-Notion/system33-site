@@ -1,5 +1,5 @@
 /* === SEM FORMATION (Kap 16) ===
-   Four forms: factor loadings, mediation, fit indices, path-diagram anatomy.
+   Three forms: factor loadings, mediation, fit indices.
    Blueprint -> Process -> Data -> Formula -> Test (Test lives in test.js). */
 (function(){
   'use strict';
@@ -63,25 +63,6 @@
     inner+=gauge(118,'RMSEA','bad',0.06,0.15,d?res.rmsea:null);
     inner+=gauge(158,'SRMR','bad',0.08,0.15,d?res.srmr:null);
     return svg(inner,196);
-  }
-  function vizPath(){
-    var inner='';
-    inner+=ell(90,38,40,22,'&eta;&#8321;');
-    inner+=ell(270,38,40,22,'&eta;&#8322;');
-    inner+=ln(130,38,230,38,'&beta;',{accent:true,ly:-10,lx:-4});
-    inner+=rct(18,120,52,30,'X&#8321;');
-    inner+=rct(78,120,52,30,'X&#8322;');
-    inner+=rct(138,120,52,30,'X&#8323;');
-    inner+=ln(90,60,44,120,'',{});
-    inner+=ln(90,60,104,120,'',{});
-    inner+=ln(90,60,164,120,'',{});
-    inner+=rct(198,120,52,30,'Y&#8321;');
-    inner+=rct(258,120,52,30,'Y&#8322;');
-    inner+=rct(318,120,40,30,'Y&#8323;');
-    inner+=ln(270,60,224,120,'',{});
-    inner+=ln(270,60,284,120,'',{});
-    inner+=ln(270,60,338,120,'',{});
-    return svg(inner,170);
   }
 
   /* ---------- Forms ---------- */
@@ -169,33 +150,6 @@
         s+='<span class="verdict '+vc[0]+'">'+vc[1]+'</span>';
         return {summary:s, cfi:v.cfi, tli:v.tli, rmsea:v.rmsea, srmr:v.srmr};
       }
-    },
-    4: {
-      name:'Path Diagram',
-      viz:vizPath,
-      caption:'Ovals are latent constructs, rectangles are observed indicators, single arrows are regression paths. Each latent needs at least three indicators to be identified.',
-      eq:'loadings = latents &times; indicators each',
-      blueprint:'A path diagram is the model drawn out. <strong>Ovals</strong> hold latent constructs, <strong>rectangles</strong> hold the indicators you actually measured, a <strong>single arrow</strong> is a regression path and a <strong>double arrow</strong> is a covariance. A latent needs at least three indicators to be safely identified.',
-      process:[
-        {t:'Count the latents', b:'Each oval is one construct you cannot measure directly.'},
-        {t:'Check identification', b:'Every latent needs &ge; 3 indicators to be safely identified.'},
-        {t:'Count the loadings', b:'loadings = number of latents &times; indicators per latent.'},
-        {t:'Read the arrows', b:'Single arrow = regression path; double arrow = covariance.'}
-      ],
-      inputs:[
-        {id:'L', label:'Latent constructs', ex:2},
-        {id:'k', label:'Indicators per latent', ex:3}
-      ],
-      solve:function(v){
-        var L=Math.round(v.L), k=Math.round(v.k), loadings=L*k, idok=k>=3;
-        var s='';
-        s+='<div class="rrow">Latents: <strong>'+L+'</strong></div>';
-        s+='<div class="rrow">Indicators each: <strong>'+k+'</strong></div>';
-        s+='<div class="rrow">Loadings: '+L+' &times; '+k+' = <strong>'+loadings+'</strong></div>';
-        var vc = idok?['strongv','Each latent has &ge; 3 indicators &mdash; identified']:['weakv','Fewer than 3 indicators &mdash; under-identified'];
-        s+='<span class="verdict '+vc[0]+'">'+vc[1]+'</span>';
-        return {summary:s};
-      }
     }
   };
 
@@ -204,7 +158,7 @@
 
   function renderModes(){
     var nav=el('mode-nav'), html='';
-    for(var i=1;i<=4;i++){ html+='<button class="mode-btn'+(i===form?' active':'')+'" data-form="'+i+'">'+FORMS[i].name+'</button>'; }
+    for(var i=1;i<=3;i++){ html+='<button class="mode-btn'+(i===form?' active':'')+'" data-form="'+i+'">'+FORMS[i].name+'</button>'; }
     nav.innerHTML=html;
     var btns=nav.querySelectorAll('.mode-btn');
     for(var j=0;j<btns.length;j++){ btns[j].addEventListener('click', function(){ switchForm(parseInt(this.getAttribute('data-form'),10)); }); }
