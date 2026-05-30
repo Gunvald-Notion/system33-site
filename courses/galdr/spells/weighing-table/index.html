@@ -140,7 +140,7 @@
     <div class="formula-ref">
         <div class="formula-ref-header"><span class="formula-ref-name">E[X] &mdash; Expected Value</span><span class="formula-ref-kap">Kap 5</span></div>
         <div class="formula-ref-eq">&Sigma; x<sub>i</sub> &middot; P(x<sub>i</sub>) = &mu;</div>
-        <div class="formula-ref-desc">The center. Weighted average of all values. Every other formula measures from here.</div>
+        <div class="formula-ref-desc">The center. Weighted average of all values. Every other formula measures from here. (E[ ] is the expectation operator — “the average of” — not the number e.)</div>
     </div>
     <div class="formula-ref">
         <div class="formula-ref-header"><span class="formula-ref-name">Var[X] &mdash; Variance</span><span class="formula-ref-kap">Kap 5</span></div>
@@ -153,13 +153,13 @@
         <div class="formula-ref-desc">Undo the squaring. Variance floats off the line as an area; its root folds it back onto the axis. &sigma; is the typical distance a value sits from the center &mu;, in the same units as the values. For Var = 0.49, &sigma; = &radic;0.49 = 0.7.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Cov(X,E) &mdash; Covariance</span><span class="formula-ref-kap">Kap 6</span></div>
-        <div class="formula-ref-eq">&Sigma;&Sigma; (x<sub>i</sub> &minus; &mu;<sub>X</sub>)(e<sub>j</sub> &minus; &mu;<sub>E</sub>) &middot; P(x<sub>i</sub>, e<sub>j</sub>)</div>
-        <div class="formula-ref-desc">Do X and E move together? Walk every cell, check direction, weight, pile up.</div>
+        <div class="formula-ref-header"><span class="formula-ref-name">Cov(X,Y) &mdash; Covariance</span><span class="formula-ref-kap">Kap 6</span></div>
+        <div class="formula-ref-eq">&Sigma;&Sigma; (x<sub>i</sub> &minus; &mu;<sub>X</sub>)(y<sub>j</sub> &minus; &mu;<sub>Y</sub>) &middot; P(x<sub>i</sub>, y<sub>j</sub>)</div>
+        <div class="formula-ref-desc">Do X and Y move together? Walk every cell, check direction, weight, pile up. (Y is just a second variable — we use Y, not E, so it never clashes with Euler’s e.)</div>
     </div>
     <div class="formula-ref">
         <div class="formula-ref-header"><span class="formula-ref-name">&rho; &mdash; Correlation</span><span class="formula-ref-kap">Kap 6</span></div>
-        <div class="formula-ref-eq">&rho; = Cov(X,E) / (&sigma;<sub>X</sub> &middot; &sigma;<sub>E</sub>)</div>
+        <div class="formula-ref-eq">&rho; = Cov(X,Y) / (&sigma;<sub>X</sub> &middot; &sigma;<sub>Y</sub>)</div>
         <div class="formula-ref-desc">Covariance scaled to [&minus;1, 1]. Removes unit dependency. Pure direction signal.</div>
     </div>
 </div></section>
@@ -178,10 +178,10 @@ const VAR_CONTRIBS = [
 ];
 
 const COV_CELLS = [
-    { x:0, e:0, p:0.4, dx:-0.5, de:-0.5, prod:0.25,  vote:0.10,  zone:'together' },
-    { x:0, e:1, p:0.1, dx:-0.5, de:0.5,  prod:-0.25, vote:-0.025, zone:'opposite' },
-    { x:1, e:0, p:0.1, dx:0.5,  de:-0.5, prod:-0.25, vote:-0.025, zone:'opposite' },
-    { x:1, e:1, p:0.4, dx:0.5,  de:0.5,  prod:0.25,  vote:0.10,  zone:'together' }
+    { x:0, y:0, p:0.4, dx:-0.5, dy:-0.5, prod:0.25,  vote:0.10,  zone:'together' },
+    { x:0, y:1, p:0.1, dx:-0.5, dy:0.5,  prod:-0.25, vote:-0.025, zone:'opposite' },
+    { x:1, y:0, p:0.1, dx:0.5,  dy:-0.5, prod:-0.25, vote:-0.025, zone:'opposite' },
+    { x:1, y:1, p:0.4, dx:0.5,  dy:0.5,  prod:0.25,  vote:0.10,  zone:'together' }
 ];
 
 let mode = 'var', currentStep = 1;
@@ -291,48 +291,48 @@ function renderVarStep(el){
 function renderCovStep(el){
     if(currentStep === 1){
         el.innerHTML = '<div class="step-content"><h3>Step 1 — Blueprint</h3>'+
-            '<p>Recognize the question: <strong>when X moves, does E move with it?</strong></p>'+
-            '<p>Two variables on a plane. X runs along the bottom, E up the side. Every observation has both an X-value and an E-value. The formula checks whether they move in the same direction.</p>'+
-            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Cov(X,E) = ΣΣ (xᵢ − μₓ)(eⱼ − μₑ) · P(xᵢ, eⱼ)</p>'+
+            '<p>Recognize the question: <strong>when X moves, does Y move with it?</strong></p>'+
+            '<p>Two variables on a plane. X runs along the bottom, Y up the side. Every observation has both an X-value and a Y-value. The formula checks whether they move in the same direction. <em>(Y is just the name for the second variable — we deliberately use Y, never E, so it can’t be mistaken for Euler’s e from Kap 7.)</em></p>'+
+            '<p style="color:var(--accent);font-weight:500;margin-top:12px">Cov(X,Y) = ΣΣ (xᵢ − μ<sub>X</sub>)(yⱼ − μ<sub>Y</sub>) · P(xᵢ, yⱼ)</p>'+
             '<p style="margin-top:12px">The spell ends in <strong>two</strong> numbers: <strong>Cov</strong>, the raw pile of together-vs-apart votes, and <strong>ρ</strong> (rho), that same signal folded onto a fixed −1 to +1 scale so you can judge how <em>strong</em> the link is, not just its direction.</p>'+
             '</div>';
     } else if(currentStep === 2){
         el.innerHTML = '<div class="step-content"><h3>Step 2 — The Process</h3>'+
             '<p>Three stages, in sequence — the exact same three you will walk in Step 4. Each stage maps onto one piece of the formula.</p>'+
             '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>Stage 1 — Find both centers (μₓ, μₑ).</strong> Each variable has its own center, found the Kap 5 way — μ = Σ value · P(value) along its own margin. You need both before anything else, because the whole formula measures distance <em>from</em> these two points.</div>'+
-            '<div class="proc-step"><strong>Stage 2 — Build the pile (Cov).</strong> Walk every cell of the joint table. At each one: measure X’s distance from μₓ and E’s distance from μₑ, multiply the two (the direction-detector — same side gives +, opposite sides gives −), then weight by the joint probability P(xᵢ, eⱼ). Sum every weighted vote with ΣΣ. That pile is Cov(X,E).</div>'+
-            '<div class="proc-step"><strong>Stage 3 — Fold to ρ.</strong> Raw covariance is in mixed units and has no fixed ceiling, so its size is hard to read. Divide by each variable’s own spread — σₓ · σₑ — to fold it onto a fixed scale from −1 to +1. ρ is the pure direction signal: how tightly they move together, stripped of units.</div>'+
-            '<div class="proc-step" style="margin-top:10px;color:var(--accent)">Stage 2: &nbsp; Cov(X,E) = ΣΣ (xᵢ − μₓ)(eⱼ − μₑ) · P(xᵢ, eⱼ)</div>'+
-            '<div class="proc-step" style="margin-top:4px;color:var(--accent)">Stage 3: &nbsp; ρ = Cov(X,E) / (σₓ · σₑ)</div>'+
+            '<div class="proc-step"><strong>Stage 1 — Find both centers (μ<sub>X</sub>, μ<sub>Y</sub>).</strong> Each variable has its own center, found the Kap 5 way — μ = Σ value · P(value) along its own margin. You need both before anything else, because the whole formula measures distance <em>from</em> these two points.</div>'+
+            '<div class="proc-step"><strong>Stage 2 — Build the pile (Cov).</strong> Walk every cell of the joint table. At each one: measure X’s distance from μ<sub>X</sub> and Y’s distance from μ<sub>Y</sub>, multiply the two (the direction-detector — same side gives +, opposite sides gives −), then weight by the joint probability P(xᵢ, yⱼ). Sum every weighted vote with ΣΣ. That pile is Cov(X,Y).</div>'+
+            '<div class="proc-step"><strong>Stage 3 — Fold to ρ.</strong> Raw covariance is in mixed units and has no fixed ceiling, so its size is hard to read. Divide by each variable’s own spread — σ<sub>X</sub> · σ<sub>Y</sub> — to fold it onto a fixed scale from −1 to +1. ρ is the pure direction signal: how tightly they move together, stripped of units.</div>'+
+            '<div class="proc-step" style="margin-top:10px;color:var(--accent)">Stage 2: &nbsp; Cov(X,Y) = ΣΣ (xᵢ − μ<sub>X</sub>)(yⱼ − μ<sub>Y</sub>) · P(xᵢ, yⱼ)</div>'+
+            '<div class="proc-step" style="margin-top:4px;color:var(--accent)">Stage 3: &nbsp; ρ = Cov(X,Y) / (σ<sub>X</sub> · σ<sub>Y</sub>)</div>'+
             '</div>'+
             '<div class="proc-block"><div class="proc-title">The four zones</div>'+
-            '<div class="proc-step">The center point (μₓ, μₑ) splits the plane into four zones. Top-right and bottom-left are “together” zones (same side, positive product). Top-left and bottom-right are “opposite” zones (different sides, negative product). Stage 2 walks every cell, checks which zone it lands in, weights by probability, and piles up.</div>'+
+            '<div class="proc-step">The center point (μ<sub>X</sub>, μ<sub>Y</sub>) splits the plane into four zones. Top-right and bottom-left are “together” zones (same side, positive product). Top-left and bottom-right are “opposite” zones (different sides, negative product). Stage 2 walks every cell, checks which zone it lands in, weights by probability, and piles up.</div>'+
             '</div></div>';
     } else if(currentStep === 3){
         el.innerHTML = '<div class="step-content"><h3>Step 3 — The Data</h3>'+
             '<p>This station is only for <strong>reading</strong> what you have been handed. No solving yet — look at the joint table and understand what it describes.</p>'+
             '<div class="data-card"><div class="data-title">Joint probability table</div><table class="data-table">'+
             '<tr><th></th><th>X = 0</th><th>X = 1</th></tr>'+
-            '<tr><th>E = 1</th><td>0.1</td><td>0.4</td></tr>'+
-            '<tr><th>E = 0</th><td>0.4</td><td>0.1</td></tr>'+
+            '<tr><th>Y = 1</th><td>0.1</td><td>0.4</td></tr>'+
+            '<tr><th>Y = 0</th><td>0.4</td><td>0.1</td></tr>'+
             '</table></div>'+
-            '<p>X and E each land on 0 or 1, so the table has four cells — one for every (X, E) combination. The four probabilities add to 1 (0.4 + 0.1 + 0.1 + 0.4 = 1), so this is a complete joint distribution: nothing is missing.</p>'+
-            '<p>Look at where the mass sits. The heavy cells (0.4 each) are the ones where X and E <em>agree</em> — both 0, or both 1. The light cells (0.1 each) are where they disagree. So before any arithmetic you can already <em>feel</em> the lean: these two seem to rise and fall together. That hunch is all you take from this station. Finding the two centers, and then proving the lean with a number, is the solve — Step 4.</p>'+
+            '<p>X and Y each land on 0 or 1, so the table has four cells — one for every (X, Y) combination. The four probabilities add to 1 (0.4 + 0.1 + 0.1 + 0.4 = 1), so this is a complete joint distribution: nothing is missing.</p>'+
+            '<p>Look at where the mass sits. The heavy cells (0.4 each) are the ones where X and Y <em>agree</em> — both 0, or both 1. The light cells (0.1 each) are where they disagree. So before any arithmetic you can already <em>feel</em> the lean: these two seem to rise and fall together. That hunch is all you take from this station. Finding the two centers, and then proving the lean with a number, is the solve — Step 4.</p>'+
             '</div>';
         markDone(2);
     } else if(currentStep === 4){
         let html = '<div class="step-content"><h3>Step 4 — Run the Formula</h3>'+
             '<p>Now the solve — the same three stages from the Process, always in this order. Each stage leans on the one before it, so you never start in the middle.</p>';
-        html += '<div class="derivation"><div class="d-label">Stage 1 — Find both centers (μₓ, μₑ)</div>'+
+        html += '<div class="derivation"><div class="d-label">Stage 1 — Find both centers (μ<sub>X</sub>, μ<sub>Y</sub>)</div>'+
             '<div class="d-line">You cannot measure a distance until you know the points you measure <em>from</em>. Each variable has its own center, found along its own margin (add across the row or column).</div>'+
-            '<div class="d-line">P(X=0) = 0.4 + 0.1 = 0.5, &nbsp; P(X=1) = 0.1 + 0.4 = 0.5 &nbsp;→&nbsp; μₓ = 0×0.5 + 1×0.5 = <strong>0.5</strong></div>'+
-            '<div class="d-line">P(E=0) = 0.4 + 0.1 = 0.5, &nbsp; P(E=1) = 0.1 + 0.4 = 0.5 &nbsp;→&nbsp; μₑ = 0×0.5 + 1×0.5 = <strong>0.5</strong></div></div>';
+            '<div class="d-line">P(X=0) = 0.4 + 0.1 = 0.5, &nbsp; P(X=1) = 0.1 + 0.4 = 0.5 &nbsp;→&nbsp; μ<sub>X</sub> = 0×0.5 + 1×0.5 = <strong>0.5</strong></div>'+
+            '<div class="d-line">P(Y=0) = 0.4 + 0.1 = 0.5, &nbsp; P(Y=1) = 0.1 + 0.4 = 0.5 &nbsp;→&nbsp; μ<sub>Y</sub> = 0×0.5 + 1×0.5 = <strong>0.5</strong></div></div>';
         html += '<div class="result-box"><div class="result-box-name">Stage 1 result — the two centers</div>'+
-            '<div class="result-box-formula">μₓ = Σ xᵢ · P(xᵢ) &nbsp;&nbsp; μₑ = Σ eⱼ · P(eⱼ)</div>'+
-            '<div class="result-box-value">μₓ = 0.5 &nbsp;&middot;&nbsp; μₑ = 0.5</div></div>';
+            '<div class="result-box-formula">μ<sub>X</sub> = Σ xᵢ · P(xᵢ) &nbsp;&nbsp; μ<sub>Y</sub> = Σ yⱼ · P(yⱼ)</div>'+
+            '<div class="result-box-value">μ<sub>X</sub> = 0.5 &nbsp;&middot;&nbsp; μ<sub>Y</sub> = 0.5</div></div>';
         html += '<p style="color:var(--text2);font-size:.9rem;margin-top:22px"><strong>Stage 2 — Build the pile.</strong> Now stand at the center point (0.5, 0.5) and walk each cell: measure both distances, multiply them (direction-detector), weight by the joint probability, throw the vote on the pile.</p>';
-        const labels = ['Bottom-left (X=0, E=0)', 'Top-left (X=0, E=1)', 'Bottom-right (X=1, E=0)', 'Top-right (X=1, E=1)'];
+        const labels = ['Bottom-left (X=0, Y=0)', 'Top-left (X=0, Y=1)', 'Bottom-right (X=1, Y=0)', 'Top-right (X=1, Y=1)'];
         let pile = 0;
         [0,1,2,3].forEach((idx, i) => {
             const c = COV_CELLS[idx];
@@ -341,23 +341,23 @@ function renderCovStep(el){
             const voteColor = c.vote > 0 ? 'var(--green)' : 'var(--red)';
             const voteWord = c.vote > 0 ? 'together' : 'apart';
             html += '<div class="derivation"><div class="d-label">'+labels[i]+'</div>'+
-                '<div class="d-line">X distance: '+c.x+' − 0.5 = '+c.dx.toFixed(1)+' &nbsp; E distance: '+c.e+' − 0.5 = '+c.de.toFixed(1)+'</div>'+
-                '<div class="d-line">Direction-detector: ('+c.dx.toFixed(1)+')('+c.de.toFixed(1)+') = '+c.prod.toFixed(2)+' &nbsp; <span style="color:var(--muted)">'+dir+'</span></div>'+
+                '<div class="d-line">X distance: '+c.x+' − 0.5 = '+c.dx.toFixed(1)+' &nbsp; Y distance: '+c.y+' − 0.5 = '+c.dy.toFixed(1)+'</div>'+
+                '<div class="d-line">Direction-detector: ('+c.dx.toFixed(1)+')('+c.dy.toFixed(1)+') = '+c.prod.toFixed(2)+' &nbsp; <span style="color:var(--muted)">'+dir+'</span></div>'+
                 '<div class="d-line">Weight: '+c.prod.toFixed(2)+' × '+c.p+' = <strong style="color:'+voteColor+'">'+c.vote.toFixed(3)+'</strong> — vote <em>'+voteWord+'</em></div>'+
                 '<div class="d-line">Pile = '+pile.toFixed(3)+'</div></div>';
         });
-        html += '<div class="result-box"><div class="result-box-name">Stage 2 result — the pile, Cov(X,E)</div>'+
+        html += '<div class="result-box"><div class="result-box-name">Stage 2 result — the pile, Cov(X,Y)</div>'+
             '<div class="result-box-formula">+0.10 − 0.025 − 0.025 + 0.10</div>'+
-            '<div class="result-box-value" style="color:var(--green)">Cov(X,E) = +0.15</div></div>';
-        html += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">Positive — the together votes won. But +0.15 on its own is hard to read: is that a strong link or a weak one? The raw number is in mixed X·E units and has no fixed ceiling. That’s what Stage 3 fixes.</p>';
+            '<div class="result-box-value" style="color:var(--green)">Cov(X,Y) = +0.15</div></div>';
+        html += '<p style="color:var(--text2);font-size:.85rem;margin-top:14px">Positive — the together votes won. But +0.15 on its own is hard to read: is that a strong link or a weak one? The raw number is in mixed X·Y units and has no fixed ceiling. That’s what Stage 3 fixes.</p>';
         html += '<p style="color:var(--text2);font-size:.9rem;margin-top:22px"><strong>Stage 3 — Fold to ρ.</strong> Scale the raw pile by each variable’s own spread so it lands on a fixed, readable range.</p>';
         html += '<div class="derivation"><div class="d-label">Stage 3 — Fold the covariance onto the [−1, 1] scale</div>'+
-            '<div class="d-line">First, each variable’s own spread — the Kap 5 table applied to each margin. Both X and E are 0/1 variables centered at 0.5:</div>'+
-            '<div class="d-line">Var = (0−0.5)²×0.5 + (1−0.5)²×0.5 = 0.25 &nbsp;→&nbsp; σₓ = σₑ = √0.25 = <strong>0.5</strong></div>'+
+            '<div class="d-line">First, each variable’s own spread — the Kap 5 table applied to each margin. Both X and Y are 0/1 variables centered at 0.5:</div>'+
+            '<div class="d-line">Var = (0−0.5)²×0.5 + (1−0.5)²×0.5 = 0.25 &nbsp;→&nbsp; σ<sub>X</sub> = σ<sub>Y</sub> = √0.25 = <strong>0.5</strong></div>'+
             '<div class="d-line">Now divide the covariance by the product of the spreads: ρ = 0.15 / (0.5 × 0.5) = 0.15 / 0.25 = <strong>0.6</strong></div>'+
             '<div class="d-line">ρ = 0.6 is unitless and bounded: 0 means no linear link, +1 perfectly locked together, −1 perfectly opposed. So +0.6 is a <strong>moderately strong positive</strong> link — now you can judge the <em>size</em>, which the raw covariance never let you do.</div></div>';
         html += '<div class="result-box"><div class="result-box-name">Stage 3 result — ρ, correlation</div>'+
-            '<div class="result-box-formula">ρ = Cov(X,E) / (σₓ · σₑ) = 0.15 / 0.25</div>'+
+            '<div class="result-box-formula">ρ = Cov(X,Y) / (σ<sub>X</sub> · σ<sub>Y</sub>) = 0.15 / 0.25</div>'+
             '<div class="result-box-value" style="color:var(--green)">ρ = 0.6 — moderately strong, positive</div></div>';
         html += '</div>';
         el.innerHTML = html;
@@ -560,12 +560,12 @@ function drawCovarianceViz(){
     ctx.setLineDash([]);
 
     ctx.fillStyle = accent; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText('(μₓ, μₑ)', midGX + 4, midGY - 4);
+    ctx.fillText('(μX, μY)', midGX + 4, midGY - 4);
 
     ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('X →', gx + gridSize / 2, gy + gridSize + 8);
     ctx.save(); ctx.translate(gx - 12, gy + gridSize / 2); ctx.rotate(-Math.PI / 2);
-    ctx.fillText('E →', 0, 0); ctx.restore();
+    ctx.fillText('Y →', 0, 0); ctx.restore();
 
     ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = red; ctx.fillText('OPPOSITE', gx + gridSize * 0.25, gy + gridSize * 0.15);
@@ -599,11 +599,11 @@ function drawCovarianceViz(){
     ctx.fillText('X=0', gx + gridSize * 0.25, gy + gridSize + 20);
     ctx.fillText('X=1', gx + gridSize * 0.75, gy + gridSize + 20);
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    ctx.fillText('E=0', gx - 8, gy + gridSize * 0.75);
-    ctx.fillText('E=1', gx - 8, gy + gridSize * 0.35);
+    ctx.fillText('Y=0', gx - 8, gy + gridSize * 0.75);
+    ctx.fillText('Y=1', gx - 8, gy + gridSize * 0.35);
 
     ctx.fillStyle = green; ctx.font = 'bold 13px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText('Cov(X,E) = +0.15  →  ρ = 0.6 (moderately strong, positive)', cw / 2, gy + gridSize + 38);
+    ctx.fillText('Cov(X,Y) = +0.15  →  ρ = 0.6 (moderately strong, positive)', cw / 2, gy + gridSize + 38);
 }
 
 /* === INIT === */
