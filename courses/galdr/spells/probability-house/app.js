@@ -19,6 +19,11 @@
     return s;
   }
 
+  /* --- Braced formula pieces (ported from the Kap 11 formation) --- */
+  var BP='M 0 0 Q 4 0 4 4 L 46 4 Q 50 4 50 9 Q 50 4 54 4 L 96 4 Q 100 4 100 0';
+  function brace(){return '<svg class="piece-brace" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="'+BP+'" fill="none" stroke="currentColor" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';}
+  function pc(t,l,c){return '<span class="piece" data-c="'+c+'"><span class="piece-text">'+t+'</span>'+brace()+'<span class="piece-label">'+l+'</span></span>';}
+
   var C = {};
   ['ab','anb','nab','nanb','pa','pna','pb','pnb','total'].forEach(function(k){ C[k] = document.getElementById('c-'+k); });
 
@@ -121,6 +126,98 @@
     }
   };
 
+  /* --- Bayes: deepened path (first-principle depth, self-contained pieces) --- */
+  function bayesFviz(filled){
+    if(filled){
+      return '<div class="formula-viz"><span class="formula-lhs">P(A|B) =</span>'+
+        pc(f(PBgA)+'&middot;'+f(PA)+' = '+f(PAB),'numerator: true positives','o')+
+        '<span class="formula-op">&divide;</span>'+
+        pc(f(PAB)+' + '+f(PNAB)+' = '+f(PB),'denominator: all positives','b')+
+        '<span class="formula-op">&rarr;</span>'+
+        pc('&asymp; '+f(PAgB),'the flip','a')+'</div>';
+    }
+    return '<div class="formula-viz"><span class="formula-lhs">P(A|B) =</span>'+
+      pc('P(B|A)&middot;P(A)','numerator: true positives','o')+
+      '<span class="formula-op">&divide;</span>'+
+      pc('P(B)','denominator: all positives','b')+
+      '<span class="formula-op">&rarr;</span>'+
+      pc('P(A|B)','the flip','a')+'</div>';
+  }
+
+  function bayesBlueprint(){
+    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: what Bayes&rsquo; law is, and why you are allowed to flip</h3>'+
+      '<h4>What the law is for</h4>'+
+      '<p>The test came back <strong>positive</strong>. What you actually care about is this: given that positive, is the trait really there? That is P(A|B) &mdash; the chance of <strong>A (has the trait)</strong> given <strong>B (tests positive)</strong>. But look at what the lab ever measured: only the <em>forward</em> direction &mdash; P(B|A), how often a true carrier trips the test. You were handed the chance of the evidence given the cause, and you want the chance of the cause given the evidence. <strong>Bayes is the spell that turns that forward chance around into the reverse you need.</strong></p>'+
+      '<h4>How it works</h4>'+
+      '<p>The bridge between forward and reverse is the one cell they <em>share</em>: P(A&cap;B) &mdash; has the trait AND tests positive, the top-left room of the house. That single room can be read two ways. Forward: P(B|A)&middot;P(A) &mdash; start from carriers, keep the ones who test positive. Reverse: P(A|B)&middot;P(B) &mdash; start from positives, keep the ones who really carry. Both name the exact same room, so they are equal:</p>'+
+      '<div class="derivation"><div class="d-line">P(B|A)&middot;P(A) &nbsp;=&nbsp; P(A&cap;B) &nbsp;=&nbsp; P(A|B)&middot;P(B)</div></div>'+
+      '<p>Solve that equality for the reverse and Bayes falls straight out: <strong>P(A|B) = P(B|A)&middot;P(A) / P(B)</strong>.</p>'+
+      '<h4>Why you are allowed to do it</h4>'+
+      '<p>Because the intersection is <strong>symmetric</strong> &mdash; &ldquo;A and B&rdquo; is the same room as &ldquo;B and A.&rdquo; That shared cell is the hinge that lets you walk in either direction. The forward conditional times its base rate, and the reverse conditional times its base rate, both land in that one identical cell. That equality is the whole permission &mdash; nothing else is assumed.</p>'+
+      '<div class="derivation"><div class="d-label">What each symbol means &mdash; in plain words</div>'+
+      '<div class="d-line"><strong>A</strong> &mdash; has the trait (the carrier) &nbsp;&middot;&nbsp; <strong>A&prime;</strong> &mdash; does not have the trait (healthy)</div>'+
+      '<div class="d-line"><strong>B</strong> &mdash; tests positive &nbsp;&middot;&nbsp; <strong>B&prime;</strong> &mdash; tests negative</div>'+
+      '<div class="d-line"><strong>P(A)</strong> &mdash; how common the trait is (the base rate)</div>'+
+      '<div class="d-line"><strong>P(B|A)</strong> &mdash; a true carrier testing positive (the test&rsquo;s catch rate)</div>'+
+      '<div class="d-line"><strong>P(A&cap;B)</strong> &mdash; the true-positive cell: has the trait AND tests positive</div>'+
+      '<div class="d-line"><strong>P(B)</strong> &mdash; everyone who tests positive (true alarms + false alarms)</div>'+
+      '<div class="d-line"><strong>P(A|B)</strong> &mdash; the answer: given a positive test, the chance the trait is really there</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(A|B) = P(B|A)&middot;P(A) / P(B)</p></div>';
+  }
+
+  function bayesProcess(){
+    return '<div class="step-content"><h3>Step 2 &mdash; Process: three moves that flip the chance</h3>'+
+      '<p>The same three moves you will walk with numbers in Step 4 &mdash; always in this order, each leaning on the house the last one built. The shape first, no numbers yet.</p>'+
+      bayesFviz(false)+
+      '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+      '<div class="proc-step"><strong>Move 1 &mdash; Build the numerator: the true-positive cell.</strong> P(B|A)&middot;P(A) = P(A&cap;B). <em>Why this piece:</em> of all the positives, the only ones you actually want are the carriers who correctly test positive &mdash; the top-left room. <em>What it does to the space:</em> it folds the forward catch-rate and the base rate into a single cell of mass.</div>'+
+      '<div class="proc-step"><strong>Move 2 &mdash; Build the denominator: every positive.</strong> P(B) = P(A&cap;B) + P(A&prime;&cap;B). <em>Why this piece:</em> a positive can arrive through two doors &mdash; a real carrier (true alarm), or a healthy person the test cried wolf on (false alarm). The reverse question lives inside the whole world of positives, so you must gather both doors. <em>What it does to the space:</em> it shrinks the world from everyone down to the B-column &mdash; everyone who tested positive.</div>'+
+      '<div class="proc-step"><strong>Move 3 &mdash; Divide: the true slice of all positives.</strong> P(A|B) = P(A&cap;B) / P(B). <em>Why this piece:</em> inside that shrunken column of positives, what share are really carriers? That share <em>is</em> the reverse chance. <em>What it does to the space:</em> it reads A&rsquo;s density inside the B-column &mdash; the flip is complete.</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:4px">P(A|B) = P(B|A)&middot;P(A) / P(B)</p></div>';
+  }
+
+  function bayesData(){
+    return '<div class="step-content"><h3>Step 3 &mdash; The Data: three numbers, and why they are enough</h3>'+
+      '<h4>What the problem hands you</h4>'+
+      '<p>A Bayes problem almost never hands you the cells of the house directly. It hands you a <strong>prior</strong> and <strong>two conditionals</strong> &mdash; three numbers in words &mdash; and trusts you to build the rest.</p>'+
+      '<div class="data-card"><div class="data-title">A screening test</div>'+
+      '<table class="data-table">'+
+      '<tr><th>P(A) &mdash; the prior: how common the trait is</th><td>0.20</td></tr>'+
+      '<tr><th>P(B|A) &mdash; a true carrier testing positive</th><td>0.90</td></tr>'+
+      '<tr><th>P(B|A&prime;) &mdash; a healthy person testing positive (false alarm)</th><td>0.10</td></tr>'+
+      '</table></div>'+
+      '<p>In words: <strong>one in five</strong> carry the trait. The test is good &mdash; it catches <strong>90%</strong> of true carriers &mdash; but it also cries wolf on <strong>10%</strong> of everyone healthy.</p>'+
+      '<h4>Why three numbers fill the whole house</h4>'+
+      '<p>Each inner cell is a conditional times its base rate. That is all you need:</p>'+
+      '<div class="derivation"><div class="d-label">building the two B-cells</div>'+
+      '<div class="d-line">true-positive cell: &nbsp; P(A&cap;B) = P(B|A)&middot;P(A) = '+f(PBgA)+'&middot;'+f(PA)+' = <strong>'+f(PAB)+'</strong></div>'+
+      '<div class="d-line">false-positive cell: &nbsp; P(A&prime;&cap;B) = P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+'&middot;'+f(PNA)+' = <strong>'+f(PNAB)+'</strong></div>'+
+      '</div>'+
+      '<p>The rest of the house follows by conservation &mdash; every row and column closes to its margin, and the whole thing sums to 1. <strong>Watch the table above:</strong> the two cells that light are exactly these two doors into B.</p>'+
+      '<h4>Feel the tension before you solve</h4>'+
+      '<p>The trait is <em>rare</em>. So even though the test is sharp, it drags a crowd of false alarms in from the much larger healthy group, right alongside the true carriers. Hold that in mind &mdash; it is the whole reason the answer in Step 4 lands lower than your gut expects.</p></div>';
+  }
+
+  function bayesWalk(){
+    return '<div class="step-content"><h3>Step 4 &mdash; Run the Formula: the flip, piece by piece</h3>'+
+      '<p>The three moves from the Process, now carrying the numbers from the filled house. Each piece below stands on its own &mdash; what it is, its formula, its arithmetic, its value &mdash; nothing pointing off to another room.</p>'+
+      bayesFviz(true)+
+      '<div class="derivation"><div class="d-label">Move 1 &mdash; numerator: the true-positive cell</div>'+
+      '<div class="d-line" style="color:var(--text2);margin-bottom:6px">Carriers who correctly test positive &mdash; has the trait (A) <em>and</em> tests positive (B). The top-left room.</div>'+
+      '<div class="d-line">P(B|A)&middot;P(A) = '+f(PBgA)+'&middot;'+f(PA)+' = <strong>'+f(PAB)+'</strong> &nbsp;=&nbsp; P(A&cap;B)</div></div>'+
+      '<div class="derivation"><div class="d-label">Move 2 &mdash; denominator: everyone who tests positive</div>'+
+      '<div class="d-line" style="color:var(--text2);margin-bottom:6px">A positive arrives two ways. Build both doors right here &mdash; no need to leave for another room.</div>'+
+      '<div class="d-line">true alarms: &nbsp; P(A&cap;B) = <strong>'+f(PAB)+'</strong></div>'+
+      '<div class="d-line">false alarms: &nbsp; P(A&prime;&cap;B) = P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+'&middot;'+f(PNA)+' = <strong>'+f(PNAB)+'</strong></div>'+
+      '<div class="d-line">P(B) = '+f(PAB)+' + '+f(PNAB)+' = <strong>'+f(PB)+'</strong></div></div>'+
+      '<div class="derivation"><div class="d-label">Move 3 &mdash; divide: the true slice of all positives</div>'+
+      '<div class="d-line">P(A|B) = P(A&cap;B) / P(B) = '+f(PAB)+' / '+f(PB)+' &asymp; <strong>'+f(PAgB)+'</strong></div></div>'+
+      '<div class="result-box"><div class="result-box-name">The flip &mdash; P(A|B)</div><div class="result-box-formula">P(B|A)&middot;P(A) / P(B)</div><div class="result-box-value">P(A|B) &asymp; '+f(PAgB)+'</div></div>'+
+      '<p style="color:var(--text2);font-size:.88rem;margin-top:18px">'+PATHS.bayes.close+'</p></div>';
+  }
+
   /* --- Rendering --- */
   var activePath = null, step = 1;
 
@@ -175,10 +272,11 @@
     if(!host) return;
     if(!activePath){ host.innerHTML='<div class="step-content"><p style="color:var(--muted);font-style:italic">Pick a path above, then walk the four steps.</p></div>'; showLabels(); clearHL(); return; }
     var P = PATHS[activePath];
-    if(step===1){ showLabels(); host.innerHTML=blueprintHTML(P); }
-    else if(step===2){ showLabels(); host.innerHTML=processHTML(P); }
-    else if(step===3){ fillHouse(); host.innerHTML=dataHTML(P); }
-    else if(step===4){ fillHouse(); host.innerHTML=walkHTML(P); }
+    var isBayes = activePath==='bayes';
+    if(step===1){ showLabels(); host.innerHTML = isBayes ? bayesBlueprint() : blueprintHTML(P); }
+    else if(step===2){ showLabels(); host.innerHTML = isBayes ? bayesProcess() : processHTML(P); }
+    else if(step===3){ fillHouse(); host.innerHTML = isBayes ? bayesData() : dataHTML(P); }
+    else if(step===4){ fillHouse(); host.innerHTML = isBayes ? bayesWalk() : walkHTML(P); }
     else if(step===5){ fillHouse(); host.innerHTML='<div class="step-content"><h3>Step 5 &mdash; Test yourself</h3><div id="test-host"></div></div>'; if(window.renderTest) window.renderTest(activePath); }
     markDone();
     hlCells(P.hl);
