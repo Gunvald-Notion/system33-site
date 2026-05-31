@@ -54,79 +54,37 @@
   function clearHL(){ Object.keys(C).forEach(function(k){ if(C[k]) C[k].classList.remove('cell-path','cell-highlight'); }); }
   function hlCells(keys){ clearHL(); (keys||[]).forEach(function(k){ if(C[k]) C[k].classList.add('cell-path'); }); }
 
-  /* --- Path definitions --- */
+  /* --- Path definitions (formula, highlight set, close line) --- */
   var PATHS = {
     addisjon: {
       name:'Addisjon', kap:'Kap 2',
       formula:'P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)',
       hl:['pa','pb','ab','anb','nab'],
-      blueprint:'The question: what is the chance that <strong>at least one</strong> of A or B happens? You are gathering every room of the house where A fires, or B fires, or both. You end in one number &mdash; P(A&cup;B).',
-      stages:[
-        {t:'Stage 1 &mdash; Gather the A-row.', b:'Read P(A) from the &Sigma; rad margin. That is every room where A fires: P(A&cap;B) + P(A&cap;B&prime;).', hl:['pa','ab','anb']},
-        {t:'Stage 2 &mdash; Gather the B-column.', b:'Read P(B) from the &Sigma; kol margin: every room where B fires, P(A&cap;B) + P(A&prime;&cap;B).', hl:['pb','ab','nab']},
-        {t:'Stage 3 &mdash; Remove the overlap.', b:'P(A&cap;B) sits in both the row and the column, so P(A)+P(B) counted it twice. Subtract it back once.', hl:['ab']}
-      ],
-      walk:[
-        {label:'Stage 1 &mdash; the A-row total', lines:['P(A) = '+f(PA)+' &nbsp;&larr; &Sigma; rad margin'], rname:'Stage 1 &mdash; P(A)', rformula:'P(A) = P(A&cap;B) + P(A&cap;B&prime;)', rvalue:'P(A) = '+f(PA)},
-        {label:'Stage 2 &mdash; the B-column total', lines:['P(B) = '+f(PB)+' &nbsp;&larr; &Sigma; kol margin'], rname:'Stage 2 &mdash; P(B)', rformula:'P(B) = P(A&cap;B) + P(A&prime;&cap;B)', rvalue:'P(B) = '+f(PB)},
-        {label:'Stage 3 &mdash; subtract the double-counted overlap', lines:['P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)','P(A&cup;B) = '+f(PA)+' + '+f(PB)+' &minus; '+f(PAB)], rname:'Answer &mdash; P(A&cup;B)', rformula:'= '+f(PA)+' + '+f(PB)+' &minus; '+f(PAB), rvalue:'P(A&cup;B) = '+f(UNION)}
-      ],
-      close:'At least one of the two fires '+f(UNION*100)+'% of the time. Every piece was read straight off the margins and the one shared cell.'
+      close:'At least one of the two fires '+f(UNION*100)+'% of the time. Every piece was read straight off the margins and the one shared corner — and the overlap was paid back exactly once.'
     },
     multiplikasjon: {
       name:'Multiplikasjon', kap:'Kap 4',
       formula:'P(A&cap;B) = P(A|B) &middot; P(B)',
       hl:['ab','pb','nab'],
-      blueprint:'The question: how much probability lands in <strong>both</strong> A and B at once? You end in the top-left cell, P(A&cap;B) &mdash; built from a conditional times a margin.',
-      stages:[
-        {t:'Stage 1 &mdash; Shrink the world to B.', b:'Condition on B: the B-column becomes the whole world now, with total P(B) in the &Sigma; kol margin.', hl:['pb','ab','nab']},
-        {t:'Stage 2 &mdash; Measure A inside it.', b:'P(A|B) = P(A&cap;B) / P(B) &mdash; A&rsquo;s share of that shrunken column.', hl:['ab','pb']},
-        {t:'Stage 3 &mdash; Multiply back.', b:'Rearrange to get the joint: P(A&cap;B) = P(A|B) &middot; P(B). Conditional times margin.', hl:['ab']}
-      ],
-      walk:[
-        {label:'Stage 1 &mdash; shrink to the B-column', lines:['P(B) = '+f(PB)+' &nbsp;&larr; the new whole world'], rname:'Stage 1 &mdash; the column total', rformula:'condition on B', rvalue:'P(B) = '+f(PB)},
-        {label:'Stage 2 &mdash; A&rsquo;s share inside B', lines:['P(A|B) = P(A&cap;B) / P(B) = '+f(PAB)+' / '+f(PB)+' = '+f(PAgB)], rname:'Stage 2 &mdash; P(A|B)', rformula:'P(A&cap;B) / P(B)', rvalue:'P(A|B) = '+f(PAgB)},
-        {label:'Stage 3 &mdash; multiply back to the joint', lines:['P(A&cap;B) = P(A|B) &middot; P(B) = '+f(PAgB)+' &middot; '+f(PB)], rname:'Answer &mdash; P(A&cap;B)', rformula:'P(A|B) &middot; P(B)', rvalue:'P(A&cap;B) = '+f(PAB)}
-      ],
-      close:'The joint cell and the conditional are two readings of the same corner of the house &mdash; one divided by the column, one multiplied back into it.'
+      close:'The joint room and the conditional are two readings of the same corner of the house — one divided down by the column, one multiplied back into it.'
     },
     oppsplitting: {
       name:'Oppsplitting', kap:'Kap 4',
       formula:'P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)',
       hl:['pa','pna','ab','nab','pb'],
-      blueprint:'The question: what is the overall chance of B, when B can arrive through <strong>two different doors</strong> &mdash; via A, or via A&prime;? This is the law you reach for when the problem hands you a prior and two conditionals. You end in P(B).',
-      stages:[
-        {t:'Stage 1 &mdash; Split the world by A.', b:'The prior cuts everything into two lanes: the A-lane P(A) and the A&prime;-lane P(A&prime;) = 1 &minus; P(A).', hl:['pa','pna']},
-        {t:'Stage 2 &mdash; Send B down each lane.', b:'A-lane: P(B|A)&middot;P(A) lands in the true cell P(A&cap;B). A&prime;-lane: P(B|A&prime;)&middot;P(A&prime;) lands in P(A&prime;&cap;B).', hl:['ab','nab']},
-        {t:'Stage 3 &mdash; Sum the two lanes.', b:'Add the two B-cells. That sum is P(B) &mdash; the whole &Sigma; kol margin.', hl:['ab','nab','pb']}
-      ],
-      walk:[
-        {label:'Stage 1 &mdash; the two lanes', lines:['P(A) = '+f(PA)+' &nbsp;&middot;&nbsp; P(A&prime;) = 1 &minus; '+f(PA)+' = '+f(PNA)], rname:'Stage 1 &mdash; split by the prior', rformula:'P(A) and P(A&prime;)', rvalue:'P(A) = '+f(PA)+' &middot; P(A&prime;) = '+f(PNA)},
-        {label:'Stage 2 &mdash; B through each lane', lines:['A-lane: P(B|A)&middot;P(A) = '+f(PBgA)+' &middot; '+f(PA)+' = '+f(PAB),'A&prime;-lane: P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+' &middot; '+f(PNA)+' = '+f(PNAB)], rname:'Stage 2 &mdash; the two B-cells', rformula:'true positives + false positives', rvalue:f(PAB)+' &nbsp; and &nbsp; '+f(PNAB)},
-        {label:'Stage 3 &mdash; sum the lanes', lines:['P(B) = '+f(PAB)+' + '+f(PNAB)], rname:'Answer &mdash; P(B)', rformula:'P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)', rvalue:'P(B) = '+f(PB)}
-      ],
-      close:'B fires '+f(PB*100)+'% of the time overall &mdash; mostly the '+f(PAB)+' of true cases, plus a thin '+f(PNAB)+' of false alarms from the much larger A&prime; lane.'
+      close:'B fires '+f(PB*100)+'% of the time overall — mostly the '+f(PAB)+' of true cases, plus a thin '+f(PNAB)+' of false positives drawn from the much larger A&prime; lane.'
     },
     bayes: {
       name:'Bayes', kap:'Kap 4',
       formula:'P(A|B) = P(B|A)&middot;P(A) / P(B)',
       hl:['ab','pa','pb','nab'],
-      blueprint:'The question: the test came back positive (B) &mdash; so now what is the chance the trait is really there (A)? You are <strong>flipping</strong> a known forward chance P(B|A) into its reverse P(A|B). You end in P(A|B).',
-      stages:[
-        {t:'Stage 1 &mdash; Numerator: the true-positive cell.', b:'P(B|A)&middot;P(A) = P(A&cap;B) &mdash; the carriers who test positive. The top-left cell.', hl:['ab','pa']},
-        {t:'Stage 2 &mdash; Denominator: every positive.', b:'P(B) from Oppsplitting &mdash; everyone who tests positive, true cases and false alarms together.', hl:['pb','ab','nab']},
-        {t:'Stage 3 &mdash; Divide.', b:'P(A|B) = P(A&cap;B) / P(B) &mdash; the true-positive slice of all the positives.', hl:['ab','pb']}
-      ],
-      walk:[
-        {label:'Stage 1 &mdash; numerator (true positives)', lines:['P(B|A)&middot;P(A) = '+f(PBgA)+' &middot; '+f(PA)+' = '+f(PAB)+' &nbsp;= P(A&cap;B)'], rname:'Stage 1 &mdash; the true-positive cell', rformula:'P(B|A)&middot;P(A)', rvalue:'P(A&cap;B) = '+f(PAB)},
-        {label:'Stage 2 &mdash; denominator (all positives)', lines:['P(B) = '+f(PB)+' &nbsp;&larr; from Oppsplitting (true + false positives)'], rname:'Stage 2 &mdash; all positives', rformula:'P(B)', rvalue:'P(B) = '+f(PB)},
-        {label:'Stage 3 &mdash; divide, flipping forward to reverse', lines:['P(A|B) = P(A&cap;B) / P(B) = '+f(PAB)+' / '+f(PB)+' &asymp; '+f(PAgB)], rname:'Answer &mdash; P(A|B)', rformula:'P(B|A)&middot;P(A) / P(B)', rvalue:'P(A|B) &asymp; '+f(PAgB)}
-      ],
-      close:'The trap the exam loves: a 90% test, yet a positive only means about '+Math.round(PAgB*100)+'% &mdash; because the trait is rare, the thin false-positive lane is nearly as big as the true one. The base rate rules.'
+      close:'The trap the exam loves: a 90% test, yet a positive only means about '+Math.round(PAgB*100)+'% — because the trait is rare, the thin false-positive lane is nearly as big as the true one. The base rate rules.'
     }
   };
 
-  /* --- Bayes: deepened path (first-principle depth, self-contained pieces) --- */
+  /* ============================================================
+     BAYES — deepened path
+     ============================================================ */
   function bayesFviz(filled){
     if(filled){
       return '<div class="formula-viz"><span class="formula-lhs">P(A|B) =</span>'+
@@ -225,6 +183,292 @@
       '<p style="color:var(--text2);font-size:.88rem;margin-top:18px">'+PATHS.bayes.close+'</p></div>';
   }
 
+  /* ============================================================
+     ADDISJON — deepened path  (P(A\u222aB) = P(A) + P(B) \u2212 P(A\u2229B))
+     ============================================================ */
+  function addFviz(filled){
+    if(filled){
+      return '<div class="formula-viz"><span class="formula-lhs">P(A&cup;B) =</span>'+
+        pc(f(PA),'the whole A-row','b')+
+        '<span class="formula-op">+</span>'+
+        pc(f(PB),'the whole B-column','b')+
+        '<span class="formula-op">&minus;</span>'+
+        pc(f(PAB),'shared corner, counted twice','o')+
+        '<span class="formula-op">&rarr;</span>'+
+        pc('= '+f(UNION),'at least one','a')+'</div>';
+    }
+    return '<div class="formula-viz"><span class="formula-lhs">P(A&cup;B) =</span>'+
+      pc('P(A)','the whole A-row','b')+
+      '<span class="formula-op">+</span>'+
+      pc('P(B)','the whole B-column','b')+
+      '<span class="formula-op">&minus;</span>'+
+      pc('P(A&cap;B)','shared corner, counted twice','o')+
+      '<span class="formula-op">&rarr;</span>'+
+      pc('P(A&cup;B)','at least one','a')+'</div>';
+  }
+
+  function addBlueprint(){
+    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: first the space, then the law</h3>'+
+      '<h4>What space are we standing in?</h4>'+
+      '<p>Before a single formula, fix where you are. <strong>You are inside one whole world, and that whole equals 1.</strong> The house is that whole, carved into four rooms &mdash; P(A&cap;B), P(A&cap;B&prime;), P(A&prime;&cap;B), P(A&prime;&cap;B&prime;) &mdash; that tile it completely: nothing outside, no overlap, all summing back to 1. The margins are the outer walls: P(A) is its whole row added up, P(B) its whole column. The Addisjon question lives <em>across</em> the house &mdash; every room that A or B touches.</p>'+
+      '<h4>The rooms are built, not handed to you</h4>'+
+      '<p>The walls themselves are sums of rooms. P(A) = P(A&cap;B) + P(A&cap;B&prime;) &mdash; the A-row is its two rooms stacked. P(B) = P(A&cap;B) + P(A&prime;&cap;B) the same way. Hold that, because it is the whole reason the union needs care: the corner room P(A&cap;B) lives inside <em>both</em> the A-row and the B-column at once.</p>'+
+      '<h4>What the law is for</h4>'+
+      '<p>The question: what is the chance that <strong>at least one</strong> of A or B happens &mdash; P(A&cup;B)? You are gathering every room the two events touch: the union of the A-row and the B-column.</p>'+
+      '<h4>How it works</h4>'+
+      '<p>Grab the whole A-row, P(A). Grab the whole B-column, P(B). Add them &mdash; but the shared corner P(A&cap;B) sat inside both grabs, so it just got counted <strong>twice</strong>. Subtract it back once, and every room is counted exactly once:</p>'+
+      '<div class="derivation"><div class="d-line">P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)</div></div>'+
+      '<h4>Why you are allowed to do it</h4>'+
+      '<p>Because the union is exactly the set of rooms touched by A or B, and each must carry weight once &mdash; no more, no less. Adding the two walls double-counts only the overlap; removing it once restores every room to a single count. That is inclusion&ndash;exclusion, and it holds for no deeper reason than the rooms summing honestly to themselves.</p>'+
+      '<div class="derivation"><div class="d-label">What each symbol means &mdash; in plain words</div>'+
+      '<div class="d-line"><strong>P(A)</strong> &mdash; the A-row wall: every room where A fires</div>'+
+      '<div class="d-line"><strong>P(B)</strong> &mdash; the B-column wall: every room where B fires</div>'+
+      '<div class="d-line"><strong>P(A&cap;B)</strong> &mdash; the shared corner: where A and B fire together</div>'+
+      '<div class="d-line"><strong>P(A&cup;B)</strong> &mdash; the answer: every room where at least one fires</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)</p></div>';
+  }
+
+  function addProcess(){
+    return '<div class="step-content"><h3>Step 2 &mdash; Process: three moves to the union</h3>'+
+      '<p>The same three moves you will walk with numbers in Step 4 &mdash; always in this order. The shape first, no numbers yet.</p>'+
+      addFviz(false)+
+      '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+      '<div class="proc-step"><strong>Move 1 &mdash; Gather the whole A-row.</strong> Read P(A) off the row margin. <em>Why this piece:</em> it is every room where A fires. <em>What it does to the space:</em> it collapses the A-row into a single wall of mass.</div>'+
+      '<div class="proc-step"><strong>Move 2 &mdash; Gather the whole B-column.</strong> Read P(B) off the column margin. <em>Why this piece:</em> it is every room where B fires. <em>What it does to the space:</em> it collapses the B-column into a single wall.</div>'+
+      '<div class="proc-step"><strong>Move 3 &mdash; Subtract the shared corner once.</strong> &minus; P(A&cap;B). <em>Why this piece:</em> that corner sat inside both walls, so adding them counted it twice. <em>What it does to the space:</em> it removes the double-count, leaving every room with exactly one vote.</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:4px">P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)</p></div>';
+  }
+
+  function addData(){
+    return '<div class="step-content"><h3>Step 3 &mdash; The Data: read it off the lit house</h3>'+
+      '<h4>What the problem hands you</h4>'+
+      '<p>The same screening test fills the house &mdash; a prior and two conditionals &mdash; and from them every room and wall is built. For the union you only need three things off the lit house: the A-row wall, the B-column wall, and the shared corner.</p>'+
+      '<div class="data-card"><div class="data-title">Read off the filled house</div>'+
+      '<table class="data-table">'+
+      '<tr><th>P(A) &mdash; the whole A-row</th><td>'+f(PA)+'</td></tr>'+
+      '<tr><th>P(B) &mdash; the whole B-column</th><td>'+f(PB)+'</td></tr>'+
+      '<tr><th>P(A&cap;B) &mdash; the shared corner</th><td>'+f(PAB)+'</td></tr>'+
+      '</table></div>'+
+      '<p>Look up at the house: the A-row margin reads '+f(PA)+', the B-column margin reads '+f(PB)+', and the top-left room they share reads '+f(PAB)+'. Notice the corner is already sitting <em>inside</em> both margins &mdash; that is the double-count waiting to happen.</p>'+
+      '<h4>Feel the tension before you solve</h4>'+
+      '<p>The shared corner ('+f(PAB)+') is large next to the walls &mdash; most of the A-row <em>is</em> that corner. So if you just added P(A) + P(B) and stopped, you would badly overshoot. The whole craft of the union is paying that overlap back exactly once.</p></div>';
+  }
+
+  function addWalk(){
+    return '<div class="step-content"><h3>Step 4 &mdash; Run the Formula: the union, piece by piece</h3>'+
+      '<p>The three moves from the Process, now carrying the numbers from the filled house. Each piece stands on its own.</p>'+
+      addFviz(true)+
+      '<div class="derivation"><div class="d-label">Move 1 &mdash; the whole A-row</div>'+
+      '<div class="d-line">P(A) = P(A&cap;B) + P(A&cap;B&prime;) = '+f(PAB)+' + '+f(PANB)+' = <strong>'+f(PA)+'</strong></div></div>'+
+      '<div class="derivation"><div class="d-label">Move 2 &mdash; the whole B-column</div>'+
+      '<div class="d-line">P(B) = P(A&cap;B) + P(A&prime;&cap;B) = '+f(PAB)+' + '+f(PNAB)+' = <strong>'+f(PB)+'</strong></div></div>'+
+      '<div class="derivation"><div class="d-label">Move 3 &mdash; subtract the shared corner once</div>'+
+      '<div class="d-line" style="color:var(--text2);margin-bottom:6px">It was counted inside both walls above, so pay it back exactly once.</div>'+
+      '<div class="d-line">P(A&cup;B) = '+f(PA)+' + '+f(PB)+' &minus; '+f(PAB)+'</div></div>'+
+      '<div class="result-box"><div class="result-box-name">The union &mdash; P(A&cup;B)</div><div class="result-box-formula">P(A) + P(B) &minus; P(A&cap;B)</div><div class="result-box-value">P(A&cup;B) = '+f(UNION)+'</div></div>'+
+      '<p style="color:var(--text2);font-size:.88rem;margin-top:18px">'+PATHS.addisjon.close+'</p></div>';
+  }
+
+  /* ============================================================
+     MULTIPLIKASJON — deepened path  (P(A\u2229B) = P(A|B)\u00b7P(B))
+     ============================================================ */
+  function mulFviz(filled){
+    if(filled){
+      return '<div class="formula-viz"><span class="formula-lhs">P(A&cap;B) =</span>'+
+        pc('&asymp; '+f(PAgB),'A&rsquo;s share inside B','o')+
+        '<span class="formula-op">&times;</span>'+
+        pc(f(PB),'the B-column world','b')+
+        '<span class="formula-op">&rarr;</span>'+
+        pc('&asymp; '+f(PAB),'the joint room','a')+'</div>';
+    }
+    return '<div class="formula-viz"><span class="formula-lhs">P(A&cap;B) =</span>'+
+      pc('P(A|B)','A&rsquo;s share inside B','o')+
+      '<span class="formula-op">&times;</span>'+
+      pc('P(B)','the B-column world','b')+
+      '<span class="formula-op">&rarr;</span>'+
+      pc('P(A&cap;B)','the joint room','a')+'</div>';
+  }
+
+  function mulBlueprint(){
+    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: first the space, then the law</h3>'+
+      '<h4>What space are we standing in?</h4>'+
+      '<p>Before a single formula, fix where you are. <strong>You are inside one whole world worth 1</strong>, carved into four rooms that tile it &mdash; no overlap, nothing outside, all summing to 1. The margins are the outer walls. The Multiplikasjon question lives in a single room: the top-left corner, P(A&cap;B), where A and B happen <em>together</em>.</p>'+
+      '<h4>The rooms are built, not handed to you</h4>'+
+      '<p>This is the hinge. The joint room P(A&cap;B) is not an atom &mdash; it is <strong>a wall narrowed by a fraction</strong>. Stand in the B-column (worth P(B)) and keep only A&rsquo;s share of it, P(A|B). That product builds the room: P(A&cap;B) = P(A|B)&middot;P(B). A conditional times a margin.</p>'+
+      '<h4>What the law is for</h4>'+
+      '<p>The question: how much probability lands in <strong>both</strong> A and B at once? You are building the top-left room from a conditional and the wall it sits against.</p>'+
+      '<h4>How it works</h4>'+
+      '<p>Condition on B &mdash; the B-column becomes the whole world for a moment, worth P(B). Inside that shrunken world, P(A|B) is A&rsquo;s density. Multiply that density back by the size of the world it lived in, and you return to the full house with the joint room filled:</p>'+
+      '<div class="derivation"><div class="d-line">P(A|B) = P(A&cap;B) / P(B) &nbsp;&rArr;&nbsp; P(A&cap;B) = P(A|B)&middot;P(B)</div></div>'+
+      '<h4>Why you are allowed to do it</h4>'+
+      '<p>Because conditioning is just rescaling. P(A|B) is <em>defined</em> as the joint divided by the column &mdash; A&rsquo;s mass measured against the shrunken world. Multiplying by P(B) simply undoes that rescale and puts the mass back into the full house. The definition <em>is</em> the permission.</p>'+
+      '<div class="derivation"><div class="d-label">What each symbol means &mdash; in plain words</div>'+
+      '<div class="d-line"><strong>P(B)</strong> &mdash; the B-column wall: the shrunken world once we condition on B</div>'+
+      '<div class="d-line"><strong>P(A|B)</strong> &mdash; inside that world, A&rsquo;s share (its density in the B-column)</div>'+
+      '<div class="d-line"><strong>P(A&cap;B)</strong> &mdash; the joint room: A and B together, the top-left corner</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(A&cap;B) = P(A|B)&middot;P(B)</p></div>';
+  }
+
+  function mulProcess(){
+    return '<div class="step-content"><h3>Step 2 &mdash; Process: three moves to the joint room</h3>'+
+      '<p>The same three moves you will walk with numbers in Step 4 &mdash; always in this order. The shape first, no numbers yet.</p>'+
+      mulFviz(false)+
+      '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+      '<div class="proc-step"><strong>Move 1 &mdash; Shrink the world to B.</strong> Condition on B. <em>Why this piece:</em> we only care about the corner where B already holds. <em>What it does to the space:</em> the B-column becomes the whole world, worth P(B).</div>'+
+      '<div class="proc-step"><strong>Move 2 &mdash; Measure A inside it.</strong> P(A|B) = P(A&cap;B) / P(B). <em>Why this piece:</em> within that shrunken world, this is A&rsquo;s share. <em>What it does to the space:</em> it reads A&rsquo;s density against the B-column rather than the whole house.</div>'+
+      '<div class="proc-step"><strong>Move 3 &mdash; Multiply back.</strong> P(A&cap;B) = P(A|B)&middot;P(B). <em>Why this piece:</em> the density alone is measured against the wrong-sized world; scale it back up. <em>What it does to the space:</em> it returns the mass to the full house, filling the joint room.</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:4px">P(A&cap;B) = P(A|B)&middot;P(B)</p></div>';
+  }
+
+  function mulData(){
+    return '<div class="step-content"><h3>Step 3 &mdash; The Data: read it off the lit house</h3>'+
+      '<h4>What the problem hands you</h4>'+
+      '<p>The same filled house gives you both pieces. For the joint room you need the B-column wall and A&rsquo;s share inside it &mdash; read straight off the lit cells.</p>'+
+      '<div class="data-card"><div class="data-title">Read off the filled house</div>'+
+      '<table class="data-table">'+
+      '<tr><th>P(B) &mdash; the B-column wall (shrunken world)</th><td>'+f(PB)+'</td></tr>'+
+      '<tr><th>P(A|B) &mdash; A&rsquo;s share inside the B-column</th><td>&asymp; '+f(PAgB)+'</td></tr>'+
+      '</table></div>'+
+      '<p>Look up at the house: the B-column margin reads '+f(PB)+'. Inside that column sit two rooms &mdash; the true-positive corner P(A&cap;B) = '+f(PAB)+' and the room below it P(A&prime;&cap;B) = '+f(PNAB)+'. A&rsquo;s share of the column is '+f(PAB)+' / '+f(PB)+' &asymp; '+f(PAgB)+'.</p>'+
+      '<h4>Feel the tension before you solve</h4>'+
+      '<p>A&rsquo;s share <em>inside</em> B ('+f(PAgB)+') is far larger than A&rsquo;s share of the whole house (P(A) = '+f(PA)+'). That jump is conditioning at work &mdash; once you know B happened, the world shrank to a column where A is much denser. Multiplying back by the column&rsquo;s true size brings it honestly back to '+f(PAB)+'.</p></div>';
+  }
+
+  function mulWalk(){
+    return '<div class="step-content"><h3>Step 4 &mdash; Run the Formula: the joint room, piece by piece</h3>'+
+      '<p>The three moves from the Process, now carrying the numbers from the filled house. Each piece stands on its own.</p>'+
+      mulFviz(true)+
+      '<div class="derivation"><div class="d-label">Move 1 &mdash; shrink to the B-column</div>'+
+      '<div class="d-line" style="color:var(--text2);margin-bottom:6px">Condition on B: the column is the whole world now.</div>'+
+      '<div class="d-line">P(B) = P(A&cap;B) + P(A&prime;&cap;B) = '+f(PAB)+' + '+f(PNAB)+' = <strong>'+f(PB)+'</strong></div></div>'+
+      '<div class="derivation"><div class="d-label">Move 2 &mdash; A&rsquo;s share inside B</div>'+
+      '<div class="d-line">P(A|B) = P(A&cap;B) / P(B) = '+f(PAB)+' / '+f(PB)+' &asymp; <strong>'+f(PAgB)+'</strong></div></div>'+
+      '<div class="derivation"><div class="d-label">Move 3 &mdash; multiply back into the full house</div>'+
+      '<div class="d-line">P(A&cap;B) = P(A|B)&middot;P(B) = '+f(PAgB)+' &middot; '+f(PB)+' &asymp; <strong>'+f(PAB)+'</strong></div></div>'+
+      '<div class="result-box"><div class="result-box-name">The joint room &mdash; P(A&cap;B)</div><div class="result-box-formula">P(A|B)&middot;P(B)</div><div class="result-box-value">P(A&cap;B) = '+f(PAB)+'</div></div>'+
+      '<p style="color:var(--text2);font-size:.88rem;margin-top:18px">'+PATHS.multiplikasjon.close+'</p></div>';
+  }
+
+  /* ============================================================
+     OPPSPLITTING — deepened path  (total probability)
+     P(B) = P(B|A)\u00b7P(A) + P(B|A\u2032)\u00b7P(A\u2032)
+     ============================================================ */
+  function oppFviz(filled){
+    if(filled){
+      return '<div class="formula-viz"><span class="formula-lhs">P(B) =</span>'+
+        pc(f(PBgA)+'&middot;'+f(PA)+' = '+f(PAB),'via the A-lane','o')+
+        '<span class="formula-op">+</span>'+
+        pc(f(PBgNA)+'&middot;'+f(PNA)+' = '+f(PNAB),'via the A&prime;-lane','b')+
+        '<span class="formula-op">&rarr;</span>'+
+        pc('= '+f(PB),'all of B','a')+'</div>';
+    }
+    return '<div class="formula-viz"><span class="formula-lhs">P(B) =</span>'+
+      pc('P(B|A)&middot;P(A)','via the A-lane','o')+
+      '<span class="formula-op">+</span>'+
+      pc('P(B|A&prime;)&middot;P(A&prime;)','via the A&prime;-lane','b')+
+      '<span class="formula-op">&rarr;</span>'+
+      pc('P(B)','all of B','a')+'</div>';
+  }
+
+  function oppBlueprint(){
+    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: first the space, then the law</h3>'+
+      '<h4>What space are we standing in?</h4>'+
+      '<p>Before a single formula, fix where you are. <strong>You are inside one whole world worth 1</strong>, carved into four rooms that tile it &mdash; no overlap, nothing outside, all summing to 1. The Oppsplitting question lives in the B-column &mdash; but it reaches that column by first cutting the whole house in two.</p>'+
+      '<h4>The rooms are built, not handed to you</h4>'+
+      '<p>The two rooms in the B-column are each a lane&rsquo;s rate times its base. The true-positive corner: P(A&cap;B) = P(B|A)&middot;P(A). The room below it: P(A&prime;&cap;B) = P(B|A&prime;)&middot;P(A&prime;). Each is a wall (a lane) narrowed by a fraction (its catch rate). Build both and you have the whole column.</p>'+
+      '<h4>What the law is for</h4>'+
+      '<p>The question: what is the overall chance of B, when B can arrive through <strong>two different doors</strong> &mdash; via A, or via A&prime;? This is the law you reach for when the problem hands you a prior and two conditionals. You end in P(B).</p>'+
+      '<h4>How it works</h4>'+
+      '<p>The prior cuts the house into two lanes that tile it perfectly: the A-lane (worth P(A)) and the A&prime;-lane (worth P(A&prime;) = 1 &minus; P(A)). Send B down each lane &mdash; keep P(B|A) of the first, P(B|A&prime;) of the second &mdash; and the two B-rooms appear. Sum them and you have the whole B-column:</p>'+
+      '<div class="derivation"><div class="d-line">P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</div></div>'+
+      '<h4>Why you are allowed to do it</h4>'+
+      '<p>Because A and A&prime; <strong>partition</strong> the whole space &mdash; together they tile every room, with no overlap and nothing left out. So B&rsquo;s total mass is exactly the sum of B-inside-A and B-inside-A&prime;. Nothing is missed and nothing is counted twice; the partition <em>is</em> the permission.</p>'+
+      '<div class="derivation"><div class="d-label">What each symbol means &mdash; in plain words</div>'+
+      '<div class="d-line"><strong>P(A)</strong> / <strong>P(A&prime;)</strong> &mdash; the two lanes: the trait present, or absent (together they fill the house)</div>'+
+      '<div class="d-line"><strong>P(B|A)</strong> &mdash; down the A-lane, the fraction that tests positive (true positives)</div>'+
+      '<div class="d-line"><strong>P(B|A&prime;)</strong> &mdash; down the A&prime;-lane, the fraction that tests positive (false positives)</div>'+
+      '<div class="d-line"><strong>P(B)</strong> &mdash; the answer: the whole B-column, both doors summed</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</p></div>';
+  }
+
+  function oppProcess(){
+    return '<div class="step-content"><h3>Step 2 &mdash; Process: three moves to the whole column</h3>'+
+      '<p>The same three moves you will walk with numbers in Step 4 &mdash; always in this order. The shape first, no numbers yet.</p>'+
+      oppFviz(false)+
+      '<div class="proc-block"><div class="proc-title">Procedure</div>'+
+      '<div class="proc-step"><strong>Move 1 &mdash; Split the world by the prior.</strong> Into the A-lane P(A) and the A&prime;-lane P(A&prime;) = 1 &minus; P(A). <em>Why this piece:</em> B can only happen inside one lane or the other. <em>What it does to the space:</em> it cuts the whole house into two parts that tile it.</div>'+
+      '<div class="proc-step"><strong>Move 2 &mdash; Send B down each lane.</strong> A-lane: P(B|A)&middot;P(A). A&prime;-lane: P(B|A&prime;)&middot;P(A&prime;). <em>Why this piece:</em> each lane lets through its own fraction of positives. <em>What it does to the space:</em> it fills the two rooms of the B-column &mdash; true positives and false positives.</div>'+
+      '<div class="proc-step"><strong>Move 3 &mdash; Sum the two lanes.</strong> Add the two B-rooms. <em>Why this piece:</em> together they are every way B can occur. <em>What it does to the space:</em> it closes the B-column into a single wall, P(B).</div>'+
+      '</div>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:4px">P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</p></div>';
+  }
+
+  function oppData(){
+    return '<div class="step-content"><h3>Step 3 &mdash; The Data: three numbers, and how they light the house</h3>'+
+      '<h4>What the problem hands you</h4>'+
+      '<p>A total-probability problem hands you a <strong>prior</strong> and <strong>two conditionals</strong> &mdash; the same screening test &mdash; and trusts you to build both doors into B.</p>'+
+      '<div class="data-card"><div class="data-title">A screening test</div>'+
+      '<table class="data-table">'+
+      '<tr><th>P(A) &mdash; the prior: how common the trait is</th><td>0.20</td></tr>'+
+      '<tr><th>P(B|A) &mdash; a true carrier testing positive</th><td>0.90</td></tr>'+
+      '<tr><th>P(B|A&prime;) &mdash; a healthy person testing positive (a false positive)</th><td>0.10</td></tr>'+
+      '</table></div>'+
+      '<p>One in five carry the trait, so the A-lane is worth P(A) = '+f(PA)+' and the far larger A&prime;-lane is worth P(A&prime;) = '+f(PNA)+'. Look up at the house: the two rooms in the B-column are the two doors &mdash; the top-left true-positive corner '+f(PAB)+', and the false-positive room below it '+f(PNAB)+'.</p>'+
+      '<h4>Feel the tension before you solve</h4>'+
+      '<p>The A&prime;-lane is four times the size of the A-lane. So even though its catch rate is small (just '+f(PBgNA)+'), it still drips a real '+f(PNAB)+' of false positives into the column &mdash; nearly half the size of the '+f(PAB)+' of true ones. A big lane with a small rate can rival a small lane with a big rate. That balance is the whole story.</p></div>';
+  }
+
+  function oppWalk(){
+    return '<div class="step-content"><h3>Step 4 &mdash; Run the Formula: the whole column, piece by piece</h3>'+
+      '<p>The three moves from the Process, now carrying the numbers from the filled house. Each piece stands on its own.</p>'+
+      oppFviz(true)+
+      '<div class="derivation"><div class="d-label">Move 1 &mdash; split the world by the prior</div>'+
+      '<div class="d-line">P(A) = '+f(PA)+' &nbsp;&middot;&nbsp; P(A&prime;) = 1 &minus; '+f(PA)+' = <strong>'+f(PNA)+'</strong></div></div>'+
+      '<div class="derivation"><div class="d-label">Move 2 &mdash; send B down each lane</div>'+
+      '<div class="d-line">A-lane (true positives): &nbsp; P(B|A)&middot;P(A) = '+f(PBgA)+'&middot;'+f(PA)+' = <strong>'+f(PAB)+'</strong></div>'+
+      '<div class="d-line">A&prime;-lane (false positives): &nbsp; P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+'&middot;'+f(PNA)+' = <strong>'+f(PNAB)+'</strong></div></div>'+
+      '<div class="derivation"><div class="d-label">Move 3 &mdash; sum the two lanes</div>'+
+      '<div class="d-line">P(B) = '+f(PAB)+' + '+f(PNAB)+' = <strong>'+f(PB)+'</strong></div></div>'+
+      '<div class="result-box"><div class="result-box-name">All of B &mdash; P(B)</div><div class="result-box-formula">P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</div><div class="result-box-value">P(B) = '+f(PB)+'</div></div>'+
+      '<p style="color:var(--text2);font-size:.88rem;margin-top:18px">'+PATHS.oppsplitting.close+'</p></div>';
+  }
+
+  /* --- Deepened dispatch: every path routes through here --- */
+  var DEEP = {
+    addisjon:       { bp: addBlueprint,   pr: addProcess,   da: addData,   wk: addWalk },
+    multiplikasjon: { bp: mulBlueprint,   pr: mulProcess,   da: mulData,   wk: mulWalk },
+    oppsplitting:   { bp: oppBlueprint,   pr: oppProcess,   da: oppData,   wk: oppWalk },
+    bayes:          { bp: bayesBlueprint, pr: bayesProcess, da: bayesData, wk: bayesWalk }
+  };
+
+  /* --- Generic renderers (kept as a safety fallback only) --- */
+  function blueprintHTML(P){
+    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: '+P.name+'</h3>'+
+      '<p style="color:var(--accent);font-weight:500;margin-top:12px">'+P.formula+'</p></div>';
+  }
+  function processHTML(P){
+    return '<div class="step-content"><h3>Step 2 &mdash; Process: '+P.name+'</h3>'+
+      '<p style="color:var(--accent);font-weight:500">'+P.formula+'</p></div>';
+  }
+  function dataHTML(){
+    return '<div class="step-content"><h3>Step 3 &mdash; The Data</h3>'+
+      '<div class="data-card"><div class="data-title">A screening test</div>'+
+      '<table class="data-table">'+
+      '<tr><th>P(A)</th><td>0.20</td></tr>'+
+      '<tr><th>P(B|A)</th><td>0.90</td></tr>'+
+      '<tr><th>P(B|A&prime;)</th><td>0.10</td></tr>'+
+      '</table></div></div>';
+  }
+  function walkHTML(P){
+    return '<div class="step-content"><h3>Step 4 &mdash; Run the Formula: '+P.name+'</h3>'+
+      '<p style="color:var(--accent);font-weight:500">'+P.formula+'</p></div>';
+  }
+
   /* --- Rendering --- */
   var activePath = null, step = 1;
 
@@ -234,56 +478,17 @@
     });
   }
 
-  function blueprintHTML(P){
-    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: '+P.name+'</h3>'+
-      '<p>'+P.blueprint+'</p>'+
-      '<p style="color:var(--accent);font-weight:500;margin-top:12px">'+P.formula+'</p></div>';
-  }
-  function processHTML(P){
-    var h='<div class="step-content"><h3>Step 2 &mdash; Process: '+P.name+'</h3>'+
-      '<p>The same stages you will walk with numbers in Step 4 &mdash; always in this order, each one leaning on the cells the last one found.</p>'+
-      '<div class="proc-block"><div class="proc-title">Procedure</div>';
-    P.stages.forEach(function(s){ h+='<div class="proc-step"><strong>'+s.t+'</strong> '+s.b+'</div>'; });
-    h+='<div class="proc-step" style="margin-top:10px;color:var(--accent)">'+P.formula+'</div></div></div>';
-    return h;
-  }
-  function dataHTML(P){
-    return '<div class="step-content"><h3>Step 3 &mdash; The Data</h3>'+
-      '<p>This station is only for <strong>reading</strong> the problem the way the exam states it &mdash; a prior and two conditionals. No solving yet.</p>'+
-      '<div class="data-card"><div class="data-title">A screening test</div>'+
-      '<table class="data-table">'+
-      '<tr><th>P(A) &mdash; the prior</th><td>0.20</td></tr>'+
-      '<tr><th>P(B|A) &mdash; catches a true case</th><td>0.90</td></tr>'+
-      '<tr><th>P(B|A&prime;) &mdash; false positive on a healthy one</th><td>0.10</td></tr>'+
-      '</table></div>'+
-      '<p>One in five carry the trait (P(A) = 0.20). The test is good &mdash; it catches 90% of carriers &mdash; but it also returns a false positive on 10% of healthy people. Those three numbers are enough: the house fills itself. P(A&cap;B) = 0.90&middot;0.20 = 0.18, the false-positive cell P(A&prime;&cap;B) = 0.10&middot;0.80 = 0.08, and the rest follows by the conservation law.</p>'+
-      '<p>Before any path, <em>feel</em> the tension: the trait is rare, so even a sharp test will drag a crowd of false positives in alongside the true cases. That is the whole story Step 4 makes exact.</p></div>';
-  }
-  function walkHTML(P){
-    var h='<div class="step-content"><h3>Step 4 &mdash; Run the Formula: '+P.name+'</h3>'+
-      '<p>The same stages from the Process, now with the numbers from the filled house. Watch each stage hand the next one its piece.</p>';
-    P.walk.forEach(function(w){
-      h+='<div class="derivation"><div class="d-label">'+w.label+'</div>';
-      w.lines.forEach(function(l){ h+='<div class="d-line">'+l+'</div>'; });
-      h+='</div>';
-      h+='<div class="result-box"><div class="result-box-name">'+w.rname+'</div><div class="result-box-formula">'+w.rformula+'</div><div class="result-box-value">'+w.rvalue+'</div></div>';
-    });
-    if(P.close) h+='<p style="color:var(--text2);font-size:.88rem;margin-top:18px">'+P.close+'</p>';
-    h+='</div>';
-    return h;
-  }
-
   function renderStep(){
     setActiveStepBtn();
     var host = document.getElementById('step-container');
     if(!host) return;
     if(!activePath){ host.innerHTML='<div class="step-content"><p style="color:var(--muted);font-style:italic">Pick a path above, then walk the four steps.</p></div>'; showLabels(); clearHL(); return; }
     var P = PATHS[activePath];
-    var isBayes = activePath==='bayes';
-    if(step===1){ showLabels(); host.innerHTML = isBayes ? bayesBlueprint() : blueprintHTML(P); }
-    else if(step===2){ showLabels(); host.innerHTML = isBayes ? bayesProcess() : processHTML(P); }
-    else if(step===3){ fillHouse(); host.innerHTML = isBayes ? bayesData() : dataHTML(P); }
-    else if(step===4){ fillHouse(); host.innerHTML = isBayes ? bayesWalk() : walkHTML(P); }
+    var d = DEEP[activePath];
+    if(step===1){ showLabels(); host.innerHTML = d ? d.bp() : blueprintHTML(P); }
+    else if(step===2){ showLabels(); host.innerHTML = d ? d.pr() : processHTML(P); }
+    else if(step===3){ fillHouse(); host.innerHTML = d ? d.da() : dataHTML(P); }
+    else if(step===4){ fillHouse(); host.innerHTML = d ? d.wk() : walkHTML(P); }
     else if(step===5){ fillHouse(); host.innerHTML='<div class="step-content"><h3>Step 5 &mdash; Test yourself</h3><div id="test-host"></div></div>'; if(window.renderTest) window.renderTest(activePath); }
     markDone();
     hlCells(P.hl);
