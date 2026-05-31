@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSM126 — Prøv deg selv | System 33</title>
-    <meta name="description" content="Gratis flervalgstest for HSM126 — Statistikk for økonomer. 90 spørsmål fordelt på 9 kapitler. Bygget av Gunvald som del av system33.io.">
+    <meta name="description" content="Gratis flervalgstest for HSM126 — Statistikk for økonomer. 98 spørsmål fordelt på 10 kapitler. Bygget av Gunvald som del av system33.io.">
     <meta property="og:title" content="HSM126 — Prøv deg selv">
-    <meta property="og:description" content="Gratis flervalgstest for HSM126. 90 spørsmål, 9 kapitler, på norsk.">
+    <meta property="og:description" content="Gratis flervalgstest for HSM126. 98 spørsmål, 10 kapitler, på norsk.">
     <meta property="og:type" content="website">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
@@ -362,7 +362,7 @@
     <div id="screen-picker">
         <section class="hero">
             <div class="container">
-                <div class="hero-badge">Gratis · Norsk · 90 spørsmål</div>
+                <div class="hero-badge">Gratis · Norsk · 98 spørsmål</div>
                 <h1>HSM126 — Prøv deg selv</h1>
                 <p>Flervalgstest for Statistikk for økonomer. Velg et kapittel for å begynne. Ingen pålogging.</p>
             </div>
@@ -420,6 +420,7 @@
     <script src="q1.js"></script>
     <script src="q2.js"></script>
     <script src="q3.js"></script>
+    <script src="q4.js"></script>
     <script>
         var CHAPTERS = [
             { id: "Ch 1 — Beskrivende", name: "Ch 1 — Beskrivende statistikk", weight: "~10%" },
@@ -430,14 +431,16 @@
             { id: "Ch 6 — Simultanfordeling", name: "Ch 6 — Simultanfordeling", weight: "~8%" },
             { id: "Ch 7 — Sentrale fordelinger", name: "Ch 7 — Sentrale fordelinger", weight: "~11%" },
             { id: "Ch 8 — Estimering", name: "Ch 8 — Estimering", weight: "~12%" },
-            { id: "Ch 9 — Hypotesetesting", name: "Ch 9 — Hypotesetesting", weight: "~13%" }
+            { id: "Ch 9 — Hypotesetesting", name: "Ch 9 — Hypotesetesting", weight: "~13%" },
+            { id: "Ch 10 — Spesielle hypotesetester", name: "Ch 10 — Spesielle hypotesetester", weight: "~10%" }
         ];
 
-        var QUESTIONS = Q1.concat(Q2).concat(Q3);
+        var QUESTIONS = Q1.concat(Q2).concat(Q3).concat(Q4);
 
         var SPELL_LINKS = {
             "Ch 8 — Estimering": { href: "../galdr/spells/wobble-frame/", label: "The Wobble Frame →" },
-            "Ch 9 — Hypotesetesting": { href: "../galdr/spells/t-obs/", label: "T_obs — Distance in Wobbles →" }
+            "Ch 9 — Hypotesetesting": { href: "../galdr/spells/t-obs/", label: "T_obs — Distance in Wobbles →" },
+            "Ch 10 — Spesielle hypotesetester": { href: "../galdr/spells/t-obs/", label: "T_obs — Distance in Wobbles →" }
         };
 
         let currentChapter = null;
