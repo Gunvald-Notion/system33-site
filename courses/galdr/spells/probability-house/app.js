@@ -177,32 +177,34 @@
       bayesFviz(false)+
       '<div class="proc-block"><div class="proc-title">Procedure</div>'+
       '<div class="proc-step"><strong>Move 1 &mdash; Build the numerator: the true-positive cell.</strong> P(B|A)&middot;P(A) = P(A&cap;B). <em>Why this piece:</em> of all the positives, the only ones you actually want are the carriers who correctly test positive &mdash; the top-left room. <em>What it does to the space:</em> it folds the forward catch-rate and the base rate into a single cell of mass.</div>'+
-      '<div class="proc-step"><strong>Move 2 &mdash; Build the denominator: every positive.</strong> P(B) = P(A&cap;B) + P(A&prime;&cap;B). <em>Why this piece:</em> a positive can arrive through two doors &mdash; a real carrier (true alarm), or a healthy person the test cried wolf on (false alarm). The reverse question lives inside the whole world of positives, so you must gather both doors. <em>What it does to the space:</em> it shrinks the world from everyone down to the B-column &mdash; everyone who tested positive.</div>'+
+      '<div class="proc-step"><strong>Move 2 &mdash; Build the denominator: every positive.</strong> P(B) = P(A&cap;B) + P(A&prime;&cap;B). <em>Why this piece:</em> a positive can arrive through two doors &mdash; a real carrier (true positive), or a healthy person the test marks positive by mistake (false positive). The reverse question lives inside the whole world of positives, so you must gather both doors. <em>What it does to the space:</em> it shrinks the world from everyone down to the B-column &mdash; everyone who tested positive.</div>'+
       '<div class="proc-step"><strong>Move 3 &mdash; Divide: the true slice of all positives.</strong> P(A|B) = P(A&cap;B) / P(B). <em>Why this piece:</em> inside that shrunken column of positives, what share are really carriers? That share <em>is</em> the reverse chance. <em>What it does to the space:</em> it reads A&rsquo;s density inside the B-column &mdash; the flip is complete.</div>'+
       '</div>'+
       '<p style="color:var(--accent);font-weight:500;margin-top:4px">P(A|B) = P(B|A)&middot;P(A) / P(B)</p></div>';
   }
 
   function bayesData(){
-    return '<div class="step-content"><h3>Step 3 &mdash; The Data: three numbers, and why they are enough</h3>'+
+    return '<div class="step-content"><h3>Step 3 &mdash; The Data: three numbers, and how they light the house</h3>'+
       '<h4>What the problem hands you</h4>'+
-      '<p>A Bayes problem almost never hands you the cells of the house directly. It hands you a <strong>prior</strong> and <strong>two conditionals</strong> &mdash; three numbers in words &mdash; and trusts you to build the rest.</p>'+
+      '<p>A Bayes problem almost never hands you the rooms of the house directly. It hands you a <strong>prior</strong> and <strong>two conditionals</strong> &mdash; three numbers in words &mdash; and trusts you to build the rest.</p>'+
       '<div class="data-card"><div class="data-title">A screening test</div>'+
       '<table class="data-table">'+
       '<tr><th>P(A) &mdash; the prior: how common the trait is</th><td>0.20</td></tr>'+
       '<tr><th>P(B|A) &mdash; a true carrier testing positive</th><td>0.90</td></tr>'+
-      '<tr><th>P(B|A&prime;) &mdash; a healthy person testing positive (false alarm)</th><td>0.10</td></tr>'+
+      '<tr><th>P(B|A&prime;) &mdash; a healthy person testing positive (a false positive)</th><td>0.10</td></tr>'+
       '</table></div>'+
-      '<p>In words: <strong>one in five</strong> carry the trait. The test is good &mdash; it catches <strong>90%</strong> of true carriers &mdash; but it also cries wolf on <strong>10%</strong> of everyone healthy.</p>'+
-      '<h4>Why three numbers fill the whole house</h4>'+
-      '<p>Each inner cell is a conditional times its base rate. That is all you need:</p>'+
-      '<div class="derivation"><div class="d-label">building the two B-cells</div>'+
-      '<div class="d-line">true-positive cell: &nbsp; P(A&cap;B) = P(B|A)&middot;P(A) = '+f(PBgA)+'&middot;'+f(PA)+' = <strong>'+f(PAB)+'</strong></div>'+
-      '<div class="d-line">false-positive cell: &nbsp; P(A&prime;&cap;B) = P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+'&middot;'+f(PNA)+' = <strong>'+f(PNAB)+'</strong></div>'+
+      '<p>In words: <strong>one in five</strong> people carry the trait. The test is good &mdash; when someone truly carries it, the test catches them <strong>90%</strong> of the time. But it is not perfect: of the healthy people, <strong>10%</strong> still come back positive anyway. That is a <em>false positive</em> &mdash; the test says &ldquo;positive&rdquo; on someone who carries nothing.</p>'+
+      '<h4>Now watch the house above fill</h4>'+
+      '<p>Those three numbers are enough, because every inner room is just a wall times a fraction. Build the two rooms sitting in the <strong>B-column</strong> &mdash; the two ways a positive can happen &mdash; and read them straight off the lit cells:</p>'+
+      '<div class="derivation"><div class="d-label">the two rooms in the B-column</div>'+
+      '<div class="d-line"><strong>top-left room</strong> &mdash; true positives: &nbsp; P(A&cap;B) = P(B|A)&middot;P(A) = '+f(PBgA)+'&middot;'+f(PA)+' = <strong>'+f(PAB)+'</strong></div>'+
+      '<div class="d-line"><strong>room just below it</strong> &mdash; false positives: &nbsp; P(A&prime;&cap;B) = P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+'&middot;'+f(PNA)+' = <strong>'+f(PNAB)+'</strong></div>'+
       '</div>'+
-      '<p>The rest of the house follows by conservation &mdash; every row and column closes to its margin, and the whole thing sums to 1. <strong>Watch the table above:</strong> the two cells that light are exactly these two doors into B.</p>'+
+      '<p>Stack those two rooms on top of each other and you have the whole <strong>B-column wall</strong>: P(B) = '+f(PAB)+' + '+f(PNAB)+' = <strong>'+f(PB)+'</strong>. The rest of the house then closes itself by conservation &mdash; every row and column sums to its margin, and the whole thing back to 1.</p>'+
+      '<h4>One room, read forward and backward</h4>'+
+      '<p>Look up at the top-left room, P(A&cap;B) = '+f(PAB)+'. We just built it <em>forward</em> &mdash; coming down from the A-row, P(B|A)&middot;P(A). In Step 4 we read the very same room <em>backward</em> &mdash; coming across from the B-column, dividing it by P(B) to land on P(A|B). Same '+f(PAB)+' of mass, two directions through one door. That single room, read both ways, <em>is</em> the whole flip &mdash; everything else is just building the walls it sits between.</p>'+
       '<h4>Feel the tension before you solve</h4>'+
-      '<p>The trait is <em>rare</em>. So even though the test is sharp, it drags a crowd of false alarms in from the much larger healthy group, right alongside the true carriers. Hold that in mind &mdash; it is the whole reason the answer in Step 4 lands lower than your gut expects.</p></div>';
+      '<p>The trait is <em>rare</em> &mdash; only '+f(PA)+' of the house sits in the A-row, against '+f(PNA)+' in the far larger A&prime;-row. So even a sharp test pulls a real crowd of false positives ('+f(PNAB)+') up against the true ones ('+f(PAB)+'). Hold that &mdash; it is the whole reason the answer in Step 4 lands lower than your gut expects.</p></div>';
   }
 
   function bayesWalk(){
@@ -214,8 +216,8 @@
       '<div class="d-line">P(B|A)&middot;P(A) = '+f(PBgA)+'&middot;'+f(PA)+' = <strong>'+f(PAB)+'</strong> &nbsp;=&nbsp; P(A&cap;B)</div></div>'+
       '<div class="derivation"><div class="d-label">Move 2 &mdash; denominator: everyone who tests positive</div>'+
       '<div class="d-line" style="color:var(--text2);margin-bottom:6px">A positive arrives two ways. Build both doors right here &mdash; no need to leave for another room.</div>'+
-      '<div class="d-line">true alarms: &nbsp; P(A&cap;B) = <strong>'+f(PAB)+'</strong></div>'+
-      '<div class="d-line">false alarms: &nbsp; P(A&prime;&cap;B) = P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+'&middot;'+f(PNA)+' = <strong>'+f(PNAB)+'</strong></div>'+
+      '<div class="d-line">true positives: &nbsp; P(A&cap;B) = <strong>'+f(PAB)+'</strong></div>'+
+      '<div class="d-line">false positives: &nbsp; P(A&prime;&cap;B) = P(B|A&prime;)&middot;P(A&prime;) = '+f(PBgNA)+'&middot;'+f(PNA)+' = <strong>'+f(PNAB)+'</strong></div>'+
       '<div class="d-line">P(B) = '+f(PAB)+' + '+f(PNAB)+' = <strong>'+f(PB)+'</strong></div></div>'+
       '<div class="derivation"><div class="d-label">Move 3 &mdash; divide: the true slice of all positives</div>'+
       '<div class="d-line">P(A|B) = P(A&cap;B) / P(B) = '+f(PAB)+' / '+f(PB)+' &asymp; <strong>'+f(PAgB)+'</strong></div></div>'+
@@ -252,10 +254,10 @@
       '<table class="data-table">'+
       '<tr><th>P(A) &mdash; the prior</th><td>0.20</td></tr>'+
       '<tr><th>P(B|A) &mdash; catches a true case</th><td>0.90</td></tr>'+
-      '<tr><th>P(B|A&prime;) &mdash; false alarm on a healthy one</th><td>0.10</td></tr>'+
+      '<tr><th>P(B|A&prime;) &mdash; false positive on a healthy one</th><td>0.10</td></tr>'+
       '</table></div>'+
-      '<p>One in five carry the trait (P(A) = 0.20). The test is good &mdash; it catches 90% of carriers &mdash; but it also cries wolf on 10% of everyone else. Those three numbers are enough: the house fills itself. P(A&cap;B) = 0.90&middot;0.20 = 0.18, the false-positive cell P(A&prime;&cap;B) = 0.10&middot;0.80 = 0.08, and the rest follows by the conservation law.</p>'+
-      '<p>Before any path, <em>feel</em> the tension: the trait is rare, so even a sharp test will drag a crowd of false alarms in alongside the true cases. That is the whole story Step 4 makes exact.</p></div>';
+      '<p>One in five carry the trait (P(A) = 0.20). The test is good &mdash; it catches 90% of carriers &mdash; but it also returns a false positive on 10% of healthy people. Those three numbers are enough: the house fills itself. P(A&cap;B) = 0.90&middot;0.20 = 0.18, the false-positive cell P(A&prime;&cap;B) = 0.10&middot;0.80 = 0.08, and the rest follows by the conservation law.</p>'+
+      '<p>Before any path, <em>feel</em> the tension: the trait is rare, so even a sharp test will drag a crowd of false positives in alongside the true cases. That is the whole story Step 4 makes exact.</p></div>';
   }
   function walkHTML(P){
     var h='<div class="step-content"><h3>Step 4 &mdash; Run the Formula: '+P.name+'</h3>'+
