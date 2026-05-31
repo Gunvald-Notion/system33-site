@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSM126 — Prøv deg selv | System 33</title>
-    <meta name="description" content="Gratis flervalgstest for HSM126 — Statistikk for økonomer. 75 spørsmål fordelt på 7 kapitler. Bygget av Gunvald som del av system33.io.">
+    <meta name="description" content="Gratis flervalgstest for HSM126 — Statistikk for økonomer. 82 spørsmål fordelt på 8 kapitler. Bygget av Gunvald som del av system33.io.">
     <meta property="og:title" content="HSM126 — Prøv deg selv">
-    <meta property="og:description" content="Gratis flervalgstest for HSM126. 75 spørsmål, 7 kapitler, på norsk.">
+    <meta property="og:description" content="Gratis flervalgstest for HSM126. 82 spørsmål, 8 kapitler, på norsk.">
     <meta property="og:type" content="website">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <style>
@@ -260,7 +260,7 @@
     <div id="screen-picker">
         <section class="hero">
             <div class="container">
-                <div class="hero-badge">Gratis · Norsk · 75 spørsmål</div>
+                <div class="hero-badge">Gratis · Norsk · 82 spørsmål</div>
                 <h1>HSM126 — Prøv deg selv</h1>
                 <p>Flervalgstest for Statistikk for økonomer. Velg et kapittel for å begynne. Ingen pålogging.</p>
             </div>
@@ -323,7 +323,8 @@
             { id: "Ch 4 — Betinget", name: "Ch 4 — Betinget sannsynlighet", weight: "~8%" },
             { id: "Ch 5 — Tilfeldige variabler", name: "Ch 5 — Tilfeldige variabler", weight: "~10%" },
             { id: "Ch 6 — Simultanfordeling", name: "Ch 6 — Simultanfordeling", weight: "~8%" },
-            { id: "Ch 7 — Sentrale fordelinger", name: "Ch 7 — Sentrale fordelinger", weight: "~11%" }
+            { id: "Ch 7 — Sentrale fordelinger", name: "Ch 7 — Sentrale fordelinger", weight: "~11%" },
+            { id: "Ch 8 — Estimering", name: "Ch 8 — Estimering", weight: "~12%" }
         ];
 
         const QUESTIONS = [
@@ -401,7 +402,14 @@
             { chapter: "Ch 7 — Sentrale fordelinger", qnum: 12, q: "For X ~ N(μ, σ²) har utvalgsgjennomsnittet x̄ basert på n observasjoner standardavvik:", a: "σ", b: "σ²/n", c: "σ/√n", d: "σ/n", correct: "C", explanation: "σx̄ = σ/√n. Dette er standardfeilen til gjennomsnittet — sentralt i Ch 8." },
             { chapter: "Ch 7 — Sentrale fordelinger", qnum: 13, q: "Binomisk fordeling kan approksimeres med normalfordeling når:", a: "n er liten", b: "p er nær 0", c: "np ≥ 5 og n(1−p) ≥ 5", d: "n < 30", correct: "C", explanation: "Tommelfingerregel for normalapproksimering: både np og n(1−p) bør være minst 5 (noen kilder krever 10)." },
             { chapter: "Ch 7 — Sentrale fordelinger", qnum: 14, q: "Når man bruker normalfordeling for å approksimere en diskret variabel (f.eks. binomisk), bør man:", a: "Ikke gjøre noen justering", b: "Bruke heltallskorreksjon: utvide intervallet med ±0.5", c: "Trekke fra 1 fra n", d: "Bruke Poisson i stedet", correct: "B", explanation: "Heltallskorreksjon/kontinuitetskorreksjon: P(X ≤ k) ≈ P(Z ≤ (k + 0.5 − μ)/σ). Justerer for at en kontinuerlig kurve approksimerer en diskret." },
-            { chapter: "Ch 7 — Sentrale fordelinger", qnum: 15, q: "X ~ N(6, 4). Du vil finne x slik at P(X > x) = 0.08. z ≈ 1.405. Hva er x?", a: "6.20", b: "6.81", c: "7.26", d: "8.81", correct: "D", explanation: "P(X ≤ x) = 0.92 → z₀.₉₂ ≈ 1.405. x = μ + z·σ = 6 + 1.405·2 = 8.81." }
+            { chapter: "Ch 7 — Sentrale fordelinger", qnum: 15, q: "X ~ N(6, 4). Du vil finne x slik at P(X > x) = 0.08. z ≈ 1.405. Hva er x?", a: "6.20", b: "6.81", c: "7.26", d: "8.81", correct: "D", explanation: "P(X ≤ x) = 0.92 → z₀.₉₂ ≈ 1.405. x = μ + z·σ = 6 + 1.405·2 = 8.81." },
+            { chapter: "Ch 8 — Estimering", qnum: 1, q: "Et utvalg på n observasjoner har utvalgsstandardavvik s. Hvilket uttrykk gir standardfeilen (SE) til gjennomsnittet?", a: "s · n", b: "s / n", c: "s / √n", d: "s² / n", correct: "C", explanation: "Formel 8.4 · Vingleramma takt 2 (Linjal). SE = s/√n. Gjennomsnittet skjelver mindre enn enkeltobservasjonene — dempet av √n, ikke n. Firedobler du utvalget, halveres SE. fx-82CW: s ÷ √ n =." },
+            { chapter: "Ch 8 — Estimering", qnum: 2, q: "Et utvalg har μ = 150, σ = 18 og n = 81. Hva er standardfeilen til gjennomsnittet?", a: "0.22", b: "1.46", c: "2", d: "18", correct: "C", explanation: "Formel 8.4 · Vingleramma takt 2. SE = σ/√n = 18/√81 = 18/9 = 2. μ = 150 er en distraksjon — SE bryr seg bare om spredning (σ) og antall (n). fx-82CW: 18 ÷ √ 81 = → 2." },
+            { chapter: "Ch 8 — Estimering", qnum: 3, q: "Et utvalg har varians = 49 og n = 196. Hva er standardfeilen til gjennomsnittet?", a: "0.5", b: "3.5", c: "7", d: "0.25", correct: "A", explanation: "Formel 8.4 · Vingleramma takt 2. Trekk rota av variansen først: s = √49 = 7. Så SE = 7/√196 = 7/14 = 0.5. Fella er å sette 49 rett inn i telleren — varians → standardavvik først, alltid. fx-82CW: √ 49 ÷ √ 196 =." },
+            { chapter: "Ch 8 — Estimering", qnum: 4, q: "Et normalfordelt utvalg har n = 25 og s = 15. Finn standardfeilen og den kritiske verdien for et 95 % konfidensintervall.", a: "SE = 3, t = 2.06", b: "SE = 0.6, t = 2.06", c: "SE = 3, t = 1.72", d: "SE = 3, z = 1.96", correct: "A", explanation: "Formel 8.4 + 8.10 + tabell T2 · Vingleramma takt 2–3. SE = 15/√25 = 15/5 = 3. n = 25 < 30 og normalfordelt → t, ikke z. df = 24, 95 % tosidig (α/2 = 0.025) → t = 2.064 ≈ 2.06 fra T2. Alt. D bruker z, som er feil for n < 30." },
+            { chapter: "Ch 8 — Estimering", qnum: 5, q: "En lengdemåling på n = 16 enheter gir x̄ = 7 cm og s = 2 cm (normalfordelt). Bygg et 90 % konfidensintervall for μ.", a: "6.12 til 7.88", b: "5.93 til 8.07", c: "6.50 til 7.50", d: "6.04 til 7.96", correct: "A", explanation: "Formel 8.10 + T2 · alle fire takter. Senter x̄ = 7. Linjal SE = 2/√16 = 0.5. Strekk: n < 30 → t, df = 15, 90 % → t = 1.753, så 1.753·0.5 = 0.877. Ramme: 7 ± 0.877 = (6.12 ; 7.88). fx-82CW: 2 ÷ √ 16 =, så 1.753 × 0.5 =, så 7 − 0.877 og 7 + 0.877." },
+            { chapter: "Ch 8 — Estimering", qnum: 6, q: "Et utvalg på n = 100 gir x̄ = 40 og s = 10. Bygg et 99 % konfidensintervall for μ.", a: "(37.42 ; 42.58)", b: "(36.8 ; 43.2)", c: "(35.65 ; 44.35)", d: "(38.04 ; 41.96)", correct: "A", explanation: "Formel 8.7/8.9 + T1 · alle fire takter. Senter 40. Linjal SE = 10/√100 = 1. Strekk: n ≥ 30 → z, 99 % → z = 2.576, så 2.576·1 = 2.576. Ramme: 40 ± 2.576 = (37.42 ; 42.58). Samme maskin som oppgave 5 — eneste forskjell: n ≥ 30 gir z fra T1, ikke t fra T2." },
+            { chapter: "Ch 8 — Estimering", qnum: 7, q: "Blant n = 16 enheter er 2 av en spesiell type, så p̂ = 0.125. Bygg et 95 % konfidensintervall for andelen p.", a: "(−0.04 ; 0.29)", b: "(0.04 ; 0.21)", c: "(0.29 ; 0.78)", d: "(0.00 ; 0.25)", correct: "A", explanation: "Formel 8.5 + 8.8 · binomisk linjal. SE = √(p̂(1−p̂)/n) = √(0.125·0.875/16) = 0.0827. Strekk: z = 1.96, så 1.96·0.0827 = 0.162. Ramme: 0.125 ± 0.162 = (−0.04 ; 0.29). Negativ nedre grense er et varsel: n·p̂(1−p̂) = 1.75 < 5, så normaltilnærmingen vakler her." }
         ];
 
         let currentChapter = null;
