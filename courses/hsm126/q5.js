@@ -8,7 +8,8 @@ var Q5 = [
 		c: `Korrelasjonen mellom x og y`,
 		d: `Feilleddet i modellen`,
 		correct: `B`,
-		explanation: `β₁ er stigningstallet — hvor mye y endrer seg per enhets økning i x. β₀ er skjæringspunktet (y når x = 0), og ε er feilleddet.`
+		explanation: `β₁ er stigningstallet — hvor mye y endrer seg per enhets økning i x. β₀ er skjæringspunktet (y når x = 0), og ε er feilleddet.`,
+		walk: `<div class="walk-intro">Et begrepsspørsmål om <strong>regresjonslinja</strong>. Før du regner noe, må du vite hva hver brikke i modellen gjør.</div><div class="piece-row"><span class="formula-lhs">y =</span><div class="piece"><span class="piece-text">β₀</span><span class="piece-label">skjæringspunkt (y når x = 0)</span></div><span class="formula-op">+</span><div class="piece accent"><span class="piece-text">β₁ · x</span><span class="piece-label">stigningstall · forklaringsvariabel</span></div><span class="formula-op">+</span><div class="piece"><span class="piece-text">ε</span><span class="piece-label">feilledd</span></div></div><div class="proc-block"><div class="proc-title">Regresjonslinja — brikke for brikke</div><div class="proc-step"><strong>Steg 1 — β₀.</strong> Skjæringspunktet: hvor linja krysser y-aksen, altså predikert y når x = 0.</div><div class="proc-step"><strong>Steg 2 — β₁.</strong> Stigningstallet: hvor mye y endrer seg når x øker med <em>én enhet</em>. Det er dette spørsmålet ber om.</div><div class="proc-step"><strong>Steg 3 — ε.</strong> Feilleddet: avstanden mellom det modellen spår og den faktiske y-verdien.</div><div class="proc-step"><strong>Fella.</strong> β₁ er ikke korrelasjonen (det er r) og ikke verdien ved x = 0 (det er β₀).</div></div><div class="result-box"><div class="result-box-name">Svar · stigningstall</div><div class="result-box-formula">β₁ = endring i y per enhets x</div><div class="result-box-value">Alternativ B</div></div>`
 	},
 	{
 		chapter: `Ch 11 — Regresjonsanalyse`,
@@ -32,7 +33,7 @@ var Q5 = [
 		d: `|r| = 0,8; modellen forklarer 80 %`,
 		correct: `B`,
 		explanation: `|r| = √R² = √0,64 = 0,8. R² = 0,64 betyr at modellen forklarer 64 % av variasjonen i y.`,
-		walk: `<div class="walk-intro">R² og korrelasjonen <strong>r</strong> henger sammen: <strong>|r| = √R²</strong>.</div><div class="result-box"><div class="result-box-name">Korrelasjon</div><div class="result-box-formula">|r| = √0,64</div><div class="result-box-value">|r| = 0,8</div></div><div class="proc-block"><div class="proc-title">Hva R² betyr</div><div class="proc-step"><strong>Andel forklart.</strong> R² = 0,64 betyr at modellen forklarer <em>64 %</em> av variasjonen i y. De resterende 36 % er uforklart (residualer).</div></div><div class="fx-line"><strong>Felle:</strong> R² er ikke r. Ta rota for å få korrelasjonen; fortegnet følger stigningstallet.</div>`
+		walk: `<div class="walk-intro">R² og korrelasjonen <strong>r</strong> henger sammen: <strong>|r| = √R²</strong>. Ta rota først, tolk prosenten etterpå.</div><div class="piece-row"><span class="formula-lhs">|r| =</span><div class="piece"><span class="piece-text">√R²</span><span class="piece-label">rota av R²</span></div><span class="formula-op">=</span><div class="piece"><span class="piece-text">√0,64</span><span class="piece-label">sett inn</span></div><span class="formula-op">→</span><div class="piece accent"><span class="piece-text">0,8</span><span class="piece-label">korrelasjon</span></div></div><div class="proc-block"><div class="proc-title">R² og r — steg for steg</div><div class="proc-step"><strong>Steg 1 — Korrelasjonen.</strong> |r| = √0,64 = 0,8.</div><div class="proc-step"><strong>Steg 2 — Andel forklart.</strong> R² = 0,64 betyr at modellen forklarer <em>64 %</em> av variasjonen i y; de resterende 36 % er uforklart (residualer).</div><div class="proc-step"><strong>Fella.</strong> R² er ikke r. Ta rota for å få korrelasjonen; fortegnet følger stigningstallet.</div></div><div class="result-box"><div class="result-box-name">Svar · R² og korrelasjon</div><div class="result-box-formula">|r| = √0,64 = 0,8 ; R² = 64 %</div><div class="result-box-value">Alternativ B</div></div>`
 	},
 	{
 		chapter: `Ch 11 — Regresjonsanalyse`,
@@ -55,7 +56,8 @@ var Q5 = [
 		c: `Om modellen som helhet forklarer noe (minst én β ≠ 0)`,
 		d: `Om residualene er normalfordelte`,
 		correct: `C`,
-		explanation: `F-testen (F = MSR/MSE) vurderer modellen samlet: er minst én av koeffisientene forskjellig fra null? Enkeltkoeffisienter testes med t-test.`
+		explanation: `F-testen (F = MSR/MSE) vurderer modellen samlet: er minst én av koeffisientene forskjellig fra null? Enkeltkoeffisienter testes med t-test.`,
+		walk: `<div class="walk-intro">F-testen ser på <strong>hele modellen samlet</strong>, ikke én enkelt koeffisient.</div><div class="piece-row"><span class="formula-lhs">F =</span><div class="piece"><span class="piece-text">MSR</span><span class="piece-label">forklart variasjon (modell)</span></div><span class="formula-op">÷</span><div class="piece"><span class="piece-text">MSE</span><span class="piece-label">uforklart variasjon (residual)</span></div></div><div class="proc-block"><div class="proc-title">F-test mot t-test</div><div class="proc-step"><strong>Steg 1 — Hypotesen.</strong> H₀: alle β = 0 (modellen forklarer ingenting) mot H_A: minst én β ≠ 0.</div><div class="proc-step"><strong>Steg 2 — Hva F måler.</strong> Stor F = forklart variasjon er stor i forhold til støyen → modellen forklarer noe.</div><div class="proc-step"><strong>Steg 3 — Arbeidsdeling.</strong> F tester modellen <em>samlet</em>; t-testen tester <em>én</em> koeffisient om gangen.</div></div><div class="result-box"><div class="result-box-name">Svar · F-test</div><div class="result-box-formula">F = MSR/MSE — minst én β ≠ 0?</div><div class="result-box-value">Alternativ C</div></div>`
 	},
 	{
 		chapter: `Ch 11 — Regresjonsanalyse`,
@@ -66,7 +68,8 @@ var Q5 = [
 		c: `Autokorrelasjon; måles med R²`,
 		d: `Ingen problem — flere variabler er alltid bedre`,
 		correct: `B`,
-		explanation: `Sterkt korrelerte forklaringsvariabler gir multikollinearitet, som blåser opp standardfeilene. VIF = 1/(1 − R²ⱼ) avslører det; en høy VIF (ofte > 5–10) er et varsel.`
+		explanation: `Sterkt korrelerte forklaringsvariabler gir multikollinearitet, som blåser opp standardfeilene. VIF = 1/(1 − R²ⱼ) avslører det; en høy VIF (ofte > 5–10) er et varsel.`,
+		walk: `<div class="walk-intro">Når to forklaringsvariabler er sterkt korrelerte med <em>hverandre</em>, oppstår <strong>multikollinearitet</strong>.</div><div class="piece-row"><span class="formula-lhs">VIF =</span><div class="piece"><span class="piece-text">1</span><span class="piece-label">teller</span></div><span class="formula-op">÷</span><div class="piece"><span class="piece-text">1 − R²ⱼ</span><span class="piece-label">hvor godt andre variabler forklarer variabel j</span></div></div><div class="proc-block"><div class="proc-title">Diagnosen — steg for steg</div><div class="proc-step"><strong>Steg 1 — Problemet.</strong> Sterkt korrelerte forklaringsvariabler blåser opp standardfeilene, så koeffisientene blir ustabile.</div><div class="proc-step"><strong>Steg 2 — Målet.</strong> VIF = 1/(1 − R²ⱼ). Høy R²ⱼ (andre variabler forklarer variabel j godt) → høy VIF.</div><div class="proc-step"><strong>Steg 3 — Varselgrensa.</strong> VIF > 5–10 regnes som et faresignal.</div><div class="proc-step"><strong>Fella.</strong> Heteroskedastisitet og autokorrelasjon er andre problemer — ikke det som korrelerte <em>forklaringsvariabler</em> gir.</div></div><div class="result-box"><div class="result-box-name">Svar · multikollinearitet</div><div class="result-box-formula">VIF = 1/(1 − R²ⱼ)</div><div class="result-box-value">Alternativ B</div></div>`
 	},
 	{
 		chapter: `Ch 11 — Regresjonsanalyse`,
@@ -77,7 +80,8 @@ var Q5 = [
 		c: `Justert R² straffer for å legge til variabler som ikke bidrar`,
 		d: `De er alltid like`,
 		correct: `C`,
-		explanation: `Vanlig R² stiger (eller står stille) hver gang du legger til en variabel, selv en ubrukelig en. Justert R² trekker fra for antall forklaringsvariabler, så den belønner bare variabler som faktisk forbedrer modellen.`
+		explanation: `Vanlig R² stiger (eller står stille) hver gang du legger til en variabel, selv en ubrukelig en. Justert R² trekker fra for antall forklaringsvariabler, så den belønner bare variabler som faktisk forbedrer modellen.`,
+		walk: `<div class="walk-intro">Vanlig R² har en svakhet: den <strong>stiger uansett</strong> når du legger til variabler. Justert R² retter på det.</div><div class="piece-row"><span class="formula-lhs">R²</span><span class="formula-op">→</span><div class="piece"><span class="piece-text">stiger alltid</span><span class="piece-label">selv av ubrukelige variabler</span></div><span class="formula-op">vs</span><div class="piece accent"><span class="piece-text">justert R²</span><span class="piece-label">straffer for antall variabler</span></div></div><div class="proc-block"><div class="proc-title">R² mot justert R²</div><div class="proc-step"><strong>Steg 1 — Svakheten.</strong> Vanlig R² går aldri ned når du legger til en variabel, selv en som ikke bidrar.</div><div class="proc-step"><strong>Steg 2 — Korreksjonen.</strong> Justert R² trekker fra for antall forklaringsvariabler (k).</div><div class="proc-step"><strong>Steg 3 — Tolkning.</strong> Bare variabler som faktisk forbedrer modellen løfter justert R²; ubrukelige variabler senker den.</div></div><div class="result-box"><div class="result-box-name">Svar · justert R²</div><div class="result-box-formula">straffer ekstra variabler</div><div class="result-box-value">Alternativ C</div></div>`
 	},
 	{
 		chapter: `Ch 11 — Regresjonsanalyse`,
@@ -88,6 +92,7 @@ var Q5 = [
 		c: `Gjennomsnittet av y`,
 		d: `Korrelasjonen mellom gruppene`,
 		correct: `A`,
-		explanation: `Med en dummy som hopper mellom 0 og 1, er β₁ spranget i forventet y fra referansegruppa (x = 0) til den andre gruppa (x = 1) — ikke en kontinuerlig helling.`
+		explanation: `Med en dummy som hopper mellom 0 og 1, er β₁ spranget i forventet y fra referansegruppa (x = 0) til den andre gruppa (x = 1) — ikke en kontinuerlig helling.`,
+		walk: `<div class="walk-intro">Når x er en <strong>dummy</strong> (0 eller 1), endrer β₁ betydning: ikke lenger en helling, men et <em>sprang mellom to grupper</em>.</div><div class="piece-row"><span class="formula-lhs">ŷ =</span><div class="piece"><span class="piece-text">β₀</span><span class="piece-label">snitt i referansegruppa (x = 0)</span></div><span class="formula-op">+</span><div class="piece accent"><span class="piece-text">β₁ · x</span><span class="piece-label">tillegg når x = 1</span></div></div><div class="proc-block"><div class="proc-title">Dummy-tolkning — steg for steg</div><div class="proc-step"><strong>Steg 1 — x = 0.</strong> ŷ = β₀ → forventet y i referansegruppa.</div><div class="proc-step"><strong>Steg 2 — x = 1.</strong> ŷ = β₀ + β₁ → forventet y i den andre gruppa.</div><div class="proc-step"><strong>Steg 3 — Differansen.</strong> β₁ = (β₀ + β₁) − β₀ = forskjellen i forventet y mellom gruppene.</div><div class="proc-step"><strong>Fella.</strong> Med en dummy er β₁ ikke en kontinuerlig helling per måleenhet — variabelen hopper bare mellom 0 og 1.</div></div><div class="result-box"><div class="result-box-name">Svar · dummy-koeffisient</div><div class="result-box-formula">β₁ = forskjell mellom gruppe x=1 og x=0</div><div class="result-box-value">Alternativ A</div></div>`
 	}
 ];
