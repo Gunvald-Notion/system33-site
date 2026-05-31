@@ -21,6 +21,7 @@
             --text-muted: #71717a;
             --correct: #22c55e;
             --wrong: #ef4444;
+            --accent: #a78bfa;
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         body {
@@ -165,6 +166,29 @@
             line-height: 1.55;
         }
         .explanation strong { color: var(--text-primary); }
+        .walk-explanation { border-left-color: var(--accent); padding: 18px 20px; }
+        .walk-verdict { font-size: 0.92rem; margin-bottom: 6px; }
+        .walk-intro { font-size: 0.9rem; color: var(--text-secondary); margin: 4px 0 14px; line-height: 1.6; }
+        .walk-intro strong { color: var(--text-primary); }
+        .piece-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; justify-content: center; padding: 18px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; margin: 6px 0 16px; }
+        .formula-lhs, .formula-op { font-family: 'SF Mono', Menlo, monospace; font-size: 1rem; padding-top: 10px; color: var(--text-secondary); }
+        .piece { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .piece-text { font-family: 'SF Mono', Menlo, monospace; font-size: 0.95rem; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-secondary); white-space: nowrap; color: var(--text-primary); }
+        .piece-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); max-width: 130px; text-align: center; line-height: 1.35; }
+        .piece.accent .piece-text { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+        .piece.accent .piece-label { color: var(--accent); }
+        .proc-block { background: var(--bg-secondary); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 14px 0; }
+        .proc-title { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+        .proc-step { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.65; margin: 9px 0; }
+        .proc-step strong { color: var(--text-primary); }
+        .proc-step em { color: var(--text-secondary); font-style: italic; }
+        .result-box { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 14px 18px; margin-top: 14px; }
+        .result-box-name { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .result-box-formula { font-family: 'SF Mono', Menlo, monospace; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 6px; }
+        .result-box-value { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); }
+        .walk-note { font-size: 0.82rem; color: var(--text-muted); margin-top: 12px; line-height: 1.55; }
+        .fx-line { font-family: 'SF Mono', Menlo, monospace; font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; }
+        .fx-line strong { color: var(--text-secondary); font-family: var(--font); }
         .next-btn {
             width: 100%;
             background: var(--text-primary);
@@ -403,168 +427,6 @@
             { chapter: "Ch 7 — Sentrale fordelinger", qnum: 13, q: "Binomisk fordeling kan approksimeres med normalfordeling når:", a: "n er liten", b: "p er nær 0", c: "np ≥ 5 og n(1−p) ≥ 5", d: "n < 30", correct: "C", explanation: "Tommelfingerregel for normalapproksimering: både np og n(1−p) bør være minst 5 (noen kilder krever 10)." },
             { chapter: "Ch 7 — Sentrale fordelinger", qnum: 14, q: "Når man bruker normalfordeling for å approksimere en diskret variabel (f.eks. binomisk), bør man:", a: "Ikke gjøre noen justering", b: "Bruke heltallskorreksjon: utvide intervallet med ±0.5", c: "Trekke fra 1 fra n", d: "Bruke Poisson i stedet", correct: "B", explanation: "Heltallskorreksjon/kontinuitetskorreksjon: P(X ≤ k) ≈ P(Z ≤ (k + 0.5 − μ)/σ). Justerer for at en kontinuerlig kurve approksimerer en diskret." },
             { chapter: "Ch 7 — Sentrale fordelinger", qnum: 15, q: "X ~ N(6, 4). Du vil finne x slik at P(X > x) = 0.08. z ≈ 1.405. Hva er x?", a: "6.20", b: "6.81", c: "7.26", d: "8.81", correct: "D", explanation: "P(X ≤ x) = 0.92 → z₀.₉₂ ≈ 1.405. x = μ + z·σ = 6 + 1.405·2 = 8.81." },
-            { chapter: "Ch 8 — Estimering", qnum: 1, q: "Et utvalg på n observasjoner har utvalgsstandardavvik s. Hvilket uttrykk gir standardfeilen (SE) til gjennomsnittet?", a: "s · n", b: "s / n", c: "s / √n", d: "s² / n", correct: "C", explanation: "Formel 8.4 · Vingleramma takt 2 (Linjal). SE = s/√n. Gjennomsnittet skjelver mindre enn enkeltobservasjonene — dempet av √n, ikke n. Firedobler du utvalget, halveres SE. fx-82CW: s ÷ √ n =." },
-            { chapter: "Ch 8 — Estimering", qnum: 2, q: "Et utvalg har μ = 150, σ = 18 og n = 81. Hva er standardfeilen til gjennomsnittet?", a: "0.22", b: "1.46", c: "2", d: "18", correct: "C", explanation: "Formel 8.4 · Vingleramma takt 2. SE = σ/√n = 18/√81 = 18/9 = 2. μ = 150 er en distraksjon — SE bryr seg bare om spredning (σ) og antall (n). fx-82CW: 18 ÷ √ 81 = → 2." },
-            { chapter: "Ch 8 — Estimering", qnum: 3, q: "Et utvalg har varians = 49 og n = 196. Hva er standardfeilen til gjennomsnittet?", a: "0.5", b: "3.5", c: "7", d: "0.25", correct: "A", explanation: "Formel 8.4 · Vingleramma takt 2. Trekk rota av variansen først: s = √49 = 7. Så SE = 7/√196 = 7/14 = 0.5. Fella er å sette 49 rett inn i telleren — varians → standardavvik først, alltid. fx-82CW: √ 49 ÷ √ 196 =." },
-            { chapter: "Ch 8 — Estimering", qnum: 4, q: "Et normalfordelt utvalg har n = 25 og s = 15. Finn standardfeilen og den kritiske verdien for et 95 % konfidensintervall.", a: "SE = 3, t = 2.06", b: "SE = 0.6, t = 2.06", c: "SE = 3, t = 1.72", d: "SE = 3, z = 1.96", correct: "A", explanation: "Formel 8.4 + 8.10 + tabell T2 · Vingleramma takt 2–3. SE = 15/√25 = 15/5 = 3. n = 25 < 30 og normalfordelt → t, ikke z. df = 24, 95 % tosidig (α/2 = 0.025) → t = 2.064 ≈ 2.06 fra T2. Alt. D bruker z, som er feil for n < 30." },
-            { chapter: "Ch 8 — Estimering", qnum: 5, q: "En lengdemåling på n = 16 enheter gir x̄ = 7 cm og s = 2 cm (normalfordelt). Bygg et 90 % konfidensintervall for μ.", a: "6.12 til 7.88", b: "5.93 til 8.07", c: "6.50 til 7.50", d: "6.04 til 7.96", correct: "A", explanation: "Formel 8.10 + T2 · alle fire takter. Senter x̄ = 7. Linjal SE = 2/√16 = 0.5. Strekk: n < 30 → t, df = 15, 90 % → t = 1.753, så 1.753·0.5 = 0.877. Ramme: 7 ± 0.877 = (6.12 ; 7.88). fx-82CW: 2 ÷ √ 16 =, så 1.753 × 0.5 =, så 7 − 0.877 og 7 + 0.877." },
-            { chapter: "Ch 8 — Estimering", qnum: 6, q: "Et utvalg på n = 100 gir x̄ = 40 og s = 10. Bygg et 99 % konfidensintervall for μ.", a: "(37.42 ; 42.58)", b: "(36.8 ; 43.2)", c: "(35.65 ; 44.35)", d: "(38.04 ; 41.96)", correct: "A", explanation: "Formel 8.7/8.9 + T1 · alle fire takter. Senter 40. Linjal SE = 10/√100 = 1. Strekk: n ≥ 30 → z, 99 % → z = 2.576, så 2.576·1 = 2.576. Ramme: 40 ± 2.576 = (37.42 ; 42.58). Samme maskin som oppgave 5 — eneste forskjell: n ≥ 30 gir z fra T1, ikke t fra T2." },
-            { chapter: "Ch 8 — Estimering", qnum: 7, q: "Blant n = 16 enheter er 2 av en spesiell type, så p̂ = 0.125. Bygg et 95 % konfidensintervall for andelen p.", a: "(−0.04 ; 0.29)", b: "(0.04 ; 0.21)", c: "(0.29 ; 0.78)", d: "(0.00 ; 0.25)", correct: "A", explanation: "Formel 8.5 + 8.8 · binomisk linjal. SE = √(p̂(1−p̂)/n) = √(0.125·0.875/16) = 0.0827. Strekk: z = 1.96, så 1.96·0.0827 = 0.162. Ramme: 0.125 ± 0.162 = (−0.04 ; 0.29). Negativ nedre grense er et varsel: n·p̂(1−p̂) = 1.75 < 5, så normaltilnærmingen vakler her." }
-        ];
-
-        let currentChapter = null;
-        let currentQuestions = [];
-        let currentIndex = 0;
-        let answers = [];
-
-        function show(screen) {
-            document.getElementById("screen-picker").classList.add("hidden");
-            document.getElementById("screen-quiz").classList.add("hidden");
-            document.getElementById("screen-results").classList.add("hidden");
-            document.getElementById("screen-" + screen).classList.remove("hidden");
-            window.scrollTo(0, 0);
-        }
-
-        function renderChapterGrid() {
-            const grid = document.getElementById("chapter-grid");
-            grid.innerHTML = "";
-            CHAPTERS.forEach(ch => {
-                const count = QUESTIONS.filter(q => q.chapter === ch.id).length;
-                const card = document.createElement("button");
-                card.className = "chapter-card";
-                card.innerHTML = `
-                    <div class="chapter-card-header">
-                        <h3>${ch.name}</h3>
-                        <span class="chapter-card-weight">${ch.weight}</span>
-                    </div>
-                    <div class="chapter-card-meta">${count} spørsmål</div>
-                `;
-                card.addEventListener("click", () => startChapter(ch));
-                grid.appendChild(card);
-            });
-        }
-
-        function startChapter(ch) {
-            currentChapter = ch;
-            currentQuestions = QUESTIONS.filter(q => q.chapter === ch.id);
-            currentIndex = 0;
-            answers = currentQuestions.map(() => null);
-            show("quiz");
-            renderQuestion();
-        }
-
-        function renderQuestion() {
-            const q = currentQuestions[currentIndex];
-            document.getElementById("quiz-chapter-name").textContent = currentChapter.name;
-            document.getElementById("quiz-progress-text").textContent = `${currentIndex + 1} / ${currentQuestions.length}`;
-            document.getElementById("progress-bar-fill").style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
-            document.getElementById("question-text").textContent = q.q;
-            const optionsDiv = document.getElementById("options");
-            optionsDiv.innerHTML = "";
-            ["A", "B", "C", "D"].forEach(letter => {
-                const btn = document.createElement("button");
-                btn.className = "option-btn";
-                const text = q[letter.toLowerCase()];
-                btn.innerHTML = `<span class="option-letter">${letter}</span> ${escapeHtml(text)}`;
-                btn.addEventListener("click", () => selectAnswer(letter));
-                optionsDiv.appendChild(btn);
-            });
-            document.getElementById("explanation").classList.add("hidden");
-            document.getElementById("next-btn").classList.add("hidden");
-            if (answers[currentIndex] !== null) {
-                showAnswer(answers[currentIndex].selected, q);
-            }
-        }
-
-        function escapeHtml(s) {
-            return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
-        }
-
-        function selectAnswer(letter) {
-            const q = currentQuestions[currentIndex];
-            const isCorrect = letter === q.correct;
-            answers[currentIndex] = { selected: letter, correct: isCorrect };
-            showAnswer(letter, q);
-        }
-
-        function showAnswer(selected, q) {
-            const buttons = document.querySelectorAll(".option-btn");
-            buttons.forEach((btn, i) => {
-                const letter = ["A", "B", "C", "D"][i];
-                btn.disabled = true;
-                if (letter === q.correct) btn.classList.add("correct");
-                else if (letter === selected) btn.classList.add("wrong");
-            });
-            const exp = document.getElementById("explanation");
-            const isCorrect = selected === q.correct;
-            exp.innerHTML = `<strong>${isCorrect ? "Riktig." : "Feil."}</strong> ${escapeHtml(q.explanation)}`;
-            exp.classList.remove("hidden");
-            const nextBtn = document.getElementById("next-btn");
-            nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? "Se resultatet →" : "Neste →";
-            nextBtn.classList.remove("hidden");
-        }
-
-        document.getElementById("next-btn").addEventListener("click", () => {
-            if (currentIndex === currentQuestions.length - 1) {
-                showResults();
-            } else {
-                currentIndex++;
-                renderQuestion();
-            }
-        });
-
-        function showResults() {
-            const correctCount = answers.filter(a => a && a.correct).length;
-            const total = currentQuestions.length;
-            const pct = Math.round((correctCount / total) * 100);
-            document.getElementById("results-chapter-label").textContent = currentChapter.name;
-            document.getElementById("score-number").textContent = `${correctCount} / ${total}`;
-            document.getElementById("score-label").textContent = `${pct}% riktig`;
-            const grid = document.getElementById("squares-grid");
-            grid.innerHTML = "";
-            answers.forEach((a, i) => {
-                const sq = document.createElement("button");
-                sq.className = `square ${a && a.correct ? "right" : "wrong"}`;
-                sq.textContent = i + 1;
-                sq.title = `Spørsmål ${i + 1} — klikk for å gå tilbake`;
-                sq.addEventListener("click", () => {
-                    currentIndex = i;
-                    show("quiz");
-                    renderQuestion();
-                });
-                grid.appendChild(sq);
-            });
-            const wrong = total - correctCount;
-            const chart = document.getElementById("mermaid-chart");
-            chart.removeAttribute("data-processed");
-            chart.textContent = `pie showData
-    title Resultat
-    "Riktig" : ${correctCount}
-    "Feil" : ${wrong}`;
-            show("results");
-            if (window.mermaid) {
-                try { mermaid.run({ nodes: [chart] }); }
-                catch (e) { mermaid.init(undefined, chart); }
-            }
-        }
-
-        document.getElementById("retry-btn").addEventListener("click", () => startChapter(currentChapter));
-        document.getElementById("back-btn").addEventListener("click", () => show("picker"));
-
-        if (window.mermaid) {
-            mermaid.initialize({
-                startOnLoad: false,
-                theme: "dark",
-                themeVariables: {
-                    background: "#18181b",
-                    primaryColor: "#22c55e",
-                    primaryTextColor: "#fafafa",
-                    pie1: "#22c55e",
-                    pie2: "#ef4444"
-                }
-            });
-        }
-        renderChapterGrid();
-    </script>
-</body>
-</html>
+            { chapter: "Ch 8 — Estimering", qnum: 1, q: "Et utvalg på n observasjoner har utvalgsstandardavvik s. Hvilket uttrykk gir standardfeilen (SE) til gjennomsnittet?", a: "s · n", b: "s / n", c: "s / √n", d: "s² / n", correct: "C", explanation: "Formel 8.4 · Vingleramma takt 2 (Linjal). SE = s/√n. Gjennomsnittet skjelver mindre enn enkeltobservasjonene.", walk: `<div class="walk-intro">Dette er en ren <strong>Linjal</strong>-oppgave (Vingleramma takt 2): du skal kjenne igjen <strong>standardfeilen til gjennomsnittet</strong> — ingen tall, bare formen.</div><div class="piece-row"><span class="formula-lhs">SE =</span><span class="piece"><span class="piece-text">s</span><span class="piece-label">utvalgets spredning</span></span><span class="formula-op">÷</span><span class="piece"><span class="piece-text">√n</span><span class="piece-label">demper for antall</span></span><span class="formula-op">→</span><span class="piece accent"><span class="piece-text">SE</span><span class="piece-label">spredning i snittet</span></span></div><div class="proc-block"><div class="proc-title">Vingleramma — takten du står i</div><div class="proc-step"><strong>Takt 2 — Linjal.</strong> Del spredningen s på <strong>√n</strong>, ikke på n. <em>Hvorfor:</em> gjennomsnittet av mange observasjoner skjelver mindre enn én enkelt observasjon — det demper seg selv, men bare med kvadratrota av antallet.</div><div class="proc-step"><strong>Kjenn igjen fella.</strong> s/n (alt. B) og s²/n (alt. D) demper for hardt. Firedobler du utvalget, <em>halveres</em> SE — ikke deles på fire.</div></div><div class="result-box"><div class="result-box-name">Svar · Formel 8.4</div><div class="result-box-formula">SE = s / √n</div><div class="result-box-value">Alternativ C</div></div><div class="fx-line"><strong>fx-82CW:</strong> s ÷ √ n =</div>` },
+            { chapter: "Ch 8 — Estimering", qnum: 2, q: "Et utvalg har μ = 150, σ = 18 og n = 81. Hva er standardfeilen til gjennomsnittet?", a: "0.22", b: "1.46", c: "2", d: "18", correct: "C", explanation: "Formel 8.4 · Vingleramma takt 2. SE = σ/√n = 18/√81 = 18/9 = 2. μ = 150 er en distraksjon.", walk: `<div class="walk-intro">Tall rett inn i <strong>Linjal</strong>-takten. μ = 150 er en <strong>distraksjon</strong> — standardfeilen bryr seg bare om spredning (σ) og antall (n).</div><div class="piece-row"><span class="formula-lhs">SE =</span><span class="piece"><span class="piece-text">σ = 18</span><span class="piece-label">spredning</span></span><span class="formula-op">÷</span><span class="piece"><span class="piece-text">√n = √81</span><span class="piece-label">antall</span></span><span class="formula-op">→</span><span class="piece accent"><span class="piece-text">2</span><span class="piece-label">standardfeil</span></span></div><div class="proc-block"><div class="proc-title">Vingleramma — takt 2, steg for steg</div><div class="proc-step"><strong>Steg 1 — Plukk ut.</strong> σ = 18, n = 81. Legg μ = 150 til side; den hører hjemme i en Ramme-oppgave, ikke her.</div><div class="proc-step"><strong>Steg 2 — Rot av antallet.</strong> √81 = 9.</div><div class="proc-step"><strong>Steg 3 — Del.</strong> 18 / 9 = <strong>2</strong>.</div></div><div class="result-box"><div class="result-box-name">Svar · Formel 8.4</div><div class="result-box-formula">SE = σ / √n = 18 / √81</div><div class="result-box-value">SE = 2 — alternativ C</div></div><div class="fx-line"><strong>fx-82CW:</strong> 18 ÷ √ 81 =</div>` },
+            { chapter: "Ch 8 — Estimering", qnum: 3, q: "Et utvalg har varians = 49 og n = 196. Hva er standardfeilen til gjennomsnittet?", a: "0.5", b: "3.5", c: "7", d: "0.25", correct: "A", explanation: "Formel 8.4 · Vingleramma takt 2. s = √49 = 7, så SE = 7/√196 = 7/14 = 0.5. Fella: varians → standardavvik først.", walk: `<div class="walk-intro">Samme <strong>Linjal</strong>-takt, men med en felle: oppgaven gir deg <strong>variansen</strong>, ikke standardavviket. Rota må trekkes først.</div><div class="piece-row"><span class="formula-lhs">SE =</span><span class="piece"><span class="piece-text">√varians = √49</span><span class="piece-label">spredning først</span></span><span class="formula-op">÷</span><span class="piece"><span class="piece-text">√n = √196</span><span class="piece-label">antall</span></span><span class="formula-op">→</span><span class="piece accent"><span class="piece-text">0.5</span><span class="piece-label">standardfeil</span></span></div><div class="proc-block"><div class="proc-title">Vingleramma — takt 2, steg for steg</div><div class="proc-step"><strong>Steg 1 — Rot av variansen.</strong> s = √49 = 7. <em>Dette er fella:</em> 49 skal ikke rett i telleren — varians er standardavviket i andre potens.</div><div class="proc-step"><strong>Steg 2 —
