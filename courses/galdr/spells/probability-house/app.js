@@ -145,23 +145,28 @@
   }
 
   function bayesBlueprint(){
-    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: what Bayes&rsquo; law is, and why you are allowed to flip</h3>'+
+    return '<div class="step-content"><h3>Step 1 &mdash; Blueprint: first the space, then the law</h3>'+
+      '<h4>What space are we standing in?</h4>'+
+      '<p>Before a single formula, fix where you are &mdash; this is the step most people skip, and it is exactly why the rest starts to feel like magic instead of building. <strong>You are inside one whole world, and that whole equals 1.</strong> Every chance here is a <em>share</em> of that one &mdash; never a loose number floating free, always a slice of the total.</p>'+
+      '<p>The house <em>is</em> that whole, carved into four rooms &mdash; P(A&cap;B), P(A&cap;B&prime;), P(A&prime;&cap;B), P(A&prime;&cap;B&prime;). They <strong>tile the entire space</strong>: nothing falls outside them, none of them overlap, and they sum straight back to 1. The margins down the side and across the top are just the outer walls &mdash; P(A) is its whole row added up, P(B) its whole column. So the first law of this place, before Bayes, before anything: <strong>nothing you compute can leave the house. Every move only shifts mass that already sums to 1.</strong></p>'+
+      '<h4>The rooms are built, not handed to you</h4>'+
+      '<p>Here is the hinge most people miss. A cell like P(A&cap;B) is <em>not</em> an atom you are simply given &mdash; it is <strong>made of</strong> pieces of the space. To build it you stand on a wall and carve a slice of it: P(A&cap;B) = P(B|A)&middot;P(A) &mdash; take the A-row (worth P(A) of the whole), keep the P(B|A) fraction of it that also tests positive. Once you see that a room is <em>a wall times a fraction</em>, you see how the entire house <strong>functions</strong>: every inner cell is a margin narrowed by a conditional. That is the gauntlet &mdash; always knowing which wall you are standing on, and what fraction of it you are keeping.</p>'+
       '<h4>What the law is for</h4>'+
-      '<p>The test came back <strong>positive</strong>. What you actually care about is this: given that positive, is the trait really there? That is P(A|B) &mdash; the chance of <strong>A (has the trait)</strong> given <strong>B (tests positive)</strong>. But look at what the lab ever measured: only the <em>forward</em> direction &mdash; P(B|A), how often a true carrier trips the test. You were handed the chance of the evidence given the cause, and you want the chance of the cause given the evidence. <strong>Bayes is the spell that turns that forward chance around into the reverse you need.</strong></p>'+
+      '<p>Now the question. The test came back <strong>positive</strong> (B), and you want the chance the trait is really there (A) &mdash; P(A|B). But the lab only ever measured the <em>forward</em> direction, P(B|A): how often a true carrier trips the test. <strong>Bayes is the spell that turns that forward chance around into the reverse you need</strong> &mdash; and it never once leaves the house to do it.</p>'+
       '<h4>How it works</h4>'+
-      '<p>The bridge between forward and reverse is the one cell they <em>share</em>: P(A&cap;B) &mdash; has the trait AND tests positive, the top-left room of the house. That single room can be read two ways. Forward: P(B|A)&middot;P(A) &mdash; start from carriers, keep the ones who test positive. Reverse: P(A|B)&middot;P(B) &mdash; start from positives, keep the ones who really carry. Both name the exact same room, so they are equal:</p>'+
+      '<p>The bridge between forward and reverse is the one room they <em>share</em>: P(A&cap;B), the top-left cell. That single room can be built through two different walls. Forward: P(B|A)&middot;P(A) &mdash; stand in the A-row, keep the positives. Reverse: P(A|B)&middot;P(B) &mdash; stand in the B-column, keep the carriers. Same room, two doors &mdash; so they are equal:</p>'+
       '<div class="derivation"><div class="d-line">P(B|A)&middot;P(A) &nbsp;=&nbsp; P(A&cap;B) &nbsp;=&nbsp; P(A|B)&middot;P(B)</div></div>'+
       '<p>Solve that equality for the reverse and Bayes falls straight out: <strong>P(A|B) = P(B|A)&middot;P(A) / P(B)</strong>.</p>'+
       '<h4>Why you are allowed to do it</h4>'+
-      '<p>Because the intersection is <strong>symmetric</strong> &mdash; &ldquo;A and B&rdquo; is the same room as &ldquo;B and A.&rdquo; That shared cell is the hinge that lets you walk in either direction. The forward conditional times its base rate, and the reverse conditional times its base rate, both land in that one identical cell. That equality is the whole permission &mdash; nothing else is assumed.</p>'+
+      '<p>Because the room is <strong>symmetric</strong> &mdash; &ldquo;A and B&rdquo; is the same corner of the space as &ldquo;B and A.&rdquo; That shared room is the hinge that lets you walk in through either wall. Nothing else is assumed; the equality <em>is</em> the permission, and it holds for one reason only &mdash; both readings land in the very same slice of the very same whole.</p>'+
       '<div class="derivation"><div class="d-label">What each symbol means &mdash; in plain words</div>'+
       '<div class="d-line"><strong>A</strong> &mdash; has the trait (the carrier) &nbsp;&middot;&nbsp; <strong>A&prime;</strong> &mdash; does not have the trait (healthy)</div>'+
       '<div class="d-line"><strong>B</strong> &mdash; tests positive &nbsp;&middot;&nbsp; <strong>B&prime;</strong> &mdash; tests negative</div>'+
-      '<div class="d-line"><strong>P(A)</strong> &mdash; how common the trait is (the base rate)</div>'+
-      '<div class="d-line"><strong>P(B|A)</strong> &mdash; a true carrier testing positive (the test&rsquo;s catch rate)</div>'+
-      '<div class="d-line"><strong>P(A&cap;B)</strong> &mdash; the true-positive cell: has the trait AND tests positive</div>'+
-      '<div class="d-line"><strong>P(B)</strong> &mdash; everyone who tests positive (true alarms + false alarms)</div>'+
-      '<div class="d-line"><strong>P(A|B)</strong> &mdash; the answer: given a positive test, the chance the trait is really there</div>'+
+      '<div class="d-line"><strong>P(A)</strong> &mdash; the A-row wall: how common the trait is (the base rate)</div>'+
+      '<div class="d-line"><strong>P(B|A)</strong> &mdash; standing in the A-row, the fraction that tests positive (the catch rate)</div>'+
+      '<div class="d-line"><strong>P(A&cap;B)</strong> &mdash; the true-positive room: has the trait AND tests positive</div>'+
+      '<div class="d-line"><strong>P(B)</strong> &mdash; the B-column wall: everyone who tests positive (true + false alarms)</div>'+
+      '<div class="d-line"><strong>P(A|B)</strong> &mdash; the answer: inside the B-column, the share that really carries</div>'+
       '</div>'+
       '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(A|B) = P(B|A)&middot;P(A) / P(B)</p></div>';
   }
