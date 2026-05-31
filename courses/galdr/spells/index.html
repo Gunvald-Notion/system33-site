@@ -3,95 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galdr Formation | System 33</title>
-    <style>
-        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-        body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
-        a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
-        .container{max-width:760px;margin:0 auto;padding:0 24px}
-        .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
-        .hero{padding:48px 0 24px;text-align:center}
-        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;letter-spacing:-.03em;margin-bottom:14px}
-        .hero p{font-size:1rem;color:var(--text2);max-width:500px;margin:0 auto}
-        .section{padding:24px 0}
-        .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
-        .spell-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-        .spell-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .2s;display:block}
-        .spell-card:hover{border-color:#3f3f46;background:rgba(228,228,231,.03);opacity:1}
-        .spell-icon{font-size:1.8rem;margin-bottom:10px}
-        .spell-name{font-size:1rem;font-weight:600;margin-bottom:4px}
-        .spell-kap{font-size:.75rem;color:var(--muted);margin-bottom:6px}
-        .spell-desc{font-size:.82rem;color:var(--text2);line-height:1.5}
-        footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:40px}
-        footer a{color:var(--text2)}
-    </style>
+    <meta http-equiv="refresh" content="0; url=/courses/galdr/">
+    <link rel="canonical" href="/courses/galdr/">
+    <title>Galdr Formation</title>
+    <script>location.replace("/courses/galdr/");</script>
+    <style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0b;color:#a1a1aa;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0}a{color:#a78bfa}</style>
 </head>
 <body>
-<header class="site-header"><div class="container"><a href="/courses/galdr/">&larr; Galdr</a></div></header>
-<section class="hero"><div class="container">
-    <h1>Galdr Formation</h1>
-    <p>Nine interactive walkthroughs. Each formation breaks one chapter's formulas into a four-step walk you can see happening.</p>
-</div></section>
-<section class="section"><div class="container">
-    <div class="section-label">The nine formations</div>
-    <div class="spell-grid">
-        <a href="/courses/galdr/spells/the-cairn/" class="spell-card">
-            <div class="spell-icon">🪨</div>
-            <div class="spell-name">The Cairn</div>
-            <div class="spell-kap">Kap 1</div>
-            <div class="spell-desc">Describe the pile you already hold — its center, its spread, and whether two columns move together.</div>
-        </a>
-        <a href="/courses/galdr/spells/probability-house/" class="spell-card">
-            <div class="spell-icon">🏠</div>
-            <div class="spell-name">Probability House</div>
-            <div class="spell-kap">Kap 3 + 4</div>
-            <div class="spell-desc">Walk the cells. Every probability lives in a house of rows and columns.</div>
-        </a>
-        <a href="/courses/galdr/spells/drainage/" class="spell-card">
-            <div class="spell-icon">⛓️</div>
-            <div class="spell-name">Drainage</div>
-            <div class="spell-kap">Kap 3</div>
-            <div class="spell-desc">The pool shrinks. nPr, nCr, and Nˢ — count the ways to draw.</div>
-        </a>
-        <a href="/courses/galdr/spells/weighing-table/" class="spell-card">
-            <div class="spell-icon">⚖️</div>
-            <div class="spell-name">The Weighing Table</div>
-            <div class="spell-kap">Kap 5 + 6</div>
-            <div class="spell-desc">Variance and covariance. Measure distance from center, weight it, pile it up.</div>
-        </a>
-        <a href="/courses/galdr/spells/bell-walk/" class="spell-card">
-            <div class="spell-icon">🔔</div>
-            <div class="spell-name">The Bell-Walk</div>
-            <div class="spell-kap">Kap 7</div>
-            <div class="spell-desc">Four distributions, one bell. Walk the curve from center to where you stand.</div>
-        </a>
-        <a href="/courses/galdr/spells/wobble-frame/" class="spell-card">
-            <div class="spell-icon">📐</div>
-            <div class="spell-name">Wobble Frame</div>
-            <div class="spell-kap">Kap 8</div>
-            <div class="spell-desc">Confidence intervals. The frame that holds the estimate with an explicit error rate.</div>
-        </a>
-        <a href="/courses/galdr/spells/t-obs/" class="spell-card">
-            <div class="spell-icon">📏</div>
-            <div class="spell-name">T<sub>obs</sub></div>
-            <div class="spell-kap">Kap 9 + 10</div>
-            <div class="spell-desc">Hypothesis testing. The gap between claim and handful, measured in wobbles.</div>
-        </a>
-        <a href="/courses/galdr/spells/enkel-og-multippel-regresjon/" class="spell-card">
-            <div class="spell-icon">📈</div>
-            <div class="spell-name">Enkel &amp; Multippel Regresjon</div>
-            <div class="spell-kap">Kap 11</div>
-            <div class="spell-desc">Regression as convergence. Each predictor an arm of force — the center is ŷ.</div>
-        </a>
-        <a href="/courses/galdr/spells/sem/" class="spell-card">
-            <div class="spell-icon">🕸️</div>
-            <div class="spell-name">Structural Equation Models (SEM)</div>
-            <div class="spell-kap">Kap 16</div>
-            <div class="spell-desc">Latent constructs, loadings, mediation, and fit indices. Measure what you can't put a ruler to.</div>
-        </a>
-    </div>
-</div></section>
-<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+    <p>Galdr Formation now lives at <a href="/courses/galdr/">/courses/galdr/</a>…</p>
 </body>
 </html>
