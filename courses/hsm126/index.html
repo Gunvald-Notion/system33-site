@@ -267,6 +267,42 @@
             transition: background 0.2s;
         }
         .walk-more:hover { background: rgba(167, 139, 250, 0.12); opacity: 1; }
+        .formula-tap { margin-bottom: 20px; }
+        .formula-tap-btn {
+            background: transparent;
+            color: var(--accent);
+            border: 1px dashed var(--accent);
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .formula-tap-btn:hover { background: rgba(167, 139, 250, 0.1); }
+        .formula-box {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        .formula-box-nr {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+        .formula-box-text {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 1rem;
+            color: var(--accent);
+            line-height: 1.5;
+        }
         .next-btn {
             width: 100%;
             background: var(--text-primary);
@@ -385,6 +421,10 @@
                 <div class="progress-bar"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
                 <div class="question-text" id="question-text"></div>
                 <div class="options" id="options"></div>
+                <div class="formula-tap hidden" id="formula-tap">
+                    <button class="formula-tap-btn" id="formula-tap-btn">Vis formel</button>
+                    <div class="formula-box hidden" id="formula-box"></div>
+                </div>
                 <div class="explanation hidden" id="explanation"></div>
                 <button class="next-btn hidden" id="next-btn">Neste →</button>
             </div>
@@ -506,6 +546,14 @@
                 btn.addEventListener("click", () => selectAnswer(letter));
                 optionsDiv.appendChild(btn);
             });
+            const formulaTap = document.getElementById("formula-tap");
+            const formulaBox = document.getElementById("formula-box");
+            const formulaBtn = document.getElementById("formula-tap-btn");
+            formulaBox.classList.add("hidden");
+            formulaBox.innerHTML = "";
+            formulaBtn.textContent = "Vis formel";
+            if (q.formel) { formulaTap.classList.remove("hidden"); }
+            else { formulaTap.classList.add("hidden"); }
             document.getElementById("explanation").classList.add("hidden");
             document.getElementById("next-btn").classList.add("hidden");
             if (answers[currentIndex] !== null) {
@@ -552,6 +600,21 @@
             nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? "Se resultatet →" : "Neste →";
             nextBtn.classList.remove("hidden");
         }
+
+        document.getElementById("formula-tap-btn").addEventListener("click", () => {
+            const q = currentQuestions[currentIndex];
+            if (!q || !q.formel) return;
+            const box = document.getElementById("formula-box");
+            const btn = document.getElementById("formula-tap-btn");
+            if (box.classList.contains("hidden")) {
+                box.innerHTML = `<span class="formula-box-nr">${escapeHtml(q.formelnr || "Formel")}</span><span class="formula-box-text">${escapeHtml(q.formel)}</span>`;
+                box.classList.remove("hidden");
+                btn.textContent = "Skjul formel";
+            } else {
+                box.classList.add("hidden");
+                btn.textContent = "Vis formel";
+            }
+        });
 
         document.getElementById("next-btn").addEventListener("click", () => {
             if (currentIndex === currentQuestions.length - 1) {
