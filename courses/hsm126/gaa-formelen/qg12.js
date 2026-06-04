@@ -1,0 +1,27 @@
+// HSM126 — Gå formelen (regn det ut). Kapittel 12 (SEM).
+var QG12 = [
+{chapter:"Kap 12", correct:"B",
+ q:String.raw`En indikator har faktorladning \(\lambda=0{,}8\). <strong>Regn ut</strong> forklart andel \(\lambda^2\) (formel 12.2).`,
+ a:String.raw`0,8`, b:String.raw`0,64`, c:String.raw`1,6`, d:String.raw`0,4`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,64.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}8^2=0{,}64\).</div></div><div class="walk-note">64 % av indikatorens variasjon forklares av den latente — parallelt til \(R^2\).</div>`},
+{chapter:"Kap 12", correct:"C",
+ q:String.raw`Samme indikator, \(\lambda^2=0{,}64\). <strong>Regn ut</strong> andelen målefeil \(1-\lambda^2\).`,
+ a:String.raw`0,64`, b:String.raw`0,8`, c:String.raw`0,36`, d:String.raw`0,16`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: C — 0,36.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(1-0{,}64=0{,}36\).</div></div><div class="walk-note">Resten er målefeilen \(\delta\) — det indikatoren ikke deler med den latente.</div>`},
+{chapter:"Kap 12", correct:"A",
+ q:String.raw`En annen indikator har ladning \(\lambda=0{,}7\). <strong>Regn ut</strong> forklart andel \(\lambda^2\).`,
+ a:String.raw`0,49`, b:String.raw`0,7`, c:String.raw`1,4`, d:String.raw`0,14`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 0,49.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}7^2=0{,}49\).</div></div><div class="walk-note">0,70 er nedre grense for en <em>sterk</em> ladning (styrketabell 12.4).</div>`},
+{chapter:"Kap 12", correct:"D",
+ q:String.raw`En mediering: sti inn \(\beta_1=0{,}5\), sti ut \(\beta_2=0{,}4\). <strong>Regn ut</strong> den indirekte effekten \(\beta_1\cdot\beta_2\) (formel 12.3).`,
+ a:String.raw`0,9`, b:String.raw`0,5`, c:String.raw`0,10`, d:String.raw`0,20`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: D — 0,20.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}5\times0{,}4=0{,}20\).</div></div><div class="walk-note">Effekten gjennom hele stien er produktet av delstrekkene — som to gir på rad.</div>`},
+{chapter:"Kap 12", correct:"B",
+ q:String.raw`Indirekte effekt \(0{,}20\), og en direkte sti \(0{,}15\). <strong>Regn ut</strong> den totale effekten.`,
+ a:String.raw`0,03`, b:String.raw`0,35`, c:String.raw`0,05`, d:String.raw`0,20`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,35.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}20+0{,}15=0{,}35\).</div></div><div class="walk-note">Total = indirekte + direkte effekt.</div>`},
+{chapter:"Kap 12", correct:"C",
+ q:String.raw`En annen mediering: \(\beta_1=0{,}6\), \(\beta_2=0{,}5\). <strong>Regn ut</strong> den indirekte effekten.`,
+ a:String.raw`1,1`, b:String.raw`0,11`, c:String.raw`0,30`, d:String.raw`0,25`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: C — 0,30.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}6\times0{,}5=0{,}30\).</div></div><div class="walk-note">Produktet av de to stiene — ingen direkte sti å legge til her.</div>`}
+];
