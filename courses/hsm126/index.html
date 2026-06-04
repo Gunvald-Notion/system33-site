@@ -64,6 +64,31 @@
             max-width: 520px;
             margin: 0 auto;
         }
+        .mode-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 28px;
+        }
+        .mode-btn {
+            display: inline-block;
+            padding: 11px 18px;
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            transition: background 0.2s;
+        }
+        .mode-btn:hover { background: rgba(167, 139, 250, 0.12); opacity: 1; }
+        .mode-btn small {
+            display: block;
+            font-weight: 400;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
         .section { padding: 32px 0 64px; }
         .section-label {
             font-size: 0.75rem;
@@ -403,11 +428,15 @@
                 <div class="hero-badge">Gratis · Norsk · 114 spørsmål</div>
                 <h1>HSM126 — Prøv deg selv</h1>
                 <p>Flervalgstest for Statistikk for økonomer. Velg et kapittel for å begynne. Ingen pålogging.</p>
+                <div class="mode-nav">
+                    <a class="mode-btn" href="kjenn-formelen/">Kjenn formelen<small>Hvilken formel passer?</small></a>
+                    <a class="mode-btn" href="gaa-formelen/">Gå formelen<small>Regn det ut, steg for steg</small></a>
+                </div>
             </div>
         </section>
         <section class="section">
             <div class="container">
-                <div class="section-label">Kapitler</div>
+                <div class="section-label">Kapitler — blandet test</div>
                 <div class="chapter-grid" id="chapter-grid"></div>
             </div>
         </section>
