@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="UTF-8">
+    <!-- System 33 analytics (shared) -->
+    <script src="/analytics.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSM126 — Kjenn formelen | System 33</title>
+    <meta name="description" content="Gjenkjenningstrening for HSM126 — les situasjonen, velg riktig formel. Kapittel 1-5. Del av system33.io.">
+    <meta property="og:title" content="HSM126 — Kjenn formelen">
+    <meta property="og:description" content="Gjenkjenningstrening for HSM126. Hvilken formel kaller situasjonen på? Kap 1-5, på norsk.">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --bg-card: #18181b;
+            --border: #27272a;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #a78bfa;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.7; }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .site-header { padding: 24px 0 0; }
+        .site-header a { color: var(--text-muted); font-size: 0.85rem; }
+        .hero { padding: 48px 0 32px; text-align: center; }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .hero-nav { margin-top: 20px; font-size: 0.85rem; }
+        .hero-nav a { color: var(--accent); }
+        .section { padding: 32px 0 64px; }
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .chapter-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .chapter-card {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px 24px;
+            cursor: pointer;
+            font-family: inherit;
+            color: inherit;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .chapter-card:hover {
+            background: rgba(228, 228, 231, 0.04);
+            border-color: #3f3f46;
+        }
+        .chapter-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 12px;
+        }
+        .chapter-card h3 { font-size: 1.05rem; font-weight: 600; }
+        .chapter-card-weight {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 3px 10px;
+            border-radius: 100px;
+            white-space: nowrap;
+        }
+        .chapter-card-meta { font-size: 0.85rem; color: var(--text-secondary); }
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 32px;
+            overflow: hidden;
+        }
+        .progress-bar-fill { height: 100%; background: var(--text-primary); transition: width 0.3s ease; }
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            line-height: 1.45;
+            margin-bottom: 28px;
+        }
+        .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .option-btn {
+            text-align: left;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: background 0.15s, border-color 0.15s;
+            line-height: 1.45;
+        }
+        .option-btn:hover:not(:disabled) { background: rgba(228, 228, 231, 0.04); border-color: #3f3f46; }
+        .option-btn:disabled { cursor: default; }
+        .option-btn.correct { border-color: var(--correct); background: rgba(34, 197, 94, 0.08); }
+        .option-btn.wrong { border-color: var(--wrong); background: rgba(239, 68, 68, 0.08); }
+        .option-letter {
+            display: inline-block;
+            width: 22px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+        .option-btn.correct .option-letter { color: var(--correct); }
+        .option-btn.wrong .option-letter { color: var(--wrong); }
+        .explanation {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--text-primary);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+        .explanation strong { color: var(--text-primary); }
+        .walk-explanation { border-left: 3px solid var(--accent); padding: 18px 20px; }
+        .walk-verdict { margin-bottom: 14px; font-size: 0.95rem; }
+        .walk-intro { margin-bottom: 16px; color: var(--text-secondary); }
+        .walk-intro strong { color: var(--text-primary); }
+        .proc-block { border-left: 2px solid var(--accent); padding-left: 16px; margin-bottom: 18px; }
+        .proc-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .proc-step { margin-bottom: 11px; color: var(--text-secondary); }
+        .proc-step:last-child { margin-bottom: 0; }
+        .proc-step strong { color: var(--text-primary); }
+        .proc-step em { color: var(--accent); font-style: normal; }
+        .walk-note {
+            background: rgba(167, 139, 250, 0.08);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .walk-note strong { color: var(--text-primary); }
+        .next-btn {
+            width: 100%;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .next-btn:hover { opacity: 0.85; }
+        .results-score { text-align: center; padding: 16px 0 24px; }
+        .results-score-number {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+        }
+        .results-score-label { font-size: 0.9rem; color: var(--text-secondary); }
+        .squares-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            margin: 16px 0 32px;
+        }
+        .square {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: transform 0.15s;
+        }
+        .square:hover { transform: scale(1.1); }
+        .square.right { background: rgba(34, 197, 94, 0.7); }
+        .square.wrong { background: rgba(239, 68, 68, 0.7); }
+        .chart-container {
+            margin: 24px 0;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+        }
+        .chart-container svg { max-width: 100%; height: auto; }
+        .results-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-secondary:hover { background: rgba(228, 228, 231, 0.04); }
+        footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        footer a { color: var(--text-secondary); }
+        .hidden { display: none !important; }
+        @media (max-width: 480px) {
+            .hero { padding: 32px 0 24px; }
+            .section { padding: 24px 0 48px; }
+            .chapter-card { padding: 18px 20px; }
+            .question-text { font-size: 1.05rem; }
+            .option-btn { font-size: 0.92rem; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="https://system33.io">← system33.io</a>
+        </div>
+    </header>
+
+    <div id="screen-picker">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">Gjenkjenning · Norsk · Kap 1–5</div>
+                <h1>Kjenn formelen</h1>
+                <p>Les situasjonen og kjenn etter verbet — hvilket rom er vi i? Velg formelen, og se fasiten gå stien steg for steg. Treningen er den øyeblikkelige klikken: <em>den der, den der</em>.</p>
+                <div class="hero-nav"><a href="../">→ Prøv deg selv (blandet test)</a></div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="section-label">Kapitler</div>
+                <div class="chapter-grid" id="chapter-grid"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="screen-quiz" class="hidden">
+        <section class="section">
+            <div class="container">
+                <div class="quiz-meta">
+                    <span id="quiz-chapter-name"></span>
+                    <span id="quiz-progress-text"></span>
+                </div>
+                <div class="progress-bar"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+                <div class="question-text" id="question-text"></div>
+                <div class="options" id="options"></div>
+                <div class="explanation hidden" id="explanation"></div>
+                <button class="next-btn hidden" id="next-btn">Neste →</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="screen-results" class="hidden">
+        <section class="section">
+            <div class="container">
+                <div class="section-label" id="results-chapter-label"></div>
+                <div class="results-score">
+                    <div class="results-score-number" id="score-number"></div>
+                    <div class="results-score-label" id="score-label"></div>
+                </div>
+                <div class="squares-grid" id="squares-grid"></div>
+                <div class="chart-container">
+                    <pre class="mermaid" id="mermaid-chart"></pre>
+                </div>
+                <div class="results-actions">
+                    <button class="next-btn" id="retry-btn">Prøv samme kapittel igjen</button>
+                    <button class="btn-secondary" id="back-btn">Velg et annet kapittel</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            Bygget av Gunvald · Del av <a href="https://system33.io">system33.io</a>
+        </div>
+    </footer>
+
+    <script src="qk1.js"></script>
+    <script>
+        var CHAPTERS = [
+            { id: "Kap 1", name: "Kap 1 — Beskrivende statistikk", weight: "Gjenkjenning" },
+            { id: "Kap 2", name: "Kap 2 — Sannsynlighet", weight: "Gjenkjenning" },
+            { id: "Kap 3", name: "Kap 3 — Kombinatorikk", weight: "Gjenkjenning" },
+            { id: "Kap 4", name: "Kap 4 — Betinget sannsynlighet", weight: "Gjenkjenning" },
+            { id: "Kap 5", name: "Kap 5 — Tilfeldige variabler", weight: "Gjenkjenning" }
+        ];
+
+        var QUESTIONS = KJ1;
+
+        let currentChapter = null;
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let answers = [];
+
+        function typeset(el) {
+            if (window.renderMathInElement) {
+                try {
+                    renderMathInElement(el, {
+                        delimiters: [
+                            { left: "\\(", right: "\\)", display: false },
+                            { left: "$$", right: "$$", display: true }
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) {}
+            }
+        }
+
+        function show(screen) {
+            document.getElementById("screen-picker").classList.add("hidden");
+            document.getElementById("screen-quiz").classList.add("hidden");
+            document.getElementById("screen-results").classList.add("hidden");
+            document.getElementById("screen-" + screen).classList.remove("hidden");
+            window.scrollTo(0, 0);
+        }
+
+        function renderChapterGrid() {
+            const grid = document.getElementById("chapter-grid");
+            grid.innerHTML = "";
+            CHAPTERS.forEach(ch => {
+                const count = QUESTIONS.filter(q => q.chapter === ch.id).length;
+                const card = document.createElement("button");
+                card.className = "chapter-card";
+                card.innerHTML = `
+                    <div class="chapter-card-header">
+                        <h3>${ch.name}</h3>
+                        <span class="chapter-card-weight">${ch.weight}</span>
+                    </div>
+                    <div class="chapter-card-meta">${count} spørsmål</div>
+                `;
+                card.addEventListener("click", () => startChapter(ch));
+                grid.appendChild(card);
+            });
+        }
+
+        function startChapter(ch) {
+            currentChapter = ch;
+            if (typeof gtag === 'function') { gtag('event', 'quiz_start', { course: 'HSM126-kjenn', chapter: ch.id }); }
+            currentQuestions = QUESTIONS.filter(q => q.chapter === ch.id);
+            currentIndex = 0;
+            answers = currentQuestions.map(() => null);
+            show("quiz");
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById("quiz-chapter-name").textContent = currentChapter.name;
+            document.getElementById("quiz-progress-text").textContent = `${currentIndex + 1} / ${currentQuestions.length}`;
+            document.getElementById("progress-bar-fill").style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
+            const qt = document.getElementById("question-text");
+            qt.innerHTML = q.q;
+            typeset(qt);
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+            ["A", "B", "C", "D"].forEach(letter => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                const text = q[letter.toLowerCase()];
+                btn.innerHTML = `<span class="option-letter">${letter}</span> ${escapeHtml(text)}`;
+                btn.addEventListener("click", () => selectAnswer(letter));
+                optionsDiv.appendChild(btn);
+            });
+            typeset(optionsDiv);
+            document.getElementById("explanation").classList.add("hidden");
+            document.getElementById("next-btn").classList.add("hidden");
+            if (answers[currentIndex] !== null) {
+                showAnswer(answers[currentIndex].selected, q);
+            }
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;","'":"&#39;"})[c]);
+        }
+
+        function selectAnswer(letter) {
+            const q = currentQuestions[currentIndex];
+            const isCorrect = letter === q.correct;
+            answers[currentIndex] = { selected: letter, correct: isCorrect };
+            showAnswer(letter, q);
+        }
+
+        function showAnswer(selected, q) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach((btn, i) => {
+                const letter = ["A", "B", "C", "D"][i];
+                btn.disabled = true;
+                if (letter === q.correct) btn.classList.add("correct");
+                else if (letter === selected) btn.classList.add("wrong");
+            });
+            const exp = document.getElementById("explanation");
+            const isCorrect = selected === q.correct;
+            const verdict = `<strong>${isCorrect ? "Riktig." : "Feil."}</strong>`;
+            if (q.walk) {
+                exp.classList.add("walk-explanation");
+                exp.innerHTML = `<div class="walk-verdict">${verdict}</div>${q.walk}`;
+            } else {
+                exp.classList.remove("walk-explanation");
+                exp.innerHTML = `${verdict} ${escapeHtml(q.explanation)}`;
+            }
+            exp.classList.remove("hidden");
+            typeset(exp);
+            const nextBtn = document.getElementById("next-btn");
+            nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? "Se resultatet →" : "Neste →";
+            nextBtn.classList.remove("hidden");
+        }
+
+        document.getElementById("next-btn").addEventListener("click", () => {
+            if (currentIndex === currentQuestions.length - 1) {
+                showResults();
+            } else {
+                currentIndex++;
+                renderQuestion();
+            }
+        });
+
+        function showResults() {
+            const correctCount = answers.filter(a => a && a.correct).length;
+            const total = currentQuestions.length;
+            const pct = Math.round((correctCount / total) * 100);
+            if (typeof gtag === 'function') { gtag('event', 'quiz_complete', { course: 'HSM126-kjenn', chapter: currentChapter.name, score: pct, correct: correctCount, total: total }); }
+            document.getElementById("results-chapter-label").textContent = currentChapter.name;
+            document.getElementById("score-number").textContent = `${correctCount} / ${total}`;
+            document.getElementById("score-label").textContent = `${pct}% riktig`;
+            const grid = document.getElementById("squares-grid");
+            grid.innerHTML = "";
+            answers.forEach((a, i) => {
+                const sq = document.createElement("button");
+                sq.className = `square ${a && a.correct ? "right" : "wrong"}`;
+                sq.textContent = i + 1;
+                sq.title = `Spørsmål ${i + 1} — klikk for å gå tilbake`;
+                sq.addEventListener("click", () => {
+                    currentIndex = i;
+                    show("quiz");
+                    renderQuestion();
+                });
+                grid.appendChild(sq);
+            });
+            const wrong = total - correctCount;
+            const chart = document.getElementById("mermaid-chart");
+            chart.removeAttribute("data-processed");
+            chart.textContent = `pie showData
+    title Resultat
+    "Riktig" : ${correctCount}
+    "Feil" : ${wrong}`;
+            show("results");
+            if (window.mermaid) {
+                try { mermaid.run({ nodes: [chart] }); }
+                catch (e) { mermaid.init(undefined, chart); }
+            }
+        }
+
+        document.getElementById("retry-btn").addEventListener("click", () => startChapter(currentChapter));
+        document.getElementById("back-btn").addEventListener("click", () => show("picker"));
+
+        if (window.mermaid) {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: "dark",
+                themeVariables: {
+                    background: "#18181b",
+                    primaryColor: "#22c55e",
+                    primaryTextColor: "#fafafa",
+                    pie1: "#22c55e",
+                    pie2: "#ef4444"
+                }
+            });
+        }
+        renderChapterGrid();
+    </script>
+</body>
+</html>
