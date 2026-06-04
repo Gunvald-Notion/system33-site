@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZS0BJG5PFE"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZS0BJG5PFE');
-    </script>
     <meta charset="UTF-8">
+    <!-- System 33 analytics (shared) -->
+    <script src="/analytics.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activate Understanding Method | System 33</title>
     <meta name="description" content="Activate the Understanding Method. A six-stage learning protocol that works with any AI. Copy the prompt, paste into your AI, name your topic — and understand it deeply.">
@@ -119,7 +113,15 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             margin-right: 90px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 14px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
         }
+        .prompt-block pre::-webkit-scrollbar { width: 10px; }
+        .prompt-block pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; }
+        .prompt-block pre::-webkit-scrollbar-track { background: transparent; }
         .copy-btn {
             position: absolute;
             top: 18px;
@@ -192,7 +194,7 @@
             .hero { padding: 40px 0 24px; }
             .section { padding: 24px 0; }
             .prompt-block { padding: 20px; }
-            .prompt-block pre { margin-right: 0; margin-top: 44px; font-size: 0.82rem; }
+            .prompt-block pre { margin-right: 0; margin-top: 44px; font-size: 0.82rem; max-height: 340px; }
             .copy-btn { top: 14px; right: 14px; }
         }
     </style>
@@ -268,7 +270,7 @@ Progress dashboard — display at the start and update before each stage:
 
   0         1         2         3         4
   012345678901234567890123456789012345678901234
-0          ╔══════════════════════════════════╗
+0          ╔═════════════════════════════════╗
 1          ║ SYSTEM 32 - UNDERSTANDING METHOD ║
 2          ║                                  ║
 3          ║ [>] 1 Intake     [ ] 4 Expansion ║
