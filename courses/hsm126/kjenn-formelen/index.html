@@ -350,6 +350,10 @@
     </footer>
 
     <script src="qk1.js"></script>
+    <script src="qk2.js"></script>
+    <script src="qk3.js"></script>
+    <script src="qk4.js"></script>
+    <script src="qk5.js"></script>
     <script>
         var CHAPTERS = [
             { id: "Kap 1", name: "Kap 1 — Beskrivende statistikk", weight: "Gjenkjenning" },
@@ -359,7 +363,7 @@
             { id: "Kap 5", name: "Kap 5 — Tilfeldige variabler", weight: "Gjenkjenning" }
         ];
 
-        var QUESTIONS = KJ1;
+        var QUESTIONS = KJ1.concat(KJ2, KJ3, KJ4, KJ5);
 
         let currentChapter = null;
         let currentQuestions = [];
