@@ -2,6 +2,8 @@
 <html lang="nb">
 <head>
     <meta charset="UTF-8">
+    <!-- System 33 analytics (shared) -->
+    <script src="/analytics.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSM126 — Prøv deg selv | System 33</title>
     <meta name="description" content="Gratis flervalgstest for HSM126 — Statistikk for økonomer. 114 spørsmål fordelt på 12 kapitler. Bygget av Gunvald som del av system33.io.">
@@ -523,6 +525,7 @@
 
         function startChapter(ch) {
             currentChapter = ch;
+            if (typeof gtag === 'function') { gtag('event', 'quiz_start', { course: 'HSM126', chapter: ch.id }); }
             currentQuestions = QUESTIONS.filter(q => q.chapter === ch.id);
             currentIndex = 0;
             answers = currentQuestions.map(() => null);
@@ -562,7 +565,7 @@
         }
 
         function escapeHtml(s) {
-            return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+            return String(s).replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;","'":"&#39;"})[c]);
         }
 
         function selectAnswer(letter) {
@@ -629,6 +632,7 @@
             const correctCount = answers.filter(a => a && a.correct).length;
             const total = currentQuestions.length;
             const pct = Math.round((correctCount / total) * 100);
+            if (typeof gtag === 'function') { gtag('event', 'quiz_complete', { course: 'HSM126', chapter: currentChapter.name, score: pct, correct: correctCount, total: total }); }
             document.getElementById("results-chapter-label").textContent = currentChapter.name;
             document.getElementById("score-number").textContent = `${correctCount} / ${total}`;
             document.getElementById("score-label").textContent = `${pct}% riktig`;
