@@ -1,0 +1,27 @@
+// HSM126 — Gå formelen (regn det ut). Kapittel 2 — Sannsynlighet.
+var QG2 = [
+{chapter:"Kap 2", correct:"B",
+ q:String.raw`Sannsynligheten for regn er \(P(\text{regn})=0{,}7\). <strong>Regn ut</strong> sannsynligheten for at det <em>ikke</em> regner (formel 2.5).`,
+ a:String.raw`0,7`, b:String.raw`0,3`, c:String.raw`1,7`, d:String.raw`0`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,3.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Trekk fra 1: \(1-0{,}7=0{,}3\).</div></div><div class="walk-note">A og \(A^c\) fyller hele utfallsrommet → summerer til 1.</div>`},
+{chapter:"Kap 2", correct:"C",
+ q:String.raw`\(P(A)=0{,}5\), \(P(B)=0{,}4\), \(P(A\cap B)=0{,}2\). <strong>Regn ut</strong> \(P(A\cup B)\) (formel 2.6).`,
+ a:String.raw`0,9`, b:String.raw`1,1`, c:String.raw`0,7`, d:String.raw`0,2`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: C — 0,7.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Legg sammen: \(0{,}5+0{,}4=0{,}9\).</div><div class="proc-step"><strong>2 —</strong> Trekk fra overlappet: \(0{,}9-0{,}2=0{,}7\).</div></div><div class="walk-note">Overlappet trekkes fra, ellers telles det to ganger.</div>`},
+{chapter:"Kap 2", correct:"A",
+ q:String.raw`To <em>disjunkte</em> begivenheter: \(P(A)=0{,}3\), \(P(B)=0{,}45\). <strong>Regn ut</strong> \(P(A\cup B)\).`,
+ a:String.raw`0,75`, b:String.raw`0,135`, c:String.raw`0,3`, d:String.raw`0,45`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 0,75.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Legg sammen: \(0{,}3+0{,}45=0{,}75\).</div><div class="proc-step"><strong>2 —</strong> Overlappet er 0: \(0{,}75-0=0{,}75\).</div></div><div class="walk-note">Disjunkt → siste ledd faller bort.</div>`},
+{chapter:"Kap 2", correct:"B",
+ q:String.raw`\(P(A)=P(B)=P(C)=0{,}3\); parvise snitt \(0{,}1\); trippelsnitt \(0{,}05\). <strong>Regn ut</strong> \(P(A\cup B\cup C)\) (formel 2.7).`,
+ a:String.raw`0,9`, b:String.raw`0,65`, c:String.raw`0,6`, d:String.raw`1,2`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,65.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Summer de enkle: \(0{,}3\cdot3=0{,}9\).</div><div class="proc-step"><strong>2 —</strong> Trekk fra de parvise: \(0{,}9-0{,}3=0{,}6\).</div><div class="proc-step"><strong>3 —</strong> Legg til trippelsnittet: \(0{,}6+0{,}05=0{,}65\).</div></div><div class="walk-note">Inklusjon–eksklusjon: minus, så pluss.</div>`},
+{chapter:"Kap 2", correct:"B",
+ q:String.raw`En modell gir \(p_1=0{,}2\), \(p_2=0{,}5\), \(p_3=0{,}3\). <strong>Regn ut</strong> summen og avgjør om modellkravet (2.4) er oppfylt.`,
+ a:String.raw`0,9 — ikke gyldig`, b:String.raw`1 — gyldig`, c:String.raw`1,1 — ikke gyldig`, d:String.raw`0,8 — gyldig`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 1, gyldig.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Summer: \(0{,}2+0{,}5+0{,}3=1\).</div></div><div class="walk-note">Hver \(p_i\in[0,1]\) og summen er 1 → gyldig modell.</div>`},
+{chapter:"Kap 2", correct:"C",
+ q:String.raw`En begivenhet har \(P(A)=0{,}25\). <strong>Regn ut</strong> \(P(A^c)\).`,
+ a:String.raw`0,25`, b:String.raw`0,5`, c:String.raw`0,75`, d:String.raw`1`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: C — 0,75.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Trekk fra 1: \(1-0{,}25=0{,}75\).</div></div><div class="walk-note">Komplementet dekker alt som ikke er A.</div>`}
+];

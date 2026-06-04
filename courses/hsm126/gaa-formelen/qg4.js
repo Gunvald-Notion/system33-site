@@ -1,0 +1,27 @@
+// HSM126 — Gå formelen (regn det ut). Kapittel 4 — Betinget sannsynlighet.
+var QG4 = [
+{chapter:"Kap 4", correct:"A",
+ q:String.raw`\(P(\text{jente}\cap\text{briller})=0{,}2\), \(P(\text{jente})=0{,}5\). <strong>Regn ut</strong> \(P(\text{briller}\mid\text{jente})\) (formel 4.1).`,
+ a:String.raw`0,4`, b:String.raw`0,1`, c:String.raw`2,5`, d:String.raw`0,2`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 0,4.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Del snittet på betingelsen: \(\frac{0{,}2}{0{,}5}=0{,}4\).</div></div><div class="walk-note">Vi krymper utfallsrommet til bare jentene.</div>`},
+{chapter:"Kap 4", correct:"B",
+ q:String.raw`\(P(\text{pos}\mid\text{syk})=0{,}9\), \(P(\text{syk})=0{,}01\), \(P(\text{pos})=0{,}108\). <strong>Regn ut</strong> \(P(\text{syk}\mid\text{pos})\) (formel 4.2, Bayes).`,
+ a:String.raw`0,9`, b:String.raw`0,083`, c:String.raw`0,01`, d:String.raw`0,108`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,083.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Gang teller: \(0{,}9\cdot0{,}01=0{,}009\).</div><div class="proc-step"><strong>2 —</strong> Del på \(P(\text{pos})\): \(\frac{0{,}009}{0{,}108}\approx0{,}083\).</div></div><div class="walk-note">Sjelden sykdom → selv positiv test gir bare ~8 %.</div>`},
+{chapter:"Kap 4", correct:"B",
+ q:String.raw`Fabrikk \(B_1\): 60 % av enhetene, feilrate 5 %. \(B_2\): 40 %, feilrate 10 %. <strong>Regn ut</strong> total feilsannsynlighet (formel 4.3).`,
+ a:String.raw`0,15`, b:String.raw`0,07`, c:String.raw`0,075`, d:String.raw`0,05`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,07.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Gang hver gren: \(0{,}05\cdot0{,}60=0{,}03\) og \(0{,}10\cdot0{,}40=0{,}04\).</div><div class="proc-step"><strong>2 —</strong> Summer: \(0{,}03+0{,}04=0{,}07\).</div></div><div class="walk-note">Veid snitt av de to feilratene.</div>`},
+{chapter:"Kap 4", correct:"A",
+ q:String.raw`\(P(A\cap B)=0{,}12\) og \(P(A)=0{,}3\). <strong>Regn ut</strong> \(P(B\mid A)\) (formel 4.1).`,
+ a:String.raw`0,4`, b:String.raw`0,36`, c:String.raw`0,12`, d:String.raw`0,04`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 0,4.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Del snittet på betingelsen: \(\frac{0{,}12}{0{,}3}=0{,}4\).</div></div><div class="walk-note">Har vi snittet allerede, trengs ikke Bayes.</div>`},
+{chapter:"Kap 4", correct:"B",
+ q:String.raw`Bayes-mellomregning: \(P(\text{pos}\mid\text{syk})=0{,}9\), \(P(\text{syk})=0{,}01\). <strong>Regn ut</strong> telleren \(P(\text{pos}\mid\text{syk})\cdot P(\text{syk})\).`,
+ a:String.raw`0,09`, b:String.raw`0,009`, c:String.raw`0,9`, d:String.raw`0,019`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,009.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Gang: \(0{,}9\cdot0{,}01=0{,}009\).</div></div><div class="walk-note">Dette er teller-leddet før du deler på \(P(\text{pos})\).</div>`},
+{chapter:"Kap 4", correct:"B",
+ q:String.raw`To leverandører: \(L_1\) 70 % (feilrate 2 %), \(L_2\) 30 % (feilrate 8 %). <strong>Regn ut</strong> total feilsannsynlighet (formel 4.3).`,
+ a:String.raw`0,10`, b:String.raw`0,038`, c:String.raw`0,05`, d:String.raw`0,024`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,038.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Gang hver gren: \(0{,}02\cdot0{,}70=0{,}014\) og \(0{,}08\cdot0{,}30=0{,}024\).</div><div class="proc-step"><strong>2 —</strong> Summer: \(0{,}014+0{,}024=0{,}038\).</div></div><div class="walk-note">Veid snitt — \(L_2\) bidrar mer per enhet, men leverer færre.</div>`}
+];

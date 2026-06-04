@@ -1,0 +1,27 @@
+// HSM126 — Gå formelen (regn det ut). Kapittel 3 — Kombinatorikk.
+var QG3 = [
+{chapter:"Kap 3", correct:"A",
+ q:String.raw`En PIN-kode har 4 sifre (0–9), sifre kan gjentas. <strong>Regn ut</strong> antall mulige koder (formel 3.1, \(N^s\)).`,
+ a:String.raw`10000`, b:String.raw`5040`, c:String.raw`40`, d:String.raw`1000`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 10 000.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(N=10\) valg, \(s=4\) plasser: \(10^4=10\,000\).</div></div><div class="walk-note">Med tilbakelegging → \(N\) er konstant for hver plass.</div>`},
+{chapter:"Kap 3", correct:"B",
+ q:String.raw`8 deltakere, gull/sølv/bronse (rekkefølge teller, ingen gjentakelse). <strong>Regn ut</strong> antall måter (formel 3.2, \((N)_s\)).`,
+ a:String.raw`512`, b:String.raw`336`, c:String.raw`56`, d:String.raw`24`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 336.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(\frac{8!}{(8-3)!}=\frac{8!}{5!}\).</div><div class="proc-step"><strong>2 —</strong> Fallende produkt: \(8\cdot7\cdot6=336\).</div></div><div class="walk-note">Beholdningen krymper for hvert trekk.</div>`},
+{chapter:"Kap 3", correct:"C",
+ q:String.raw`Velg en komite på 3 fra 8 personer (rekkefølge teller ikke). <strong>Regn ut</strong> antall komiteer (formel 3.3, \(\binom{N}{s}\)).`,
+ a:String.raw`336`, b:String.raw`24`, c:String.raw`56`, d:String.raw`112`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: C — 56.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Teller: \(8\cdot7\cdot6=336\).</div><div class="proc-step"><strong>2 —</strong> Nevner \(s!=3!=6\).</div><div class="proc-step"><strong>3 —</strong> Del: \(\frac{336}{6}=56\).</div></div><div class="walk-note">Vi deler bort de \(3!\) rekkefølgene — bare <em>hvem</em> teller.</div>`},
+{chapter:"Kap 3", correct:"B",
+ q:String.raw`Kast to terninger og noter \((\text{terning 1},\text{terning 2})\). <strong>Regn ut</strong> antall mulige utfall (formel 3.1).`,
+ a:String.raw`12`, b:String.raw`36`, c:String.raw`30`, d:String.raw`64`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 36.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(N=6\), \(s=2\): \(6^2=36\).</div></div><div class="walk-note">Hver terning er uavhengig med 6 muligheter.</div>`},
+{chapter:"Kap 3", correct:"B",
+ q:String.raw`Velg 2 av 5 bøker (rekkefølge teller ikke). <strong>Regn ut</strong> \(\binom{5}{2}\) (formel 3.3).`,
+ a:String.raw`20`, b:String.raw`10`, c:String.raw`25`, d:String.raw`120`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 10.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Teller: \(5\cdot4=20\).</div><div class="proc-step"><strong>2 —</strong> Nevner \(2!=2\).</div><div class="proc-step"><strong>3 —</strong> Del: \(\frac{20}{2}=10\).</div></div><div class="walk-note">Uordnet utvalg uten tilbakelegging.</div>`},
+{chapter:"Kap 3", correct:"A",
+ q:String.raw`Plasser 3 av 6 personer på tre ulike stoler (rekkefølge teller). <strong>Regn ut</strong> \((6)_3\) (formel 3.2).`,
+ a:String.raw`120`, b:String.raw`216`, c:String.raw`20`, d:String.raw`720`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 120.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(\frac{6!}{3!}\).</div><div class="proc-step"><strong>2 —</strong> Fallende produkt: \(6\cdot5\cdot4=120\).</div></div><div class="walk-note">Ordnet uten tilbakelegging.</div>`}
+];
