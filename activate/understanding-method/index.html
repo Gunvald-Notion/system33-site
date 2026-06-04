@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZS0BJG5PFE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZS0BJG5PFE');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activate Understanding Method | System 33</title>
@@ -271,6 +279,9 @@ Run the stages in order. The topic I want to understand is: [REPLACE WITH YOUR T
             const text = promptText.textContent;
             try {
                 await navigator.clipboard.writeText(text);
+                if (typeof gtag === 'function') {
+                    gtag('event', 'copy_prompt', { method: 'understanding-method' });
+                }
                 copyBtn.textContent = 'Copied';
                 copyBtn.classList.add('copied');
                 setTimeout(() => {
@@ -285,6 +296,9 @@ Run the stages in order. The topic I want to understand is: [REPLACE WITH YOUR T
                 sel.addRange(range);
                 try { document.execCommand('copy'); } catch (e) {}
                 sel.removeAllRanges();
+                if (typeof gtag === 'function') {
+                    gtag('event', 'copy_prompt', { method: 'understanding-method' });
+                }
                 copyBtn.textContent = 'Copied';
                 copyBtn.classList.add('copied');
                 setTimeout(() => {
