@@ -39,5 +39,5 @@ var QG1 = [
 {chapter:"Kap 1", correct:"A",
  q:String.raw`Du har \(S_{XY}=4\), \(S_X=2\) og \(S_Y=4\). <strong>Regn ut</strong> korrelasjonen \(R_{XY}\) (formel 1.10).`,
  a:String.raw`0,5`, b:String.raw`1`, c:String.raw`0,25`, d:String.raw`2`,
- walk:String.raw`<div class="walk-intro"><strong>Svar: A — 0,5.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Gang standardavvikene: \(2\cdot4=8\).</div><div class="proc-step"><strong>2 —</strong> Del kovariansen på produktet: \(\frac{4}{8}=0{,}5\).</div></div><div class="walk-note">Moderat positiv linetheær sammenheng; \(R\) ligger alltid mellom \(-1\) og \(1\).</div>`}
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 0,5.</strong></div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> Gang standardavvikene: \(2\cdot4=8\).</div><div class="proc-step"><strong>2 —</strong> Del kovariansen på produktet: \(\frac{4}{8}=0{,}5\).</div></div><div class="walk-note">Moderat positiv lineær sammenheng; \(R\) ligger alltid mellom \(-1\) og \(1\).</div>`}
 ];
