@@ -6,9 +6,9 @@
     <script src="/analytics.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSM126 — Kjenn formelen | System 33</title>
-    <meta name="description" content="Gjenkjenningstrening for HSM126 — les situasjonen, velg riktig formel. Kapittel 1-5. Del av system33.io.">
+    <meta name="description" content="Gjenkjenningstrening for HSM126 — les situasjonen, velg riktig formel. Kapittel 1-11. Del av system33.io.">
     <meta property="og:title" content="HSM126 — Kjenn formelen">
-    <meta property="og:description" content="Gjenkjenningstrening for HSM126. Hvilken formel kaller situasjonen på? Kap 1-5, på norsk.">
+    <meta property="og:description" content="Gjenkjenningstrening for HSM126. Hvilken formel kaller situasjonen på? Kap 1-11, på norsk.">
     <meta property="og:type" content="website">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -293,7 +293,7 @@
     <div id="screen-picker">
         <section class="hero">
             <div class="container">
-                <div class="hero-badge">Gjenkjenning · Norsk · Kap 1–5</div>
+                <div class="hero-badge">Gjenkjenning · Norsk · Kap 1–11</div>
                 <h1>Kjenn formelen</h1>
                 <p>Les situasjonen og kjenn etter verbet — hvilket rom er vi i? Velg formelen, og se fasiten gå stien steg for steg. Treningen er den øyeblikkelige klikken: <em>den der, den der</em>.</p>
                 <div class="hero-nav"><a href="../">→ Prøv deg selv (blandet test)</a></div>
@@ -354,16 +354,28 @@
     <script src="qk3.js"></script>
     <script src="qk4.js"></script>
     <script src="qk5.js"></script>
+    <script src="qk6.js"></script>
+    <script src="qk7.js"></script>
+    <script src="qk8.js"></script>
+    <script src="qk9.js"></script>
+    <script src="qk10.js"></script>
+    <script src="qk11.js"></script>
     <script>
         var CHAPTERS = [
             { id: "Kap 1", name: "Kap 1 — Beskrivende statistikk", weight: "Gjenkjenning" },
             { id: "Kap 2", name: "Kap 2 — Sannsynlighet", weight: "Gjenkjenning" },
             { id: "Kap 3", name: "Kap 3 — Kombinatorikk", weight: "Gjenkjenning" },
             { id: "Kap 4", name: "Kap 4 — Betinget sannsynlighet", weight: "Gjenkjenning" },
-            { id: "Kap 5", name: "Kap 5 — Tilfeldige variabler", weight: "Gjenkjenning" }
+            { id: "Kap 5", name: "Kap 5 — Tilfeldige variabler", weight: "Gjenkjenning" },
+            { id: "Kap 6", name: "Kap 6 — Simultanfordeling", weight: "Gjenkjenning" },
+            { id: "Kap 7", name: "Kap 7 — Sentrale fordelinger", weight: "Gjenkjenning" },
+            { id: "Kap 8", name: "Kap 8 — Estimering", weight: "Gjenkjenning" },
+            { id: "Kap 9", name: "Kap 9 — Hypotesetesting", weight: "Gjenkjenning" },
+            { id: "Kap 10", name: "Kap 10 — Hypotesetester (oversikt)", weight: "Gjenkjenning" },
+            { id: "Kap 11", name: "Kap 11 — Regresjonsanalyse", weight: "Gjenkjenning" }
         ];
 
-        var QUESTIONS = KJ1.concat(KJ2, KJ3, KJ4, KJ5);
+        var QUESTIONS = KJ1.concat(KJ2, KJ3, KJ4, KJ5, KJ6, KJ7, KJ8, KJ9, KJ10, KJ11);
 
         let currentChapter = null;
         let currentQuestions = [];
