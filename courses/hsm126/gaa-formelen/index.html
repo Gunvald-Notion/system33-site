@@ -6,9 +6,9 @@
     <script src="/analytics.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSM126 — Gå formelen | System 33</title>
-    <meta name="description" content="Regnetrening for HSM126 — formelen er gitt, du går stegene til tallet faller ut. Kapittel 5-11. Del av system33.io.">
+    <meta name="description" content="Regnetrening for HSM126 — formelen er gitt, du går stegene til tallet faller ut. Kapittel 5-12. Del av system33.io.">
     <meta property="og:title" content="HSM126 — Gå formelen">
-    <meta property="og:description" content="Regnetrening for HSM126. Formelen er gitt — gå stegene. Kap 5-11, på norsk.">
+    <meta property="og:description" content="Regnetrening for HSM126. Formelen er gitt — gå stegene. Kap 5-12, på norsk.">
     <meta property="og:type" content="website">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -293,7 +293,7 @@
     <div id="screen-picker">
         <section class="hero">
             <div class="container">
-                <div class="hero-badge">Regn det ut · Norsk · Kap 5–11</div>
+                <div class="hero-badge">Regn det ut · Norsk · Kap 5–12</div>
                 <h1>Gå formelen</h1>
                 <p>Formelen er alt gitt. Nå er jobben å <em>gå stegene</em> — ett om gangen, til tallet faller ut. Velg svaret, og se stien steg for steg under.</p>
                 <div class="hero-nav"><a href="../kjenn-formelen/">← Kjenn formelen</a> &nbsp;·&nbsp; <a href="../">Prøv deg selv (blandet test) →</a></div>
@@ -356,6 +356,7 @@
     <script src="qg9.js"></script>
     <script src="qg10.js"></script>
     <script src="qg11.js"></script>
+    <script src="qg12.js"></script>
     <script>
         var CHAPTERS = [
             { id: "Kap 5", name: "Kap 5 — Tilfeldige variabler", weight: "Regnetrening" },
@@ -364,10 +365,11 @@
             { id: "Kap 8", name: "Kap 8 — Estimering", weight: "Regnetrening" },
             { id: "Kap 9", name: "Kap 9 — Hypotesetesting", weight: "Regnetrening" },
             { id: "Kap 10", name: "Kap 10 — Spesielle hypotesetester", weight: "Regnetrening" },
-            { id: "Kap 11", name: "Kap 11 — Regresjonsanalyse", weight: "Regnetrening" }
+            { id: "Kap 11", name: "Kap 11 — Regresjonsanalyse", weight: "Regnetrening" },
+            { id: "Kap 12", name: "Kap 12 — SEM", weight: "Regnetrening" }
         ];
 
-        var QUESTIONS = QG5.concat(QG6, QG7, QG8, QG9, QG10, QG11);
+        var QUESTIONS = QG5.concat(QG6, QG7, QG8, QG9, QG10, QG11, QG12);
 
         let currentChapter = null;
         let currentQuestions = [];
