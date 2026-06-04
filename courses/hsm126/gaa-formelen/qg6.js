@@ -1,0 +1,32 @@
+// HSM126 — Gå formelen (regn det ut). Kapittel 6 (simultanfordeling).
+// Tabell: p(0,0)=0,10 p(0,1)=0,20 p(0,2)=0,10 | p(1,0)=0,20 p(1,1)=0,30 p(1,2)=0,10.
+var QG6 = [
+{chapter:"Kap 6", correct:"A",
+ q:String.raw`Simultantabell: \(p(0,0)=0{,}10,\ p(0,1)=0{,}20,\ p(0,2)=0{,}10,\ p(1,0)=0{,}20,\ p(1,1)=0{,}30,\ p(1,2)=0{,}10\). <strong>Regn ut</strong> \(p(1,2)=P(X=1,Y=2)\) (formel 6.1).`,
+ a:String.raw`0,10`, b:String.raw`0,20`, c:String.raw`0,30`, d:String.raw`0,40`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — 0,10.</strong> Ett celleoppslag.</div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> der \(X=1\) møter \(Y=2\): \(0{,}10\).</div></div><div class="walk-note">«Samtidig» = én celle.</div>`},
+{chapter:"Kap 6", correct:"B",
+ q:String.raw`Samme tabell. <strong>Regn ut</strong> marginalen \(P(X=0)\) (formel 6.2).`,
+ a:String.raw`0,30`, b:String.raw`0,40`, c:String.raw`0,50`, d:String.raw`0,60`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,40.</strong> Summer raden \(X=0\).</div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}10+0{,}20+0{,}10=0{,}40\).</div></div><div class="walk-note">Y er summert bort.</div>`},
+{chapter:"Kap 6", correct:"B",
+ q:String.raw`Samme tabell. <strong>Regn ut</strong> marginalen \(P(Y=1)\) (formel 6.3).`,
+ a:String.raw`0,30`, b:String.raw`0,50`, c:String.raw`0,20`, d:String.raw`0,60`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,50.</strong> Summer kolonnen \(Y=1\).</div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}20+0{,}30=0{,}50\).</div></div><div class="walk-note">Nå er X summert bort.</div>`},
+{chapter:"Kap 6", correct:"B",
+ q:String.raw`Marginalene for Y er \(0{,}30;\ 0{,}50;\ 0{,}20\) for \(Y=0,1,2\). <strong>Regn ut</strong> \(E[Y]\) (formel 5.3).`,
+ a:String.raw`0,5`, b:String.raw`0,9`, c:String.raw`0,7`, d:String.raw`1,0`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,9.</strong> Vekt verdiene med marginalene.</div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0\cdot0{,}30+1\cdot0{,}50+2\cdot0{,}20\).</div><div class="proc-step"><strong>2 —</strong> \(0+0{,}50+0{,}40=0{,}90\).</div></div><div class="walk-note">Marginalen er bare en vanlig fordeling.</div>`},
+{chapter:"Kap 6", correct:"B",
+ q:String.raw`Samme tabell. <strong>Regn ut</strong> \(E[XY]\) (formel 6.4, \(h(x,y)=xy\)).`,
+ a:String.raw`0,30`, b:String.raw`0,50`, c:String.raw`0,20`, d:String.raw`0,54`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,50.</strong> Bare par der både x og y \(>0\) bidrar.</div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(1\cdot1\cdot0{,}30=0{,}30\).</div><div class="proc-step"><strong>2 —</strong> \(1\cdot2\cdot0{,}10=0{,}20\).</div><div class="proc-step"><strong>3 —</strong> \(0{,}30+0{,}20=0{,}50\).</div></div><div class="walk-note">Byggekloss til kovariansen.</div>`},
+{chapter:"Kap 6", correct:"A",
+ q:String.raw`Du har \(E[XY]=0{,}50\), \(E[X]=0{,}60\), \(E[Y]=0{,}90\). <strong>Regn ut</strong> kovariansen (formel 6.5).`,
+ a:String.raw`−0,04`, b:String.raw`0,04`, c:String.raw`0,54`, d:String.raw`−0,54`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: A — −0,04.</strong> \(E[XY]-E[X]E[Y]\).</div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}60\cdot0{,}90=0{,}54\).</div><div class="proc-step"><strong>2 —</strong> \(0{,}50-0{,}54=-0{,}04\).</div></div><div class="walk-note">Negativ → svak motsatt samvariasjon.</div>`},
+{chapter:"Kap 6", correct:"B",
+ q:String.raw`Uavhengighetstest for \(X=0,Y=0\): marginalene er \(P(X=0)=0{,}40\), \(P(Y=0)=0{,}30\). <strong>Regn ut</strong> produktet \(P(X=0)\cdot P(Y=0)\) (formel 6.6) — og se om det matcher cella \(0{,}10\).`,
+ a:String.raw`0,10`, b:String.raw`0,12`, c:String.raw`0,40`, d:String.raw`0,30`,
+ walk:String.raw`<div class="walk-intro"><strong>Svar: B — 0,12.</strong> Og \(0{,}12\ne0{,}10\) → ikke uavhengige.</div><div class="proc-block"><div class="proc-title">Steg</div><div class="proc-step"><strong>1 —</strong> \(0{,}40\cdot0{,}30=0{,}12\).</div><div class="proc-step"><strong>2 —</strong> cella er \(0{,}10\): bryter for dette paret.</div></div><div class="walk-note">Bryter likheten for étt par → avhengige.</div>`}
+];
