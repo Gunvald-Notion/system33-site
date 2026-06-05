@@ -584,10 +584,13 @@ License: MIT — free to use, copy, modify, and share.</pre>
 
     <script>
         // Build display: transform ``` code fences into styled dashboards.
+        // Isolated in its own script block so nothing else can take it down.
         // The raw prompt (including fences) stays in #prompt-raw for copying.
         (function () {
-            var raw = document.getElementById('prompt-raw').textContent;
+            var rawEl = document.getElementById('prompt-raw');
             var display = document.getElementById('prompt-display');
+            if (!rawEl || !display) return;
+            var raw = rawEl.textContent;
             var lastIndex = 0;
             var fenceRegex = /```[^\n]*\n([\s\S]*?)\n```/g;
             var match;
@@ -636,34 +639,41 @@ License: MIT — free to use, copy, modify, and share.</pre>
                 display.appendChild(seg2);
             }
         })();
-
-        // Copy button — copies the full raw prompt (including ``` fences, for the AI)
-        var copyBtn = document.getElementById('copy-btn');
-        copyBtn.addEventListener('click', function () {
-            var text = document.getElementById('prompt-raw').textContent;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(function () {
-                    if (typeof gtag === 'function') gtag('event', 'copy_prompt', { method: 'understanding-method' });
-                    copyBtn.textContent = 'Copied';
-                    copyBtn.classList.add('copied');
-                    setTimeout(function () { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 2000);
-                }).catch(function () { fallbackCopy(text); });
-            } else {
-                fallbackCopy(text);
+    </script>
+    <script>
+        // Copy button — copies the full raw prompt (including ``` fences, for the AI).
+        // Separate block: if anything here fails, the display above is unaffected.
+        (function () {
+            var copyBtn = document.getElementById('copy-btn');
+            var rawEl = document.getElementById('prompt-raw');
+            if (!copyBtn || !rawEl) return;
+            function flash() {
+                if (typeof gtag === 'function') gtag('event', 'copy_prompt', { method: 'understanding-method' });
+                copyBtn.textContent = 'Copied';
+                copyBtn.classList.add('copied');
+                setTimeout(function () { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 2000);
             }
-        });
-        function fallbackCopy(text) {
-            var el = document.getElementById('prompt-raw');
-            el.style.display = 'block';
-            var range = document.createRange();
-            range.selectNode(el);
-            var sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-            try { document.execCommand('copy'); } catch (e) {}
-            sel.removeAllRanges();
-            el.style.display = 'none';
-            if (typeof gtag === 'function') gtag('event', 'copy_prompt', { method: 'understanding-method' });
-            copyBtn.textContent = 'Copied';
-            copyBtn.classList.add('copied');
-            setTimeout(function () { cop
+            function fallbackCopy(text) {
+                rawEl.style.display = 'block';
+                var range = document.createRange();
+                range.selectNode(rawEl);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                try { document.execCommand('copy'); } catch (e) {}
+                sel.removeAllRanges();
+                rawEl.style.display = 'none';
+                flash();
+            }
+            copyBtn.addEventListener('click', function () {
+                var text = rawEl.textContent;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(flash).catch(function () { fallbackCopy(text); });
+                } else {
+                    fallbackCopy(text);
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
