@@ -133,13 +133,9 @@
             background: none;
             border: none;
         }
-        /* Dashboard inner boxes */
+        /* Dashboard — plain monospace, no barrier */
         .dashboard-box {
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(250, 250, 250, 0.15);
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin: 4px 0;
+            margin: 10px 0;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             display: block;
@@ -155,6 +151,11 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
+        .dashboard-box .dash-title { color: var(--text-primary); font-weight: 700; }
+        .dashboard-box .step-done { color: #22c55e; }
+        .dashboard-box .step-current { color: #3b82f6; }
+        .dashboard-box .bar-fill { color: #22c55e; }
+        .dashboard-box .bar-empty { color: #52525b; }
         .copy-btn {
             position: absolute;
             top: 18px;
@@ -303,20 +304,19 @@ This is a conversation. Ask questions. Wait for answers. Let the user think. Som
 Progress dashboard — display it at the start, and again at the beginning of each new stage. Each stage below carries its own dashboard in a code block, ready to copy exactly as written. Here is the starting state (Stage 1):
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [>] 1 Intake     [ ] 4 Expansion ║
-║ [ ] 2 Origin     [ ] 5 Apply     ║
-║ [ ] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██░░░░░░░░░░] 1/6 · Intake      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓░░░░░░░░░░]  1 / 6
+
+Step 1  [-]  Intake
+Step 2  [ ]  Origin
+Step 3  [ ]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
-When you reach a new stage, copy that stage's code block exactly as written — don't redraw it from memory. Completed stages are marked [x], the active stage [>], and upcoming stages [ ]. The bar fills two cells for every stage reached.
-
-Width rule — you shouldn't need it, since every dashboard below is provided ready-made, but if you ever rebuild a row by hand: each line between the two vertical walls (the ║ characters) is exactly 34 characters wide, counting every space. If a row isn't exactly 34 wide, the right wall stops lining up.
+When you reach a new stage, copy that stage's block exactly as written — don't redraw it from memory. Completed stages are marked [x], the stage you're on is marked [-], and upcoming stages are left blank. The progress bar fills two cells for every stage reached.
 
 ## The Six Stages
 
@@ -325,15 +325,16 @@ Width rule — you shouldn't need it, since every dashboard below is provided re
 Dashboard for this stage — copy the code block exactly, don't redraw it:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [>] 1 Intake     [ ] 4 Expansion ║
-║ [ ] 2 Origin     [ ] 5 Apply     ║
-║ [ ] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██░░░░░░░░░░] 1/6 · Intake      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓░░░░░░░░░░]  1 / 6
+
+Step 1  [-]  Intake
+Step 2  [ ]  Origin
+Step 3  [ ]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 Before you try to understand something, you need to know where it sits. A concept without context floats loose in your mind with nothing to attach to. This stage anchors it.
@@ -357,15 +358,16 @@ AI instruction: Take this stage slowly. Ask the four questions one at a time —
 Dashboard for this stage — copy the code block exactly, don't redraw it:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [ ] 4 Expansion ║
-║ [>] 2 Origin     [ ] 5 Apply     ║
-║ [ ] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████░░░░░░░░] 2/6 · Origin      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓░░░░░░░░]  2 / 6
+
+Step 1  [x]  Intake
+Step 2  [-]  Origin
+Step 3  [ ]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 This is where most learning methods fail. They teach you what something is but never why it exists. Origin changes everything — when you know the problem that created a concept, you understand it at a level that memorization can never reach.
@@ -389,15 +391,16 @@ AI instruction: This is the stage that makes the method different from everythin
 Dashboard for this stage — copy the code block exactly, don't redraw it:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [ ] 4 Expansion ║
-║ [x] 2 Origin     [ ] 5 Apply     ║
-║ [>] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██████░░░░░░] 3/6 · Principle   ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓░░░░░░]  3 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [-]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 Every concept rests on a bedrock truth — a first principle that, if you hold it, lets you reconstruct everything else. This stage finds that truth and compresses it.
@@ -417,15 +420,16 @@ AI instruction: This is the stage where the user does the real thinking — don'
 Dashboard for this stage — copy the code block exactly, don't redraw it:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [>] 4 Expansion ║
-║ [x] 2 Origin     [ ] 5 Apply     ║
-║ [x] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████████░░░░] 4/6 · Expansion   ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓░░░░]  4 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [-]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 Textbooks tell you what a concept is. This stage shows you what it does in the hands of people who use it at the highest level. This is where knowledge becomes strategic — you see how the principle operates in real decisions, real companies, real situations.
@@ -447,15 +451,16 @@ AI instruction: Go find real examples — specific people, specific companies, s
 Dashboard for this stage — copy the code block exactly, don't redraw it:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [x] 4 Expansion ║
-║ [x] 2 Origin     [>] 5 Apply     ║
-║ [x] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██████████░░] 5/6 · Apply       ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓▓▓░░]  5 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [x]  Strategic Expansion
+Step 5  [-]  Application
+Step 6  [ ]  Output
 ```
 
 This is where the concept becomes yours. Everything before this was about the concept in the world. This stage is about the concept in your life.
@@ -475,15 +480,16 @@ AI instruction: You don't know who this person is — don't assume. Ask them abo
 Dashboard for this stage — copy the code block exactly, don't redraw it:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [x] 4 Expansion ║
-║ [x] 2 Origin     [x] 5 Apply     ║
-║ [x] 3 Principle  [>] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████████████] 6/6 · Output      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓▓▓▓▓]  6 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [x]  Strategic Expansion
+Step 5  [x]  Application
+Step 6  [-]  Output
 ```
 
 Understanding that stays in your head fades. This stage captures what you built so you can retrieve it, share it, and build on it.
@@ -505,15 +511,16 @@ The act of producing this output is itself a final test. If you struggle to arti
 AI instruction: Ask the user what they want to walk away with. Some people want the full summary. Some just want the principle card they can carry in their pocket. Some want to test themselves later. Let them choose. If they're not sure, give them the summary and the principle card — that covers most needs. The act of producing the output often surfaces gaps the user didn't notice. If that happens, it's fine to loop back to the stage where the gap lives. After the output is complete, display the final dashboard with all stages marked [x] and the progress bar full:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [x] 4 Expansion ║
-║ [x] 2 Origin     [x] 5 Apply     ║
-║ [x] 3 Principle  [x] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████████████] 6/6 · Done        ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓▓▓▓▓]  6 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [x]  Strategic Expansion
+Step 5  [x]  Application
+Step 6  [x]  Output
 ```
 
 That completion signal matters — it tells the user they built something real.
@@ -576,7 +583,7 @@ License: MIT — free to use, copy, modify, and share.</pre>
     </footer>
 
     <script>
-        // Build display: transform ``` code fences into styled inner boxes.
+        // Build display: transform ``` code fences into styled dashboards.
         // The raw prompt (including fences) stays in #prompt-raw for copying.
         (function () {
             var raw = document.getElementById('prompt-raw').textContent;
@@ -584,24 +591,44 @@ License: MIT — free to use, copy, modify, and share.</pre>
             var lastIndex = 0;
             var fenceRegex = /```[^\n]*\n([\s\S]*?)\n```/g;
             var match;
+            function esc(s) {
+                return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+            function colorizeDashboard(txt) {
+                return txt.split('\n').map(function (line) {
+                    var safe = esc(line);
+                    if (line.indexOf('UNDERSTANDING METHOD') !== -1) {
+                        return '<span class="dash-title">' + safe + '</span>';
+                    }
+                    if (line.indexOf('▓') !== -1 || line.indexOf('░') !== -1) {
+                        return safe.replace(/▓+/g, function (m) { return '<span class="bar-fill">' + m + '</span>'; })
+                                   .replace(/░+/g, function (m) { return '<span class="bar-empty">' + m + '</span>'; });
+                    }
+                    if (line.indexOf('[x]') !== -1) {
+                        return '<span class="step-done">' + safe + '</span>';
+                    }
+                    if (line.indexOf('[-]') !== -1) {
+                        return '<span class="step-current">' + safe + '</span>';
+                    }
+                    return safe;
+                }).join('\n');
+            }
             while ((match = fenceRegex.exec(raw)) !== null) {
-                // Text before this fence
                 if (match.index > lastIndex) {
                     var seg = document.createElement('pre');
                     seg.className = 'text-segment';
                     seg.textContent = raw.slice(lastIndex, match.index);
                     display.appendChild(seg);
                 }
-                // The dashboard box
                 var box = document.createElement('div');
                 box.className = 'dashboard-box';
                 var pre = document.createElement('pre');
-                pre.textContent = match[1];
+                try { pre.innerHTML = colorizeDashboard(match[1]); }
+                catch (e) { pre.textContent = match[1]; }
                 box.appendChild(pre);
                 display.appendChild(box);
                 lastIndex = match.index + match[0].length;
             }
-            // Remaining text after last fence
             if (lastIndex < raw.length) {
                 var seg2 = document.createElement('pre');
                 seg2.className = 'text-segment';
@@ -639,8 +666,4 @@ License: MIT — free to use, copy, modify, and share.</pre>
             if (typeof gtag === 'function') gtag('event', 'copy_prompt', { method: 'understanding-method' });
             copyBtn.textContent = 'Copied';
             copyBtn.classList.add('copied');
-            setTimeout(function () { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 2000);
-        }
-    </script>
-</body>
-</html>
+            setTimeout(function () { cop
