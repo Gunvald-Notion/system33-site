@@ -95,13 +95,9 @@
             background: none;
             border: none;
         }
-        /* Dashboard inner boxes */
+        /* Dashboard — plain monospace, no barrier */
         .dashboard-box {
-            background: rgba(0, 0, 0, 0.45);
-            border: 1px solid rgba(250, 250, 250, 0.15);
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin: 4px 0;
+            margin: 10px 0;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             display: block;
@@ -117,6 +113,11 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
+        .dashboard-box .dash-title { color: var(--text-primary); font-weight: 700; }
+        .dashboard-box .step-done { color: #22c55e; }
+        .dashboard-box .step-current { color: #3b82f6; }
+        .dashboard-box .bar-fill { color: #22c55e; }
+        .dashboard-box .bar-empty { color: #52525b; }
         footer {
             padding: 40px 0;
             border-top: 1px solid var(--border);
@@ -163,35 +164,35 @@ This is a conversation. Ask questions. Wait for answers. Let the user think. Som
 Progress dashboard — display it at the start, and again at the beginning of each new stage. Each stage below carries its own dashboard in a code block, ready to copy exactly as written. Here is the starting state (Stage 1):
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [>] 1 Intake     [ ] 4 Expansion ║
-║ [ ] 2 Origin     [ ] 5 Apply     ║
-║ [ ] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██░░░░░░░░░░] 1/6 · Intake      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓░░░░░░░░░░]  1 / 6
+
+Step 1  [-]  Intake
+Step 2  [ ]  Origin
+Step 3  [ ]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
-When you reach a new stage, copy that stage's code block exactly as written — do not redraw it from memory. Completed stages are marked [x], the active stage [>], and upcoming stages [ ]. The bar fills two cells for every stage reached.
-
-Width rule — you should not need it, since every dashboard is provided ready-made, but if you ever rebuild a row by hand: each line between the two vertical walls (the ║ characters) is exactly 34 characters wide, counting every space. If a row is not exactly 34 wide, the right wall stops lining up.
+When you reach a new stage, copy that stage's block exactly as written — do not redraw it from memory. Completed stages are marked [x], the stage you're on is marked [-], and upcoming stages are left blank. The progress bar fills two cells for every stage reached.
 
 ## The Six Stages
 
 ### Stage 1: Intake
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [>] 1 Intake     [ ] 4 Expansion ║
-║ [ ] 2 Origin     [ ] 5 Apply     ║
-║ [ ] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██░░░░░░░░░░] 1/6 · Intake      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓░░░░░░░░░░]  1 / 6
+
+Step 1  [-]  Intake
+Step 2  [ ]  Origin
+Step 3  [ ]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 Before you try to understand something, you need to know where it sits. A concept without context floats loose in your mind with nothing to attach to. This stage anchors it.
@@ -201,15 +202,16 @@ Ask four questions, one at a time: What is this concept? Where does it come from
 ### Stage 2: Origin
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [ ] 4 Expansion ║
-║ [>] 2 Origin     [ ] 5 Apply     ║
-║ [ ] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████░░░░░░░░] 2/6 · Origin      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓░░░░░░░░]  2 / 6
+
+Step 1  [x]  Intake
+Step 2  [-]  Origin
+Step 3  [ ]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 This is where most learning methods fail. They teach you what something is but never why it exists. Discover: When was this created, and what was happening in the world that made it necessary? What problem existed before it? Who solved it, and what was the insight? How does the origin illuminate the concept itself? Do real research. Present it as a story, not a summary. If the exact origin is unclear, anchor on the problem — the problem is always knowable. Confirm: "Origin found. The problem was [X]. Moving to Principle."
@@ -217,15 +219,16 @@ This is where most learning methods fail. They teach you what something is but n
 ### Stage 3: Principle
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [ ] 4 Expansion ║
-║ [x] 2 Origin     [ ] 5 Apply     ║
-║ [>] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██████░░░░░░] 3/6 · Principle   ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓░░░░░░]  3 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [-]  Principle
+Step 4  [ ]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 Every concept rests on a bedrock truth — a first principle that, if you hold it, lets you reconstruct everything else. Produce two outputs: the first principle (the underlying law in one or two sentences — why does this have to exist?) and the compression (a five-second phrase, the handle you grab when you need it fast). This is where the user does the real thinking — don't do it for them. Let them struggle, then help them sharpen. Check the compression captures the essence. Confirm: "Principle: [stated principle]. Compression: [phrase]. Moving to Expansion."
@@ -233,15 +236,16 @@ Every concept rests on a bedrock truth — a first principle that, if you hold i
 ### Stage 4: Strategic Expansion
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [>] 4 Expansion ║
-║ [x] 2 Origin     [ ] 5 Apply     ║
-║ [x] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████████░░░░] 4/6 · Expansion   ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓░░░░]  4 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [-]  Strategic Expansion
+Step 5  [ ]  Application
+Step 6  [ ]  Output
 ```
 
 Textbooks tell you what a concept is. This stage shows what it does in the hands of people who use it at the highest level. Find real examples — specific people, companies, moments where this concept was the difference. Write them as stories, not lists. "Amazon did X because they understood Y" beats "Strategy 1: do Y." Two or three strong examples are enough; depth beats breadth. Confirm: "Strategic expansion complete. Moving to Application."
@@ -249,15 +253,16 @@ Textbooks tell you what a concept is. This stage shows what it does in the hands
 ### Stage 5: Application
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [x] 4 Expansion ║
-║ [x] 2 Origin     [>] 5 Apply     ║
-║ [x] 3 Principle  [ ] 6 Output    ║
-╟──────────────────────────────────╢
-║ [██████████░░] 5/6 · Apply       ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓▓▓░░]  5 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [x]  Strategic Expansion
+Step 5  [-]  Application
+Step 6  [ ]  Output
 ```
 
 This is where the concept becomes the user's. Don't assume who they are — ask about their life, work, situation. Then help them see where the concept already operates around them, or where it could change a decision they'll make. The test: if understanding this doesn't change at least one future decision, it isn't deep enough yet. Confirm: "Application complete. Moving to Output."
@@ -265,29 +270,31 @@ This is where the concept becomes the user's. Don't assume who they are — ask 
 ### Stage 6: Output
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [x] 4 Expansion ║
-║ [x] 2 Origin     [x] 5 Apply     ║
-║ [x] 3 Principle  [>] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████████████] 6/6 · Output      ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓▓▓▓▓]  6 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [x]  Strategic Expansion
+Step 5  [x]  Application
+Step 6  [-]  Output
 ```
 
 Understanding that stays in your head fades. Capture what was built. Ask what the user wants to walk away with: a summary, a teach-back, a principle card (first principle + compression), test questions, or all of the above. If unsure, give the summary and the principle card. Producing the output often surfaces gaps — loop back to the stage where the gap lives if needed. After output is complete, display the final dashboard with all stages [x] and the bar full:
 
 ```
-╔══════════════════════════════════╗
-║ SYSTEM 33 · UNDERSTANDING METHOD ║
-║                                  ║
-║ [x] 1 Intake     [x] 4 Expansion ║
-║ [x] 2 Origin     [x] 5 Apply     ║
-║ [x] 3 Principle  [x] 6 Output    ║
-╟──────────────────────────────────╢
-║ [████████████] 6/6 · Done        ║
-╚══════════════════════════════════╝
+SYSTEM 33 · UNDERSTANDING METHOD
+--------------------------------
+[▓▓▓▓▓▓▓▓▓▓▓▓]  6 / 6
+
+Step 1  [x]  Intake
+Step 2  [x]  Origin
+Step 3  [x]  Principle
+Step 4  [x]  Strategic Expansion
+Step 5  [x]  Application
+Step 6  [x]  Output
 ```
 
 ## About
@@ -306,13 +313,35 @@ Created by Gunvald. Part of System 33 — an operating system for thinking. Lice
     </footer>
 
     <script>
-        // Build display: transform ``` code fences into styled inner boxes.
+        // Build display: transform ``` code fences into styled dashboards.
         (function () {
             var raw = document.getElementById('method-raw').textContent;
             var display = document.getElementById('method-display');
             var lastIndex = 0;
             var fenceRegex = /```[^\n]*\n([\s\S]*?)\n```/g;
             var match;
+            function esc(s) {
+                return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+            function colorizeDashboard(txt) {
+                return txt.split('\n').map(function (line) {
+                    var safe = esc(line);
+                    if (line.indexOf('UNDERSTANDING METHOD') !== -1) {
+                        return '<span class="dash-title">' + safe + '</span>';
+                    }
+                    if (line.indexOf('▓') !== -1 || line.indexOf('░') !== -1) {
+                        return safe.replace(/▓+/g, function (m) { return '<span class="bar-fill">' + m + '</span>'; })
+                                   .replace(/░+/g, function (m) { return '<span class="bar-empty">' + m + '</span>'; });
+                    }
+                    if (line.indexOf('[x]') !== -1) {
+                        return '<span class="step-done">' + safe + '</span>';
+                    }
+                    if (line.indexOf('[-]') !== -1) {
+                        return '<span class="step-current">' + safe + '</span>';
+                    }
+                    return safe;
+                }).join('\n');
+            }
             while ((match = fenceRegex.exec(raw)) !== null) {
                 if (match.index > lastIndex) {
                     var seg = document.createElement('pre');
@@ -323,7 +352,8 @@ Created by Gunvald. Part of System 33 — an operating system for thinking. Lice
                 var box = document.createElement('div');
                 box.className = 'dashboard-box';
                 var pre = document.createElement('pre');
-                pre.textContent = match[1];
+                try { pre.innerHTML = colorizeDashboard(match[1]); }
+                catch (e) { pre.textContent = match[1]; }
                 box.appendChild(pre);
                 display.appendChild(box);
                 lastIndex = match.index + match[0].length;
