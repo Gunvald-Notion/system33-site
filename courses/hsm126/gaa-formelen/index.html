@@ -40,8 +40,30 @@
         a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
         a:hover { opacity: 0.7; }
         .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-        .site-header { padding: 24px 0 0; }
-        .site-header a { color: var(--text-muted); font-size: 0.85rem; }
+        .site-header {
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(10, 10, 11, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .site-back { color: var(--text-muted); font-size: 0.85rem; }
+        .mode-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .mode-tab {
+            display: inline-block;
+            padding: 8px 15px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .mode-tab:hover { border-color: #3f3f46; color: var(--text-primary); opacity: 1; }
+        .mode-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(167, 139, 250, 0.08); }
         .hero { padding: 48px 0 32px; text-align: center; }
         .hero-badge {
             display: inline-block;
@@ -67,8 +89,7 @@
             max-width: 520px;
             margin: 0 auto;
         }
-        .hero-nav { margin-top: 20px; font-size: 0.85rem; }
-        .hero-nav a { color: var(--accent); }
+        .hero p em { color: var(--accent); font-style: normal; }
         .section { padding: 32px 0 64px; }
         .section-label {
             font-size: 0.75rem;
@@ -286,7 +307,13 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="https://system33.io">← system33.io</a>
+            <a class="site-back" href="https://system33.io">← system33.io</a>
+            <nav class="mode-tabs">
+                <a href="/courses/hsm126/" class="mode-tab">Blandet test</a>
+                <a href="/courses/hsm126/kjenn-formelen/" class="mode-tab">Kjenn formelen</a>
+                <a href="/courses/hsm126/gaa-formelen/" class="mode-tab active">Gå formelen</a>
+                <a href="/courses/hsm126/formasjoner/" class="mode-tab">Formasjoner</a>
+            </nav>
         </div>
     </header>
 
@@ -296,7 +323,6 @@
                 <div class="hero-badge">Regn det ut · Norsk · Kap 1–12</div>
                 <h1>Gå formelen</h1>
                 <p>Formelen er alt gitt. Nå er jobben å <em>gå stegene</em> — ett om gangen, til tallet faller ut. Velg svaret, og se stien steg for steg under.</p>
-                <div class="hero-nav"><a href="../kjenn-formelen/">← Kjenn formelen</a> &nbsp;·&nbsp; <a href="../">Prøv deg selv (blandet test) →</a></div>
             </div>
         </section>
         <section class="section">
