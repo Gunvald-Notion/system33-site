@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+    <meta charset="UTF-8">
+    <!-- System 33 analytics (shared) -->
+    <script src="/analytics.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSM126 — Formasjoner | System 33</title>
+    <meta name="description" content="Formasjoner for HSM126 — hvert kapittels formler brutt ned i en firetrinns vandring du kan se skje. Del av system33.io.">
+    <meta property="og:title" content="HSM126 — Formasjoner">
+    <meta property="og:description" content="Interaktive firetrinns-vandringer for HSM126. Én formasjon per kapittel.">
+    <meta property="og:type" content="website">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --bg-card: #18181b;
+            --border: #27272a;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #a78bfa;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.7; }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .site-header {
+            padding: 14px 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(10, 10, 11, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .site-back { color: var(--text-muted); font-size: 0.85rem; }
+        .mode-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .mode-tab {
+            display: inline-block;
+            padding: 8px 15px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .mode-tab:hover { border-color: #3f3f46; color: var(--text-primary); opacity: 1; }
+        .mode-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(167, 139, 250, 0.08); }
+        .hero { padding: 48px 0 24px; text-align: center; }
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 2.75rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        .hero p { font-size: 1.05rem; color: var(--text-secondary); max-width: 540px; margin: 0 auto; }
+        .hero p em { color: var(--accent); font-style: normal; }
+        .section { padding: 24px 0 64px; }
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .spell-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+        .spell-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: background 0.2s, border-color 0.2s;
+            display: block;
+        }
+        .spell-card:hover { border-color: #3f3f46; background: rgba(228, 228, 231, 0.03); opacity: 1; }
+        .spell-icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .spell-name { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+        .spell-kap { font-size: 0.75rem; color: var(--accent); margin-bottom: 6px; }
+        .spell-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
+        footer {
+            padding: 32px 0;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 16px;
+        }
+        footer a { color: var(--text-secondary); }
+        @media (max-width: 480px) {
+            .hero { padding: 32px 0 24px; }
+            .section { padding: 16px 0 48px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a class="site-back" href="https://system33.io">← system33.io</a>
+            <nav class="mode-tabs">
+                <a href="/courses/hsm126/" class="mode-tab">Blandet test</a>
+                <a href="/courses/hsm126/kjenn-formelen/" class="mode-tab">Kjenn formelen</a>
+                <a href="/courses/hsm126/gaa-formelen/" class="mode-tab">Gå formelen</a>
+                <a href="/courses/hsm126/formasjoner/" class="mode-tab active">Formasjoner</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">Formasjoner · Norsk</div>
+            <h1>Formasjoner</h1>
+            <p>Hver formasjon bryter et kapittels formler ned i en <em>firetrinns vandring</em> du kan se skje — fra rådata til tallet faller ut. Velg en formasjon for å gå den.</p>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="section-label">Én formasjon per kapittel</div>
+            <div class="spell-grid">
+                <a href="/courses/galdr/spells/the-cairn/" class="spell-card">
+                    <div class="spell-icon">🪨</div>
+                    <div class="spell-name">The Cairn</div>
+                    <div class="spell-kap">Kap 1</div>
+                    <div class="spell-desc">Beskriv haugen du allerede har — sentrum, spredning, og om to kolonner beveger seg sammen.</div>
+                </a>
+                <a href="/courses/galdr/spells/probability-house/" class="spell-card">
+                    <div class="spell-icon">🏠</div>
+                    <div class="spell-name">Probability House</div>
+                    <div class="spell-kap">Kap 3 + 4</div>
+                    <div class="spell-desc">Gå cellene. Hver sannsynlighet bor i et hus av rader og kolonner.</div>
+                </a>
+                <a href="/courses/galdr/spells/drainage/" class="spell-card">
+                    <div class="spell-icon">⛓️</div>
+                    <div class="spell-name">Drainage</div>
+                    <div class="spell-kap">Kap 3</div>
+                    <div class="spell-desc">Bassenget krymper. nPr, nCr og Nˢ — tell måtene å trekke på.</div>
+                </a>
+                <a href="/courses/galdr/spells/weighing-table/" class="spell-card">
+                    <div class="spell-icon">⚖️</div>
+                    <div class="spell-name">The Weighing Table</div>
+                    <div class="spell-kap">Kap 5 + 6</div>
+                    <div class="spell-desc">Varians og kovarians. Mål avstand fra sentrum, vekt den, legg den i haug.</div>
+                </a>
+                <a href="/courses/galdr/spells/bell-walk/" class="spell-card">
+                    <div class="spell-icon">🔔</div>
+                    <div class="spell-name">The Bell-Walk</div>
+                    <div class="spell-kap">Kap 7</div>
+                    <div class="spell-desc">Fire fordelinger, én klokke. Gå kurven fra sentrum til der du står.</div>
+                </a>
+                <a href="/courses/galdr/spells/wobble-frame/" class="spell-card">
+                    <div class="spell-icon">📐</div>
+                    <div class="spell-name">Wobble Frame</div>
+                    <div class="spell-kap">Kap 8</div>
+                    <div class="spell-desc">Konfidensintervall. Rammen som holder estimatet med en eksplisitt feilrate.</div>
+                </a>
+                <a href="/courses/galdr/spells/t-obs/" class="spell-card">
+                    <div class="spell-icon">📏</div>
+                    <div class="spell-name">T_obs</div>
+                    <div class="spell-kap">Kap 9 + 10</div>
+                    <div class="spell-desc">Hypotesetesting. Avstanden mellom påstand og utvalg, målt i wobbles.</div>
+                </a>
+                <a href="/courses/galdr/spells/enkel-og-multippel-regresjon/" class="spell-card">
+                    <div class="spell-icon">📈</div>
+                    <div class="spell-name">Enkel & Multippel Regresjon</div>
+                    <div class="spell-kap">Kap 11</div>
+                    <div class="spell-desc">Regresjon som konvergens. Hver forklaringsvariabel en arm av kraft — sentrum er ŷ.</div>
+                </a>
+                <a href="/courses/galdr/spells/sem/" class="spell-card">
+                    <div class="spell-icon">🕸️</div>
+                    <div class="spell-name">Strukturligningsmodeller (SEM)</div>
+                    <div class="spell-kap">Kap 12</div>
+                    <div class="spell-desc">Latente begreper, ladninger, mediering og tilpasningsmål. Mål det du ikke kan legge en linjal på.</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            Bygget av Gunvald · Del av <a href="https://system33.io">system33.io</a>
+        </div>
+    </footer>
+</body>
+</html>
