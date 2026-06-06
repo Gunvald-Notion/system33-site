@@ -512,14 +512,6 @@
 
         var QUESTIONS = Q1.concat(Q2).concat(Q3).concat(Q4).concat(Q5).concat(Q6);
 
-        var SPELL_LINKS = {
-            "Ch 8 — Estimering": { href: "../galdr/spells/wobble-frame/", label: "The Wobble Frame →" },
-            "Ch 9 — Hypotesetesting": { href: "../galdr/spells/t-obs/", label: "T_obs — Distance in Wobbles →" },
-            "Ch 10 — Spesielle hypotesetester": { href: "../galdr/spells/t-obs/", label: "T_obs — Distance in Wobbles →" },
-            "Ch 11 — Regresjonsanalyse": { href: "../galdr/spells/enkel-og-multippel-regresjon/", label: "Enkel & Multippel Regresjon →" },
-            "Ch 12 — SEM": { href: "../galdr/spells/sem/", label: "Structural Equation Models →" }
-        };
-
         let currentChapter = null;
         let currentQuestions = [];
         let currentIndex = 0;
@@ -617,12 +609,7 @@
             const verdict = `<strong>${isCorrect ? "Riktig." : "Feil."}</strong>`;
             if (q.walk) {
                 exp.classList.add("walk-explanation");
-                let html = `<div class="walk-verdict">${verdict}</div>${q.walk}`;
-                const link = SPELL_LINKS[q.chapter];
-                if (link) {
-                    html += `<a class="walk-more" href="${link.href}">${link.label}</a>`;
-                }
-                exp.innerHTML = html;
+                exp.innerHTML = `<div class="walk-verdict">${verdict}</div>${q.walk}`;
             } else {
                 exp.classList.remove("walk-explanation");
                 exp.innerHTML = `${verdict} ${escapeHtml(q.explanation)}`;
