@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="no"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>🪨 The Cairn — Galdr-formasjon | System 33</title><meta name="description" content="Beskrivende statistikk som en Galdr-formasjon — fem formler, hver gått gjennom fire steg og fire trekk."><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>🪨 The Cairn — Galdr Formation | System 33</title><meta name="description" content="Descriptive statistics as a Galdr formation — five formulas, each walked through four steps and four moves."><style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -75,37 +75,53 @@ a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:
 .formula-ref-eq{font-family:'SF Mono',Menlo,monospace;font-size:.84rem;color:var(--text2);background:var(--bg2);padding:10px 14px;border-radius:6px}
 footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
 footer a{color:var(--text2)}
+.lang-toggle{display:flex;gap:4px}
+.lang-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:5px 11px;font:inherit;font-size:.72rem;font-weight:600;color:var(--text2);cursor:pointer;letter-spacing:.04em;transition:all .2s}
+.lang-btn:hover{border-color:#3f3f46}
+.lang-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
 @media(max-width:600px){.piece-text{font-size:.9rem;padding:5px 6px}.data-table{font-size:.78rem}.mode-nav{flex-direction:column}}
 </style></head><body>
-<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">← Galdr-formasjoner</a></div></header>
-<section class="hero"><div class="container"><div class="hero-icon">🪨</div><div class="hero-badge">Galdr-formasjon · Kap 1</div><h1>The Cairn</h1><p>Beskriv haugen med data du allerede har. Velg en formel, gå de fire stegene, og se hvert trekk bygge seg opp.</p></div></section>
-<section class="section"><div class="container"><div class="principle"><strong>Førsteprinsipp.</strong> The Cairn jobber på et <strong>utvalg du allerede har samlet</strong> — en ferdig haug med tall. Den spår aldri; den beskriver. Hver formel her er ett av tre spørsmål om haugen: hvor er <strong>sentrum</strong>, hvor bred er <strong>spredningen</strong>, og <strong>beveger to kolonner seg sammen</strong>. Skillet som går gjennom hele kurset: the Cairn teller ekte steiner og deler på n (eller n−1); <a href="/courses/galdr/spells/weighing-table/">Weighing Table</a> veier en fordeling av det som kan skje med P(x). Samme skjelett, ulikt drivstoff.</div></div></section>
-<section class="section"><div class="container"><div class="section-label">Velg formelen</div><div class="mode-nav">
-<button class="mode-btn active" onclick="switchForm(1)">Form 1 — Gjennomsnitt X̄</button>
-<button class="mode-btn" onclick="switchForm(2)">Form 2 — Median, kvartiler &amp; typetall</button>
-<button class="mode-btn" onclick="switchForm(3)">Form 3 — Varians &amp; Sₓ</button>
-<button class="mode-btn" onclick="switchForm(4)">Form 4 — Kovarians Sₓᵧ</button>
-<button class="mode-btn" onclick="switchForm(5)">Form 5 — Korrelasjon Rₓᵧ</button>
+<header class="site-header"><div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px"><a href="/courses/galdr/spells/" data-i18n="back">← Galdr Formations</a><div class="lang-toggle"><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button><button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button></div></div></header>
+<section class="hero"><div class="container"><div class="hero-icon">🪨</div><div class="hero-badge" data-i18n="badge">Galdr Formation · Kap 1</div><h1>The Cairn</h1><p data-i18n="heroP">Describe the pile of data you already hold. Pick a formula, walk the four steps, watch each move build.</p></div></section>
+<section class="section"><div class="container"><div class="principle" data-i18n="principle"><strong>First principle.</strong> The Cairn works on a <strong>sample you already gathered</strong> — a finished pile of numbers. It never forecasts; it describes. Every formula here is one of three questions about that pile: where is its <strong>center</strong>, how wide is its <strong>spread</strong>, and do two columns <strong>move together</strong>. The split that runs through the whole course: the Cairn counts real stones and divides by n (or n−1); the <a href="/courses/galdr/spells/weighing-table/">Weighing Table</a> weighs a distribution of what could happen by P(x). Same skeleton, different fuel.</div></div></section>
+<section class="section"><div class="container"><div class="section-label" data-i18n="chooseLabel">Choose the formula</div><div class="mode-nav">
+<button class="mode-btn active" onclick="switchForm(1)" data-i18n="mode1">Form 1 — Mean X̄</button>
+<button class="mode-btn" onclick="switchForm(2)" data-i18n="mode2">Form 2 — Median, Quartiles &amp; Mode</button>
+<button class="mode-btn" onclick="switchForm(3)" data-i18n="mode3">Form 3 — Variance &amp; Sₓ</button>
+<button class="mode-btn" onclick="switchForm(4)" data-i18n="mode4">Form 4 — Covariance Sₓᵧ</button>
+<button class="mode-btn" onclick="switchForm(5)" data-i18n="mode5">Form 5 — Correlation Rₓᵧ</button>
 </div></div></section>
-<section class="section"><div class="container"><div class="section-label" id="viz-label">Linja</div><div class="viz-wrapper"><div class="viz-wrap"><canvas id="viz-canvas"></canvas></div><p class="viz-caption" id="viz-caption">Gå de fire stegene. Slipp inn dataene i Steg 3 for å løse opp haugen.</p></div></div></section>
-<section class="section"><div class="container"><div class="section-label">Gå gjennom formasjonen</div><div class="step-nav">
-<button class="step-btn active" data-step="1">Steg 1 — Plantegning</button>
-<button class="step-btn" data-step="2">Steg 2 — Prosess</button>
-<button class="step-btn" data-step="3">Steg 3 — Data</button>
-<button class="step-btn" data-step="4">Steg 4 — Formel</button>
-<button class="step-btn" data-step="5">Test</button>
+<section class="section"><div class="container"><div class="section-label" id="viz-label" data-i18n="vizLabel">The Line</div><div class="viz-wrapper"><div class="viz-wrap"><canvas id="viz-canvas"></canvas></div><p class="viz-caption" id="viz-caption" data-i18n="vizCaption">Walk the four steps. Drop the data in Step 3 to resolve the pile.</p></div></div></section>
+<section class="section"><div class="container"><div class="section-label" data-i18n="walkLabel">Walk the formation</div><div class="step-nav">
+<button class="step-btn active" data-step="1" data-i18n="step1">Step 1 — Blueprint</button>
+<button class="step-btn" data-step="2" data-i18n="step2">Step 2 — Process</button>
+<button class="step-btn" data-step="3" data-i18n="step3">Step 3 — Data</button>
+<button class="step-btn" data-step="4" data-i18n="step4">Step 4 — Formula</button>
+<button class="step-btn" data-step="5" data-i18n="step5">Test</button>
 </div><div id="step-container"></div></div></section>
-<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container"><div class="section-label">Formeloversikt — Kap 1</div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Gjennomsnitt X̄</span><span class="formula-ref-kap">Sentrum</span></div><div class="formula-ref-eq">X̄ = (1/n) · Σ xᵢ</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Vektet gjennomsnitt X̄ᵥ</span><span class="formula-ref-kap">Sentrum</span></div><div class="formula-ref-eq">X̄ᵥ = Σ(xᵢ·wᵢ) / Σ wᵢ</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Median &amp; kvartiler</span><span class="formula-ref-kap">Sentrum</span></div><div class="formula-ref-eq">median pos = (n+1)/2 · Q1 = (n+1)/4 · Q3 = 3(n+1)/4 · IQR = Q3−Q1</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Utvalgsvarians Sₓ²</span><span class="formula-ref-kap">Spredning</span></div><div class="formula-ref-eq">Sₓ² = (1/(n−1)) · Σ (xᵢ − X̄)²</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Populasjonsvarians S² &amp; bro</span><span class="formula-ref-kap">Spredning</span></div><div class="formula-ref-eq">S² = (1/n) · Σ (xᵢ − X̄)² · S = √((n−1)/n) · Sₓ</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Standardavvik Sₓ</span><span class="formula-ref-kap">Spredning</span></div><div class="formula-ref-eq">Sₓ = √(Sₓ²)</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Utvalgskovarians Sₓᵧ</span><span class="formula-ref-kap">Par</span></div><div class="formula-ref-eq">Sₓᵧ = (1/(n−1)) · Σ (xᵢ − X̄)(yᵢ − Ȳ)</div></div>
-<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name">Korrelasjon Rₓᵧ</span><span class="formula-ref-kap">Par</span></div><div class="formula-ref-eq">Rₓᵧ = Sₓᵧ / (Sₓ · Sᵧ) ∈ [−1, +1]</div></div>
+<section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container"><div class="section-label" data-i18n="refLabel">Formula Reference — Kap 1</div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName1">Mean X̄</span><span class="formula-ref-kap" data-i18n="refKap1">Center</span></div><div class="formula-ref-eq">X̄ = (1/n) · Σ xᵢ</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName2">Weighted mean X̄ᵥ</span><span class="formula-ref-kap" data-i18n="refKap2">Center</span></div><div class="formula-ref-eq">X̄ᵥ = Σ(xᵢ·wᵢ) / Σ wᵢ</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName3">Median &amp; Quartiles</span><span class="formula-ref-kap" data-i18n="refKap3">Center</span></div><div class="formula-ref-eq">median pos = (n+1)/2 · Q1 = (n+1)/4 · Q3 = 3(n+1)/4 · IQR = Q3−Q1</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName4">Sample variance Sₓ²</span><span class="formula-ref-kap" data-i18n="refKap4">Spread</span></div><div class="formula-ref-eq">Sₓ² = (1/(n−1)) · Σ (xᵢ − X̄)²</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName5">Population variance S² &amp; bridge</span><span class="formula-ref-kap" data-i18n="refKap5">Spread</span></div><div class="formula-ref-eq">S² = (1/n) · Σ (xᵢ − X̄)² · S = √((n−1)/n) · Sₓ</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName6">Standard deviation Sₓ</span><span class="formula-ref-kap" data-i18n="refKap6">Spread</span></div><div class="formula-ref-eq">Sₓ = √(Sₓ²)</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName7">Sample covariance Sₓᵧ</span><span class="formula-ref-kap" data-i18n="refKap7">Pairs</span></div><div class="formula-ref-eq">Sₓᵧ = (1/(n−1)) · Σ (xᵢ − X̄)(yᵢ − Ȳ)</div></div>
+<div class="formula-ref"><div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName8">Correlation Rₓᵧ</span><span class="formula-ref-kap" data-i18n="refKap8">Pairs</span></div><div class="formula-ref-eq">Rₓᵧ = Sₓᵧ / (Sₓ · Sᵧ) ∈ [−1, +1]</div></div>
 </div></section>
-<footer><div class="container">Bygget av Gunvald · Del av <a href="https://system33.io">system33.io</a> · <a href="/courses/galdr/spells/">Formasjoner</a></div></footer>
-<script src="app.js"></script>
-<script src="test.js"></script>
+<footer><div class="container" data-i18n="footer">Built by Gunvald · Part of <a href="https://system33.io">system33.io</a> · <a href="/courses/galdr/spells/">Formations</a></div></footer>
+<script>
+(function(){
+function setLang(l){try{localStorage.setItem('cairnLang',l)}catch(e){}location.reload()}
+window.setLang=setLang;
+var L='en';try{if(localStorage.getItem('cairnLang')==='no')L='no'}catch(e){}
+document.documentElement.lang=L;
+var NO={back:'← Galdr-formasjoner',badge:'Galdr-formasjon · Kap 1',heroP:'Beskriv haugen med data du allerede har. Velg en formel, gå de fire stegene, og se hvert trekk bygge seg opp.',principle:'<strong>Førsteprinsipp.</strong> The Cairn jobber på et <strong>utvalg du allerede har samlet</strong> — en ferdig haug med tall. Den spår aldri; den beskriver. Hver formel her er ett av tre spørsmål om haugen: hvor er <strong>sentrum</strong>, hvor bred er <strong>spredningen</strong>, og <strong>beveger to kolonner seg sammen</strong>. Skillet som går gjennom hele kurset: the Cairn teller ekte steiner og deler på n (eller n−1); <a href="/courses/galdr/spells/weighing-table/">Weighing Table</a> veier en fordeling av det som kan skje med P(x). Samme skjelett, ulikt drivstoff.',chooseLabel:'Velg formelen',mode1:'Form 1 — Gjennomsnitt X̄',mode2:'Form 2 — Median, kvartiler &amp; typetall',mode3:'Form 3 — Varians &amp; Sₓ',mode4:'Form 4 — Kovarians Sₓᵧ',mode5:'Form 5 — Korrelasjon Rₓᵧ',vizLabel:'Linja',vizCaption:'Gå de fire stegene. Slipp inn dataene i Steg 3 for å løse opp haugen.',walkLabel:'Gå gjennom formasjonen',step1:'Steg 1 — Plantegning',step2:'Steg 2 — Prosess',step3:'Steg 3 — Data',step4:'Steg 4 — Formel',step5:'Test',refLabel:'Formeloversikt — Kap 1',refName1:'Gjennomsnitt X̄',refKap1:'Sentrum',refName2:'Vektet gjennomsnitt X̄ᵥ',refKap2:'Sentrum',refName3:'Median &amp; kvartiler',refKap3:'Sentrum',refName4:'Utvalgsvarians Sₓ²',refKap4:'Spredning',refName5:'Populasjonsvarians S² &amp; bro',refKap5:'Spredning',refName6:'Standardavvik Sₓ',refKap6:'Spredning',refName7:'Utvalgskovarians Sₓᵧ',refKap7:'Par',refName8:'Korrelasjon Rₓᵧ',refKap8:'Par',footer:'Bygget av Gunvald · Del av <a href="https://system33.io">system33.io</a> · <a href="/courses/galdr/spells/">Formasjoner</a>'};
+if(L==='no'){document.title='🪨 The Cairn — Galdr-formasjon | System 33';var md=document.querySelector('meta[name=description]');if(md)md.setAttribute('content','Beskrivende statistikk som en Galdr-formasjon — fem formler, hver gått gjennom fire steg og fire trekk.');Object.keys(NO).forEach(function(k){var els=document.querySelectorAll("[data-i18n='"+k+"']");for(var i=0;i<els.length;i++){els[i].innerHTML=NO[k]}})}
+document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-lang')===L)});
+var appSrc=(L==='no')?'app.js':'app.en.js';var testSrc=(L==='no')?'test.js':'test.en.js';
+document.write('<scr'+'ipt src="'+appSrc+'"><\/scr'+'ipt>');
+document.write('<scr'+'ipt src="'+testSrc+'"><\/scr'+'ipt>');
+})();
+</script>
 </body></html>
