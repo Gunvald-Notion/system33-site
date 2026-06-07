@@ -17,6 +17,10 @@
         a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
         .container{max-width:760px;margin:0 auto;padding:0 24px}
         .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+        .lang-toggle{display:inline-flex;gap:4px}
+        .lang-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:4px 12px;font-family:inherit;font-size:.72rem;color:var(--muted);cursor:pointer;transition:all .2s}
+        .lang-btn:hover{border-color:#3f3f46}
+        .lang-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
         .hero{padding:48px 0 24px;text-align:center}
         .hero-icon{font-size:3rem;margin-bottom:12px}
         .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
@@ -114,24 +118,30 @@
     </style>
 </head>
 <body>
-<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
+<header class="site-header"><div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <a href="/courses/galdr/spells/" data-i18n="back">&larr; Galdr Spells</a>
+    <span class="lang-toggle">
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+    </span>
+</div></header>
 
 <section class="hero"><div class="container">
     <div class="hero-icon">🏠</div>
-    <div class="hero-badge">Galdr Spell &middot; Kap 2 + 4</div>
-    <h1>The Probability House</h1>
-    <p>Every probability question is a room in the same house. Fill the house once from what you are given &mdash; then each formula is just a different room you read off.</p>
+    <div class="hero-badge" data-i18n="badge">Galdr Spell &middot; Kap 2 + 4</div>
+    <h1 data-i18n="heroH1">The Probability House</h1>
+    <p data-i18n="heroP">Every probability question is a room in the same house. Fill the house once from what you are given &mdash; then each formula is just a different room you read off.</p>
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="principle">
+    <div class="principle" data-i18n="principle">
         <strong>One house, many readings.</strong> A and A&prime; down the side, B and B&prime; across the top. The four inner cells are the joint chances; they always sum to 1. The margins are the totals P(A), P(B). Union reads the margins minus the overlap. Conditional shrinks the world to one column. Total probability sums the two lanes into a margin. Bayes flips a forward chance into its reverse. Same house &mdash; you just stand in a different room.
     </div>
 </div></section>
 
 <!-- Path selector -->
 <section class="section"><div class="container">
-    <div class="section-label">Choose the Path</div>
+    <div class="section-label" data-i18n="chooseLabel">Choose the Path</div>
     <div class="mode-nav">
         <button class="mode-btn" data-path="addisjon">Addisjon &mdash; P(A&cup;B)</button>
         <button class="mode-btn" data-path="multiplikasjon">Multiplikasjon &mdash; P(A&cap;B)</button>
@@ -142,10 +152,10 @@
 
 <!-- The House -->
 <section class="section"><div class="container">
-    <div class="section-label">The House</div>
+    <div class="section-label" data-i18n="houseLabel">The House</div>
     <div class="viz-section">
-        <h3>One contingency table</h3>
-        <p>The cells the active path touches light up in purple. Given values are blue; everything else is derived.</p>
+        <h3 data-i18n="vizH3">One contingency table</h3>
+        <p data-i18n="vizP">The cells the active path touches light up in purple. Given values are blue; everything else is derived.</p>
         <div class="house-wrap">
             <table class="house">
                 <tr>
@@ -175,67 +185,127 @@
             </table>
         </div>
         <div class="house-legend">
-            <span><span class="swatch" style="background:rgba(59,130,246,.5)"></span> given</span>
-            <span><span class="swatch" style="background:rgba(167,139,250,.5)"></span> this path</span>
-            <span><span class="swatch" style="background:#27272a"></span> derived</span>
+            <span><span class="swatch" style="background:rgba(59,130,246,.5)"></span> <span data-i18n="legGiven">given</span></span>
+            <span><span class="swatch" style="background:rgba(167,139,250,.5)"></span> <span data-i18n="legPath">this path</span></span>
+            <span><span class="swatch" style="background:#27272a"></span> <span data-i18n="legDerived">derived</span></span>
         </div>
     </div>
 </div></section>
 
 <!-- Walk the spell -->
 <section class="section"><div class="container">
-    <div class="section-label">Walk the spell</div>
+    <div class="section-label" data-i18n="walkLabel">Walk the spell</div>
     <div class="step-nav">
-        <button class="step-btn" data-step="1">Step 1 &mdash; Blueprint</button>
-        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
-        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
-        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
-        <button class="step-btn" data-step="5">Step 5 &mdash; Test</button>
+        <button class="step-btn" data-step="1" data-i18n="step1">Step 1 &mdash; Blueprint</button>
+        <button class="step-btn" data-step="2" data-i18n="step2">Step 2 &mdash; Process</button>
+        <button class="step-btn" data-step="3" data-i18n="step3">Step 3 &mdash; Data</button>
+        <button class="step-btn" data-step="4" data-i18n="step4">Step 4 &mdash; Formula</button>
+        <button class="step-btn" data-step="5" data-i18n="step5">Step 5 &mdash; Test</button>
     </div>
     <div id="step-container"></div>
 </div></section>
 
 <!-- Connected spells -->
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Connected Spells</div>
+    <div class="section-label" data-i18n="connLabel">Connected Spells</div>
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7">The <strong>Probability House</strong> builds the mass. The <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> takes those probabilities and measures the spread. <a href="/courses/galdr/spells/drainage/" style="color:var(--accent)">Drainage</a> counts the ways to fill a cell when you cannot read it directly.</p>
+        <p data-i18n="connP" style="color:var(--text2);font-size:.9rem;line-height:1.7">The <strong>Probability House</strong> builds the mass. The <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> takes those probabilities and measures the spread. <a href="/courses/galdr/spells/drainage/" style="color:var(--accent)">Drainage</a> counts the ways to fill a cell when you cannot read it directly.</p>
     </div>
 </div></section>
 
 <!-- Formula Reference -->
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Formula Reference &mdash; Kap 2 + 4</div>
+    <div class="section-label" data-i18n="refLabel">Formula Reference &mdash; Kap 2 + 4</div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Addisjon &mdash; Union</span><span class="formula-ref-kap">Kap 2</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName1">Addisjon &mdash; Union</span><span class="formula-ref-kap">Kap 2</span></div>
         <div class="formula-ref-eq">P(A&cup;B) = P(A) + P(B) &minus; P(A&cap;B)</div>
-        <div class="formula-ref-desc">At least one of A or B. Add the two margins, then subtract the overlap you counted twice.</div>
+        <div class="formula-ref-desc" data-i18n="refDesc1">At least one of A or B. Add the two margins, then subtract the overlap you counted twice.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Multiplikasjon &mdash; Joint</span><span class="formula-ref-kap">Kap 4</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName2">Multiplikasjon &mdash; Joint</span><span class="formula-ref-kap">Kap 4</span></div>
         <div class="formula-ref-eq">P(A&cap;B) = P(A|B) &middot; P(B) = P(B|A) &middot; P(A)</div>
-        <div class="formula-ref-desc">Both at once. A conditional times the margin it was conditioned on. Read either way round.</div>
+        <div class="formula-ref-desc" data-i18n="refDesc2">Both at once. A conditional times the margin it was conditioned on. Read either way round.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Betinget &mdash; Conditional</span><span class="formula-ref-kap">Kap 4</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName3">Betinget &mdash; Conditional</span><span class="formula-ref-kap">Kap 4</span></div>
         <div class="formula-ref-eq">P(A|B) = P(A&cap;B) / P(B)</div>
-        <div class="formula-ref-desc">Shrink the world to the B-column, then ask what share of it is also A.</div>
+        <div class="formula-ref-desc" data-i18n="refDesc3">Shrink the world to the B-column, then ask what share of it is also A.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Oppsplitting &mdash; Total Probability</span><span class="formula-ref-kap">Kap 4</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName4">Oppsplitting &mdash; Total Probability</span><span class="formula-ref-kap">Kap 4</span></div>
         <div class="formula-ref-eq">P(B) = P(B|A)&middot;P(A) + P(B|A&prime;)&middot;P(A&prime;)</div>
-        <div class="formula-ref-desc">B can arrive through two doors. Send it down the A-lane and the A&prime;-lane, then add. The shape exam Bayes problems are handed in.</div>
+        <div class="formula-ref-desc" data-i18n="refDesc4">B can arrive through two doors. Send it down the A-lane and the A&prime;-lane, then add. The shape exam Bayes problems are handed in.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Bayes &mdash; The Flip</span><span class="formula-ref-kap">Kap 4</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="refName5">Bayes &mdash; The Flip</span><span class="formula-ref-kap">Kap 4</span></div>
         <div class="formula-ref-eq">P(A|B) = P(B|A)&middot;P(A) / P(B)</div>
-        <div class="formula-ref-desc">Turn a known forward chance into its reverse. Numerator is the true-positive cell; denominator is every positive, from Oppsplitting.</div>
+        <div class="formula-ref-desc" data-i18n="refDesc5">Turn a known forward chance into its reverse. Numerator is the true-positive cell; denominator is every positive, from Oppsplitting.</div>
     </div>
 </div></section>
 
-<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+<footer><div class="container" data-i18n="footer">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 
-<script src="app.js"></script>
-<script src="test.js"></script>
+<script>
+(function(){
+    var L = 'en';
+    try { var s = localStorage.getItem('phLang'); if(s === 'no' || s === 'en') L = s; } catch(e){}
+    window.setLang = function(l){ try { localStorage.setItem('phLang', l); } catch(e){} location.reload(); };
+
+    var NO = {
+        back:'&larr; Galdr-formler',
+        badge:'Galdr-formel &middot; Kap 2 + 4',
+        heroH1:'Sannsynlighetshuset',
+        heroP:'Hvert sannsynlighetsspørsmål er et rom i det samme huset. Fyll huset én gang ut fra det du får oppgitt — så er hver formel bare et annet rom du leser av.',
+        principle:'<strong>Ett hus, mange lesninger.</strong> A og A&prime; nedover siden, B og B&prime; langs toppen. De fire indre cellene er de felles sannsynlighetene; de summerer alltid til 1. Margene er totalene P(A), P(B). Addisjon leser margene minus overlappet. Betinging krymper verdenen til én kolonne. Total sannsynlighet summerer de to banene til en marg. Bayes vender en forlengs-sjanse til sin baklengs. Samme hus — du står bare i et annet rom.',
+        chooseLabel:'Velg stien',
+        houseLabel:'Huset',
+        vizH3:'Én krysstabell',
+        vizP:'Cellene den aktive stien berører lyser opp i lilla. Oppgitte verdier er blå; alt annet er utledet.',
+        legGiven:'oppgitt',
+        legPath:'denne stien',
+        legDerived:'utledet',
+        walkLabel:'Gå gjennom formelen',
+        step1:'Steg 1 — Plantegning',
+        step2:'Steg 2 — Prosess',
+        step3:'Steg 3 — Dataene',
+        step4:'Steg 4 — Kjør formelen',
+        step5:'Steg 5 — Test deg selv',
+        connLabel:'Tilknyttede formler',
+        connP:'<strong>Sannsynlighetshuset</strong> bygger massen. <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Veiebordet</a> tar de sannsynlighetene og måler spredningen. <a href="/courses/galdr/spells/drainage/" style="color:var(--accent)">Drainage</a> teller måtene å fylle en celle på når du ikke kan lese den direkte.',
+        refLabel:'Formeloversikt — Kap 2 + 4',
+        refName1:'Addisjon — Forening',
+        refDesc1:'Minst én av A eller B. Legg sammen de to margene, og trekk så fra overlappet du talte to ganger.',
+        refName2:'Multiplikasjon — Felles',
+        refDesc2:'Begge på én gang. En betinget sannsynlighet ganget med margen den ble betinget på. Leses begge veier.',
+        refName3:'Betinget — Betinget sannsynlighet',
+        refDesc3:'Krymp verdenen til B-kolonnen, og spør så hvor stor andel av den som også er A.',
+        refName4:'Oppsplitting — Total sannsynlighet',
+        refDesc4:'B kan komme gjennom to dører. Send den ned A-banen og A&prime;-banen, og legg så sammen. Formen Bayes-oppgaver gis i på eksamen.',
+        refName5:'Bayes — Vendingen',
+        refDesc5:'Gjør en kjent forlengs-sjanse om til sin baklengs. Telleren er den ekte-positive cellen; nevneren er hver positiv, fra Oppsplitting.',
+        footer:'Bygd av Gunvald &middot; Del av <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Formler</a> &middot; <a href="/courses/galdr/">Galdr</a>'
+    };
+
+    if(L === 'no'){
+        document.documentElement.lang = 'no';
+        document.title = '🏠 Sannsynlighetshuset — Galdr-formel | System 33';
+        var md = document.querySelector('meta[name="description"]');
+        if(md) md.setAttribute('content', 'Interaktiv gjennomgang av Sannsynlighetshuset — forening, felles, total sannsynlighet og Bayes, alt lest av én krysstabell.');
+        Object.keys(NO).forEach(function(k){
+            var el = document.querySelector('[data-i18n="' + k + '"]');
+            if(el) el.innerHTML = NO[k];
+        });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-lang') === L);
+    });
+
+    var appSrc = (L === 'no') ? 'app.no.js' : 'app.js';
+    var testSrc = (L === 'no') ? 'test.no.js' : 'test.js';
+    document.write('<scr' + 'ipt src="' + appSrc + '"><\/scr' + 'ipt>');
+    document.write('<scr' + 'ipt src="' + testSrc + '"><\/scr' + 'ipt>');
+})();
+</script>
 </body>
 </html>
