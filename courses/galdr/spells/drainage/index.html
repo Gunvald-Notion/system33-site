@@ -81,6 +81,10 @@
         footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
         footer a{color:var(--text2)}
         .hidden{display:none!important}
+        .lang-toggle{display:flex;gap:4px}
+        .lang-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:4px 12px;font-family:inherit;font-size:.75rem;color:var(--text2);cursor:pointer;transition:all .2s}
+        .lang-btn:hover{border-color:#3f3f46}
+        .lang-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
         @media(max-width:520px){
             .hero{padding:32px 0 20px}
             .q-options{flex-direction:column}
@@ -89,27 +93,33 @@
     </style>
 </head>
 <body>
-<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
+<header class="site-header"><div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <a href="/courses/galdr/spells/">&larr; Galdr Spells</a>
+    <div class="lang-toggle">
+        <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+    </div>
+</div></header>
 
 <section class="hero"><div class="container">
     <div class="hero-icon">⛓️</div>
-    <div class="hero-badge">Galdr Spell &middot; Kap 3</div>
+    <div class="hero-badge" data-i18n="badge">Galdr Spell &middot; Kap 3</div>
     <h1>Drainage</h1>
-    <p>A pool of N. Draw S. The pool shrinks with every pick. Count the ways.</p>
+    <p data-i18n="heroP">A pool of N. Draw S. The pool shrinks with every pick. Count the ways.</p>
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="principle">
+    <div class="principle" data-i18n="principle">
         <strong>The pool shrinks.</strong> Every pick removes one from the pool. The next pick has fewer to choose from. The product of the shrinking choices is the count.
     </div>
 </div></section>
 
 <!-- Tree Visualization -->
 <section class="section" id="viz-section"><div class="container">
-    <div class="section-label">See the Web</div>
+    <div class="section-label" data-i18n="vizLabel">See the Web</div>
     <div class="tree-section">
-        <h3>The Branching</h3>
-        <p id="tree-intro">Pick a formula in Step 1 to see how the pool fans out.</p>
+        <h3 data-i18n="vizH3">The Branching</h3>
+        <p id="tree-intro" data-i18n="treeIntro">Pick a formula in Step 1 to see how the pool fans out.</p>
         <div class="tree-wrap" id="tree-wrap">
             <canvas id="tree-canvas"></canvas>
         </div>
@@ -119,49 +129,49 @@
 
 <!-- Walk the Spell -->
 <section class="section"><div class="container">
-    <div class="section-label">Walk the spell</div>
+    <div class="section-label" data-i18n="walkLabel">Walk the spell</div>
     <div class="step-nav">
-        <button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
-        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
-        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
-        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
+        <button class="step-btn active" data-step="1" data-i18n="step1">Step 1 &mdash; Blueprint</button>
+        <button class="step-btn" data-step="2" data-i18n="step2">Step 2 &mdash; Process</button>
+        <button class="step-btn" data-step="3" data-i18n="step3">Step 3 &mdash; Data</button>
+        <button class="step-btn" data-step="4" data-i18n="step4">Step 4 &mdash; Formula</button>
     </div>
 
     <!-- Step 1: Blueprint -->
     <div class="step-content" id="step-1">
-        <h3>Step 1 &mdash; Two Questions</h3>
-        <p>Answer two questions. They determine the formula.</p>
+        <h3 data-i18n="s1h">Step 1 &mdash; Two Questions</h3>
+        <p data-i18n="s1p">Answer two questions. They determine the formula.</p>
         <div class="q-block">
-            <div class="q-label">Does order matter?</div>
+            <div class="q-label" data-i18n="q1label">Does order matter?</div>
             <div class="q-options" id="q1-opts">
                 <div class="q-opt" data-val="ordered">
-                    <div class="q-opt-title">Yes &mdash; ordnet</div>
-                    <div class="q-opt-sub">Positions, ranks. 1st ≠ 2nd.</div>
+                    <div class="q-opt-title" data-i18n="q1aT">Yes &mdash; ordnet</div>
+                    <div class="q-opt-sub" data-i18n="q1aS">Positions, ranks. 1st ≠ 2nd.</div>
                 </div>
                 <div class="q-opt" data-val="unordered">
-                    <div class="q-opt-title">No &mdash; uordnet</div>
-                    <div class="q-opt-sub">Just a group. Who, not what order.</div>
+                    <div class="q-opt-title" data-i18n="q1bT">No &mdash; uordnet</div>
+                    <div class="q-opt-sub" data-i18n="q1bS">Just a group. Who, not what order.</div>
                 </div>
             </div>
         </div>
         <div class="q-block">
-            <div class="q-label">Does the pool refill?</div>
+            <div class="q-label" data-i18n="q2label">Does the pool refill?</div>
             <div class="q-options" id="q2-opts">
                 <div class="q-opt" data-val="refills">
-                    <div class="q-opt-title">Yes &mdash; med tilbakelegging</div>
-                    <div class="q-opt-sub">Item goes back. Same pool every round.</div>
+                    <div class="q-opt-title" data-i18n="q2aT">Yes &mdash; med tilbakelegging</div>
+                    <div class="q-opt-sub" data-i18n="q2aS">Item goes back. Same pool every round.</div>
                 </div>
                 <div class="q-opt" data-val="drains">
-                    <div class="q-opt-title">No &mdash; uten tilbakelegging</div>
-                    <div class="q-opt-sub">Each pick removes one. Pool shrinks.</div>
+                    <div class="q-opt-title" data-i18n="q2bT">No &mdash; uten tilbakelegging</div>
+                    <div class="q-opt-sub" data-i18n="q2bS">Each pick removes one. Pool shrinks.</div>
                 </div>
             </div>
         </div>
         <div class="grid-2x2" style="margin-top:20px">
             <table>
-                <tr><th class="corner"></th><th>Pool refills</th><th>Pool drains</th></tr>
-                <tr><th>Order matters</th><td id="g-ns" class="cell-dim">N<sup>S</sup></td><td id="g-npr" class="cell-dim">nPr</td></tr>
-                <tr><th>Order doesn’t matter</th><td id="g-na" class="cell-dim" style="font-style:italic">(ikke pensum)</td><td id="g-ncr" class="cell-dim">nCr</td></tr>
+                <tr><th class="corner"></th><th data-i18n="gHeadRefill">Pool refills</th><th data-i18n="gHeadDrain">Pool drains</th></tr>
+                <tr><th data-i18n="gRowOrder">Order matters</th><td id="g-ns" class="cell-dim">N<sup>S</sup></td><td id="g-npr" class="cell-dim">nPr</td></tr>
+                <tr><th data-i18n="gRowNoOrder">Order doesn’t matter</th><td id="g-na" class="cell-dim" style="font-style:italic">(ikke pensum)</td><td id="g-ncr" class="cell-dim">nCr</td></tr>
             </table>
         </div>
         <p id="blueprint-result" class="hidden" style="margin-top:14px;color:var(--accent);font-size:.88rem;font-weight:500"></p>
@@ -169,32 +179,32 @@
 
     <!-- Step 2: Process (pure procedure, no numbers) -->
     <div class="step-content hidden" id="step-2">
-        <h3 id="process-title">Step 2 &mdash; The Process</h3>
-        <p id="process-desc">Select a formula in Step 1 to see the procedure.</p>
+        <h3 id="process-title" data-i18n="s2title">Step 2 &mdash; The Process</h3>
+        <p id="process-desc" data-i18n="s2desc">Select a formula in Step 1 to see the procedure.</p>
         <div id="process-body"></div>
     </div>
 
     <!-- Step 3: Data (fixed N=10, S=3) -->
     <div class="step-content hidden" id="step-3">
-        <h3>Step 3 &mdash; The Data</h3>
-        <p>A pool of 10 items. Draw 3.</p>
+        <h3 data-i18n="s3h">Step 3 &mdash; The Data</h3>
+        <p data-i18n="s3p">A pool of 10 items. Draw 3.</p>
         <div class="data-card">
             <div class="data-item">
-                <div class="data-label">N (pool)</div>
+                <div class="data-label" data-i18n="dlN">N (pool)</div>
                 <div class="data-value">10</div>
             </div>
             <div class="data-item">
-                <div class="data-label">S (draw)</div>
+                <div class="data-label" data-i18n="dlS">S (draw)</div>
                 <div class="data-value">3</div>
             </div>
         </div>
-        <p style="color:var(--muted);font-size:.82rem;margin-top:8px">N = 10, S = 3 &mdash; fixed example for this walkthrough.</p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:8px" data-i18n="s3note">N = 10, S = 3 &mdash; fixed example for this walkthrough.</p>
     </div>
 
     <!-- Step 4: Formula -->
     <div class="step-content hidden" id="step-4">
-        <h3 id="formula-title">Step 4 &mdash; Walk the Rounds</h3>
-        <p id="formula-desc">Select a formula in Step 1 first.</p>
+        <h3 id="formula-title" data-i18n="s4title">Step 4 &mdash; Walk the Rounds</h3>
+        <p id="formula-desc" data-i18n="s4desc">Select a formula in Step 1 first.</p>
         <div id="derivation-box"></div>
         <div class="result-box hidden" id="result-box">
             <div class="result-box-name" id="result-name"></div>
@@ -205,362 +215,125 @@
 </div></section>
 
 <section class="section"><div class="container" style="text-align:center">
-    <button class="action-btn secondary" id="btn-reset">&larr; Reset</button>
+    <button class="action-btn secondary" id="btn-reset" data-i18n="resetBtn">&larr; Reset</button>
 </div></section>
 
 <!-- Laplace bridge -->
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">When Drainage Feeds the Probability House</div>
+    <div class="section-label" data-i18n="laplaceLabel">When Drainage Feeds the Probability House</div>
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px">When the problem asks for a <strong>probability</strong>:</p>
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:6px"><strong>Mulige</strong> — total ways (denominator).</p>
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Gunstige</strong> — ways that satisfy the condition (numerator).</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px" data-i18n="laplaceP1">When the problem asks for a <strong>probability</strong>:</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:6px" data-i18n="laplaceP2"><strong>Mulige</strong> — total ways (denominator).</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px" data-i18n="laplaceP3"><strong>Gunstige</strong> — ways that satisfy the condition (numerator).</p>
         <p style="color:var(--accent);font-size:.95rem;font-weight:600">P = gunstige / mulige</p>
-        <p style="color:var(--muted);font-size:.82rem;margin-top:10px">Drainage counts. Laplace converts to mass. The <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">Probability House</a> composes.</p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:10px" data-i18n="laplaceP5">Drainage counts. Laplace converts to mass. The <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">Probability House</a> composes.</p>
     </div>
 </div></section>
 
 <!-- Formula Reference -->
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Formula Reference &mdash; Kap 3</div>
+    <div class="section-label" data-i18n="refLabel">Formula Reference &mdash; Kap 3</div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">n!</span><span class="formula-ref-kap">Full drainage</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name">n!</span><span class="formula-ref-kap" data-i18n="ref1kap">Full drainage</span></div>
         <div class="formula-ref-eq">n! = n &times; (n&minus;1) &times; &hellip; &times; 1</div>
-        <div class="formula-ref-desc">Every item leaves the pool. nPr and nCr are built from n!.</div>
+        <div class="formula-ref-desc" data-i18n="ref1desc">Every item leaves the pool. nPr and nCr are built from n!.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">nPr &mdash; Permutations</span><span class="formula-ref-kap">Ordered</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="ref2name">nPr &mdash; Permutations</span><span class="formula-ref-kap" data-i18n="ref2kap">Ordered</span></div>
         <div class="formula-ref-eq">nPr = N! / (N&minus;S)! = N &times; (N&minus;1) &times; &hellip; &times; (N&minus;S+1)</div>
-        <div class="formula-ref-desc">S items leave. Order matters. The (N&minus;S)! cancels the unused rounds.</div>
+        <div class="formula-ref-desc" data-i18n="ref2desc">S items leave. Order matters. The (N&minus;S)! cancels the unused rounds.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">nCr &mdash; Combinations</span><span class="formula-ref-kap">Unordered</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="ref3name">nCr &mdash; Combinations</span><span class="formula-ref-kap" data-i18n="ref3kap">Unordered</span></div>
         <div class="formula-ref-eq">nCr = N! / (S!(N&minus;S)!) = nPr / S!</div>
-        <div class="formula-ref-desc">Same drainage as nPr, then &divide; S! to strip the costume-count.</div>
+        <div class="formula-ref-desc" data-i18n="ref3desc">Same drainage as nPr, then &divide; S! to strip the costume-count.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">N<sup>S</sup></span><span class="formula-ref-kap">No drainage</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name">N<sup>S</sup></span><span class="formula-ref-kap" data-i18n="ref4kap">No drainage</span></div>
         <div class="formula-ref-eq">N<sup>S</sup> = N &times; N &times; &hellip; (S times)</div>
-        <div class="formula-ref-desc">Pool refills. Every round has the same N choices.</div>
+        <div class="formula-ref-desc" data-i18n="ref4desc">Pool refills. Every round has the same N choices.</div>
     </div>
 </div></section>
 
-<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+<footer><div class="container" data-i18n="footer">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 
 <script>
-/* === FIXED DATA === */
-const N = 10, S = 3;
-
-let q1 = null, q2 = null, formula = null;
-
-function factorial(n){ let r=1; for(let i=2;i<=n;i++) r*=i; return r; }
-function permut(n,s){ let r=1; for(let i=0;i<s;i++) r*=(n-i); return r; }
-function combin(n,s){ return permut(n,s)/factorial(s); }
-function fmtBig(v){
-    if(v===null) return '\u2014';
-    if(v>999999999999) return v.toExponential(4);
-    return v.toLocaleString('en-US');
-}
-
-/* === STEP NAV === */
-const stepBtns = document.querySelectorAll('.step-btn');
-const stepEls = [1,2,3,4].map(i => document.getElementById('step-'+i));
-function showStep(n){
-    stepBtns.forEach(b => b.classList.remove('active'));
-    stepBtns[n-1].classList.add('active');
-    stepEls.forEach(s => s.classList.add('hidden'));
-    stepEls[n-1].classList.remove('hidden');
-    if(n===2) renderProcess();
-    if(n===4) showResult();
-}
-stepBtns.forEach(b => b.addEventListener('click', () => showStep(parseInt(b.dataset.step))));
-
-/* === STEP 1: BLUEPRINT === */
-const gridCells = { ns:document.getElementById('g-ns'), npr:document.getElementById('g-npr'), ncr:document.getElementById('g-ncr'), na:document.getElementById('g-na') };
-function updateGrid(){
-    Object.values(gridCells).forEach(c => { c.classList.remove('cell-active'); c.classList.add('cell-dim'); });
-    formula = null;
-    if(q1&&q2){
-        if(q1==='ordered'&&q2==='refills'){ formula='ns'; gridCells.ns.classList.add('cell-active'); gridCells.ns.classList.remove('cell-dim'); }
-        else if(q1==='ordered'&&q2==='drains'){ formula='npr'; gridCells.npr.classList.add('cell-active'); gridCells.npr.classList.remove('cell-dim'); }
-        else if(q1==='unordered'&&q2==='drains'){ formula='ncr'; gridCells.ncr.classList.add('cell-active'); gridCells.ncr.classList.remove('cell-dim'); }
-        else{ gridCells.na.classList.add('cell-active'); gridCells.na.classList.remove('cell-dim'); }
-        const el = document.getElementById('blueprint-result');
-        const names={ns:'N\u02E2 \u2014 pool refills, order matters',npr:'nPr \u2014 pool drains, order matters',ncr:'nCr \u2014 pool drains, order collapsed'};
-        if(formula){ el.textContent='Formula: '+names[formula]; el.classList.remove('hidden'); el.style.color='var(--accent)'; stepBtns[0].classList.add('done'); }
-        else{ el.textContent='Ikke pensum'; el.classList.remove('hidden'); el.style.color='var(--muted)'; }
-        drawTreeViz();
+window.setLang=function(l){localStorage.setItem('drLang',l);location.reload();};
+(function(){
+    var L=localStorage.getItem('drLang')||'en';
+    if(L!=='no'&&L!=='en'){L='en';}
+    window.__L=L;
+    var btns=document.querySelectorAll('.lang-btn');
+    for(var b=0;b<btns.length;b++){btns[b].classList.toggle('active',btns[b].getAttribute('data-lang')===L);}
+    if(L==='no'){
+        var DICT={
+            badge:'Galdr-formel · Kap 3',
+            heroP:'Et basseng på N. Trekk S. Bassenget krymper for hvert valg. Tell måtene.',
+            principle:'<strong>Bassenget krymper.</strong> Hvert valg fjerner ett fra bassenget. Det neste valget har færre å velge mellom. Produktet av de krympende valgene er tellingen.',
+            vizLabel:'Se nettet',
+            vizH3:'Forgreiningen',
+            treeIntro:'Velg en formel i Steg 1 for å se hvordan bassenget greiner seg ut.',
+            walkLabel:'Gå formelen',
+            step1:'Steg 1 — Plantegning',
+            step2:'Steg 2 — Prosess',
+            step3:'Steg 3 — Dataene',
+            step4:'Steg 4 — Formelen',
+            s1h:'Steg 1 — To spørsmål',
+            s1p:'Svar på to spørsmål. De bestemmer formelen.',
+            q1label:'Teller rekkefølgen?',
+            q1aT:'Ja — ordnet',
+            q1aS:'Posisjoner, rangering. 1. ≠ 2.',
+            q1bT:'Nei — uordnet',
+            q1bS:'Bare en gruppe. Hvem, ikke hvilken rekkefølge.',
+            q2label:'Fylles bassenget på nytt?',
+            q2aT:'Ja — med tilbakelegging',
+            q2aS:'Elementet går tilbake. Samme basseng hver runde.',
+            q2bT:'Nei — uten tilbakelegging',
+            q2bS:'Hvert valg fjerner ett. Bassenget krymper.',
+            gHeadRefill:'Bassenget fylles på nytt',
+            gHeadDrain:'Bassenget tømmes',
+            gRowOrder:'Rekkefølgen teller',
+            gRowNoOrder:'Rekkefølgen teller ikke',
+            s2title:'Steg 2 — Prosessen',
+            s2desc:'Velg en formel i Steg 1 for å se framgangsmåten.',
+            s3h:'Steg 3 — Dataene',
+            s3p:'Et basseng på 10 elementer. Trekk 3.',
+            dlN:'N (basseng)',
+            dlS:'S (trekk)',
+            s3note:'N = 10, S = 3 — fast eksempel for denne gjennomgangen.',
+            s4title:'Steg 4 — Gå rundene',
+            s4desc:'Velg en formel i Steg 1 først.',
+            resetBtn:'← Nullstill',
+            laplaceLabel:'Når Drainage mater Probability House',
+            laplaceP1:'Når oppgaven spør etter en <strong>sannsynlighet</strong>:',
+            laplaceP2:'<strong>Mulige</strong> — alle måter (nevner).',
+            laplaceP3:'<strong>Gunstige</strong> — måter som oppfyller vilkåret (teller).',
+            laplaceP5:'Drainage teller. Laplace gjør om til masse. <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">Probability House</a> setter sammen.',
+            refLabel:'Formeloversikt — Kap 3',
+            ref1kap:'Full tømming',
+            ref1desc:'Hvert element forlater bassenget. nPr og nCr bygges fra n!.',
+            ref2name:'nPr — Permutasjoner',
+            ref2kap:'Ordnet',
+            ref2desc:'S elementer forlater. Rekkefølgen teller. (N−S)! stryker de ubrukte rundene.',
+            ref3name:'nCr — Kombinasjoner',
+            ref3kap:'Uordnet',
+            ref3desc:'Samme tømming som nPr, så ÷ S! for å fjerne antall rekkefølger.',
+            ref4kap:'Ingen tømming',
+            ref4desc:'Bassenget fylles på nytt. Hver runde har de samme N valgene.',
+            footer:'Bygd av Gunvald · Del av <a href="https://system33.io">system33.io</a> · <a href="/courses/galdr/spells/">Spells</a> · <a href="/courses/galdr/">Galdr</a>'
+        };
+        document.documentElement.lang='no';
+        document.title='⛓️ Drainage — Galdr-formel | System 33';
+        var md=document.querySelector('meta[name="description"]');
+        if(md){md.setAttribute('content','Interaktiv visualisering av Drainage-formelen — tell måtene å trekke fra et basseng som krymper.');}
+        var els=document.querySelectorAll('[data-i18n]');
+        for(var j=0;j<els.length;j++){var k=els[j].getAttribute('data-i18n');if(DICT[k]!==undefined){els[j].innerHTML=DICT[k];}}
     }
-}
-document.querySelectorAll('#q1-opts .q-opt').forEach(o=>{
-    o.addEventListener('click',()=>{
-        document.querySelectorAll('#q1-opts .q-opt').forEach(x=>x.classList.remove('active'));
-        o.classList.add('active'); q1=o.dataset.val; updateGrid();
-    });
-});
-document.querySelectorAll('#q2-opts .q-opt').forEach(o=>{
-    o.addEventListener('click',()=>{
-        document.querySelectorAll('#q2-opts .q-opt').forEach(x=>x.classList.remove('active'));
-        o.classList.add('active'); q2=o.dataset.val; updateGrid();
-    });
-});
-
-/* === TREE VISUALIZATION === */
-function drawTreeViz(){
-    if(!formula) return;
-
-    const names={ns:'N\u02E2 \u2014 pool stays full',npr:'nPr \u2014 pool drains',ncr:'nCr \u2014 pool drains, then collapse order'};
-    document.getElementById('tree-intro').textContent = names[formula];
-
-    const wrap = document.getElementById('tree-wrap');
-    const canvas = document.getElementById('tree-canvas');
-    const dpr = window.devicePixelRatio || 1;
-    const cw = wrap.clientWidth - 18;
-    const rowH = 80;
-    const topPad = 40;
-    const ch = topPad + S * rowH + 60;
-    canvas.width = cw * dpr;
-    canvas.height = ch * dpr;
-    canvas.style.width = cw + 'px';
-    canvas.style.height = ch + 'px';
-    const ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, cw, ch);
-
-    const R = 6;
-    const accent = '#a78bfa';
-    const accentDim = 'rgba(167,139,250,0.12)';
-    const accentHi = 'rgba(167,139,250,0.35)';
-    const linec = 'rgba(167,139,250,0.15)';
-    const lineHi = 'rgba(167,139,250,0.4)';
-    const muted = '#71717a';
-    const green = '#22c55e';
-    const red = '#ef4444';
-    const text2 = '#a1a1aa';
-    const midX = cw / 2;
-
-    function poolAt(round){ return formula === 'ns' ? N : N - round; }
-
-    // Root node
-    const rootY = topPad;
-    ctx.beginPath();
-    ctx.arc(midX, rootY, R + 4, 0, Math.PI * 2);
-    ctx.fillStyle = accentHi;
-    ctx.fill();
-    ctx.strokeStyle = accent;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.fillStyle = '#fafafa';
-    ctx.font = 'bold 10px Inter,sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(N.toString(), midX, rootY);
-
-    ctx.fillStyle = muted;
-    ctx.font = '10px Inter,sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText('Pool: ' + N, midX + R + 10, rootY);
-
-    let prevHiX = midX;
-    let prevY = rootY;
-
-    for (let lv = 0; lv < S; lv++) {
-        const pool = poolAt(lv);
-        const y = topPad + (lv + 1) * rowH;
-
-        // Row width shrinks to show drainage
-        const baseFrac = 0.88;
-        const frac = formula === 'ns' ? baseFrac : baseFrac * (pool / N);
-        const rowW = Math.max(cw * frac, 80);
-        const startX = midX - rowW / 2;
-        const spacing = rowW / (pool + 1);
-
-        // Fan lines from previous highlighted node
-        for (let i = 0; i < pool; i++) {
-            const dotX = startX + spacing * (i + 1);
-            ctx.beginPath();
-            ctx.moveTo(prevHiX, prevY + R + 2);
-            ctx.lineTo(dotX, y - R - 1);
-            ctx.strokeStyle = i === 0 ? lineHi : linec;
-            ctx.lineWidth = i === 0 ? 1.5 : 0.6;
-            ctx.stroke();
-        }
-
-        // Draw dots
-        for (let i = 0; i < pool; i++) {
-            const dotX = startX + spacing * (i + 1);
-            ctx.beginPath();
-            ctx.arc(dotX, y, R, 0, Math.PI * 2);
-            ctx.fillStyle = i === 0 ? accentHi : accentDim;
-            ctx.fill();
-            ctx.strokeStyle = i === 0 ? accent : 'rgba(167,139,250,0.4)';
-            ctx.lineWidth = i === 0 ? 1.5 : 1;
-            ctx.stroke();
-        }
-
-        // Right label
-        ctx.fillStyle = text2;
-        ctx.font = '11px Inter,sans-serif';
-        ctx.textAlign = 'right';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Round ' + (lv + 1) + ': ' + pool, cw - 4, y);
-        if (formula !== 'ns' && lv > 0) {
-            ctx.fillStyle = red;
-            ctx.font = '9px Inter,sans-serif';
-            ctx.fillText('\u22121', cw - 4, y + 13);
-        }
-
-        prevHiX = startX + spacing;
-        prevY = y;
-    }
-
-    // Total at bottom
-    const totalY = topPad + S * rowH + 40;
-    let parts = [], total = 1;
-    for (let i = 0; i < S; i++) { const p = poolAt(i); parts.push(p); total *= p; }
-
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
-    if (formula === 'ncr') {
-        ctx.fillStyle = green;
-        ctx.font = 'bold 13px Inter,sans-serif';
-        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + '  ordered', midX, totalY - 10);
-        const fact = factorial(S);
-        ctx.fillStyle = text2;
-        ctx.font = '12px Inter,sans-serif';
-        ctx.fillText('\u00f7 ' + S + '! = \u00f7 ' + fmtBig(fact) + ' = ' + fmtBig(total / fact) + ' groups', midX, totalY + 10);
-    } else {
-        ctx.fillStyle = green;
-        ctx.font = 'bold 13px Inter,sans-serif';
-        ctx.fillText(parts.join(' \u00d7 ') + ' = ' + fmtBig(total) + ' ways', midX, totalY);
-    }
-}
-
-/* === STEP 2: PROCESS (pure procedure, no numbers) === */
-function renderProcess(){
-    const body = document.getElementById('process-body');
-    if(!formula){
-        document.getElementById('process-desc').textContent = 'Select a formula in Step 1 first.';
-        body.innerHTML = ''; return;
-    }
-    document.getElementById('process-desc').textContent = '';
-
-    if(formula==='npr'){
-        document.getElementById('process-title').textContent = 'Step 2 \u2014 nPr Process';
-        body.innerHTML = '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>1.</strong> Write N! \u2014 the full factorial, every item drains.</div>'+
-            '<div class="proc-step"><strong>2.</strong> Divide by (N\u2212S)! \u2014 cancel the rounds you didn\u2019t use.</div>'+
-            '<div class="proc-step"><strong>3.</strong> What survives: S consecutive factors, each one smaller than the last.</div>'+
-            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">nPr = N! / (N\u2212S)!</div>'+
-            '</div>'+
-            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
-            '<div class="proc-step">Each round picks from a shrinking pool. Round 1 has N choices, round 2 has N\u22121, round 3 has N\u22122, and so on. Multiplying S shrinking rounds gives the ordered count.</div>'+
-            '</div>';
-    } else if(formula==='ncr'){
-        document.getElementById('process-title').textContent = 'Step 2 \u2014 nCr Process';
-        body.innerHTML = '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>1.</strong> Do the nPr process \u2014 S rounds drain from the pool.</div>'+
-            '<div class="proc-step"><strong>2.</strong> Divide by S! \u2014 the costume-count. S items can be ordered S! ways, but order doesn\u2019t matter here.</div>'+
-            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">nCr = N! / (S! \u00d7 (N\u2212S)!) = nPr / S!</div>'+
-            '</div>'+
-            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
-            '<div class="proc-step">nPr counts every arrangement. But if order doesn\u2019t matter, each group of S was counted S! times (once per permutation). Dividing collapses those duplicates into one group.</div>'+
-            '</div>';
-    } else if(formula==='ns'){
-        document.getElementById('process-title').textContent = 'Step 2 \u2014 N\u02E2 Process';
-        body.innerHTML = '<div class="proc-block"><div class="proc-title">Procedure</div>'+
-            '<div class="proc-step"><strong>1.</strong> Every round has N choices. The pool refills after each pick.</div>'+
-            '<div class="proc-step"><strong>2.</strong> Multiply N by itself, S times.</div>'+
-            '<div class="proc-step" style="margin-top:8px;color:var(--accent)">N\u02E2 = N \u00d7 N \u00d7 \u2026 (S times)</div>'+
-            '</div>'+
-            '<div class="proc-block"><div class="proc-title">Why it works</div>'+
-            '<div class="proc-step">No drainage. The pool stays full. Every round is independent with the same N options, so the total is N multiplied S times.</div>'+
-            '</div>';
-    }
-}
-
-/* === STEP 4: RESULT (always N=10, S=3) === */
-function showResult(){
-    if(!formula){
-        document.getElementById('formula-desc').textContent = 'Select a formula in Step 1 first.';
-        document.getElementById('derivation-box').innerHTML = '';
-        document.getElementById('result-box').classList.add('hidden');
-        return;
-    }
-    const n=N, s=S;
-    const dbox = document.getElementById('derivation-box');
-    const rbox = document.getElementById('result-box');
-    let dHTML='', name='', fStr='', value=0, desc='';
-
-    if(formula==='ns'){
-        value=Math.pow(n,s);
-        name='N\u02E2 \u2014 Pool Refills';
-        desc=s+' rounds, each with '+n+' choices.';
-        fStr=n+'\u02E2 = '+fmtBig(value);
-        dHTML='<div class="derivation"><div class="d-label">Computation</div>';
-        dHTML+='<div class="d-line">'+Array(s).fill(n).join(' \u00d7 ')+'</div>';
-        dHTML+='<div class="d-line"><strong>= '+fmtBig(value)+'</strong></div></div>';
-    } else if(formula==='npr'){
-        value=permut(n,s);
-        name='nPr \u2014 Ordered Drainage';
-        desc=s+' items leave a pool of '+n+'. Order matters.';
-        let parts=[];
-        for(let i=0;i<s;i++) parts.push(n-i);
-        fStr=parts.join(' \u00d7 ')+' = '+fmtBig(value);
-        dHTML='<div class="derivation"><div class="d-label">Where each round comes from</div>';
-        dHTML+='<div class="d-line">N! / (N\u2212S)! = '+n+'! / '+(n-s)+'!</div>';
-        dHTML+='<div class="d-line">Cancel '+(n-s)+'! from bottom. Surviving rounds:</div>';
-        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': <strong>'+(n-i)+'</strong> \u2190 pool lost '+i+'</div>';
-        dHTML+='<div class="d-line" style="margin-top:6px"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(value)+'</strong></div></div>';
-    } else if(formula==='ncr'){
-        const perm=permut(n,s), cost=factorial(s);
-        value=combin(n,s);
-        name='nCr \u2014 Unordered Drainage';
-        desc='Same '+s+' drainage rounds, then \u00f7 '+s+'! to collapse order.';
-        let parts=[];
-        for(let i=0;i<s;i++) parts.push(n-i);
-        fStr=fmtBig(perm)+' \u00f7 '+fmtBig(cost)+' = '+fmtBig(value);
-        dHTML='<div class="derivation"><div class="d-label">Drainage (same as nPr)</div>';
-        for(let i=0;i<s;i++) dHTML+='<div class="d-line">Round '+(i+1)+': <strong>'+(n-i)+'</strong></div>';
-        dHTML+='<div class="d-line"><strong>'+parts.join(' \u00d7 ')+' = '+fmtBig(perm)+' ordered</strong></div></div>';
-        dHTML+='<div class="derivation"><div class="d-label">Costume-count</div>';
-        let cp=[]; for(let i=s;i>=1;i--) cp.push(i);
-        dHTML+='<div class="d-line">'+s+'! = '+cp.join(' \u00d7 ')+' = '+fmtBig(cost)+'</div>';
-        dHTML+='<div class="d-line">Each group of '+s+' appeared '+fmtBig(cost)+' times in different orders.</div></div>';
-        dHTML+='<div class="derivation"><div class="d-label">Result</div>';
-        dHTML+='<div class="d-line"><strong>'+fmtBig(perm)+' \u00f7 '+fmtBig(cost)+' = '+fmtBig(value)+' groups</strong></div></div>';
-    }
-    dbox.innerHTML=dHTML;
-    document.getElementById('formula-title').textContent='Step 4 \u2014 '+(formula==='ns'?'N\u02E2':formula==='npr'?'nPr':'nCr');
-    document.getElementById('formula-desc').textContent=desc;
-    document.getElementById('result-name').textContent=name;
-    document.getElementById('result-formula').textContent=fStr;
-    document.getElementById('result-value').textContent=fmtBig(value);
-    rbox.classList.remove('hidden');
-    stepBtns[3].classList.add('done');
-    stepBtns[2].classList.add('done');
-}
-
-/* === RESET === */
-document.getElementById('btn-reset').addEventListener('click',()=>{
-    q1=null;q2=null;formula=null;
-    document.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('active'));
-    Object.values(gridCells).forEach(c=>{c.classList.remove('cell-active');c.classList.add('cell-dim');});
-    document.getElementById('blueprint-result').classList.add('hidden');
-    document.getElementById('process-body').innerHTML='';
-    document.getElementById('derivation-box').innerHTML='';
-    document.getElementById('result-box').classList.add('hidden');
-    document.getElementById('tree-intro').textContent='Pick a formula in Step 1 to see how the pool fans out.';
-    const canvas=document.getElementById('tree-canvas');
-    const ctx=canvas.getContext('2d');
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    stepBtns.forEach(b=>b.classList.remove('done'));
-    showStep(1);
-});
-
-showStep(1);
+    var appSrc=(L==='no')?'app.no.js':'app.js';
+    var testSrc=(L==='no')?'test.no.js':'test.js';
+    document.write('<scr'+'ipt src="'+appSrc+'"><\/scr'+'ipt>');
+    document.write('<scr'+'ipt src="'+testSrc+'"><\/scr'+'ipt>');
+})();
 </script>
-<script src="test.js"></script>
 </body>
 </html>
