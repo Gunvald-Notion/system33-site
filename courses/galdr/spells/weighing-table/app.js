@@ -356,4 +356,86 @@ function drawCovarianceViz(){
     const wrap = document.getElementById('viz-wrap');
     const canvas = document.getElementById('viz-canvas');
     const dpr = window.devicePixelRatio || 1;
-    const cw =
+    const cw = wrap.clientWidth - 18;
+    const ch = 340;
+    canvas.width = cw * dpr; canvas.height = ch * dpr;
+    canvas.style.width = cw + 'px'; canvas.style.height = ch + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr); ctx.clearRect(0, 0, cw, ch);
+
+    const accent = '#a78bfa', green = '#22c55e', red = '#ef4444', text2 = '#a1a1aa', muted = '#71717a', border = '#27272a';
+
+    const pad = 60;
+    const gridSize = Math.min(cw - pad * 2, ch - 80);
+    const gx = (cw - gridSize) / 2;
+    const gy = 30;
+    const midGX = gx + gridSize / 2;
+    const midGY = gy + gridSize / 2;
+
+    ctx.fillStyle = 'rgba(239,68,68,0.06)';
+    ctx.fillRect(gx, gy, gridSize / 2, gridSize / 2);
+    ctx.fillStyle = 'rgba(34,197,94,0.06)';
+    ctx.fillRect(midGX, gy, gridSize / 2, gridSize / 2);
+    ctx.fillStyle = 'rgba(34,197,94,0.06)';
+    ctx.fillRect(gx, midGY, gridSize / 2, gridSize / 2);
+    ctx.fillStyle = 'rgba(239,68,68,0.06)';
+    ctx.fillRect(midGX, midGY, gridSize / 2, gridSize / 2);
+
+    ctx.strokeStyle = border; ctx.lineWidth = 1;
+    ctx.strokeRect(gx, gy, gridSize, gridSize);
+
+    ctx.beginPath(); ctx.setLineDash([4, 3]);
+    ctx.moveTo(midGX, gy); ctx.lineTo(midGX, gy + gridSize);
+    ctx.moveTo(gx, midGY); ctx.lineTo(gx + gridSize, midGY);
+    ctx.strokeStyle = accent; ctx.lineWidth = 1; ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = accent; ctx.font = '9px Inter,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('(μX, μY)', midGX + 4, midGY - 4);
+
+    ctx.fillStyle = text2; ctx.font = '11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('X →', gx + gridSize / 2, gy + gridSize + 8);
+    ctx.save(); ctx.translate(gx - 12, gy + gridSize / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Y →', 0, 0); ctx.restore();
+
+    ctx.font = '10px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = red; ctx.fillText('OPPOSITE', gx + gridSize * 0.25, gy + gridSize * 0.15);
+    ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: −', gx + gridSize * 0.25, gy + gridSize * 0.22);
+    ctx.fillStyle = green; ctx.font = '10px Inter,sans-serif'; ctx.fillText('TOGETHER', gx + gridSize * 0.75, gy + gridSize * 0.15);
+    ctx.fillStyle = 'rgba(34,197,94,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: +', gx + gridSize * 0.75, gy + gridSize * 0.22);
+    ctx.fillStyle = green; ctx.font = '10px Inter,sans-serif'; ctx.fillText('TOGETHER', gx + gridSize * 0.25, gy + gridSize * 0.85);
+    ctx.fillStyle = 'rgba(34,197,94,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: +', gx + gridSize * 0.25, gy + gridSize * 0.92);
+    ctx.fillStyle = red; ctx.font = '10px Inter,sans-serif'; ctx.fillText('OPPOSITE', gx + gridSize * 0.75, gy + gridSize * 0.85);
+    ctx.fillStyle = 'rgba(239,68,68,0.5)'; ctx.font = '8px Inter,sans-serif'; ctx.fillText('product: −', gx + gridSize * 0.75, gy + gridSize * 0.92);
+
+    const dotPositions = [
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.75, p: 0.4, label: 'P=0.4', color: green },
+        { x: gx + gridSize * 0.25, y: gy + gridSize * 0.35, p: 0.1, label: 'P=0.1', color: red },
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.75, p: 0.1, label: 'P=0.1', color: red },
+        { x: gx + gridSize * 0.75, y: gy + gridSize * 0.35, p: 0.4, label: 'P=0.4', color: green }
+    ];
+
+    dotPositions.forEach(d => {
+        const r = 8 + d.p * 30;
+        ctx.beginPath(); ctx.arc(d.x, d.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = d.color === green ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.15)';
+        ctx.fill();
+        ctx.strokeStyle = d.color; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#fafafa'; ctx.font = 'bold 11px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(d.label, d.x, d.y);
+    });
+
+    ctx.fillStyle = muted; ctx.font = '10px Inter,sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('X=0', gx + gridSize * 0.25, gy + gridSize + 20);
+    ctx.fillText('X=1', gx + gridSize * 0.75, gy + gridSize + 20);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('Y=0', gx - 8, gy + gridSize * 0.75);
+    ctx.fillText('Y=1', gx - 8, gy + gridSize * 0.35);
+
+    ctx.fillStyle = green; ctx.font = 'bold 13px Inter,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Cov(X,Y) = +0.15  →  ρ = 0.6 (moderately strong, positive)', cw / 2, gy + gridSize + 38);
+}
+
+/* === INIT === */
+renderAll();
