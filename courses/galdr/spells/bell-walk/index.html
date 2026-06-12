@@ -11,6 +11,7 @@
         a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
         .container{max-width:760px;margin:0 auto;padding:0 24px}
         .site-header{padding:24px 0 0}.site-header a{color:var(--muted);font-size:.85rem}
+        .header-row{display:flex;justify-content:space-between;align-items:center}
         .hero{padding:48px 0 24px;text-align:center}
         .hero-icon{font-size:3rem;margin-bottom:12px}
         .hero-badge{display:inline-block;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.75rem;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:20px}
@@ -79,44 +80,48 @@
         .recog-line strong{color:var(--text)}
         footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
         footer a{color:var(--text2)}
+        .lang-toggle{display:flex;gap:4px}
+        .lang-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:4px 12px;font-family:inherit;font-size:.75rem;color:var(--text2);cursor:pointer;transition:all .2s}
+        .lang-btn:hover{border-color:#3f3f46}
+        .lang-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
         @media(max-width:520px){.hero{padding:32px 0 20px}.mode-nav{flex-direction:column}}
     </style>
 </head>
 <body>
-<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
+<header class="site-header"><div class="container header-row"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a><div class="lang-toggle"><button class="lang-btn" data-lang="en">EN</button><button class="lang-btn" data-lang="no">NO</button></div></div></header>
 
 <section class="hero"><div class="container">
     <div class="hero-icon">🔔</div>
-    <div class="hero-badge">Galdr Spell &middot; Kap 7</div>
+    <div class="hero-badge" data-i18n="badge">Galdr Spell &middot; Kap 7</div>
     <h1>The Bell-Walk</h1>
-    <p>Four distributions, one bell. The middle is the average. Every question is just: how much energy does it take to get from the middle to where you're standing?</p>
+    <p data-i18n="heroP">Four distributions, one bell. The middle is the average. Every question is just: how much energy does it take to get from the middle to where you're standing?</p>
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="principle">
+    <div class="principle" data-i18n="principle">
         <strong>The bell comes first.</strong> Before any formula, the bell already exists &mdash; it emerged from independent forces piling up without coordination. Thick in the middle, thin at the edges. The force first. The formula after.
     </div>
     <div class="recog-box">
-        <div class="recog-title">How to know which one you're in</div>
-        <div class="recog-line"><strong>Binomial</strong> &mdash; count of tries + percentage per try</div>
-        <div class="recog-line"><strong>Hypergeometric</strong> &mdash; exact counts in a finite pool, no percentage</div>
-        <div class="recog-line"><strong>Poisson</strong> &mdash; average rate over a window, no fixed count</div>
-        <div class="recog-line"><strong>Normal</strong> &mdash; told directly ("normalfordelt") or summing many independent things</div>
+        <div class="recog-title" data-i18n="recogTitle">How to know which one you're in</div>
+        <div class="recog-line" data-i18n="recog1"><strong>Binomial</strong> &mdash; count of tries + percentage per try</div>
+        <div class="recog-line" data-i18n="recog2"><strong>Hypergeometric</strong> &mdash; exact counts in a finite pool, no percentage</div>
+        <div class="recog-line" data-i18n="recog3"><strong>Poisson</strong> &mdash; average rate over a window, no fixed count</div>
+        <div class="recog-line" data-i18n="recog4"><strong>Normal</strong> &mdash; told directly ("normalfordelt") or summing many independent things</div>
     </div>
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="section-label">Choose the distribution</div>
+    <div class="section-label" data-i18n="modeLabel">Choose the distribution</div>
     <div class="mode-nav">
-        <button class="mode-btn active" data-mode="bin">Binomial</button>
-        <button class="mode-btn" data-mode="hyp">Hypergeometric</button>
-        <button class="mode-btn" data-mode="poi">Poisson</button>
-        <button class="mode-btn" data-mode="nor">Normal</button>
+        <button class="mode-btn active" data-mode="bin" data-i18n="modeBin">Binomial</button>
+        <button class="mode-btn" data-mode="hyp" data-i18n="modeHyp">Hypergeometric</button>
+        <button class="mode-btn" data-mode="poi" data-i18n="modePoi">Poisson</button>
+        <button class="mode-btn" data-mode="nor" data-i18n="modeNor">Normal</button>
     </div>
 </div></section>
 
 <section class="section" id="viz-section"><div class="container">
-    <div class="section-label" id="viz-label">The Bell</div>
+    <div class="section-label" id="viz-label" data-i18n="vizLabel">The Bell</div>
     <div class="viz-section">
         <h3 id="viz-title">Binomial Bell</h3>
         <p id="viz-desc">Bin(10, 0.6) &mdash; 11 doors from 0 to 10. Standing at k = 6.</p>
@@ -127,625 +132,105 @@
 </div></section>
 
 <section class="section"><div class="container">
-    <div class="section-label">Walk the spell</div>
+    <div class="section-label" data-i18n="walkLabel">Walk the spell</div>
     <div class="step-nav" id="step-nav">
-        <button class="step-btn active" data-step="1">Step 1 &mdash; Blueprint</button>
-        <button class="step-btn" data-step="2">Step 2 &mdash; Process</button>
-        <button class="step-btn" data-step="3">Step 3 &mdash; Data</button>
-        <button class="step-btn" data-step="4">Step 4 &mdash; Formula</button>
+        <button class="step-btn active" data-step="1" data-i18n="step1">Step 1 &mdash; Blueprint</button>
+        <button class="step-btn" data-step="2" data-i18n="step2">Step 2 &mdash; Process</button>
+        <button class="step-btn" data-step="3" data-i18n="step3">Step 3 &mdash; Data</button>
+        <button class="step-btn" data-step="4" data-i18n="step4">Step 4 &mdash; Formula</button>
     </div>
     <div id="step-container"></div>
 </div></section>
 
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Connected Spells</div>
+    <div class="section-label" data-i18n="connLabel">Connected Spells</div>
     <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px">
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Drainage</strong> feeds the counting. The nCr inside binomial and hypergeometric is the same <a href="/courses/galdr/spells/drainage/" style="color:var(--accent)">Drainage</a> from Kap 3.</p>
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px"><strong>Probability House</strong> builds the mass. The probabilities here live in the same <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">house of cells</a> from Kap 1+2.</p>
-        <p style="color:var(--text2);font-size:.9rem;line-height:1.7"><strong>Weighing Table</strong> measures the spread. Variance and standard deviation from the <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> (Kap 5+6) feed into the normal distribution&rsquo;s z-score.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px" data-i18n="connP1"><strong>Drainage</strong> feeds the counting. The nCr inside binomial and hypergeometric is the same <a href="/courses/galdr/spells/drainage/" style="color:var(--accent)">Drainage</a> from Kap 3.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7;margin-bottom:12px" data-i18n="connP2"><strong>Probability House</strong> builds the mass. The probabilities here live in the same <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">house of cells</a> from Kap 1+2.</p>
+        <p style="color:var(--text2);font-size:.9rem;line-height:1.7" data-i18n="connP3"><strong>Weighing Table</strong> measures the spread. Variance and standard deviation from the <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> (Kap 5+6) feed into the normal distribution&rsquo;s z-score.</p>
     </div>
 </div></section>
 
 <section class="section" style="border-top:1px solid var(--border);padding-top:40px"><div class="container">
-    <div class="section-label">Formula Reference &mdash; Kap 7</div>
+    <div class="section-label" data-i18n="refLabel">Formula Reference &mdash; Kap 7</div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Binomial &mdash; Bin(n, p)</span><span class="formula-ref-kap">Kap 7.1&ndash;7.3</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="ref1name">Binomial &mdash; Bin(n, p)</span><span class="formula-ref-kap">Kap 7.1&ndash;7.3</span></div>
         <div class="formula-ref-eq">P(X = k) = C(n,k) &middot; p<sup>k</sup> &middot; (1&minus;p)<sup>n&minus;k</sup></div>
-        <div class="formula-ref-desc">E[X] = np &nbsp;&nbsp; Var[X] = np(1&minus;p) &nbsp;&nbsp; Patterns &times; success-energy &times; failure-energy</div>
+        <div class="formula-ref-desc" data-i18n="ref1desc">E[X] = np &nbsp;&nbsp; Var[X] = np(1&minus;p) &nbsp;&nbsp; Patterns &times; success-energy &times; failure-energy</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Hypergeometric &mdash; Hyp(N, M, n)</span><span class="formula-ref-kap">Kap 7.4</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="ref2name">Hypergeometric &mdash; Hyp(N, M, n)</span><span class="formula-ref-kap">Kap 7.4</span></div>
         <div class="formula-ref-eq">P(X = k) = C(M,k) &middot; C(N&minus;M, n&minus;k) / C(N, n)</div>
-        <div class="formula-ref-desc">E[X] = nM/N &nbsp;&nbsp; Gunstige over mulige. Three Drainages &mdash; glowing pool, dark pool, all hands.</div>
+        <div class="formula-ref-desc" data-i18n="ref2desc">E[X] = nM/N &nbsp;&nbsp; Gunstige over mulige. Three Drainages &mdash; glowing pool, dark pool, all hands.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Poisson &mdash; Po(&lambda;)</span><span class="formula-ref-kap">Kap 7.5</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="ref3name">Poisson &mdash; Po(&lambda;)</span><span class="formula-ref-kap">Kap 7.5</span></div>
         <div class="formula-ref-eq">P(X = k) = &lambda;<sup>k</sup> &middot; e<sup>&minus;&lambda;</sup> / k!</div>
-        <div class="formula-ref-desc">E[X] = &lambda; &nbsp;&nbsp; Var[X] = &lambda; &nbsp;&nbsp; Energy pushes out, void pulls back, factorial cleans up.</div>
+        <div class="formula-ref-desc" data-i18n="ref3desc">E[X] = &lambda; &nbsp;&nbsp; Var[X] = &lambda; &nbsp;&nbsp; Energy pushes out, void pulls back, factorial cleans up.</div>
     </div>
     <div class="formula-ref">
-        <div class="formula-ref-header"><span class="formula-ref-name">Normal &mdash; N(&mu;, &sigma;&sup2;)</span><span class="formula-ref-kap">Kap 7.6&ndash;7.7</span></div>
+        <div class="formula-ref-header"><span class="formula-ref-name" data-i18n="ref4name">Normal &mdash; N(&mu;, &sigma;&sup2;)</span><span class="formula-ref-kap">Kap 7.6&ndash;7.7</span></div>
         <div class="formula-ref-eq">z = (X &minus; &mu;) / &sigma; &nbsp;&nbsp;&rarr;&nbsp;&nbsp; z-table</div>
-        <div class="formula-ref-desc">68% within &plusmn;1&sigma;, 95% within &plusmn;2&sigma;, 99.7% within &plusmn;3&sigma;. Distance from center in stretches.</div>
+        <div class="formula-ref-desc" data-i18n="ref4desc">68% within &plusmn;1&sigma;, 95% within &plusmn;2&sigma;, 99.7% within &plusmn;3&sigma;. Distance from center in stretches.</div>
     </div>
 </div></section>
 
-<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
+<footer><div class="container" data-i18n="footer">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a></div></footer>
 
 <script>
-/* === MATH === */
-function C(n,k){
-    if(k<0||k>n)return 0;
-    if(k===0||k===n)return 1;
-    if(k>n-k)k=n-k;
-    var r=1;for(var i=0;i<k;i++)r=r*(n-i)/(i+1);return Math.round(r);
-}
-function fac(n){var r=1;for(var i=2;i<=n;i++)r*=i;return r;}
-function binP(k){return C(10,k)*Math.pow(0.6,k)*Math.pow(0.4,10-k);}
-function hypP(k){return C(13,k)*C(13,8-k)/C(26,8);}
-function poiP(k){return Math.pow(4,k)*Math.exp(-4)/fac(k);}
-function norPDF(x){return Math.exp(-0.5*Math.pow((x-180)/7,2))/(7*Math.sqrt(2*Math.PI));}
-
-/* === STATE === */
-var mode='bin',currentStep=1;
-
-/* === MODE NAV === */
-document.querySelectorAll('.mode-btn').forEach(function(b){
-    b.addEventListener('click',function(){
-        document.querySelectorAll('.mode-btn').forEach(function(x){x.classList.remove('active');});
-        b.classList.add('active');
-        mode=b.dataset.mode;
-        currentStep=1;
-        document.querySelectorAll('.step-btn').forEach(function(s){s.classList.remove('done');});
-        renderAll();
-    });
+(function(){
+var L=localStorage.getItem('bwLang')||'en';
+window.setLang=function(l){localStorage.setItem('bwLang',l);location.reload();};
+document.querySelectorAll('.lang-btn').forEach(function(b){
+    if(b.dataset.lang===L)b.classList.add('active');
+    b.addEventListener('click',function(){window.setLang(b.dataset.lang);});
 });
-
-/* === STEP NAV === */
-document.querySelectorAll('.step-btn').forEach(function(b){
-    b.addEventListener('click',function(){
-        currentStep=parseInt(b.dataset.step);
-        renderStep();
-    });
-});
-
-function renderAll(){drawViz();renderStep();}
-
-function renderStep(){
-    document.querySelectorAll('.step-btn').forEach(function(b){b.classList.remove('active');});
-    document.querySelectorAll('.step-btn')[currentStep-1].classList.add('active');
-    var el=document.getElementById('step-container');
-    if(mode==='bin')el.innerHTML=binStep(currentStep);
-    else if(mode==='hyp')el.innerHTML=hypStep(currentStep);
-    else if(mode==='poi')el.innerHTML=poiStep(currentStep);
-    else el.innerHTML=norStep(currentStep);
-}
-
-function markDone(n){document.querySelectorAll('.step-btn').forEach(function(b,i){if(i<n)b.classList.add('done');});}
-
-/* === FORMULA SHOWCASE === */
-function brace(){return '<svg class="piece-brace" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M 0 0 Q 4 0 4 4 L 46 4 Q 50 4 50 9 Q 50 4 54 4 L 96 4 Q 100 4 100 0"/></svg>';}
-function pc(t,l,c){return '<span class="piece" data-c="'+c+'"><span class="piece-text">'+t+'</span>'+brace()+'<span class="piece-label">'+l+'</span></span>';}
-function binFormula(filled){
-    var m1=filled?'210':'C(n, k)';
-    var m2=filled?'0.0467':'p<sup>k</sup>';
-    var m3=filled?'0.0256':'(1\u2212p)<sup>n\u2212k</sup>';
-    var m4=filled?'0.2508':'P(X=k)';
-    return '<div class="formula-viz">'+
-        '<span class="formula-lhs">P(X = k) =</span>'+
-        pc(m1,'Move 1 \u00B7 patterns','m')+
-        '<span class="formula-op">\u00D7</span>'+
-        pc(m2,'Move 2 \u00B7 success','o')+
-        '<span class="formula-op">\u00D7</span>'+
-        pc(m3,'Move 3 \u00B7 failure','b')+
-        '<span class="formula-op">=</span>'+
-        pc(m4,'Move 4 \u00B7 weight','a')+
-        '</div>';
-}
-function hypFormula(filled){
-    var m1=filled?'715':'C(M, k)';
-    var m2=filled?'715':'C(N\u2212M, n\u2212k)';
-    var m3=filled?'1\u202F562\u202F275':'C(N, n)';
-    var m4=filled?'0.3272':'P(X=k)';
-    return '<div class="formula-viz">'+
-        '<span class="formula-lhs">P(X = k) =</span>'+
-        pc(m1,'Move 1 \u00B7 glowing','m')+
-        '<span class="formula-op">\u00D7</span>'+
-        pc(m2,'Move 2 \u00B7 dark','o')+
-        '<span class="formula-op">\u00F7</span>'+
-        pc(m3,'Move 3 \u00B7 all hands','b')+
-        '<span class="formula-op">=</span>'+
-        pc(m4,'Move 4 \u00B7 weight','a')+
-        '</div>';
-}
-function poiFormula(filled){
-    var m1=filled?'4096':'\u03BB<sup>k</sup>';
-    var m2=filled?'0.0183':'e<sup>\u2212\u03BB</sup>';
-    var m3=filled?'720':'k!';
-    var m4=filled?'0.1042':'P(X=k)';
-    return '<div class="formula-viz">'+
-        '<span class="formula-lhs">P(X = k) =</span>'+
-        pc(m1,'Move 1 \u00B7 raw energy','m')+
-        '<span class="formula-op">\u00D7</span>'+
-        pc(m2,'Move 2 \u00B7 the void','o')+
-        '<span class="formula-op">\u00F7</span>'+
-        pc(m3,'Move 3 \u00B7 factorial','b')+
-        '<span class="formula-op">=</span>'+
-        pc(m4,'Move 4 \u00B7 weight','a')+
-        '</div>';
-}
-function norFormula(filled){
-    var m1=filled?'10':'X\u2212\u03BC';
-    var m2=filled?'7':'\u03C3';
-    var m3=filled?'1.43':'z';
-    var m4=filled?'0.9236':'area';
-    return '<div class="formula-viz">'+
-        '<span class="formula-lhs">z =</span>'+
-        pc(m1,'Move 1 \u00B7 distance','m')+
-        '<span class="formula-op">\u00F7</span>'+
-        pc(m2,'Move 2 \u00B7 stretch','o')+
-        '<span class="formula-op">=</span>'+
-        pc(m3,'Move 3 \u00B7 z-score','b')+
-        '<span class="formula-op">\u2192</span>'+
-        pc(m4,'Move 4 \u00B7 area','a')+
-        '</div>';
-}
-
-/* === BINOMIAL STEPS === */
-function binStep(s){
-    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p><strong>What this distribution is for.</strong> They gave you a fixed <strong>count of tries</strong> (n) and a <strong>probability per try</strong> (p) that stays the same every time. Count plus percentage, with the tries independent, is the signature of binomial. The job is to find how much weight sits on one exact outcome: getting k successes out of n tries.</p>'+
-        '<p><strong>How it works.</strong> Every try is the same biased coin. You are asking for the chance of landing exactly k successes. Three forces decide that weight: how many arrangements give k successes, how costly those k successes are, and how costly the n\u2212k failures are. Multiply the three and you have the weight on door k.</p>'+
-        '<p><strong>Why it is able to do that.</strong> Because the tries do not affect each other, the chance of one specific sequence is just p multiplied k times and (1\u2212p) multiplied n\u2212k times. Every sequence with k successes carries that same chance, so you count how many such sequences exist and multiply. That count is C(n, k).</p>'+
-        '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = C(n,k) &middot; p<sup>k</sup> &middot; (1\u2212p)<sup>n\u2212k</sup></p>'+
-        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
-        '<div class="d-line"><strong>n</strong> \u2014 the count of tries (here 10 walks)</div>'+
-        '<div class="d-line"><strong>p</strong> \u2014 the chance of success on one try (here 0.6)</div>'+
-        '<div class="d-line"><strong>k</strong> \u2014 the number of successes you are asking about (here 6)</div>'+
-        '<div class="d-line"><strong>1\u2212p</strong> \u2014 the chance of failure, the flip of p (here 0.4)</div>'+
-        '<div class="d-line"><strong>C(n, k)</strong> \u2014 how many arrangements give k successes among n tries</div>'+
-        '<div class="d-line"><strong>P(X = k)</strong> \u2014 the weight sitting on door k</div></div>'+
-        '</div>';
-    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>Three pieces multiplied into one weight. Here is the shape before any numbers land.</p>'+
-        binFormula(false)+
-        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
-        '<div class="proc-step"><strong>Move 1 \u2014 C(n, k), patterns.</strong> How many ways can k successes be arranged among n tries? This is the Drainage from Kap 3. The pool is the tries, the draw is the successes.</div>'+
-        '<div class="proc-step"><strong>Move 2 \u2014 p<sup>k</sup>, success energy.</strong> Each success costs probability. Multiplying them together shrinks the weight.</div>'+
-        '<div class="proc-step"><strong>Move 3 \u2014 (1\u2212p)<sup>n\u2212k</sup>, failure energy.</strong> Same logic for the other side. Each failure also carries weight.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 multiply. Patterns \u00D7 success-energy \u00D7 failure-energy = the weight sitting on that door.</div>'+
-        '</div></div>';
-    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
-        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
-        '<tr><th>n (tries)</th><th>p (per try)</th><th>k (asking about)</th><th>Center (np)</th></tr>'+
-        '<tr><td>10</td><td>0.6</td><td>6</td><td>6</td></tr>'+
-        '</table></div>'+
-        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
-        '<div class="d-line"><strong>n = 10</strong> \u2014 handed to you. The problem says ten walks, ten tries. This is the count.</div>'+
-        '<div class="d-line"><strong>p = 0.6</strong> \u2014 handed to you. The problem gives the success chance per try directly: 60 percent.</div>'+
-        '<div class="d-line"><strong>k = 6</strong> \u2014 handed to you. This is the exact outcome the question asks about: six successes.</div>'+
-        '<div class="d-line"><strong>1\u2212p = 0.4</strong> \u2014 not handed to you. You flip p to get it: 1 \u2212 0.6 = 0.4. If a success costs 0.6, a failure is whatever is left, the other 40 percent.</div>'+
-        '</div>'+
-        '<p><strong>The three pieces to build:</strong></p>'+
-        '<p>C(10, 6) \u2192 pattern counter, from n and k</p>'+
-        '<p>0.6<sup>6</sup> \u2192 success energy, p raised to k</p>'+
-        '<p>0.4<sup>4</sup> \u2192 failure energy, the flip raised to n\u2212k</p>'+
-        '</div>';}
-    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        binFormula(true)+
-        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 patterns \u00B7 C(10, 6)</div>'+
-        '<div class="d-line">C(10, 6) = 10! \u00F7 (6! \u00B7 4!)</div>'+
-        '<div class="d-line">the 6! cancels the top \u2192 (10 \u00B7 9 \u00B7 8 \u00B7 7) \u00F7 (4 \u00B7 3 \u00B7 2 \u00B7 1)</div>'+
-        '<div class="d-line">top: 10 \u00B7 9 \u00B7 8 \u00B7 7 = 5040</div>'+
-        '<div class="d-line">bottom: 4 \u00B7 3 \u00B7 2 \u00B7 1 = 24</div>'+
-        '<div class="d-line">5040 \u00F7 24 = <strong style="color:#a78bfa">210</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">n and k feed this. 210 is how many ways six successes can sit among ten tries.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 success energy \u00B7 0.6<sup>6</sup></div>'+
-        '<div class="d-line">0.6 \u00D7 0.6 = 0.36</div>'+
-        '<div class="d-line">0.36 \u00D7 0.6 = 0.216</div>'+
-        '<div class="d-line">0.216 \u00D7 0.6 = 0.1296</div>'+
-        '<div class="d-line">0.1296 \u00D7 0.6 = 0.07776</div>'+
-        '<div class="d-line">0.07776 \u00D7 0.6 = <strong style="color:#22c55e">0.046656</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">p raised to k. The 0.6 came from the problem, multiplied by itself six times, one for each success.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 failure energy \u00B7 0.4<sup>4</sup></div>'+
-        '<div class="d-line">first flip p: 1 \u2212 0.6 = 0.4</div>'+
-        '<div class="d-line">0.4 \u00D7 0.4 = 0.16</div>'+
-        '<div class="d-line">0.16 \u00D7 0.4 = 0.064</div>'+
-        '<div class="d-line">0.064 \u00D7 0.4 = <strong style="color:#3b82f6">0.0256</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">the flip raised to n\u2212k. Ten tries minus six successes leaves four failures, so 0.4 multiplied by itself four times.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 multiply the three</div>'+
-        '<div class="d-line">210 \u00D7 0.046656 = 9.798</div>'+
-        '<div class="d-line">9.798 \u00D7 0.0256 = <strong style="color:#f59e0b">0.2508</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">patterns \u00D7 success energy \u00D7 failure energy = the weight on door 6.</div></div>'+
-        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X = 6)</div>'+
-        '<div class="result-box-value" style="color:#f59e0b">P(X = 6) = 0.2508</div>'+
-        '<div class="result-box-desc">25.1% at the center of the bell. The peak. The heaviest door. Move one step away and the weight drops.</div>'+
-        '</div></div>';
-}
-
-/* === HYPERGEOMETRIC STEPS === */
-function hypStep(s){
-    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p><strong>What this distribution is for.</strong> They gave you <strong>exact counts of types in a finite pool</strong> \u2014 M glowing out of N total \u2014 and you draw n without putting any back. No percentage anywhere, just whole numbers, and the pool shrinks with every draw. The job is to find how much weight sits on one exact outcome: pulling k glowing into your hand.</p>'+
-        '<p><strong>How it works.</strong> This is pure counting. Favorable arrangements over all possible arrangements, gunstige over mulige. Count the ways to pick k glowing from the M that exist, multiply by the ways to fill the rest of the hand from the dark pile, then divide by the total ways to draw n from N. That fraction is the weight on door k.</p>'+
-        '<p><strong>Why it is able to do that.</strong> Because every draw changes what is left, no single percentage stays true from one pull to the next. So instead of a percentage you count: how many hands hold exactly k glowing, set against how many hands exist at all. Counting carries the shrinking pool on its own, with no probability needed.</p>'+
-        '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = C(M,k) &middot; C(N\u2212M, n\u2212k) / C(N, n)</p>'+
-        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
-        '<div class="d-line"><strong>N</strong> \u2014 the total size of the pool (here 26)</div>'+
-        '<div class="d-line"><strong>M</strong> \u2014 how many glowing sit in the pool (here 13)</div>'+
-        '<div class="d-line"><strong>n</strong> \u2014 how many you draw (here 8)</div>'+
-        '<div class="d-line"><strong>k</strong> \u2014 the number of glowing you are asking about (here 4)</div>'+
-        '<div class="d-line"><strong>N\u2212M</strong> \u2014 the dark pile, what is left when the glowing are removed (here 13)</div>'+
-        '<div class="d-line"><strong>C(M, k)</strong> \u2014 how many ways to pick k glowing from M</div>'+
-        '<div class="d-line"><strong>C(N\u2212M, n\u2212k)</strong> \u2014 how many ways to fill the rest from the dark pile</div>'+
-        '<div class="d-line"><strong>C(N, n)</strong> \u2014 how many ways to draw n from the whole pool</div>'+
-        '<div class="d-line"><strong>P(X = k)</strong> \u2014 the weight sitting on door k</div></div>'+
-        '</div>';
-    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>Two counts multiplied in the teller, one count in the nevner. Here is the shape before any numbers land.</p>'+
-        hypFormula(false)+
-        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
-        '<div class="proc-step"><strong>Move 1 \u2014 C(M, k), glowing pool.</strong> How many ways to pick k glowing from the M that exist. Drainage from the light side.</div>'+
-        '<div class="proc-step"><strong>Move 2 \u2014 C(N\u2212M, n\u2212k), dark pool.</strong> How many ways to fill the rest of the hand with non-glowing. Drainage from the dark side.</div>'+
-        '<div class="proc-step"><strong>Move 3 \u2014 C(N, n), all hands.</strong> Total ways to draw n from N, alle verdener. This is the nevner.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 divide. Glowing \u00D7 dark, over all hands = the weight sitting on that door. Gunstige over mulige.</div>'+
-        '</div></div>';
-    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
-        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
-        '<tr><th>N (total)</th><th>M (glowing)</th><th>n (drawn)</th><th>k (asking)</th><th>Center (nM/N)</th></tr>'+
-        '<tr><td>26</td><td>13</td><td>8</td><td>4</td><td>4</td></tr>'+
-        '</table></div>'+
-        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
-        '<div class="d-line"><strong>N = 26</strong> \u2014 handed to you. The problem names the whole pool: twenty-six in total.</div>'+
-        '<div class="d-line"><strong>M = 13</strong> \u2014 handed to you. The problem says how many of the pool are glowing: thirteen.</div>'+
-        '<div class="d-line"><strong>n = 8</strong> \u2014 handed to you. The problem says how many you draw: eight.</div>'+
-        '<div class="d-line"><strong>k = 4</strong> \u2014 handed to you. This is the exact outcome the question asks about: four glowing.</div>'+
-        '<div class="d-line"><strong>N\u2212M = 13</strong> \u2014 not handed to you. You subtract to get it: 26 \u2212 13 = 13. Whatever is not glowing is the dark pile.</div>'+
-        '<div class="d-line"><strong>n\u2212k = 4</strong> \u2014 not handed to you. You subtract: 8 \u2212 4 = 4. The seats in the hand not taken by glowing are filled from the dark.</div>'+
-        '</div>'+
-        '<p><strong>The three pieces to build:</strong></p>'+
-        '<p>C(13, 4) \u2192 glowing pool, k from M</p>'+
-        '<p>C(13, 4) \u2192 dark pool, n\u2212k from N\u2212M</p>'+
-        '<p>C(26, 8) \u2192 all hands, n from N</p>'+
-        '</div>';}
-    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        hypFormula(true)+
-        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 glowing pool \u00B7 C(13, 4)</div>'+
-        '<div class="d-line">C(13, 4) = 13! \u00F7 (4! \u00B7 9!)</div>'+
-        '<div class="d-line">the 9! cancels the top \u2192 (13 \u00B7 12 \u00B7 11 \u00B7 10) \u00F7 (4 \u00B7 3 \u00B7 2 \u00B7 1)</div>'+
-        '<div class="d-line">top: 13 \u00B7 12 \u00B7 11 \u00B7 10 = 17160</div>'+
-        '<div class="d-line">bottom: 4 \u00B7 3 \u00B7 2 \u00B7 1 = 24</div>'+
-        '<div class="d-line">17160 \u00F7 24 = <strong style="color:#a78bfa">715</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">M and k feed this. 715 is how many ways four glowing can be picked from the thirteen that exist.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 dark pool \u00B7 C(13, 4)</div>'+
-        '<div class="d-line">first the dark pile: N \u2212 M = 26 \u2212 13 = 13</div>'+
-        '<div class="d-line">then the seats to fill: n \u2212 k = 8 \u2212 4 = 4</div>'+
-        '<div class="d-line">C(13, 4) = <strong style="color:#22c55e">715</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">same shape as Move 1, and here the same numbers by chance: four non-glowing picked from the thirteen dark.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 all hands \u00B7 C(26, 8)</div>'+
-        '<div class="d-line">C(26, 8) = 26! \u00F7 (8! \u00B7 18!)</div>'+
-        '<div class="d-line">C(26, 8) = <strong style="color:#3b82f6">1\u202F562\u202F275</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">N and n feed this. Every possible hand of eight drawn from the twenty-six, glowing or not.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 divide</div>'+
-        '<div class="d-line">teller: 715 \u00D7 715 = 511\u202F225</div>'+
-        '<div class="d-line">511\u202F225 \u00F7 1\u202F562\u202F275 = <strong style="color:#f59e0b">0.3272</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">glowing \u00D7 dark, over all hands = the weight on door 4.</div></div>'+
-        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X = 4)</div>'+
-        '<div class="result-box-value" style="color:#f59e0b">P(X = 4) = 0.3272</div>'+
-        '<div class="result-box-desc">32.7% at the center of the bell. The peak. Almost the same shape as binomial, but the shrinking pool squeezes the bell slightly tighter.</div>'+
-        '</div></div>';
-}
-
-/* === POISSON STEPS === */
-function poiStep(s){
-    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p><strong>What this distribution is for.</strong> They gave you an <strong>average rate</strong> (\u03BB, lambda) over a <strong>window</strong> \u2014 events arriving on their own time. No fixed count of tries, no box, no percentage per try. Just a rhythm and a window. The job is to find how much weight sits on one exact count: k events landing in the window.</p>'+
-        '<p><strong>How it works.</strong> Three forces decide the weight. The rhythm raised to the count pushes energy outward. The void, the chance of total silence, pulls everything back down. The factorial strips out ordering, because the same events in a different order are the same outcome. Multiply the first two, divide by the third, and you have the weight on door k.</p>'+
-        '<p><strong>Why it is able to do that.</strong> Because events arrive independently and the window is fixed, the chance of one specific timeline with k events is the rhythm multiplied k times, scaled by the weight of silence. Every ordering of those k events is the same outcome, so you fold them together by dividing by k!. That is what leaves a clean weight on the count.</p>'+
-        '<p style="color:var(--accent);font-weight:500;margin-top:12px">P(X = k) = \u03BB<sup>k</sup> &middot; e<sup>\u2212\u03BB</sup> / k!</p>'+
-        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
-        '<div class="d-line"><strong>\u03BB</strong> \u2014 the average rate over the window (here 4)</div>'+
-        '<div class="d-line"><strong>k</strong> \u2014 the exact count you are asking about (here 6)</div>'+
-        '<div class="d-line"><strong>\u03BB<sup>k</sup></strong> \u2014 the rhythm raised to the count, raw energy</div>'+
-        '<div class="d-line"><strong>e<sup>\u2212\u03BB</sup></strong> \u2014 the void, the chance of total silence in the window</div>'+
-        '<div class="d-line"><strong>k!</strong> \u2014 the factorial, all the orderings of k events folded into one</div>'+
-        '<div class="d-line"><strong>P(X = k)</strong> \u2014 the weight sitting on door k</div></div>'+
-        '</div>';
-    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>Two forces multiplied, one that divides them down. Here is the shape before any numbers land.</p>'+
-        poiFormula(false)+
-        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
-        '<div class="proc-step"><strong>Move 1 \u2014 \u03BB<sup>k</sup>, raw energy.</strong> The rhythm raised to the count. The further past center you stand, the more the rhythm multiplies into itself.</div>'+
-        '<div class="proc-step"><strong>Move 2 \u2014 e<sup>\u2212\u03BB</sup>, the void.</strong> The weight of silence, the chance nothing shows up in the whole window. Everything that happened had to climb out of this.</div>'+
-        '<div class="proc-step"><strong>Move 3 \u2014 k!, the factorial.</strong> Strips out ordering. An event at minute 2 then minute 7 is the same as minute 7 then minute 2, so divide by all the arrangements.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 combine. Raw energy \u00D7 void, over the factorial = the weight sitting on that door.</div>'+
-        '</div></div>';
-    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
-        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
-        '<tr><th>\u03BB (rhythm)</th><th>k (count)</th><th>Center (\u03BB)</th></tr>'+
-        '<tr><td>4</td><td>6</td><td>4</td></tr>'+
-        '</table></div>'+
-        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
-        '<div class="d-line"><strong>\u03BB = 4</strong> \u2014 handed to you. The problem gives the average rate over the window directly: four on average.</div>'+
-        '<div class="d-line"><strong>k = 6</strong> \u2014 handed to you. This is the exact count the question asks about: six events.</div>'+
-        '<div class="d-line"><strong>Center = 4</strong> \u2014 not handed as a separate number. For Poisson the center is just the rhythm itself, so \u03BB = 4 is also the middle of the bell. Standing at k = 6 is two steps past center.</div>'+
-        '</div>'+
-        '<p><strong>The three pieces to build:</strong></p>'+
-        '<p>4<sup>6</sup> \u2192 raw energy, \u03BB raised to k</p>'+
-        '<p>e<sup>\u22124</sup> \u2192 the void, e to the minus \u03BB</p>'+
-        '<p>6! \u2192 the factorial, k!</p>'+
-        '</div>';}
-    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        poiFormula(true)+
-        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 raw energy \u00B7 4<sup>6</sup></div>'+
-        '<div class="d-line">4 \u00D7 4 = 16</div>'+
-        '<div class="d-line">16 \u00D7 4 = 64</div>'+
-        '<div class="d-line">64 \u00D7 4 = 256</div>'+
-        '<div class="d-line">256 \u00D7 4 = 1024</div>'+
-        '<div class="d-line">1024 \u00D7 4 = <strong style="color:#a78bfa">4096</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">\u03BB raised to k. The rhythm 4 multiplied by itself six times, one for each event.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 the void \u00B7 e<sup>\u22124</sup></div>'+
-        '<div class="d-line">e<sup>\u22124</sup> = 1 \u00F7 e<sup>4</sup></div>'+
-        '<div class="d-line">e<sup>4</sup> \u2248 54.598</div>'+
-        '<div class="d-line">1 \u00F7 54.598 = <strong style="color:#22c55e">0.018316</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">keep the unrounded 0.018316 for the final multiply. Rounding to 0.0183 too early drifts the answer off by a hair.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 the factorial \u00B7 6!</div>'+
-        '<div class="d-line">6 \u00D7 5 = 30</div>'+
-        '<div class="d-line">30 \u00D7 4 = 120</div>'+
-        '<div class="d-line">120 \u00D7 3 = 360</div>'+
-        '<div class="d-line">360 \u00D7 2 = 720</div>'+
-        '<div class="d-line">720 \u00D7 1 = <strong style="color:#3b82f6">720</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">all the orderings of six events folded into one. Order does not matter, so divide them out.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 combine</div>'+
-        '<div class="d-line">teller: 4096 \u00D7 0.018316 = 75.02</div>'+
-        '<div class="d-line">75.02 \u00F7 720 = <strong style="color:#f59e0b">0.1042</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">raw energy \u00D7 void, over the factorial = the weight on door 6.</div></div>'+
-        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X = 6)</div>'+
-        '<div class="result-box-value" style="color:#f59e0b">P(X = 6) = 0.1042</div>'+
-        '<div class="result-box-desc">10.4% two steps past center. Still catching real weight \u2014 about one in ten windows looks like this. Move out to door 10 and the energy nearly vanishes.</div>'+
-        '</div></div>';
-}
-
-/* === NORMAL STEPS === */
-function norStep(s){
-    if(s===1)return '<div class="step-content"><h3>Step 1 \u2014 Blueprint</h3>'+
-        '<p><strong>What this distribution is for.</strong> They told you directly (<strong>normalfordelt</strong>), or you are summing many independent things (sentralgrensesetningen, the central limit). This is continuous measurement \u2014 no discrete doors, no counting. The job is to find how much of the bell sits on one side of where you stand: the area under the curve up to your point.</p>'+
-        '<p><strong>How it works.</strong> You cannot read the area off the raw measurement, because every normal bell has its own center and its own stretch. So you first convert your point to a standard score \u2014 how many stretches from center you stand. That number is z. Once you are on the standard bell, one fixed z-table holds the area for every possible point.</p>'+
-        '<p><strong>Why it is able to do that.</strong> Because every normal bell is the same shape, only shifted and scaled. Subtract the center and divide by the stretch, and any bell collapses onto the one standard bell where \u03BC = 0 and \u03C3 = 1. That is why a single table can answer every normal question \u2014 the standardizing is what makes them all the same curve.</p>'+
-        '<p style="color:var(--accent);font-weight:500;margin-top:12px">z = (X \u2212 \u03BC) / \u03C3 &nbsp;&nbsp;\u2192&nbsp;&nbsp; z-table</p>'+
-        '<div class="derivation"><div class="d-label">The pieces of the formula</div>'+
-        '<div class="d-line"><strong>\u03BC</strong> \u2014 the center of the bell, the average (here 180)</div>'+
-        '<div class="d-line"><strong>\u03C3</strong> \u2014 the stretch, one standard step out from center (here 7)</div>'+
-        '<div class="d-line"><strong>X</strong> \u2014 the point you are standing at (here 190)</div>'+
-        '<div class="d-line"><strong>X \u2212 \u03BC</strong> \u2014 the distance from center, how far your point sits from the middle</div>'+
-        '<div class="d-line"><strong>z</strong> \u2014 the standard score, that distance measured in stretches</div>'+
-        '<div class="d-line"><strong>area</strong> \u2014 the slice of the bell the z-table hands back, the weight up to your point</div></div>'+
-        '</div>';
-    if(s===2)return '<div class="step-content"><h3>Step 2 \u2014 The Process</h3>'+
-        '<p>One subtraction, one division, then a lookup. Here is the shape before any numbers land.</p>'+
-        norFormula(false)+
-        '<div class="proc-block"><div class="proc-title">The four moves</div>'+
-        '<div class="proc-step"><strong>Move 1 \u2014 X \u2212 \u03BC, distance from center.</strong> How far is your point from the middle of the bell? Negative if below, positive if above.</div>'+
-        '<div class="proc-step"><strong>Move 2 \u2014 \u00F7 \u03C3, convert to stretches.</strong> Divide the distance by one stretch. Now the distance is measured in standard steps, not raw units.</div>'+
-        '<div class="proc-step"><strong>Move 3 \u2014 z, the standard score.</strong> The result lands you on the standard bell where \u03BC = 0 and \u03C3 = 1. This is the number the table reads.</div>'+
-        '<div class="proc-step" style="margin-top:8px;color:var(--accent)">Move 4 \u2014 z-table. Look up z and the table hands back the area under the bell to the left of where you stand.</div>'+
-        '</div>'+
-        '<div class="proc-block"><div class="proc-title">The 68\u201395\u201399.7 rule</div>'+
-        '<div class="proc-step">68% within \u00B11\u03C3. 95% within \u00B12\u03C3. 99.7% within \u00B13\u03C3. This gives you instant orientation before you even touch the z-table.</div>'+
-        '</div></div>';
-    if(s===3){markDone(2);return '<div class="step-content"><h3>Step 3 \u2014 The Data</h3>'+
-        '<p>Every number in the formula comes straight from the problem text. Here is where each one is found.</p>'+
-        '<div class="data-card"><div class="data-title">From the problem</div><table class="data-table">'+
-        '<tr><th>\u03BC (center)</th><th>\u03C3 (stretch)</th><th>X (standing at)</th><th>Distance (X\u2212\u03BC)</th></tr>'+
-        '<tr><td>180</td><td>7</td><td>190</td><td>10</td></tr>'+
-        '</table></div>'+
-        '<div class="derivation"><div class="d-label">Where each number comes from</div>'+
-        '<div class="d-line"><strong>\u03BC = 180</strong> \u2014 handed to you. The problem names the center of the bell directly: the average is 180.</div>'+
-        '<div class="d-line"><strong>\u03C3 = 7</strong> \u2014 handed to you. The problem gives the stretch, one standard step from center: 7.</div>'+
-        '<div class="d-line"><strong>X = 190</strong> \u2014 handed to you. This is the point the question asks about: standing at 190.</div>'+
-        '<div class="d-line"><strong>X \u2212 \u03BC = 10</strong> \u2014 not handed to you. You subtract: 190 \u2212 180 = 10. Ten raw units above the center.</div>'+
-        '</div>'+
-        '<p><strong>The pieces to build:</strong></p>'+
-        '<p>190 \u2212 180 \u2192 distance, X minus \u03BC</p>'+
-        '<p>\u00F7 7 \u2192 standardize, distance over \u03C3</p>'+
-        '<p>z-table \u2192 area, look up the z-score</p>'+
-        '</div>';}
-    markDone(3);return '<div class="step-content"><h3>Step 4 \u2014 Walk It</h3>'+
-        norFormula(true)+
-        '<div class="derivation"><div class="d-label" style="color:#a78bfa">Move 1 \u2014 distance from center \u00B7 X \u2212 \u03BC</div>'+
-        '<div class="d-line">X \u2212 \u03BC = 190 \u2212 180</div>'+
-        '<div class="d-line">190 \u2212 180 = <strong style="color:#a78bfa">10</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">X and \u03BC feed this. Ten raw units above the center of the bell.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#22c55e">Move 2 \u2014 convert to stretches \u00B7 \u00F7 \u03C3</div>'+
-        '<div class="d-line">one stretch is \u03C3 = 7</div>'+
-        '<div class="d-line">10 \u00F7 7 = <strong style="color:#22c55e">1.43</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">the distance divided by one stretch. Ten units is about one and a half stretches out.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#3b82f6">Move 3 \u2014 the standard score \u00B7 z</div>'+
-        '<div class="d-line">z = <strong style="color:#3b82f6">1.43</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">this is where you stand on the standard bell, \u03BC = 0 and \u03C3 = 1. The number the table reads.</div></div>'+
-        '<div class="derivation"><div class="d-label" style="color:#f59e0b">Move 4 \u2014 z-table lookup</div>'+
-        '<div class="d-line">z = 1.43 \u2192 <strong style="color:#f59e0b">0.9236</strong></div>'+
-        '<div class="d-line" style="color:var(--muted)">the table hands back the area to the left. 0.9236 of the bell sits below you.</div></div>'+
-        '<div class="result-box" style="border-left-color:#f59e0b"><div class="result-box-name">Move 4 \u2014 P(X \u2264 190)</div>'+
-        '<div class="result-box-value" style="color:#f59e0b">P(X \u2264 190) = 0.9236</div>'+
-        '<div class="result-box-desc">92.4% of the bell sits below you. You are standing on the right slope, above most of the weight. Only 7.6% of the energy is further right.</div>'+
-        '</div></div>';
-}
-
-/* === VISUALIZATION === */
-function drawViz(){
-    var labels={
-        bin:{title:'Binomial Bell',desc:'Bin(10, 0.6) \u2014 11 doors from 0 to 10. Standing at k = 6.'},
-        hyp:{title:'Hypergeometric Bell',desc:'Hyp(26, 13, 8) \u2014 9 doors from 0 to 8. Standing at k = 4.'},
-        poi:{title:'Poisson Bell',desc:'Po(4) \u2014 doors from 0 onward. Standing at k = 6.'},
-        nor:{title:'Normal Curve',desc:'N(180, 7\u00B2) \u2014 continuous. Standing at x = 190.'}
+if(L==='no'){
+    document.documentElement.lang='no';
+    document.title='🔔 Klokkevandringen — Galdr-formel | System 33';
+    var DICT={
+        badge:'Galdr-formel &middot; Kap 7',
+        heroP:'Fire fordelinger, én klokke. Midten er gjennomsnittet. Hvert spørsmål er bare: hvor mye energi krever det å komme fra midten til der du står?',
+        principle:'<strong>Klokken kommer først.</strong> Før noen formel finnes klokken allerede — den vokste fram av uavhengige krefter som hopet seg opp uten koordinering. Tykk i midten, tynn i kantene. Kraften først. Formelen etterpå.',
+        recogTitle:'Slik vet du hvilken du står i',
+        recog1:'<strong>Binomisk</strong> — antall forsøk + prosent per forsøk',
+        recog2:'<strong>Hypergeometrisk</strong> — eksakte antall i et endelig basseng, ingen prosent',
+        recog3:'<strong>Poisson</strong> — gjennomsnittlig rate over et vindu, ingen fast antall',
+        recog4:'<strong>Normal</strong> — sagt rett ut («normalfordelt») eller sum av mange uavhengige ting',
+        modeLabel:'Velg fordelingen',
+        modeBin:'Binomisk',
+        modeHyp:'Hypergeometrisk',
+        modePoi:'Poisson',
+        modeNor:'Normal',
+        vizLabel:'Klokken',
+        walkLabel:'Gå formelen',
+        step1:'Steg 1 — Plantegning',
+        step2:'Steg 2 — Prosess',
+        step3:'Steg 3 — Dataene',
+        step4:'Steg 4 — Formelen',
+        connLabel:'Formler som henger sammen',
+        connP1:'<strong>Drainage</strong> mater tellingen. nCr-en inne i binomisk og hypergeometrisk er samme <a href="/courses/galdr/spells/drainage/" style="color:var(--accent)">Drainage</a> fra Kap 3.',
+        connP2:'<strong>Probability House</strong> bygger massen. Sannsynlighetene her bor i samme <a href="/courses/galdr/spells/probability-house/" style="color:var(--accent)">hus av celler</a> fra Kap 1+2.',
+        connP3:'<strong>Weighing Table</strong> måler spredningen. Varians og standardavvik fra <a href="/courses/galdr/spells/weighing-table/" style="color:var(--accent)">Weighing Table</a> (Kap 5+6) mater inn i normalfordelingens z-skår.',
+        refLabel:'Formeloversikt — Kap 7',
+        ref1name:'Binomisk — Bin(n, p)',
+        ref1desc:'E[X] = np &nbsp;&nbsp; Var[X] = np(1&minus;p) &nbsp;&nbsp; Mønstre &times; suksess-energi &times; fiasko-energi',
+        ref2name:'Hypergeometrisk — Hyp(N, M, n)',
+        ref2desc:'E[X] = nM/N &nbsp;&nbsp; Gunstige over mulige. Tre Drainage-er — lysende basseng, mørkt basseng, alle hender.',
+        ref3name:'Poisson — Po(λ)',
+        ref3desc:'E[X] = λ &nbsp;&nbsp; Var[X] = λ &nbsp;&nbsp; Energien presser ut, tomrommet drar tilbake, fakultetet rydder opp.',
+        ref4name:'Normal — N(μ, σ²)',
+        ref4desc:'68% innenfor &plusmn;1σ, 95% innenfor &plusmn;2σ, 99.7% innenfor &plusmn;3σ. Avstand fra senteret i strekk.',
+        footer:'Bygd av Gunvald &middot; Del av <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Spells</a> &middot; <a href="/courses/galdr/">Galdr</a>'
     };
-    document.getElementById('viz-title').textContent=labels[mode].title;
-    document.getElementById('viz-desc').textContent=labels[mode].desc;
-    if(mode==='nor') drawNormal(); else drawBars();
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var k=el.getAttribute('data-i18n');
+        if(DICT[k])el.innerHTML=DICT[k];
+    });
 }
-
-function drawBars(){
-    var conf={
-        bin:{kMin:0,kMax:10,kH:6,mu:6,muL:'\u03BC = np = 6',fn:binP},
-        hyp:{kMin:0,kMax:8,kH:4,mu:4,muL:'\u03BC = nM/N = 4',fn:hypP},
-        poi:{kMin:0,kMax:12,kH:6,mu:4,muL:'\u03BC = \u03BB = 4',fn:poiP}
-    }[mode];
-    var wrap=document.getElementById('viz-wrap');
-    var canvas=document.getElementById('viz-canvas');
-    var dpr=window.devicePixelRatio||1;
-    var cw=wrap.clientWidth-18;
-    var ch=280;
-    canvas.width=cw*dpr;canvas.height=ch*dpr;
-    canvas.style.width=cw+'px';canvas.style.height=ch+'px';
-    var ctx=canvas.getContext('2d');
-    ctx.scale(dpr,dpr);ctx.clearRect(0,0,cw,ch);
-
-    var accent='#a78bfa',green='#22c55e',muted='#71717a',border='#27272a';
-    var padL=35,padR=15,padTop=30,padBot=30;
-    var plotW=cw-padL-padR;
-    var plotH=ch-padTop-padBot;
-    var nBars=conf.kMax-conf.kMin+1;
-    var barW=plotW/(nBars+1);
-    var maxP=0;
-    for(var k=conf.kMin;k<=conf.kMax;k++) maxP=Math.max(maxP,conf.fn(k));
-
-    // Axis
-    ctx.strokeStyle=border;ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(padL,ch-padBot);ctx.lineTo(cw-padR,ch-padBot);ctx.stroke();
-
-    // Bars
-    for(var k=conf.kMin;k<=conf.kMax;k++){
-        var p=conf.fn(k);
-        var x=padL+(k-conf.kMin+1)*barW;
-        var h=Math.max(1,(p/maxP)*plotH*0.82);
-        var y=ch-padBot-h;
-        var bw=Math.max(4,barW*0.65);
-        var isHL=(k===conf.kH);
-        ctx.fillStyle=isHL?'rgba(167,139,250,0.35)':'rgba(167,139,250,0.08)';
-        rr(ctx,x-bw/2,y,bw,h,3);ctx.fill();
-        ctx.strokeStyle=isHL?accent:'rgba(167,139,250,0.2)';
-        ctx.lineWidth=isHL?1.5:1;
-        rr(ctx,x-bw/2,y,bw,h,3);ctx.stroke();
-        // K label
-        ctx.fillStyle=isHL?'#fafafa':muted;
-        ctx.font=(cw<400?'8':'10')+'px Inter,sans-serif';
-        ctx.textAlign='center';ctx.textBaseline='top';
-        ctx.fillText(k.toString(),x,ch-padBot+4);
-    }
-
-    // Mu line
-    var muX=padL+(conf.mu-conf.kMin+1)*barW;
-    ctx.beginPath();ctx.setLineDash([4,3]);
-    ctx.moveTo(muX,padTop+14);ctx.lineTo(muX,ch-padBot);
-    ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle=accent;ctx.font='bold 11px Inter,sans-serif';
-    ctx.textAlign='center';ctx.textBaseline='bottom';
-    ctx.fillText(conf.muL,muX,padTop+10);
-
-    // Result
-    var hx=padL+(conf.kH-conf.kMin+1)*barW;
-    var hp=conf.fn(conf.kH);
-    ctx.fillStyle=green;ctx.font='bold 12px Inter,sans-serif';
-    ctx.textAlign='center';ctx.textBaseline='top';
-    ctx.fillText('P(X = '+conf.kH+') = '+hp.toFixed(4),cw/2,ch-16);
-}
-
-function drawNormal(){
-    var wrap=document.getElementById('viz-wrap');
-    var canvas=document.getElementById('viz-canvas');
-    var dpr=window.devicePixelRatio||1;
-    var cw=wrap.clientWidth-18;
-    var ch=300;
-    canvas.width=cw*dpr;canvas.height=ch*dpr;
-    canvas.style.width=cw+'px';canvas.style.height=ch+'px';
-    var ctx=canvas.getContext('2d');
-    ctx.scale(dpr,dpr);ctx.clearRect(0,0,cw,ch);
-
-    var accent='#a78bfa',green='#22c55e',muted='#71717a',border='#27272a';
-    var mu=180,sig=7,xH=190;
-    var xMin=mu-4*sig,xMax=mu+4*sig;
-    var padL=30,padR=15,padTop=20,padBot=50;
-    var plotW=cw-padL-padR;
-    var plotH=ch-padTop-padBot;
-    var maxPDF=norPDF(mu);
-
-    function tx(x){return padL+(x-xMin)/(xMax-xMin)*plotW;}
-    function ty(pdf){return ch-padBot-(pdf/maxPDF)*plotH*0.88;}
-
-    // Shaded area
-    ctx.beginPath();
-    ctx.moveTo(tx(xMin),ch-padBot);
-    for(var x=xMin;x<=xH;x+=0.5) ctx.lineTo(tx(x),ty(norPDF(x)));
-    ctx.lineTo(tx(xH),ch-padBot);
-    ctx.closePath();
-    ctx.fillStyle='rgba(167,139,250,0.12)';ctx.fill();
-
-    // Full curve
-    ctx.beginPath();
-    ctx.moveTo(tx(xMin),ty(norPDF(xMin)));
-    for(var x=xMin;x<=xMax;x+=0.5) ctx.lineTo(tx(x),ty(norPDF(x)));
-    ctx.strokeStyle=accent;ctx.lineWidth=2;ctx.stroke();
-
-    // Sigma ticks
-    for(var s=-3;s<=3;s++){
-        var sx=mu+s*sig;
-        ctx.beginPath();ctx.moveTo(tx(sx),ch-padBot);ctx.lineTo(tx(sx),ch-padBot+5);
-        ctx.strokeStyle=border;ctx.lineWidth=1;ctx.stroke();
-        ctx.fillStyle=muted;ctx.font='9px Inter,sans-serif';
-        ctx.textAlign='center';ctx.textBaseline='top';
-        if(s===0) ctx.fillText('\u03BC',tx(sx),ch-padBot+7);
-        else ctx.fillText((s>0?'+':'')+s+'\u03C3',tx(sx),ch-padBot+7);
-    }
-
-    // Mu line
-    ctx.beginPath();ctx.setLineDash([4,3]);
-    ctx.moveTo(tx(mu),padTop+12);ctx.lineTo(tx(mu),ch-padBot);
-    ctx.strokeStyle=accent;ctx.lineWidth=1;ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle=accent;ctx.font='bold 11px Inter,sans-serif';
-    ctx.textAlign='center';ctx.textBaseline='bottom';
-    ctx.fillText('\u03BC = 180',tx(mu),padTop+8);
-
-    // X highlight line
-    ctx.beginPath();ctx.setLineDash([3,3]);
-    ctx.moveTo(tx(xH),padTop+24);ctx.lineTo(tx(xH),ch-padBot);
-    ctx.strokeStyle='#fafafa';ctx.lineWidth=1;ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle='#fafafa';ctx.font='bold 10px Inter,sans-serif';
-    ctx.textAlign='center';ctx.textBaseline='bottom';
-    ctx.fillText('x = 190',tx(xH),padTop+22);
-    ctx.fillStyle=muted;ctx.font='9px Inter,sans-serif';
-    ctx.fillText('z = 1.43',tx(xH),padTop+34);
-
-    // Area label inside the shaded region
-    ctx.fillStyle='rgba(167,139,250,0.5)';ctx.font='bold 14px Inter,sans-serif';
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('92.4%',tx(mu-0.5*sig),ty(norPDF(mu))+45);
-
-    // Result
-    ctx.fillStyle=green;ctx.font='bold 12px Inter,sans-serif';
-    ctx.textAlign='center';ctx.textBaseline='top';
-    ctx.fillText('P(X \u2264 190) = 0.9236 \u2014 z = 1.43',cw/2,ch-18);
-}
-
-function rr(ctx,x,y,w,h,r){
-    ctx.beginPath();
-    ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
-    ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
-    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
-    ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
-    ctx.quadraticCurveTo(x,y,x+r,y);
-    ctx.closePath();
-}
-
-/* === INIT === */
-renderAll();
+document.write('<scr'+'ipt src="'+(L==='no'?'app.no.js':'app.js')+'"><\/scr'+'ipt>');
+document.write('<scr'+'ipt src="'+(L==='no'?'test.no.js':'test.js')+'"><\/scr'+'ipt>');
+})();
 </script>
-<script src="test.js"></script>
 </body>
 </html>
