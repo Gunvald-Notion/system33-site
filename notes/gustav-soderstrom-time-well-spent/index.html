@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Well Spent — System 33</title>
+    <meta name="description" content="Gustav Söderström, Spotify Co-CEO, with David Senra (Founders) — on building media people are glad they gave their time to. Episode notes across six chapters.">
+    <meta property="og:title" content="Time Well Spent — System 33">
+    <meta property="og:description" content="David Senra × Gustav Söderström. Spotify's Co-CEO on building media people don't regret.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://system33.io/notes/gustav-soderstrom-time-well-spent/">
+    <meta property="og:image" content="https://img.youtube.com/vi/qYnVDIgZxlI/maxresdefault.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Time Well Spent — System 33">
+    <meta name="twitter:image" content="https://img.youtube.com/vi/qYnVDIgZxlI/maxresdefault.jpg">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0a0a0b; --bg-secondary: #111113; --bg-card: #18181b;
+            --border: #27272a; --text-primary: #fafafa; --text-secondary: #a1a1aa;
+            --text-muted: #71717a; --accent-glow: rgba(228, 228, 231, 0.08);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        body { font-family: var(--font); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+        a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.7; }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .nav { padding: 24px 0; border-bottom: 1px solid var(--border); }
+        .nav a { font-size: 0.85rem; color: var(--text-muted); }
+        .nav a:hover { color: var(--text-primary); }
+        .hero { padding: 64px 0 48px; }
+        .hero-meta { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 16px; }
+        .hero-subtitle { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 24px; }
+        .hero-thumb { width: 100%; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border); }
+        .hero-links { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; }
+        .hero-links a { color: var(--text-secondary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; }
+        .hero-links a:hover { background: var(--accent-glow); border-color: #3f3f46; opacity: 1; }
+        .divider { width: 100%; height: 1px; background: var(--border); margin: 0; }
+        .toc { padding: 48px 0; }
+        .toc-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+        .toc ul { list-style: none; }
+        .toc li { margin-bottom: 8px; }
+        .toc a { font-size: 0.95rem; color: var(--text-secondary); }
+        .toc a:hover { color: var(--text-primary); }
+        .article { padding: 48px 0; }
+        .article h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin: 64px 0 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .article h2:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+        .article h3 { font-size: 1.2rem; font-weight: 600; margin: 36px 0 12px; }
+        .article h4 { font-size: 1.05rem; font-weight: 600; margin: 28px 0 10px; color: var(--text-secondary); }
+        .article p { color: var(--text-secondary); margin-bottom: 16px; font-size: 1rem; }
+        .article strong { color: var(--text-primary); font-weight: 600; }
+        .article em { font-style: italic; }
+        .article ul, .article ol { color: var(--text-secondary); margin: 0 0 16px 24px; }
+        .article li { margin-bottom: 6px; }
+        .article a { color: var(--text-primary); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+        .article a:hover { text-decoration-color: var(--text-muted); }
+        .mermaid-container { margin: 32px 0; overflow-x: auto; padding: 24px 0; }
+        .mermaid-container .mermaid { display: flex; justify-content: center; }
+        .mermaid-container .mermaid svg { max-width: none !important; min-width: 100%; height: auto !important; }
+        .mermaid-container .mermaid svg text { font-size: 20px !important; }
+        .chapter-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin: 24px 0; }
+        .chapter-box h3 { margin-top: 0; }
+        .chapter-box h4 { margin-top: 0; color: var(--text-primary); }
+        .chapter-box p { color: var(--text-secondary); }
+        .chapter-box ul, .chapter-box ol { color: var(--text-secondary); }
+        .about { padding: 48px 0; }
+        .about p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
+        .footer { padding: 48px 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .footer-left { font-size: 0.85rem; color: var(--text-muted); }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { font-size: 0.85rem; color: var(--text-secondary); }
+        @media (max-width: 480px) {
+            .hero { padding: 40px 0 32px; }
+            .hero h1 { font-size: 1.8rem; }
+            .article h2 { font-size: 1.35rem; }
+            .chapter-box { padding: 20px; }
+            .footer { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav class="nav"><a href="/">← System 33</a></nav>
+</div>
+
+<div class="container">
+    <header class="hero">
+        <div class="hero-meta">Episode Notes</div>
+        <h1>Time Well Spent</h1>
+        <p class="hero-subtitle">David Senra (Founders) × Gustav Söderström — Spotify's Co-CEO on building media people are glad they gave their time to. A live walk-through, six chapters, reactions over summary.</p>
+        <img class="hero-thumb" src="https://img.youtube.com/vi/qYnVDIgZxlI/maxresdefault.jpg" alt="Episode thumbnail">
+        <div class="hero-links">
+            <a href="https://www.youtube.com/watch?v=qYnVDIgZxlI" target="_blank" rel="noopener">🎬 Watch on YouTube</a>
+            <a href="https://www.davidsenra.com/episode/gustav-soderstrom" target="_blank" rel="noopener">📝 Show Notes</a>
+        </div>
+    </header>
+</div>
+
+<div class="container"><div class="divider"></div></div>
+
+<div class="container">
+    <nav class="toc">
+        <div class="toc-label">Contents</div>
+        <ul>
+            <li><a href="#cast">Who's in the room</a></li>
+            <li><a href="#hierarchy">The hierarchy — who speaks to who</a></li>
+            <li><a href="#ch1">1 · How Gustav prepared to become CEO</a></li>
+            <li><a href="#ch2">2 · You ship your org chart</a></li>
+            <li><a href="#ch3">3 · Time well spent — the No-Regret test</a></li>
+            <li><a href="#ch4">4 · The anti-engagement decision</a></li>
+            <li><a href="#ch5">5 · Getting into AI early</a></li>
+            <li><a href="#ch6">6 · You are your thoughts</a></li>
+            <li><a href="#sources">Sources — checked 14 June 2026</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="container"><div class="divider"></div></div>
+
+<div class="container">
+    <article class="article">
+
+        <h2 id="cast">Who's in the room</h2>
+
+        <div class="chapter-box">
+            <h4>Gustav Söderström — the guest</h4>
+            <p>Spotify's <strong>Co-CEO and Chief Product &amp; Technology Officer.</strong> Joined in 2009 when it was a small Swedish outfit betting against the download model, and helped build it into the global leader in audio. Before Spotify he founded Kenet Works (mobile messaging, acquired by Yahoo! in 2006), then ran product for Yahoo! Mobile. Took the Co-CEO chair on 1 January 2026 alongside Alex Norström. His own line: <em>"Love science and art — preferably intertwined."</em></p>
+            <p><a href="https://se.linkedin.com/in/gustavsoderstrom" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/GustavS" target="_blank" rel="noopener">X — @GustavS</a></p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>David Senra — the host</h4>
+            <p>Host of <strong>Founders</strong>, the podcast where he reads a biography of a great entrepreneur and talks through what he learned. Thousands of hours inside the minds of history's builders — which makes him the rare interviewer who hears an operating principle and immediately knows which founder did the same thing a century ago.</p>
+            <p><a href="https://www.davidsenra.com" target="_blank" rel="noopener">davidsenra.com</a> · <a href="https://x.com/FoundersPodcast" target="_blank" rel="noopener">X — @FoundersPodcast</a></p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>Daniel Ek — the one who keeps coming up</h4>
+            <p>Spotify's founder, now <strong>Executive Chairman</strong> (Chairman &amp; CEO from 2006 until the January 2026 handover). The person who kept giving Gustav jobs he wasn't ready for. Also founder and Principal of <strong>Prima Materia</strong> — his investment firm that insists it's not a fund: <em>"We are not investors but builders and active owners."</em> Chairman of Neko Health and Helsing.</p>
+            <p><a href="https://en.wikipedia.org/wiki/Daniel_Ek" target="_blank" rel="noopener">Wikipedia</a> · <a href="https://se.linkedin.com/in/daniel-ek-1b52093a" target="_blank" rel="noopener">LinkedIn</a></p>
+        </div>
+
+        <h2 id="hierarchy">The hierarchy — who speaks to who</h2>
+
+        <p>The whole shape, after the 1 January 2026 handover — governance at the top, the two co-CEOs, the corporate functions beside them, and the two operating lines fanning down into the squads-and-tribes layer Spotify is known for.</p>
+
+        <div class="mermaid-container">
+            <pre class="mermaid">
+flowchart TD
+    BOD["Board of Directors"] --> EK["Daniel Ek<br>Founder &amp; Executive Chairman"]
+    EK --> CEO["Co-CEOs<br>Gustav Söderström + Alex Norström"]
+    CEO --> FIN["CFO<br>Christian Luiga"]
+    CEO --> HR["CHRO<br>Anna Lundström"]
+    CEO --> PA["Chief Public Affairs<br>Dustee Jenkins"]
+    CEO --> LEG["General Counsel"]
+    CEO --> PT["Product &amp; Technology<br>Söderström's line"]
+    CEO --> BIZ["Business &amp; Commercial<br>Norström's line"]
+    PT --> PROD["Product"]
+    PT --> ENG["Engineering"]
+    PT --> DATA["Data &amp; Personalization"]
+    BIZ --> MUS["Music"]
+    BIZ --> POD["Podcasts &amp; Audiobooks"]
+    BIZ --> ADS["Advertising"]
+    PROD --> TRIBE["Tribes"]
+    ENG --> TRIBE
+    TRIBE --> SQUAD["Squads"]
+    SQUAD -.-> CHAP["Chapters &amp; Guilds"]
+            </pre>
+        </div>
+
+        <p>A note on sourcing: the named chiefs are confirmed from Spotify's own governance pages. The General Counsel is left unnamed on purpose — the previous holder departed and the current one isn't confirmed. The division split is Spotify's functional shape, not a leaked chart. Full sources are at the bottom.</p>
+
+        <h2 id="ch1">1 · 00:00 — How Gustav prepared to become CEO</h2>
+
+        <div class="chapter-box">
+            <h4>📺 What does the video talk about?</h4>
+            <p>How Gustav got ready for the chair — and it wasn't a coronation. Daniel Ek named him and Alex Norström co-presidents nearly three years before the actual handoff: a slow, deliberate transfer. Long before that, Ek kept <em>giving</em> him jobs he wasn't ready for — throwing him into the Facebook integration (<em>"go talk to Zuckerberg"</em>) when he barely knew the building. Gustav's own words: at Spotify <em>"you get a new job almost every year."</em> He wasn't taking those jobs — he was given them, on purpose, before he felt ready.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>🔧 How do we use it?</h4>
+            <p>The note we take: the creation of something is always where the cost is highest — and where the reward is highest too. That's the start of anything. The more we learn it and refine it, the flatter the curve goes; we get less back for the same effort. So the real return lives in the early phase, the first stretch of something new. That's why we keep <em>starting</em> instead of polishing what we already know. The model below is the shape of it — steep at the start, flattening the longer we stay.</p>
+        </div>
+
+        <div class="mermaid-container">
+            <pre class="mermaid">
+xychart-beta
+    title "Diminishing returns — growth is steepest at the start, then comfort flattens it"
+    x-axis [Start, Early, Mid, Late, Comfort]
+    y-axis "Total growth gained" 0 --> 100
+    line [0, 68, 87, 96, 100]
+            </pre>
+        </div>
+
+        <div class="chapter-box">
+            <h4>⚙️ How does the system see it?</h4>
+            <p>We can look at this through the method we build. At its core it's two things: a structure to do something, and a way to collect data and use that data to improve it. The trap is building a method we only ever <em>develop</em> — refined on paper, never let out to meet real life. Growth only happens when the method meets reality, and that meeting usually means failure. Failure is the thing we <em>want</em> — it shows us where the method is weakest, the part we'd never find in a vacuum.</p>
+        </div>
+
+        <div class="mermaid-container">
+            <pre class="mermaid">
+flowchart TD
+    A["1 · Build a structure to work in"] --> B["2 · Add a way to collect data"]
+    B --> C["The method — just these two"]
+    C --> D["3 · Use it for real"]
+    D --> E["4 · Refine from what the data shows"]
+    E --> D
+    D --> F["Experience compounds — most of the growth lives here"]
+            </pre>
+        </div>
+
+        <div class="chapter-box">
+            <h4>⚙️ A second note — create from reality, not theory</h4>
+            <p>It's better to build something from experience than without it, and the same holds for decisions: a call made under uncertainty is only as good as the experience behind it. Lean on a field you've actually stood in and you decide from real perspective; lean on one you haven't, and you quietly borrow biases from somewhere else. That's why the insight almost always lives where the work happens — Toyota sends its people to <em>go and see</em> the actual spot before deciding, and Musk put his desk on the production line. Same reason the chair needs the reps: a CEO decides across every domain, so it needs perspective pulled from many.</p>
+        </div>
+
+        <h2 id="ch2">2 · 09:25 — You ship your org chart</h2>
+
+        <div class="chapter-box">
+            <h4>📺 What does the video talk about?</h4>
+            <p>The line of the episode: <em>you ship your org chart</em> — a product ends up shaped like the team that built it. Everyone told Spotify to build separate apps, one per format. They built one super-app instead and swallowed enormous backend complexity, because the real bottleneck was never product quality — there were already seven-plus good podcast apps — it was distribution. So they took the pain exactly where it bought the most reach.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>🔧 How do we use it?</h4>
+            <p>Break it down to first principles before anything else. Strip the thing to its fundamentals — a podcast is just a platform where people listen to people talk — and then ask the real question: <strong>what's the actual bottleneck in this reality, right now?</strong> For podcasts it wasn't quality, it was distribution. So you ask: if we <em>had</em> to do this, what's the first problem we'd actually hit? Break it to fundamentals, find the real constraint, and notice that the right call is usually the harder road — because the hard road is normally where the real bottleneck sits.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>⚙️ How does the system see it?</h4>
+            <p>Underneath this is human nature's pull toward the path of least resistance — and that pull cuts two ways. For the <em>user</em>, you want least resistance: make the thing effortless to reach and use. For <em>yourself</em>, you refuse it: take the harder road where the real bottleneck lives. Design for least resistance on the outside, and refuse it on the inside.</p>
+        </div>
+
+        <h2 id="ch3">3 · 23:05 — Time well spent — the No-Regret test</h2>
+
+        <div class="chapter-box">
+            <h4>📺 What does the video talk about?</h4>
+            <p>The thesis the whole episode is named after. Spotify ran a survey: Gen Z <em>valued</em> the platform at around 90%, but 60%+ said they <em>regretted</em> the time they spent on other media. Gustav's reframe: <em>"I thought people were on these platforms because they wanted to be. Turns out a lot of them feel trapped."</em> So Spotify's rule for what to build next: only expand into categories people <em>don't</em> regret — music, podcasts, books, fitness. Time well spent, not time merely captured.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>🔧 How do we use it?</h4>
+            <p>It's a never-ending feedback loop, with one filter on the front: the <strong>No-Regret test.</strong> Don't chase the time people give you — chase the time people are <em>glad</em> they gave you. Before adding anything, ask: will they regret this later? If yes, it doesn't go in, however well it performs in the moment.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>⚙️ How does the system see it?</h4>
+            <p>It's the same loop the system runs on, pointed at the relationship instead of a product: leave them stronger than you found them. A session that captures attention but leaves a person worse off fails the test, no matter how engaging it felt. The measure isn't time spent — it's whether the time was worth giving.</p>
+        </div>
+
+        <h2 id="ch4">4 · 32:25 — The anti-engagement decision</h2>
+
+        <div class="chapter-box">
+            <h4>📺 What does the video talk about?</h4>
+            <p>Video podcasts drive engagement — but parents told Spotify the video was wrecking the time-well-spent promise, pulling kids into the screen. So Spotify let anyone turn the video <em>off</em> and keep just the audio. It works because the model isn't engagement-based: around 90% of revenue is subscription. Gustav's framing: <em>"You don't pay every month for your engagement. You pay for the value you felt."</em></p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>🔧 How do we use it?</h4>
+            <p>This is a business shape where people pay for the <em>updates</em> but still own the thing — value delivered without a cage. Anti-engagement isn't refusing to offer the thing that pulls; it's refusing to <em>lock people inside</em> it. YouTube Shorts is the photo-negative: engineered so there's no door out. The move is to give people the value and leave them the option to walk.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>⚙️ How does the system see it?</h4>
+            <p>Not all engagement is good engagement. There's engagement that only <em>produces</em> — motion that discharges and leaves nothing — and engagement that <em>creates</em>, that leaves something built behind. Refuse the kind that only produces; build for the kind that creates.</p>
+        </div>
+
+        <h2 id="ch5">5 · 40:23 — Getting into AI early</h2>
+
+        <div class="chapter-box">
+            <h4>📺 What does the video talk about?</h4>
+            <p>Gustav read <em>Attention Is All You Need</em> within days of it landing in 2017 — the paper that started the transformer era. His thesis: periods of change are when market share actually moves, and the winners are the ones who get there first. Apple and Amazon tried to build AI fully in-house and stalled. And the payoff is concrete: AI makes once-expensive things cheap — a 190-BPM run playlist that builds itself from your pace, wired to your Strava.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>🔧 How do we use it?</h4>
+            <p>Two notes. First: <strong>be early to the change.</strong> The window where position is up for grabs is short — move into it before it closes. Second, on how you get there fast: <strong>learn from the best.</strong> Don't re-derive everything from scratch — borrow the reps of someone who has already stood where you're going.</p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>⚙️ How does the system see it?</h4>
+            <p>The interesting part isn't the playlist — it's the <em>connection</em>. Wiring data across music, body, and environment so they inform each other is the same move as the heart-rate visualisation we built into the Understanding Method video. Separate signals become one picture. That's where the value forms: not in any single stream, but in the link between them.</p>
+        </div>
+
+        <h2 id="ch6">6 · 43:55 — You are your thoughts</h2>
+
+        <div class="chapter-box">
+            <h4>📺 What does the video talk about?</h4>
+            <p>Gustav goes philosophical. Your atoms swap out every several years; thinking physically rewires your brain's structure (London cabbies and the Knowledge are the classic case). What stays constant isn't the matter — it's the information-processing pattern running on top of it. His conclusion: <em>"I literally am my thoughts."</em></p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>🔧 How do we use it?</h4>
+            <p>If you are your thoughts, then you can <strong>build yourself on purpose</strong> — self-construction, with capacity as the engine. Herminia Ibarra's <em>Working Identity</em> is the manual: you don't think your way into a new self and then act — you <em>act</em> your way in, and the knowing arrives after the doing. You try on provisional selves. Growth is sacrifice: to become the next version you give up the current one.</p>
+            <p><a href="https://www.herminiaibarra.com/working-identity-book/" target="_blank" rel="noopener">Working Identity — Herminia Ibarra</a></p>
+        </div>
+
+        <div class="chapter-box">
+            <h4>⚙️ How does the system see it?</h4>
+            <p>Identity isn't stored — it's <em>voted into being</em>, again and again, from what you keep choosing. The archive is the ballot box: what gets saved is what gets to count. To grow, the system has to prune — the pattern isn't a frozen file, it's a seed. Continuity isn't copying yourself forward; it's re-becoming from the same seed each time.</p>
+        </div>
+
+        <div class="chapter-box">
+            <p>This walk covers the first six movements. The episode keeps going past here — Premeditated Media, who tells you the truth, what keeps him up at night — worth the rewatch from <a href="https://www.youtube.com/watch?v=qYnVDIgZxlI&t=3655s" target="_blank" rel="noopener">1:00:55</a>.</p>
+        </div>
+
+        <h2 id="sources">Sources — checked 14 June 2026</h2>
+
+        <div class="chapter-box">
+            <p>The leadership and org-structure notes above were verified against primary sources on <strong>14 June 2026</strong>. These things move, so the date is the point — re-check before leaning on any of it later.</p>
+            <h4>Spotify leadership — after the 1 Jan 2026 handover</h4>
+            <ul>
+                <li><strong>Daniel Ek</strong> — Executive Chairman (was Chairman &amp; CEO, 2006 – Jan 2026), now focused on long-term strategy and governance. <a href="https://se.linkedin.com/in/daniel-ek-1b52093a" target="_blank" rel="noopener">LinkedIn</a></li>
+                <li><strong>Gustav Söderström &amp; Alex Norström</strong> — Co-CEOs since 1 Jan 2026, both reporting to Ek.</li>
+                <li>Named chiefs confirmed via Spotify's governance pages: CFO <strong>Christian Luiga</strong>, CHRO <strong>Anna Lundström</strong>, Chief Public Affairs Officer <strong>Dustee Jenkins</strong>. The General Counsel is left unnamed on purpose — the prior holder departed and the current one isn't confirmed.</li>
+            </ul>
+            <h4>Prima Materia — Daniel Ek's firm</h4>
+            <ul>
+                <li>Ek is <strong>Principal</strong> (since Jan 2026) and <strong>Founder</strong> (since Feb 2021). Also Chairman of Helsing and Chairman &amp; Co-Founder of Neko Health.</li>
+                <li>In their own words: <em>"We are not investors but builders and active owners to a small number of companies building great businesses for the long term."</em> <a href="https://primamateria.com/about" target="_blank" rel="noopener">primamateria.com/about</a></li>
+                <li><em>"We are not a venture capital firm... We no longer make new fund investments."</em> They back moonshots — clean energy, AI, healthcare, natural resources. <a href="https://primamateria.com/faqs" target="_blank" rel="noopener">primamateria.com/faqs</a></li>
+                <li>Founders and principal investors: <strong>Daniel Ek and Shakil Khan.</strong> Small team (~3 people); Pia Michel is Head of New Projects. Operates independently of Spotify.</li>
+                <li>Portfolio, highly selective: Helsing (defense AI — Prima Materia led a €600m round), Neko Health (preventive health scanning), Epiterna (longevity — sole early investor).</li>
+            </ul>
+            <p>One caution: third-party databases (Crunchbase, LinkedIn's auto-category) tag Prima Materia as "venture capital / private equity" — but the firm explicitly rejects that label. Trust the firm's own wording over the database tags.</p>
+        </div>
+
+    </article>
+</div>
+
+<div class="container"><div class="divider"></div></div>
+
+<div class="container">
+    <section class="about">
+        <p>Notes by Gunvald. Part of <a href="/">System 33</a> — an operating system for thinking.</p>
+        <br>
+        <p>Three angles per chapter:</p>
+        <ul style="color: var(--text-secondary); margin: 12px 0 0 24px; list-style: none;">
+            <li>📺 <strong style="color: var(--text-primary);">What does the video talk about?</strong> — Summary</li>
+            <li>🔧 <strong style="color: var(--text-primary);">How do we use it?</strong> — Practical application</li>
+            <li>⚙️ <strong style="color: var(--text-primary);">How does the system see it?</strong> — How System 33 connects</li>
+        </ul>
+        <br>
+        <p><em>Built from a ~1h14m YouTube episode. Verified against primary sources on 14 June 2026.</em></p>
+    </section>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer">
+            <div class="footer-left">© 2026 System 33. MIT License.</div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="https://github.com/Gunvald-Notion" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://www.linkedin.com/in/gunvald7/" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',
+        securityLevel: 'loose',
+        fontSize: 26,
+        flowchart: { padding: 20, nodeSpacing: 40, rankSpacing: 50 },
+        themeVariables: {
+            primaryColor: '#18181b',
+            primaryTextColor: '#fafafa',
+            primaryBorderColor: '#27272a',
+            lineColor: '#a1a1aa',
+            secondaryColor: '#27272a',
+            tertiaryColor: '#111113',
+            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+            fontSize: '24px'
+        }
+    });
+</script>
+
+</body>
+</html>
