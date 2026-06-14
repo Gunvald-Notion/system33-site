@@ -77,6 +77,29 @@
             .chapter-box { padding: 20px; }
             .footer { flex-direction: column; align-items: flex-start; }
         }
+        /* Cast person cards — portrait beside text, Notion-style */
+        .person { display: flex; gap: 20px; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; }
+        .person-photo { flex: 0 0 96px; width: 96px; height: 96px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); background: var(--bg-secondary); }
+        .person-monogram { flex: 0 0 96px; width: 96px; height: 96px; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(135deg, #1f1f23, #2a2a30); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--text-secondary); }
+        .person-body { flex: 1 1 auto; min-width: 0; }
+        .person-body h4 { margin: 0 0 8px; color: var(--text-primary); font-size: 1.1rem; }
+        .person-body p { color: var(--text-secondary); margin-bottom: 10px; }
+        .person-links { font-size: 0.9rem; }
+        /* Legible org structure — tiers instead of a cramped graph */
+        .org { margin: 28px 0; }
+        .org-tier { margin: 0 0 14px; }
+        .org-tier-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 10px; }
+        .org-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .org-box { flex: 1 1 200px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+        .org-box .role { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 3px; }
+        .org-box .name { color: var(--text-primary); font-weight: 600; font-size: 0.98rem; }
+        .org-box.lead { border-color: #3f3f46; background: #1c1c20; }
+        .org-box .org-note { color: var(--text-muted); font-size: 0.82rem; margin-top: 3px; font-weight: 400; }
+        .org-connector { text-align: center; color: var(--text-muted); font-size: 1.1rem; line-height: 1; margin: 2px 0 12px; }
+        @media (max-width: 480px) {
+            .person { flex-direction: column; gap: 14px; }
+            .person-photo, .person-monogram { width: 72px; height: 72px; flex-basis: 72px; }
+        }
     </style>
 </head>
 <body>
@@ -124,50 +147,86 @@
 
         <h2 id="cast">Who's in the room</h2>
 
-        <div class="chapter-box">
-            <h4>Gustav Söderström — the guest</h4>
-            <p>Spotify's <strong>Co-CEO and Chief Product &amp; Technology Officer.</strong> Joined in 2009 when it was a small Swedish outfit betting against the download model, and helped build it into the global leader in audio. Before Spotify he founded Kenet Works (mobile messaging, acquired by Yahoo! in 2006), then ran product for Yahoo! Mobile. Took the Co-CEO chair on 1 January 2026 alongside Alex Norström. His own line: <em>"Love science and art — preferably intertwined."</em></p>
-            <p><a href="https://se.linkedin.com/in/gustavsoderstrom" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/GustavS" target="_blank" rel="noopener">X — @GustavS</a></p>
+        <div class="person">
+            <div class="person-monogram" aria-hidden="true">GS</div>
+            <div class="person-body">
+                <h4>Gustav Söderström — the guest</h4>
+                <p>Spotify's <strong>Co-CEO and Chief Product &amp; Technology Officer.</strong> Joined in 2009 when it was a small Swedish outfit betting against the download model, and helped build it into the global leader in audio. Before Spotify he founded Kenet Works (mobile messaging, acquired by Yahoo! in 2006), then ran product for Yahoo! Mobile. Took the Co-CEO chair on 1 January 2026 alongside Alex Norström. His own line: <em>"Love science and art — preferably intertwined."</em></p>
+                <p class="person-links"><a href="https://se.linkedin.com/in/gustavsoderstrom" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/GustavS" target="_blank" rel="noopener">X — @GustavS</a></p>
+            </div>
         </div>
 
-        <div class="chapter-box">
-            <h4>David Senra — the host</h4>
-            <p>Host of <strong>Founders</strong>, the podcast where he reads a biography of a great entrepreneur and talks through what he learned. Thousands of hours inside the minds of history's builders — which makes him the rare interviewer who hears an operating principle and immediately knows which founder did the same thing a century ago.</p>
-            <p><a href="https://www.davidsenra.com" target="_blank" rel="noopener">davidsenra.com</a> · <a href="https://x.com/FoundersPodcast" target="_blank" rel="noopener">X — @FoundersPodcast</a></p>
+        <div class="person">
+            <img class="person-photo" src="https://yt3.googleusercontent.com/2yUUt7GiVvaIvJFypoy-IjPbfwpe9dfYlYfr0mI03b3BYN6MqJGbdFpNgdDbYH4F3uuB5aYmpg=s160-c-k-c0x00ffffff-no-rj" alt="David Senra" loading="lazy">
+            <div class="person-body">
+                <h4>David Senra — the host</h4>
+                <p>Host of <strong>Founders</strong>, the podcast where he reads a biography of a great entrepreneur and talks through what he learned. Thousands of hours inside the minds of history's builders — which makes him the rare interviewer who hears an operating principle and immediately knows which founder did the same thing a century ago.</p>
+                <p class="person-links"><a href="https://www.davidsenra.com" target="_blank" rel="noopener">davidsenra.com</a> · <a href="https://x.com/FoundersPodcast" target="_blank" rel="noopener">X — @FoundersPodcast</a></p>
+            </div>
         </div>
 
-        <div class="chapter-box">
-            <h4>Daniel Ek — the one who keeps coming up</h4>
-            <p>Spotify's founder, now <strong>Executive Chairman</strong> (Chairman &amp; CEO from 2006 until the January 2026 handover). The person who kept giving Gustav jobs he wasn't ready for. Also founder and Principal of <strong>Prima Materia</strong> — his investment firm that insists it's not a fund: <em>"We are not investors but builders and active owners."</em> Chairman of Neko Health and Helsing.</p>
-            <p><a href="https://en.wikipedia.org/wiki/Daniel_Ek" target="_blank" rel="noopener">Wikipedia</a> · <a href="https://se.linkedin.com/in/daniel-ek-1b52093a" target="_blank" rel="noopener">LinkedIn</a></p>
+        <div class="person">
+            <img class="person-photo" src="https://upload.wikimedia.org/wikipedia/commons/0/0c/Cropped_image_of_Daniel_Ek.jpg" alt="Daniel Ek" loading="lazy">
+            <div class="person-body">
+                <h4>Daniel Ek — the one who keeps coming up</h4>
+                <p>Spotify's founder, now <strong>Executive Chairman</strong> (Chairman &amp; CEO from 2006 until the January 2026 handover). The person who kept giving Gustav jobs he wasn't ready for. Also founder and Principal of <strong>Prima Materia</strong> — his investment firm that insists it's not a fund: <em>"We are not investors but builders and active owners."</em> Chairman of Neko Health and Helsing.</p>
+                <p class="person-links"><a href="https://en.wikipedia.org/wiki/Daniel_Ek" target="_blank" rel="noopener">Wikipedia</a> · <a href="https://se.linkedin.com/in/daniel-ek-1b52093a" target="_blank" rel="noopener">LinkedIn</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram" aria-hidden="true">PM</div>
+            <div class="person-body">
+                <h4>Pia Michel — the one who beat Gustav</h4>
+                <p>Head of New Projects at <strong>Prima Materia</strong>, Daniel Ek's company-building firm, since 2021. A science background — BSc Amsterdam, MSc Groningen — and she's led real deals there, like the longevity startup Epiterna. She's the one David needles Gustav about: a few months back the four of them were racing cars in Sweden — Gustav, David, Daniel and Pia — and Pia won. The point isn't the race. It's that a man that competitive grinned and said <em>"I felt great about losing to Pia."</em> Small human proof of the leave-them-stronger, others-over-self idea the episode keeps circling.</p>
+                <p class="person-links"><a href="https://se.linkedin.com/in/pia-michel" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://x.com/piammichel" target="_blank" rel="noopener">X — @piammichel</a></p>
+            </div>
         </div>
 
         <h2 id="hierarchy">The hierarchy — who speaks to who</h2>
 
         <p>The whole shape, after the 1 January 2026 handover — governance at the top, the two co-CEOs, the corporate functions beside them, and the two operating lines fanning down into the squads-and-tribes layer Spotify is known for.</p>
 
-        <div class="mermaid-container">
-            <pre class="mermaid">
-flowchart TD
-    BOD["Board of Directors"] --> EK["Daniel Ek<br>Founder &amp; Executive Chairman"]
-    EK --> CEO["Co-CEOs<br>Gustav Söderström + Alex Norström"]
-    CEO --> FIN["CFO<br>Christian Luiga"]
-    CEO --> HR["CHRO<br>Anna Lundström"]
-    CEO --> PA["Chief Public Affairs<br>Dustee Jenkins"]
-    CEO --> LEG["General Counsel"]
-    CEO --> PT["Product &amp; Technology<br>Söderström's line"]
-    CEO --> BIZ["Business &amp; Commercial<br>Norström's line"]
-    PT --> PROD["Product"]
-    PT --> ENG["Engineering"]
-    PT --> DATA["Data &amp; Personalization"]
-    BIZ --> MUS["Music"]
-    BIZ --> POD["Podcasts &amp; Audiobooks"]
-    BIZ --> ADS["Advertising"]
-    PROD --> TRIBE["Tribes"]
-    ENG --> TRIBE
-    TRIBE --> SQUAD["Squads"]
-    SQUAD -.-> CHAP["Chapters &amp; Guilds"]
-            </pre>
+        <div class="org" role="group" aria-label="Spotify leadership structure after the 1 January 2026 handover">
+            <div class="org-tier">
+                <div class="org-tier-label">Governance</div>
+                <div class="org-row"><div class="org-box"><div class="role">Board of Directors</div><div class="name">Lorentzon · Woody Marshall (Lead Independent) · Heidi O'Neill · others</div></div></div>
+            </div>
+            <div class="org-connector">↓</div>
+            <div class="org-tier">
+                <div class="org-row"><div class="org-box lead"><div class="role">Founder &amp; Executive Chairman</div><div class="name">Daniel Ek</div></div></div>
+            </div>
+            <div class="org-connector">↓</div>
+            <div class="org-tier">
+                <div class="org-tier-label">Leadership · since 1 Jan 2026</div>
+                <div class="org-row"><div class="org-box lead"><div class="role">Co-CEOs</div><div class="name">Gustav Söderström + Alex Norström</div></div></div>
+            </div>
+            <div class="org-connector">↓</div>
+            <div class="org-tier">
+                <div class="org-tier-label">Corporate functions — reporting to the Co-CEOs</div>
+                <div class="org-row">
+                    <div class="org-box"><div class="role">CFO</div><div class="name">Christian Luiga</div></div>
+                    <div class="org-box"><div class="role">CHRO</div><div class="name">Anna Lundström</div></div>
+                    <div class="org-box"><div class="role">Chief Public Affairs</div><div class="name">Dustee Jenkins</div></div>
+                    <div class="org-box"><div class="role">General Counsel</div><div class="name">— unconfirmed</div></div>
+                </div>
+            </div>
+            <div class="org-tier">
+                <div class="org-tier-label">Two operating lines</div>
+                <div class="org-row">
+                    <div class="org-box"><div class="role">Product &amp; Technology — Söderström's line</div><div class="name">Product · Engineering · Data &amp; Personalization</div></div>
+                    <div class="org-box"><div class="role">Business &amp; Commercial — Norström's line</div><div class="name">Music · Podcasts &amp; Audiobooks · Advertising</div></div>
+                </div>
+            </div>
+            <div class="org-connector">↓</div>
+            <div class="org-tier">
+                <div class="org-tier-label">How the teams are organized</div>
+                <div class="org-row">
+                    <div class="org-box"><div class="name">Tribes</div><div class="org-note">product areas</div></div>
+                    <div class="org-box"><div class="name">Squads</div><div class="org-note">small autonomous teams</div></div>
+                    <div class="org-box"><div class="name">Chapters &amp; Guilds</div><div class="org-note">skills + interests, across squads</div></div>
+                </div>
+            </div>
         </div>
 
         <p>A note on sourcing: the named chiefs are confirmed from Spotify's own governance pages. The General Counsel is left unnamed on purpose — the previous holder departed and the current one isn't confirmed. The division split is Spotify's functional shape, not a leaked chart. Full sources are at the bottom.</p>
@@ -176,20 +235,28 @@ flowchart TD
 
         <p>Ek is the bridge between two worlds: Executive Chairman at Spotify, and Founder &amp; Principal of his own investment firm, Prima Materia — the one that keeps coming up in the episode. It's deliberately tiny, and it insists it isn't a fund.</p>
 
-        <div class="mermaid-container">
-            <pre class="mermaid">
-flowchart TD
-    PM["Prima Materia<br>builders and active owners, not a fund"]
-    PM --> EK2["Daniel Ek<br>Founder &amp; Principal"]
-    PM --> SK["Shakil Khan<br>Co-Founder &amp; Principal Investor"]
-    PM --> PIA["Pia Michel<br>Head of New Projects"]
-    EK2 --> PORT["Portfolio<br>highly selective"]
-    SK --> PORT
-    PIA --> PORT
-    PORT --> HEL["Helsing<br>defense AI · led a €600m round"]
-    PORT --> NEK["Neko Health<br>preventive health scanning"]
-    PORT --> EPI["Epiterna<br>longevity · sole early investor"]
-            </pre>
+        <div class="org" role="group" aria-label="Prima Materia structure">
+            <div class="org-tier">
+                <div class="org-row"><div class="org-box lead"><div class="role">Builders and active owners — not a fund</div><div class="name">Prima Materia</div></div></div>
+            </div>
+            <div class="org-connector">↓</div>
+            <div class="org-tier">
+                <div class="org-tier-label">The people</div>
+                <div class="org-row">
+                    <div class="org-box"><div class="role">Founder &amp; Principal</div><div class="name">Daniel Ek</div></div>
+                    <div class="org-box"><div class="role">Co-Founder &amp; Principal Investor</div><div class="name">Shakil Khan</div></div>
+                    <div class="org-box"><div class="role">Head of New Projects</div><div class="name">Pia Michel</div></div>
+                </div>
+            </div>
+            <div class="org-connector">↓</div>
+            <div class="org-tier">
+                <div class="org-tier-label">Portfolio — highly selective</div>
+                <div class="org-row">
+                    <div class="org-box"><div class="name">Helsing</div><div class="org-note">defense AI · led a €600m round</div></div>
+                    <div class="org-box"><div class="name">Neko Health</div><div class="org-note">preventive health scanning</div></div>
+                    <div class="org-box"><div class="name">Epiterna</div><div class="org-note">longevity · sole early investor</div></div>
+                </div>
+            </div>
         </div>
 
         <h2 id="ch1">1 · 00:00 — How Gustav prepared to become CEO</h2>
