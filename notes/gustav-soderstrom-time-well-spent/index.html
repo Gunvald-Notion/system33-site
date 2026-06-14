@@ -172,6 +172,26 @@ flowchart TD
 
         <p>A note on sourcing: the named chiefs are confirmed from Spotify's own governance pages. The General Counsel is left unnamed on purpose — the previous holder departed and the current one isn't confirmed. The division split is Spotify's functional shape, not a leaked chart. Full sources are at the bottom.</p>
 
+        <h3>Daniel Ek's other seat — Prima Materia</h3>
+
+        <p>Ek is the bridge between two worlds: Executive Chairman at Spotify, and Founder &amp; Principal of his own investment firm, Prima Materia — the one that keeps coming up in the episode. It's deliberately tiny, and it insists it isn't a fund.</p>
+
+        <div class="mermaid-container">
+            <pre class="mermaid">
+flowchart TD
+    PM["Prima Materia<br>builders and active owners, not a fund"]
+    PM --> EK2["Daniel Ek<br>Founder &amp; Principal"]
+    PM --> SK["Shakil Khan<br>Co-Founder &amp; Principal Investor"]
+    PM --> PIA["Pia Michel<br>Head of New Projects"]
+    EK2 --> PORT["Portfolio<br>highly selective"]
+    SK --> PORT
+    PIA --> PORT
+    PORT --> HEL["Helsing<br>defense AI · led a €600m round"]
+    PORT --> NEK["Neko Health<br>preventive health scanning"]
+    PORT --> EPI["Epiterna<br>longevity · sole early investor"]
+            </pre>
+        </div>
+
         <h2 id="ch1">1 · 00:00 — How Gustav prepared to become CEO</h2>
 
         <div class="chapter-box">
@@ -185,13 +205,42 @@ flowchart TD
         </div>
 
         <div class="mermaid-container">
-            <pre class="mermaid">
-xychart-beta
-    title "Diminishing returns — growth is steepest at the start, then comfort flattens it"
-    x-axis [Start, Early, Mid, Late, Comfort]
-    y-axis "Total growth gained" 0 --> 100
-    line [0, 68, 87, 96, 100]
-            </pre>
+            <svg viewBox="0 0 720 400" role="img" aria-label="Diminishing returns — growth is steepest at the start, then comfort flattens it" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+                <defs>
+                    <linearGradient id="dr-fill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#fafafa" stop-opacity="0.16"/>
+                        <stop offset="100%" stop-color="#fafafa" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <text x="60" y="22" fill="#fafafa" font-size="16" font-weight="600">Diminishing returns — the steepest growth is at the start</text>
+                <g stroke="#27272a" stroke-width="1">
+                    <line x1="60" y1="40" x2="690" y2="40"/>
+                    <line x1="60" y1="112" x2="690" y2="112"/>
+                    <line x1="60" y1="184" x2="690" y2="184"/>
+                    <line x1="60" y1="256" x2="690" y2="256"/>
+                    <line x1="60" y1="328" x2="690" y2="328"/>
+                </g>
+                <line x1="60" y1="40" x2="60" y2="328" stroke="#a1a1aa" stroke-width="1.5"/>
+                <line x1="60" y1="328" x2="690" y2="328" stroke="#a1a1aa" stroke-width="1.5"/>
+                <path d="M60,328 C138.75,328 138.75,131 217.5,131 C296.25,131 296.25,77 375,77 C453.75,77 453.75,51 532.5,51 C611.25,51 611.25,40 690,40 L690,328 Z" fill="url(#dr-fill)"/>
+                <path d="M60,328 C138.75,328 138.75,131 217.5,131 C296.25,131 296.25,77 375,77 C453.75,77 453.75,51 532.5,51 C611.25,51 611.25,40 690,40" fill="none" stroke="#fafafa" stroke-width="2.5"/>
+                <g fill="#fafafa">
+                    <circle cx="60" cy="328" r="4"/>
+                    <circle cx="217.5" cy="131" r="4"/>
+                    <circle cx="375" cy="77" r="4"/>
+                    <circle cx="532.5" cy="51" r="4"/>
+                    <circle cx="690" cy="40" r="4"/>
+                </g>
+                <g fill="#a1a1aa" font-size="13" text-anchor="middle">
+                    <text x="60" y="350">Start</text>
+                    <text x="217.5" y="350">Early</text>
+                    <text x="375" y="350">Mid</text>
+                    <text x="532.5" y="350">Late</text>
+                    <text x="690" y="350">Comfort</text>
+                </g>
+                <text x="375" y="384" fill="#71717a" font-size="12" text-anchor="middle">Effort / time spent in one thing →</text>
+                <text x="20" y="184" fill="#71717a" font-size="12" text-anchor="middle" transform="rotate(-90 20 184)">Total growth gained</text>
+            </svg>
         </div>
 
         <div class="chapter-box">
