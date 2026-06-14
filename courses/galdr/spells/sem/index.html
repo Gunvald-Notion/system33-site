@@ -11,6 +11,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:
 a{color:var(--text2);text-decoration:none}a:hover{opacity:.7}
 .container{max-width:760px;margin:0 auto;padding:0 24px}
 .site-header{padding:24px 0 0}.site-header a{font-size:.85rem;color:var(--muted)}
+.lang-btn{background:transparent;border:1px solid var(--border);border-radius:100px;color:var(--text2);font-family:inherit;font-size:.75rem;padding:4px 12px;cursor:pointer;float:right;margin-top:-2px;transition:all .2s}.lang-btn:hover{border-color:var(--accent);color:var(--accent)}
 .hero{padding:40px 0 18px}
 .badge{display:inline-block;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid var(--border);border-radius:999px;padding:3px 10px;margin-bottom:14px}
 .hero h1{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:700;letter-spacing:-.03em;margin-bottom:12px}
@@ -74,12 +75,52 @@ footer a{color:var(--text2)}
 </style>
 </head>
 <body>
-<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Formation</a></div></header>
+<script>
+(function(){
+    var L=localStorage.getItem('semLang')||'en';
+    var NO={
+        'title':'SEM | Galdr-formasjon | System 33',
+        'hero-p':'Siste kapittel. M\u00E5le det du ikke kan sette en linjal p\u00E5 \u2014 konstrukter som lever i respondentens hode \u2014 og vurdere om modellen faktisk holder.',
+        'principle':'<strong>To typer variabler.</strong> Observerte m\u00E5ler du direkte; latente n\u00E5r du bare gjennom flere indikatorer som beveger seg sammen. SEM binder dem med to halvdeler: en <strong>m\u00E5lemodell</strong> som gj\u00F8r indikatorer om til et konstrukt, og en <strong>strukturell modell</strong> som lar konstrukter predikere hverandre.',
+        'label-output':'Lese resultatet \u2014 lavaan i R',
+        'label-ref':'Formeloversikt',
+        'refrow1':'<code>=~</code> &nbsp;\u201Erm\u00E5les av\u201D \u2014 m\u00E5lemodellen (latent <code>=~</code> indikatorer).',
+        'refrow2':'<code>~</code> &nbsp;\u201Eregresjoneres p\u00E5\u201D \u2014 strukturell modell (utfall <code>~</code> prediktor).',
+        'refrow3':'<code>~~</code> &nbsp;\u201Ekovarierer med\u201D.',
+        'refrow4':'<code>cfa()</code> bare m\u00E5lemodell &middot; <code>sem()</code> full modell.',
+        'refrow5':'<code>summary(fit, fit.measures = TRUE, standardized = TRUE)</code> skriver ut ladninger, strukturelle koeffisienter og tilpasningsindekser.',
+        'form1-r1':'M\u00E5lemodell: &nbsp;<code>X = &lambda;&middot;&eta; + &delta;</code>',
+        'form1-r2':'Strukturell modell: &nbsp;<code>&eta;&#8322; = &beta;&middot;&eta;&#8321; + &zeta;</code>',
+        'form1-r3':'Forklart varians for en indikator: &nbsp;<code>&lambda;&sup2;</code> &nbsp;(sterk &gt;0.70 &middot; moderat 0.40\u20130.70 &middot; svak &lt;0.40)',
+        'form1-r4':'Indirekte effekt: &nbsp;<code>&beta;&#8321;&middot;&beta;&#8322;</code> &nbsp;&middot;&nbsp; Totalt: &nbsp;<code>direkte + indirekte</code>',
+        'form1-r5':'Tilpasningsgrenser: &nbsp;CFI &ge; 0.95 &middot; TLI &ge; 0.95 &middot; RMSEA &le; 0.06 &middot; SRMR &le; 0.08',
+        'footer':'Bygd av Gunvald &middot; Del av <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Formasjon</a>'
+    };
+    if(L==='no'){
+        document.documentElement.lang='no';
+        document.title=NO['title'];
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+        var btn=document.getElementById('lang-toggle');
+        if(btn){
+            btn.textContent=L==='no'?'EN':'NO';
+            btn.addEventListener('click',function(){localStorage.setItem('semLang',L==='no'?'en':'no');location.reload();});
+        }
+        if(L==='no'){
+            document.querySelectorAll('[data-i18n]').forEach(function(el){
+                var k=el.getAttribute('data-i18n');
+                if(NO[k]!==undefined)el.innerHTML=NO[k];
+            });
+        }
+    });
+})();
+</script>
+<header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Formation</a><button class="lang-btn" id="lang-toggle">NO</button></div></header>
 <section class="hero"><div class="container">
 <div class="badge">Kap 16 &middot; SEM</div>
 <h1>Structural Equation Models</h1>
-<p>The last chapter. Measuring what you can&rsquo;t put a ruler to &mdash; constructs that live in the respondent&rsquo;s head &mdash; and judging whether the model actually holds.</p>
-<div class="principle"><strong>Two kinds of variable.</strong> Observed ones you measure directly; latent ones you reach only through several indicators that move together. SEM ties them with two halves: a <strong>measurement model</strong> that turns indicators into a construct, and a <strong>structural model</strong> that lets constructs predict each other.</div>
+<p data-i18n="hero-p">The last chapter. Measuring what you can&rsquo;t put a ruler to &mdash; constructs that live in the respondent&rsquo;s head &mdash; and judging whether the model actually holds.</p>
+<div class="principle" data-i18n="principle"><strong>Two kinds of variable.</strong> Observed ones you measure directly; latent ones you reach only through several indicators that move together. SEM ties them with two halves: a <strong>measurement model</strong> that turns indicators into a construct, and a <strong>structural model</strong> that lets constructs predict each other.</div>
 </div></section>
 <section class="shell"><div class="container">
 <div id="mode-nav" class="mode-nav"></div>
@@ -88,25 +129,30 @@ footer a{color:var(--text2)}
 <div id="step-container"></div>
 </div></section>
 <section><div class="container">
-<div class="section-label">Reading the output &mdash; lavaan in R</div>
+<div class="section-label" data-i18n="label-output">Reading the output &mdash; lavaan in R</div>
 <div class="refbox">
-<div class="refrow"><code>=~</code> &nbsp;&ldquo;is measured by&rdquo; &mdash; the measurement model (latent <code>=~</code> indicators).</div>
-<div class="refrow"><code>~</code> &nbsp;&ldquo;is regressed on&rdquo; &mdash; the structural model (outcome <code>~</code> predictor).</div>
-<div class="refrow"><code>~~</code> &nbsp;&ldquo;covaries with&rdquo;.</div>
-<div class="refrow"><code>cfa()</code> measurement model only &middot; <code>sem()</code> full model.</div>
-<div class="refrow"><code>summary(fit, fit.measures = TRUE, standardized = TRUE)</code> prints loadings, structural coefficients and the fit indices.</div>
+<div class="refrow" data-i18n="refrow1"><code>=~</code> &nbsp;&ldquo;is measured by&rdquo; &mdash; the measurement model (latent <code>=~</code> indicators).</div>
+<div class="refrow" data-i18n="refrow2"><code>~</code> &nbsp;&ldquo;is regressed on&rdquo; &mdash; the structural model (outcome <code>~</code> predictor).</div>
+<div class="refrow" data-i18n="refrow3"><code>~~</code> &nbsp;&ldquo;covaries with&rdquo;.</div>
+<div class="refrow" data-i18n="refrow4"><code>cfa()</code> measurement model only &middot; <code>sem()</code> full model.</div>
+<div class="refrow" data-i18n="refrow5"><code>summary(fit, fit.measures = TRUE, standardized = TRUE)</code> prints loadings, structural coefficients and the fit indices.</div>
 </div>
-<div class="section-label">Formula reference</div>
+<div class="section-label" data-i18n="label-ref">Formula reference</div>
 <div class="refbox">
-<div class="refrow">Measurement model: &nbsp;<code>X = &lambda;&middot;&eta; + &delta;</code></div>
-<div class="refrow">Structural model: &nbsp;<code>&eta;&#8322; = &beta;&middot;&eta;&#8321; + &zeta;</code></div>
-<div class="refrow">Explained variance of an indicator: &nbsp;<code>&lambda;&sup2;</code> &nbsp;(strong &gt;0.70 &middot; moderate 0.40&ndash;0.70 &middot; weak &lt;0.40)</div>
-<div class="refrow">Indirect effect: &nbsp;<code>&beta;&#8321;&middot;&beta;&#8322;</code> &nbsp;&middot;&nbsp; Total: &nbsp;<code>direct + indirect</code></div>
-<div class="refrow">Fit thresholds: &nbsp;CFI &ge; 0.95 &middot; TLI &ge; 0.95 &middot; RMSEA &le; 0.06 &middot; SRMR &le; 0.08</div>
+<div class="refrow" data-i18n="form1-r1">Measurement model: &nbsp;<code>X = &lambda;&middot;&eta; + &delta;</code></div>
+<div class="refrow" data-i18n="form1-r2">Structural model: &nbsp;<code>&eta;&#8322; = &beta;&middot;&eta;&#8321; + &zeta;</code></div>
+<div class="refrow" data-i18n="form1-r3">Explained variance of an indicator: &nbsp;<code>&lambda;&sup2;</code> &nbsp;(strong &gt;0.70 &middot; moderate 0.40&ndash;0.70 &middot; weak &lt;0.40)</div>
+<div class="refrow" data-i18n="form1-r4">Indirect effect: &nbsp;<code>&beta;&#8321;&middot;&beta;&#8322;</code> &nbsp;&middot;&nbsp; Total: &nbsp;<code>direct + indirect</code></div>
+<div class="refrow" data-i18n="form1-r5">Fit thresholds: &nbsp;CFI &ge; 0.95 &middot; TLI &ge; 0.95 &middot; RMSEA &le; 0.06 &middot; SRMR &le; 0.08</div>
 </div>
 </div></section>
-<footer><div class="container">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Formation</a></div></footer>
-<script src="./app.js"></script>
-<script src="./test.js"></script>
+<footer><div class="container" data-i18n="footer">Built by Gunvald &middot; Part of <a href="https://system33.io">system33.io</a> &middot; <a href="/courses/galdr/spells/">Formation</a></div></footer>
+<script>
+(function(){
+    var L=localStorage.getItem('semLang')||'en';
+    document.write('<scr'+'ipt src="'+(L==='no'?'app.no.js':'app.js')+'"><\/scr'+'ipt>');
+    document.write('<scr'+'ipt src="'+(L==='no'?'test.no.js':'test.js')+'"><\/scr'+'ipt>');
+})();
+</script>
 </body>
 </html>
