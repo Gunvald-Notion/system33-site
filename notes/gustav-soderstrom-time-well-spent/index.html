@@ -96,6 +96,11 @@
         .org-box.lead { border-color: #3f3f46; background: #1c1c20; }
         .org-box .org-note { color: var(--text-muted); font-size: 0.82rem; margin-top: 3px; font-weight: 400; }
         .org-connector { text-align: center; color: var(--text-muted); font-size: 1.1rem; line-height: 1; margin: 2px 0 12px; }
+        .org-figure { margin: 28px 0 8px; }
+        .org-figure a { display: block; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); padding: 16px; }
+        .org-figure a:hover { border-color: #3f3f46; opacity: 1; }
+        .org-figure img { width: 100%; height: auto; display: block; }
+        .org-figcaption { font-size: 0.8rem; color: var(--text-muted); margin: 10px 2px 0; }
         @media (max-width: 480px) {
             .person { flex-direction: column; gap: 14px; }
             .person-photo, .person-monogram { width: 72px; height: 72px; flex-basis: 72px; }
@@ -187,47 +192,12 @@
 
         <p>The whole shape, after the 1 January 2026 handover — governance at the top, the two co-CEOs, the corporate functions beside them, and the two operating lines fanning down into the squads-and-tribes layer Spotify is known for.</p>
 
-        <div class="org" role="group" aria-label="Spotify leadership structure after the 1 January 2026 handover">
-            <div class="org-tier">
-                <div class="org-tier-label">Governance</div>
-                <div class="org-row"><div class="org-box"><div class="role">Board of Directors</div><div class="name">Lorentzon · Woody Marshall (Lead Independent) · Heidi O'Neill · others</div></div></div>
-            </div>
-            <div class="org-connector">↓</div>
-            <div class="org-tier">
-                <div class="org-row"><div class="org-box lead"><div class="role">Founder &amp; Executive Chairman</div><div class="name">Daniel Ek</div></div></div>
-            </div>
-            <div class="org-connector">↓</div>
-            <div class="org-tier">
-                <div class="org-tier-label">Leadership · since 1 Jan 2026</div>
-                <div class="org-row"><div class="org-box lead"><div class="role">Co-CEOs</div><div class="name">Gustav Söderström + Alex Norström</div></div></div>
-            </div>
-            <div class="org-connector">↓</div>
-            <div class="org-tier">
-                <div class="org-tier-label">Corporate functions — reporting to the Co-CEOs</div>
-                <div class="org-row">
-                    <div class="org-box"><div class="role">CFO</div><div class="name">Christian Luiga</div></div>
-                    <div class="org-box"><div class="role">CHRO</div><div class="name">Anna Lundström</div></div>
-                    <div class="org-box"><div class="role">Chief Public Affairs</div><div class="name">Dustee Jenkins</div></div>
-                    <div class="org-box"><div class="role">General Counsel</div><div class="name">— unconfirmed</div></div>
-                </div>
-            </div>
-            <div class="org-tier">
-                <div class="org-tier-label">Two operating lines</div>
-                <div class="org-row">
-                    <div class="org-box"><div class="role">Product &amp; Technology — Söderström's line</div><div class="name">Product · Engineering · Data &amp; Personalization</div></div>
-                    <div class="org-box"><div class="role">Business &amp; Commercial — Norström's line</div><div class="name">Music · Podcasts &amp; Audiobooks · Advertising</div></div>
-                </div>
-            </div>
-            <div class="org-connector">↓</div>
-            <div class="org-tier">
-                <div class="org-tier-label">How the teams are organized</div>
-                <div class="org-row">
-                    <div class="org-box"><div class="name">Tribes</div><div class="org-note">product areas</div></div>
-                    <div class="org-box"><div class="name">Squads</div><div class="org-note">small autonomous teams</div></div>
-                    <div class="org-box"><div class="name">Chapters &amp; Guilds</div><div class="org-note">skills + interests, across squads</div></div>
-                </div>
-            </div>
-        </div>
+        <figure class="org-figure">
+            <a href="spotify-hierarchy.svg" target="_blank" rel="noopener" aria-label="Open the full Spotify reporting chart — pinch to zoom and pan on mobile">
+                <img src="spotify-hierarchy.svg" alt="Spotify reporting structure after the 1 January 2026 handover: the Board at the top, Daniel Ek as Founder and Executive Chairman, the two Co-CEOs Gustav Söderström and Alex Norström with corporate functions reporting beside them, the two operating lines fanning down, and the squads-and-tribes team layer.">
+            </a>
+            <figcaption class="org-figcaption">↗ Tap to open full size — pinch to zoom and pan on your phone</figcaption>
+        </figure>
 
         <p>A note on sourcing: the named chiefs are confirmed from Spotify's own governance pages. The General Counsel is left unnamed on purpose — the previous holder departed and the current one isn't confirmed. The division split is Spotify's functional shape, not a leaked chart. Full sources are at the bottom.</p>
 
