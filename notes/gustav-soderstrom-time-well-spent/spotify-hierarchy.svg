@@ -1,58 +1,60 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 790" role="img" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 880" width="1120" height="880" role="img" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
 <title>Spotify reporting structure after the 1 January 2026 handover</title>
-<rect x="0" y="0" width="1000" height="790" fill="#111113"/>
-<text x="40" y="40" fill="#fafafa" font-size="18" font-weight="700">Spotify — who reports to whom</text>
-<text x="40" y="62" fill="#71717a" font-size="13">After the 1 January 2026 handover · solid lines = reporting · dashed = staff functions</text>
-<line x1="470" y1="158" x2="470" y2="194" stroke="#52525b" stroke-width="2"/>
-<line x1="470" y1="268" x2="470" y2="306" stroke="#52525b" stroke-width="2"/>
-<line x1="700" y1="350" x2="740" y2="350" stroke="#52525b" stroke-width="2" stroke-dasharray="6 5"/>
-<line x1="470" y1="394" x2="470" y2="446" stroke="#52525b" stroke-width="2"/>
-<line x1="300" y1="446" x2="640" y2="446" stroke="#52525b" stroke-width="2"/>
-<line x1="300" y1="446" x2="300" y2="484" stroke="#52525b" stroke-width="2"/>
-<line x1="640" y1="446" x2="640" y2="484" stroke="#52525b" stroke-width="2"/>
-<line x1="300" y1="580" x2="300" y2="614" stroke="#52525b" stroke-width="2"/>
-<line x1="640" y1="580" x2="640" y2="614" stroke="#52525b" stroke-width="2"/>
-<line x1="300" y1="614" x2="640" y2="614" stroke="#52525b" stroke-width="2"/>
-<line x1="470" y1="614" x2="470" y2="642" stroke="#52525b" stroke-width="2"/>
-<line x1="170" y1="642" x2="770" y2="642" stroke="#52525b" stroke-width="2"/>
-<line x1="170" y1="642" x2="170" y2="662" stroke="#52525b" stroke-width="2"/>
-<line x1="470" y1="642" x2="470" y2="662" stroke="#52525b" stroke-width="2"/>
-<line x1="770" y1="642" x2="770" y2="662" stroke="#52525b" stroke-width="2"/>
-<rect x="190.0" y="78" width="560" height="80" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
-<text x="470.0" y="98.9" fill="#71717a" font-size="11" font-weight="400" text-anchor="middle" letter-spacing="1">GOVERNANCE</text>
-<text x="470.0" y="122.6" fill="#fafafa" font-size="17" font-weight="700" text-anchor="middle">Board of Directors</text>
-<text x="470.0" y="144.0" fill="#a1a1aa" font-size="12.5" font-weight="400" text-anchor="middle">Martin Lorentzon · Woody Marshall (Lead Independent) · Heidi O'Neill</text>
-<rect x="250.0" y="194" width="440" height="74" rx="12" fill="#1c1c20" stroke="#3f3f46" stroke-width="1.5"/>
-<text x="470.0" y="220.8" fill="#71717a" font-size="11" font-weight="400" text-anchor="middle" letter-spacing="1">FOUNDER &amp; EXECUTIVE CHAIRMAN</text>
-<text x="470.0" y="245.7" fill="#fafafa" font-size="18" font-weight="700" text-anchor="middle">Daniel Ek</text>
-<rect x="240.0" y="306" width="460" height="88" rx="12" fill="#1c1c20" stroke="#3f3f46" stroke-width="1.5"/>
-<text x="470.0" y="329.3" fill="#71717a" font-size="11" font-weight="400" text-anchor="middle" letter-spacing="1">LEADERSHIP · SINCE 1 JAN 2026</text>
-<text x="470.0" y="354.2" fill="#fafafa" font-size="18" font-weight="700" text-anchor="middle">Co-CEOs</text>
-<text x="470.0" y="377.1" fill="#a1a1aa" font-size="13.5" font-weight="400" text-anchor="middle">Gustav Söderström   +   Alex Norström</text>
-<rect x="740.0" y="306" width="250" height="150" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
-<text x="865.0" y="339.6" fill="#71717a" font-size="10.5" font-weight="400" text-anchor="middle" letter-spacing="1">CORPORATE FUNCTIONS</text>
-<text x="865.0" y="356.5" fill="#71717a" font-size="11" font-weight="400" text-anchor="middle">report to the Co-CEOs</text>
-<text x="865.0" y="374.6" fill="#a1a1aa" font-size="12" font-weight="400" text-anchor="middle">CFO — Christian Luiga</text>
-<text x="865.0" y="393.2" fill="#a1a1aa" font-size="12" font-weight="400" text-anchor="middle">CHRO — Anna Lundström</text>
-<text x="865.0" y="411.3" fill="#a1a1aa" font-size="11.5" font-weight="400" text-anchor="middle">Public Affairs — Dustee Jenkins</text>
-<text x="865.0" y="429.1" fill="#a1a1aa" font-size="11.5" font-weight="400" text-anchor="middle">General Counsel — unconfirmed</text>
-<rect x="140.0" y="484" width="320" height="96" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
-<text x="300.0" y="506.9" fill="#71717a" font-size="10.5" font-weight="400" text-anchor="middle" letter-spacing="1">PRODUCT &amp; TECHNOLOGY</text>
-<text x="300.0" y="526.0" fill="#fafafa" font-size="13" font-weight="600" text-anchor="middle">Gustav Söderström's line</text>
-<text x="300.0" y="545.0" fill="#a1a1aa" font-size="12" font-weight="400" text-anchor="middle">Product · Engineering</text>
-<text x="300.0" y="563.6" fill="#a1a1aa" font-size="12" font-weight="400" text-anchor="middle">Data &amp; Personalization</text>
-<rect x="480.0" y="484" width="320" height="96" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
-<text x="640.0" y="506.9" fill="#71717a" font-size="10.5" font-weight="400" text-anchor="middle" letter-spacing="1">BUSINESS &amp; COMMERCIAL</text>
-<text x="640.0" y="526.0" fill="#fafafa" font-size="13" font-weight="600" text-anchor="middle">Alex Norström's line</text>
-<text x="640.0" y="545.0" fill="#a1a1aa" font-size="12" font-weight="400" text-anchor="middle">Music · Podcasts &amp; Audiobooks</text>
-<text x="640.0" y="563.6" fill="#a1a1aa" font-size="12" font-weight="400" text-anchor="middle">Advertising</text>
-<rect x="30.0" y="662" width="280" height="84" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
-<text x="170.0" y="699.9" fill="#fafafa" font-size="14" font-weight="700" text-anchor="middle">Tribes</text>
-<text x="170.0" y="718.8" fill="#71717a" font-size="11.5" font-weight="400" text-anchor="middle">product areas</text>
-<rect x="330.0" y="662" width="280" height="84" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
-<text x="470.0" y="699.9" fill="#fafafa" font-size="14" font-weight="700" text-anchor="middle">Squads</text>
-<text x="470.0" y="718.8" fill="#71717a" font-size="11.5" font-weight="400" text-anchor="middle">small autonomous teams</text>
-<rect x="630.0" y="662" width="280" height="84" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
-<text x="770.0" y="699.9" fill="#fafafa" font-size="14" font-weight="700" text-anchor="middle">Chapters &amp; Guilds</text>
-<text x="770.0" y="718.8" fill="#71717a" font-size="11.5" font-weight="400" text-anchor="middle">skills + interests, across squads</text>
+<rect x="0" y="0" width="1120" height="880" fill="#111113"/>
+<text x="40" y="40" fill="#fafafa" font-size="18" font-weight="700" text-anchor="start">Spotify — who reports to whom</text>
+<text x="40" y="63" fill="#71717a" font-size="13" text-anchor="start">After the 1 January 2026 handover · solid lines = direct reporting · dashed = staff functions</text>
+<line x1="470" y1="160" x2="470" y2="198" stroke="#52525b" stroke-width="2"/>
+<line x1="470" y1="272" x2="470" y2="310" stroke="#52525b" stroke-width="2"/>
+<line x1="470" y1="400" x2="470" y2="462" stroke="#52525b" stroke-width="2"/>
+<line x1="300" y1="462" x2="640" y2="462" stroke="#52525b" stroke-width="2"/>
+<line x1="300" y1="462" x2="300" y2="500" stroke="#52525b" stroke-width="2"/>
+<line x1="640" y1="462" x2="640" y2="500" stroke="#52525b" stroke-width="2"/>
+<line x1="300" y1="596" x2="300" y2="720" stroke="#52525b" stroke-width="2"/>
+<line x1="640" y1="596" x2="640" y2="720" stroke="#52525b" stroke-width="2"/>
+<line x1="300" y1="720" x2="640" y2="720" stroke="#52525b" stroke-width="2"/>
+<line x1="470" y1="720" x2="470" y2="748" stroke="#52525b" stroke-width="2"/>
+<line x1="170" y1="748" x2="770" y2="748" stroke="#52525b" stroke-width="2"/>
+<line x1="170" y1="748" x2="170" y2="768" stroke="#52525b" stroke-width="2"/>
+<line x1="470" y1="748" x2="470" y2="768" stroke="#52525b" stroke-width="2"/>
+<line x1="770" y1="748" x2="770" y2="768" stroke="#52525b" stroke-width="2"/>
+<line x1="560" y1="400" x2="560" y2="440" stroke="#52525b" stroke-width="2" stroke-dasharray="6 5"/>
+<line x1="560" y1="440" x2="850" y2="440" stroke="#52525b" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="705" y="433" fill="#71717a" font-size="10.5" text-anchor="middle" font-style="italic">staff functions</text>
+<rect x="200" y="82" width="540" height="78" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="470" y="104" fill="#71717a" font-size="11" text-anchor="middle" letter-spacing="1">GOVERNANCE</text>
+<text x="470" y="128" fill="#fafafa" font-size="17" font-weight="700" text-anchor="middle">Board of Directors</text>
+<text x="470" y="150" fill="#a1a1aa" font-size="12.5" text-anchor="middle">Martin Lorentzon · Woody Marshall (Lead Independent) · Heidi O'Neill</text>
+<rect x="270" y="198" width="400" height="74" rx="12" fill="#1c1c20" stroke="#3f3f46" stroke-width="1.5"/>
+<text x="470" y="222" fill="#71717a" font-size="11" text-anchor="middle" letter-spacing="1">FOUNDER &amp; EXECUTIVE CHAIRMAN</text>
+<text x="470" y="248" fill="#fafafa" font-size="18" font-weight="700" text-anchor="middle">Daniel Ek</text>
+<rect x="255" y="310" width="430" height="90" rx="12" fill="#1c1c20" stroke="#3f3f46" stroke-width="1.5"/>
+<text x="470" y="336" fill="#71717a" font-size="11" text-anchor="middle" letter-spacing="1">LEADERSHIP · SINCE 1 JAN 2026</text>
+<text x="470" y="362" fill="#fafafa" font-size="18" font-weight="700" text-anchor="middle">Co-CEOs</text>
+<text x="470" y="386" fill="#a1a1aa" font-size="13.5" text-anchor="middle">Gustav Söderström   +   Alex Norström</text>
+<rect x="850" y="400" width="250" height="150" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="975" y="428" fill="#71717a" font-size="11" text-anchor="middle" letter-spacing="1">STAFF FUNCTIONS</text>
+<text x="975" y="447" fill="#71717a" font-size="11" text-anchor="middle">report to the Co-CEOs</text>
+<text x="975" y="474" fill="#a1a1aa" font-size="12" text-anchor="middle">CFO — Christian Luiga</text>
+<text x="975" y="495" fill="#a1a1aa" font-size="12" text-anchor="middle">CHRO — Anna Lundström</text>
+<text x="975" y="516" fill="#a1a1aa" font-size="11.5" text-anchor="middle">Public Affairs — Dustee Jenkins</text>
+<text x="975" y="537" fill="#a1a1aa" font-size="11.5" text-anchor="middle">General Counsel — unconfirmed</text>
+<rect x="150" y="500" width="300" height="96" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="300" y="524" fill="#71717a" font-size="10.5" text-anchor="middle" letter-spacing="1">PRODUCT &amp; TECHNOLOGY</text>
+<text x="300" y="545" fill="#fafafa" font-size="13" font-weight="600" text-anchor="middle">Gustav Söderström's line</text>
+<text x="300" y="565" fill="#a1a1aa" font-size="12" text-anchor="middle">Product · Engineering</text>
+<text x="300" y="583" fill="#a1a1aa" font-size="12" text-anchor="middle">Data &amp; Personalization</text>
+<rect x="490" y="500" width="300" height="96" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="640" y="524" fill="#71717a" font-size="10.5" text-anchor="middle" letter-spacing="1">BUSINESS &amp; COMMERCIAL</text>
+<text x="640" y="545" fill="#fafafa" font-size="13" font-weight="600" text-anchor="middle">Alex Norström's line</text>
+<text x="640" y="565" fill="#a1a1aa" font-size="12" text-anchor="middle">Music · Podcasts &amp; Audiobooks</text>
+<text x="640" y="583" fill="#a1a1aa" font-size="12" text-anchor="middle">Advertising</text>
+<rect x="30" y="768" width="280" height="84" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="170" y="806" fill="#fafafa" font-size="14" font-weight="700" text-anchor="middle">Tribes</text>
+<text x="170" y="826" fill="#71717a" font-size="11.5" text-anchor="middle">product areas</text>
+<rect x="330" y="768" width="280" height="84" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="470" y="806" fill="#fafafa" font-size="14" font-weight="700" text-anchor="middle">Squads</text>
+<text x="470" y="826" fill="#71717a" font-size="11.5" text-anchor="middle">small autonomous teams</text>
+<rect x="630" y="768" width="280" height="84" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="770" y="806" fill="#fafafa" font-size="14" font-weight="700" text-anchor="middle">Chapters &amp; Guilds</text>
+<text x="770" y="826" fill="#71717a" font-size="11.5" text-anchor="middle">skills + interests, across squads</text>
 </svg>
