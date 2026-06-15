@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 480" width="1000" height="480" role="img" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+<title>Prima Materia structure — Daniel Ek's firm</title>
+<rect x="0" y="0" width="1000" height="480" fill="#111113"/>
+<text x="40" y="40" fill="#fafafa" font-size="18" font-weight="700" text-anchor="start">Prima Materia — Daniel Ek's firm</text>
+<text x="40" y="63" fill="#71717a" font-size="13" text-anchor="start">Builders and active owners — not a fund · a tiny team and a highly selective portfolio</text>
+<line x1="500" y1="148" x2="500" y2="186" stroke="#52525b" stroke-width="2"/>
+<line x1="200" y1="186" x2="800" y2="186" stroke="#52525b" stroke-width="2"/>
+<line x1="200" y1="186" x2="200" y2="206" stroke="#52525b" stroke-width="2"/>
+<line x1="500" y1="186" x2="500" y2="206" stroke="#52525b" stroke-width="2"/>
+<line x1="800" y1="186" x2="800" y2="206" stroke="#52525b" stroke-width="2"/>
+<line x1="500" y1="294" x2="500" y2="326" stroke="#52525b" stroke-width="2"/>
+<line x1="200" y1="326" x2="800" y2="326" stroke="#52525b" stroke-width="2"/>
+<line x1="200" y1="326" x2="200" y2="346" stroke="#52525b" stroke-width="2"/>
+<line x1="500" y1="326" x2="500" y2="346" stroke="#52525b" stroke-width="2"/>
+<line x1="800" y1="326" x2="800" y2="346" stroke="#52525b" stroke-width="2"/>
+<text x="520" y="180" fill="#71717a" font-size="10.5" text-anchor="start" letter-spacing="1">THE PEOPLE</text>
+<text x="520" y="320" fill="#71717a" font-size="10.5" text-anchor="start" letter-spacing="1">PORTFOLIO</text>
+<rect x="300" y="82" width="400" height="66" rx="12" fill="#1c1c20" stroke="#3f3f46" stroke-width="1.5"/>
+<text x="500" y="108" fill="#71717a" font-size="11" text-anchor="middle" letter-spacing="1">FOUNDER-LED · NOT A FUND</text>
+<text x="500" y="132" fill="#fafafa" font-size="17" font-weight="700" text-anchor="middle">Prima Materia</text>
+<rect x="70" y="206" width="260" height="88" rx="12" fill="#1c1c20" stroke="#3f3f46" stroke-width="1.5"/>
+<text x="200" y="232" fill="#71717a" font-size="10.5" text-anchor="middle" letter-spacing="1">FOUNDER &amp; PRINCIPAL</text>
+<text x="200" y="258" fill="#fafafa" font-size="16" font-weight="700" text-anchor="middle">Daniel Ek</text>
+<rect x="370" y="206" width="260" height="88" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="500" y="232" fill="#71717a" font-size="9.5" text-anchor="middle" letter-spacing="0.5">CO-FOUNDER &amp; PRINCIPAL INVESTOR</text>
+<text x="500" y="258" fill="#fafafa" font-size="16" font-weight="700" text-anchor="middle">Shakil Khan</text>
+<rect x="670" y="206" width="260" height="88" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="800" y="232" fill="#71717a" font-size="10.5" text-anchor="middle" letter-spacing="1">HEAD OF NEW PROJECTS</text>
+<text x="800" y="258" fill="#fafafa" font-size="16" font-weight="700" text-anchor="middle">Pia Michel</text>
+<rect x="70" y="346" width="260" height="104" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="200" y="380" fill="#fafafa" font-size="15" font-weight="700" text-anchor="middle">Helsing</text>
+<text x="200" y="404" fill="#a1a1aa" font-size="12" text-anchor="middle">defense AI</text>
+<text x="200" y="424" fill="#71717a" font-size="11.5" text-anchor="middle">led a €600m round</text>
+<rect x="370" y="346" width="260" height="104" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="500" y="380" fill="#fafafa" font-size="15" font-weight="700" text-anchor="middle">Neko Health</text>
+<text x="500" y="404" fill="#a1a1aa" font-size="12" text-anchor="middle">preventive health scanning</text>
+<rect x="670" y="346" width="260" height="104" rx="12" fill="#18181b" stroke="#27272a" stroke-width="1.5"/>
+<text x="800" y="380" fill="#fafafa" font-size="15" font-weight="700" text-anchor="middle">Epiterna</text>
+<text x="800" y="404" fill="#a1a1aa" font-size="12" text-anchor="middle">longevity</text>
+<text x="800" y="424" fill="#71717a" font-size="11.5" text-anchor="middle">sole early investor</text>
+</svg>
