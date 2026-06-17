@@ -67,6 +67,7 @@
         .article th, .article td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; color: var(--text-secondary); vertical-align: top; }
         .article th { color: var(--text-primary); font-weight: 600; background: var(--bg-card); }
         .person { display: flex; gap: 20px; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; }
+        .person-photo { flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); background: var(--bg-secondary); }
         .person-monogram { flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(135deg, #1f1f23, #2a2a30); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.02em; }
         .person-body { flex: 1 1 auto; min-width: 0; }
         .person-body h4 { margin: 0 0 8px; color: var(--text-primary); font-size: 1.1rem; }
@@ -87,7 +88,7 @@
             .chapter-box { padding: 20px; }
             .article table { font-size: 0.8rem; }
             .person { flex-direction: column; gap: 14px; }
-            .person-monogram { width: 64px; height: 64px; flex-basis: 64px; }
+            .person-photo, .person-monogram { width: 64px; height: 64px; flex-basis: 64px; }
             .footer { flex-direction: column; align-items: flex-start; }
         }
     </style>
@@ -157,7 +158,7 @@
         <p>This read runs on two conversations and a cast of people who shaped the story. The three voices first — guest, host, companion — then the figures who keep coming up across the chapters.</p>
 
         <div class="person">
-            <div class="person-monogram">EC</div>
+            <img class="person-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Ed_Catmull_at_Web_Summit_2015_(cropped).jpg?width=300" alt="Ed Catmull" loading="lazy">
             <div class="person-body">
                 <h4>Ed Catmull — the guest</h4>
                 <p>Co-founder of <strong>Pixar</strong> and former president of Pixar and Walt Disney Animation Studios. He started as a computer scientist — a PhD from Utah who wanted to make the first film animated entirely on computers — and spent forty years building the place that could. He shared the <strong>2019 Turing Award</strong>, computing's highest honour, for the graphics work underneath all of it, and wrote <em>Creativity, Inc.</em>, the book this whole read sits beside. Retired in 2019.</p>
@@ -175,7 +176,7 @@
         </div>
 
         <div class="person">
-            <div class="person-monogram">NT</div>
+            <img class="person-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/NicolaiTangen.jpg?width=300" alt="Nicolai Tangen" loading="lazy">
             <div class="person-body">
                 <h4>Nicolai Tangen — the companion</h4>
                 <p>CEO of <strong>Norges Bank Investment Management</strong>, which runs Norway's ~$2.1 trillion sovereign wealth fund — the largest single investor in the world. A former hedge-fund founder who now hosts <em>In Good Company</em>, interviewing the leaders of the companies the fund owns. His separate sit-down with Catmull is the companion wall this read keeps leaning against.</p>
@@ -184,7 +185,7 @@
         </div>
 
         <div class="person">
-            <div class="person-monogram">SJ</div>
+            <img class="person-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Steve_Jobs_Headshot_2010-CROP.jpg?width=300" alt="Steve Jobs" loading="lazy">
             <div class="person-body">
                 <h4>Steve Jobs — the owner who learned to wait</h4>
                 <p>Apple's co-founder, and the man who bought the computer division that became Pixar from George Lucas in 1986 — then funded it through years of losses before <em>Toy Story</em>. He's also the one Catmull eventually kept out of the Braintrust: not as punishment, but to protect the single room where directors had to feel safe enough to be wrong. Died 2011.</p>
@@ -193,7 +194,7 @@
         </div>
 
         <div class="person">
-            <div class="person-monogram">ME</div>
+            <img class="person-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Michael_Eisner_at_the_CFC_Gala_2013-_Celebrating_A_Quarter_Century_of_Creativity_(cropped).jpg?width=300" alt="Michael Eisner" loading="lazy">
             <div class="person-body">
                 <h4>Michael Eisner — Disney's CEO, 1984–2005</h4>
                 <p>Ran Disney through a creative renaissance and then a long, cold standoff with Pixar over their distribution deal. The "worst nightmare" of chapter six is Pixar quietly engineering enough independence that it no longer needed him. Later founded The Tornante Company.</p>
@@ -202,7 +203,7 @@
         </div>
 
         <div class="person">
-            <div class="person-monogram">BI</div>
+            <img class="person-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Bob_Iger_crop_2.jpg?width=300" alt="Bob Iger" loading="lazy">
             <div class="person-body">
                 <h4>Bob Iger — Disney's CEO, the better hand</h4>
                 <p>Succeeded Eisner in 2005 and almost immediately bought Pixar (2006), choosing to keep Catmull and the culture intact rather than swallow them. He stepped down, returned in 2022, and is set to lead Disney through the end of 2026 while the board names his successor. Chapter seven is the hand he was dealt — and how he played it.</p>
@@ -211,7 +212,7 @@
         </div>
 
         <div class="person">
-            <div class="person-monogram">WD</div>
+            <img class="person-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/Walt_Disney_NYWTS.jpg?width=300" alt="Walt Disney" loading="lazy">
             <div class="person-body">
                 <h4>Walt Disney — the one he measured against</h4>
                 <p>Built the studio and the art form, then kept pushing into new technology — sound, colour, the multiplane camera — long after he could have coasted on what already worked. Chapter twelve is Catmull reading Walt for the pattern: never stop adopting the new tool. Died 1966.</p>
@@ -220,7 +221,7 @@
         </div>
 
         <div class="person">
-            <div class="person-monogram">GL</div>
+            <img class="person-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/George_Lucas_cropped_2009.jpg?width=300" alt="George Lucas" loading="lazy">
             <div class="person-body">
                 <h4>George Lucas — the one who hired him first</h4>
                 <p>Founder of Lucasfilm and creator of Star Wars. In the late 1970s he hired Catmull to run his computer division — the group Jobs later bought and renamed Pixar. The motion-blur problem of chapter thirteen comes straight from Lucas's need to make computer images sit convincingly inside real film. Sold Lucasfilm to Disney in 2012.</p>
