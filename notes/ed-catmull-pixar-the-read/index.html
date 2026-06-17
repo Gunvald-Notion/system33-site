@@ -66,6 +66,12 @@
         .article table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.88rem; }
         .article th, .article td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; color: var(--text-secondary); vertical-align: top; }
         .article th { color: var(--text-primary); font-weight: 600; background: var(--bg-card); }
+        .person { display: flex; gap: 20px; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; }
+        .person-monogram { flex: 0 0 88px; width: 88px; height: 88px; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(135deg, #1f1f23, #2a2a30); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.02em; }
+        .person-body { flex: 1 1 auto; min-width: 0; }
+        .person-body h4 { margin: 0 0 8px; color: var(--text-primary); font-size: 1.1rem; }
+        .person-body p { color: var(--text-secondary); margin-bottom: 10px; }
+        .person-links { font-size: 0.9rem; }
         .about { padding: 48px 0; }
         .about .toc-label { margin-bottom: 24px; }
         .about p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 14px; }
@@ -80,6 +86,8 @@
             .article h2 { font-size: 1.35rem; }
             .chapter-box { padding: 20px; }
             .article table { font-size: 0.8rem; }
+            .person { flex-direction: column; gap: 14px; }
+            .person-monogram { width: 64px; height: 64px; flex-basis: 64px; }
             .footer { flex-direction: column; align-items: flex-start; }
         }
     </style>
@@ -120,6 +128,7 @@
     <nav class="toc">
         <div class="toc-label">Contents</div>
         <ul>
+            <li><a href="#cast">Who's in the room</a></li>
             <li><a href="#ch1">1 · Most Companies Are Full Of Shit</a></li>
             <li><a href="#ch2">2 · The Brain Trust Mechanism</a></li>
             <li><a href="#ch3">3 · Why Steve Jobs Was Banned From The Braintrust</a></li>
@@ -138,6 +147,87 @@
             <li><a href="#threads">Threads to carry</a></li>
         </ul>
     </nav>
+</div>
+
+<div class="container"><div class="divider"></div></div>
+
+<div class="container">
+    <article class="article">
+        <h2 id="cast">Who's in the room</h2>
+        <p>This read runs on two conversations and a cast of people who shaped the story. The three voices first — guest, host, companion — then the figures who keep coming up across the chapters.</p>
+
+        <div class="person">
+            <div class="person-monogram">EC</div>
+            <div class="person-body">
+                <h4>Ed Catmull — the guest</h4>
+                <p>Co-founder of <strong>Pixar</strong> and former president of Pixar and Walt Disney Animation Studios. He started as a computer scientist — a PhD from Utah who wanted to make the first film animated entirely on computers — and spent forty years building the place that could. He shared the <strong>2019 Turing Award</strong>, computing's highest honour, for the graphics work underneath all of it, and wrote <em>Creativity, Inc.</em>, the book this whole read sits beside. Retired in 2019.</p>
+                <p class="person-links"><a href="https://en.wikipedia.org/wiki/Edwin_Catmull" target="_blank" rel="noopener">Wikipedia</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram">DS</div>
+            <div class="person-body">
+                <h4>David Senra — the host</h4>
+                <p>Host of <strong>Founders</strong>, the podcast where he reads a biography of a great entrepreneur and talks through what he learned. Thousands of hours inside the minds of history's builders — which makes him the rare interviewer who hears an operating principle and immediately knows which founder did the same thing a century ago.</p>
+                <p class="person-links"><a href="https://www.davidsenra.com" target="_blank" rel="noopener">davidsenra.com</a> · <a href="https://x.com/FoundersPodcast" target="_blank" rel="noopener">X — @FoundersPodcast</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram">NT</div>
+            <div class="person-body">
+                <h4>Nicolai Tangen — the companion</h4>
+                <p>CEO of <strong>Norges Bank Investment Management</strong>, which runs Norway's ~$2.1 trillion sovereign wealth fund — the largest single investor in the world. A former hedge-fund founder who now hosts <em>In Good Company</em>, interviewing the leaders of the companies the fund owns. His separate sit-down with Catmull is the companion wall this read keeps leaning against.</p>
+                <p class="person-links"><a href="https://www.nbim.no/en/news-and-insights/podcast/" target="_blank" rel="noopener">In Good Company</a> · <a href="https://en.wikipedia.org/wiki/Nicolai_Tangen" target="_blank" rel="noopener">Wikipedia</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram">SJ</div>
+            <div class="person-body">
+                <h4>Steve Jobs — the owner who learned to wait</h4>
+                <p>Apple's co-founder, and the man who bought the computer division that became Pixar from George Lucas in 1986 — then funded it through years of losses before <em>Toy Story</em>. He's also the one Catmull eventually kept out of the Braintrust: not as punishment, but to protect the single room where directors had to feel safe enough to be wrong. Died 2011.</p>
+                <p class="person-links"><a href="https://en.wikipedia.org/wiki/Steve_Jobs" target="_blank" rel="noopener">Wikipedia</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram">ME</div>
+            <div class="person-body">
+                <h4>Michael Eisner — Disney's CEO, 1984–2005</h4>
+                <p>Ran Disney through a creative renaissance and then a long, cold standoff with Pixar over their distribution deal. The "worst nightmare" of chapter six is Pixar quietly engineering enough independence that it no longer needed him. Later founded The Tornante Company.</p>
+                <p class="person-links"><a href="https://en.wikipedia.org/wiki/Michael_Eisner" target="_blank" rel="noopener">Wikipedia</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram">BI</div>
+            <div class="person-body">
+                <h4>Bob Iger — Disney's CEO, the better hand</h4>
+                <p>Succeeded Eisner in 2005 and almost immediately bought Pixar (2006), choosing to keep Catmull and the culture intact rather than swallow them. He stepped down, returned in 2022, and is set to lead Disney through the end of 2026 while the board names his successor. Chapter seven is the hand he was dealt — and how he played it.</p>
+                <p class="person-links"><a href="https://en.wikipedia.org/wiki/Bob_Iger" target="_blank" rel="noopener">Wikipedia</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram">WD</div>
+            <div class="person-body">
+                <h4>Walt Disney — the one he measured against</h4>
+                <p>Built the studio and the art form, then kept pushing into new technology — sound, colour, the multiplane camera — long after he could have coasted on what already worked. Chapter twelve is Catmull reading Walt for the pattern: never stop adopting the new tool. Died 1966.</p>
+                <p class="person-links"><a href="https://en.wikipedia.org/wiki/Walt_Disney" target="_blank" rel="noopener">Wikipedia</a></p>
+            </div>
+        </div>
+
+        <div class="person">
+            <div class="person-monogram">GL</div>
+            <div class="person-body">
+                <h4>George Lucas — the one who hired him first</h4>
+                <p>Founder of Lucasfilm and creator of Star Wars. In the late 1970s he hired Catmull to run his computer division — the group Jobs later bought and renamed Pixar. The motion-blur problem of chapter thirteen comes straight from Lucas's need to make computer images sit convincingly inside real film. Sold Lucasfilm to Disney in 2012.</p>
+                <p class="person-links"><a href="https://en.wikipedia.org/wiki/George_Lucas" target="_blank" rel="noopener">Wikipedia</a></p>
+            </div>
+        </div>
+    </article>
 </div>
 
 <div class="container"><div class="divider"></div></div>
