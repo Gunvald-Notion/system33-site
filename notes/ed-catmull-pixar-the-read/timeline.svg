@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 980" width="720" height="980" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" role="img" aria-label="Timeline of the story from Walt Disney founding his studio in 1923 to Ed Catmull retiring in 2019">
+    <rect x="0" y="0" width="720" height="980" rx="16" fill="#111113"/>
+    <text x="64" y="46" fill="#fafafa" font-size="24" font-weight="700">The story in order</text>
+    <text x="64" y="72" fill="#71717a" font-size="14">Disney to Pixar — the dates the read moves through</text>
+    <line x1="130" y1="96" x2="130" y2="946" stroke="#27272a" stroke-width="2"/>
+
+    <g>
+        <circle cx="130" cy="110" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="110" r="5" fill="#fafafa"/>
+        <text x="110" y="116" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1923</text>
+        <text x="158" y="116" fill="#a1a1aa" font-size="16">Walt Disney founds his studio</text>
+    </g>
+    <g>
+        <circle cx="130" cy="192" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="192" r="5" fill="#fafafa"/>
+        <text x="110" y="198" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1928</text>
+        <text x="158" y="198" fill="#a1a1aa" font-size="16">Sound arrives with Steamboat Willie</text>
+    </g>
+    <g>
+        <circle cx="130" cy="274" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="274" r="5" fill="#fafafa"/>
+        <text x="110" y="280" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1937</text>
+        <text x="158" y="280" fill="#a1a1aa" font-size="16">Snow White — the first feature-length animated film</text>
+    </g>
+    <g>
+        <circle cx="130" cy="356" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="356" r="5" fill="#fafafa"/>
+        <text x="110" y="362" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1966</text>
+        <text x="158" y="362" fill="#a1a1aa" font-size="16">Walt Disney dies; Disney stops renewing</text>
+    </g>
+    <g>
+        <circle cx="130" cy="438" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="438" r="5" fill="#fafafa"/>
+        <text x="110" y="444" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1979</text>
+        <text x="158" y="444" fill="#a1a1aa" font-size="16">Lucas hires Catmull for the Lucasfilm computer division</text>
+    </g>
+    <g>
+        <circle cx="130" cy="520" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="520" r="5" fill="#fafafa"/>
+        <text x="110" y="526" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1986</text>
+        <text x="158" y="526" fill="#a1a1aa" font-size="16">Steve Jobs buys the division — it becomes Pixar</text>
+    </g>
+    <g>
+        <circle cx="130" cy="602" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="602" r="5" fill="#fafafa"/>
+        <text x="110" y="608" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1991</text>
+        <text x="158" y="608" fill="#a1a1aa" font-size="16">Pixar signs its film deal with Disney</text>
+    </g>
+    <g>
+        <circle cx="130" cy="684" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="684" r="5" fill="#fafafa"/>
+        <text x="110" y="690" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">1995</text>
+        <text x="158" y="690" fill="#a1a1aa" font-size="16">Toy Story released; Pixar goes public</text>
+    </g>
+    <g>
+        <circle cx="130" cy="766" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="766" r="5" fill="#fafafa"/>
+        <text x="110" y="772" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">2005</text>
+        <text x="158" y="772" fill="#a1a1aa" font-size="16">Eisner out; Bob Iger becomes Disney CEO</text>
+    </g>
+    <g>
+        <circle cx="130" cy="848" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="848" r="5" fill="#fafafa"/>
+        <text x="110" y="854" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">2006</text>
+        <text x="158" y="854" fill="#a1a1aa" font-size="16">Disney buys Pixar for about $7.4 billion</text>
+    </g>
+    <g>
+        <circle cx="130" cy="930" r="11" fill="#111113" stroke="#3f3f46" stroke-width="1.5"/>
+        <circle cx="130" cy="930" r="5" fill="#fafafa"/>
+        <text x="110" y="936" text-anchor="end" fill="#fafafa" font-size="19" font-weight="700">2019</text>
+        <text x="158" y="936" fill="#a1a1aa" font-size="16">Catmull shares the Turing Award and retires</text>
+    </g>
+</svg>

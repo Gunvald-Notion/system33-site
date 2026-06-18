@@ -75,6 +75,20 @@
         .person-body h4 { margin: 0 0 8px; color: var(--text-primary); font-size: 1.1rem; }
         .person-body p { color: var(--text-secondary); margin-bottom: 10px; }
         .person-links { font-size: 0.9rem; }
+        .org-figure { margin: 28px 0 8px; }
+        .org-figure a { display: block; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); padding: 16px; }
+        .org-figure a:hover { border-color: #3f3f46; opacity: 1; }
+        .org-figure img { width: 100%; height: auto; display: block; }
+        .org-figcaption { font-size: 0.8rem; color: var(--text-muted); margin: 10px 2px 0; }
+        .zoomable { cursor: zoom-in; }
+        .lightbox { position: fixed; inset: 0; z-index: 1000; display: none; background: rgba(8, 8, 10, 0.94); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); touch-action: none; overscroll-behavior: contain; }
+        .lightbox.open { display: block; }
+        .lightbox-stage { position: absolute; inset: 0; overflow: hidden; touch-action: none; cursor: grab; }
+        .lightbox-stage:active { cursor: grabbing; }
+        .lightbox-img { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
+        .lightbox-close { position: absolute; top: 14px; right: 14px; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: rgba(24, 24, 27, 0.92); color: var(--text-primary); font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .lightbox-close:hover { border-color: #3f3f46; }
+        .lightbox-hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 2; font-size: 0.78rem; color: var(--text-secondary); background: rgba(24, 24, 27, 0.88); border: 1px solid var(--border); padding: 7px 14px; border-radius: 20px; pointer-events: none; max-width: 90vw; text-align: center; }
         .about { padding: 48px 0; }
         .about .toc-label { margin-bottom: 24px; }
         .about p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin-bottom: 14px; }
@@ -236,23 +250,12 @@
 <div class="container">
     <section class="timeline-section">
         <div class="toc-label">Timeline · the story in order</div>
-        <div class="mermaid-container">
-            <pre class="mermaid">
-timeline
-    title The story in order
-    1923 : Walt Disney founds his studio
-    1928 : Sound arrives with Steamboat Willie
-    1937 : Snow White, the first feature-length animated film
-    1966 : Walt Disney dies and Disney stops renewing
-    1979 : Lucas hires Catmull for Lucasfilm's computer division
-    1986 : Steve Jobs buys the division and it becomes Pixar
-    1991 : Pixar signs its film deal with Disney
-    1995 : Toy Story is released and Pixar goes public
-    2005 : Eisner is out and Bob Iger becomes Disney CEO
-    2006 : Disney buys Pixar for about 7.4 billion dollars
-    2019 : Catmull shares the Turing Award and retires
-            </pre>
-        </div>
+        <figure class="org-figure">
+            <a class="zoomable" href="timeline.svg" data-zoom-src="timeline.svg" data-zoom-alt="Timeline — Disney to Pixar, the dates the read moves through" aria-label="Open the timeline — zoom and pan without leaving the page">
+                <img src="timeline.svg" alt="Vertical timeline of the story: Walt Disney founds his studio in 1923, sound arrives with Steamboat Willie in 1928, Snow White in 1937, Walt Disney dies in 1966, Lucas hires Catmull in 1979, Steve Jobs buys the division and it becomes Pixar in 1986, Pixar signs its Disney deal in 1991, Toy Story and the IPO in 1995, Iger replaces Eisner in 2005, Disney buys Pixar in 2006, and Catmull shares the Turing Award and retires in 2019.">
+            </a>
+            <figcaption class="org-figcaption">↗ Tap to open — then pinch to zoom and drag to walk through it, right here on the page</figcaption>
+        </figure>
     </section>
 </div>
 
@@ -287,6 +290,14 @@ timeline
     </div>
 </footer>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Diagram viewer">
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close">×</button>
+    <div class="lightbox-stage" id="lightbox-stage">
+        <img class="lightbox-img" id="lightbox-img" alt="">
+    </div>
+    <div class="lightbox-hint">Pinch or scroll to zoom · drag to move · double-tap to reset · Esc to close</div>
+</div>
+
 <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
     mermaid.initialize({
@@ -316,6 +327,113 @@ timeline
             if (el) el.scrollIntoView();
         }
     }
+</script>
+
+<script>
+(function () {
+    var lb = document.getElementById('lightbox');
+    var stage = document.getElementById('lightbox-stage');
+    var img = document.getElementById('lightbox-img');
+    var closeBtn = document.getElementById('lightbox-close');
+    if (!lb || !stage || !img) return;
+    var scale = 1, tx = 0, ty = 0, minScale = 1, maxScale = 8, baseScale = 1;
+    var natW = 0, natH = 0;
+    var pointers = new Map();
+    var startDist = 0, startScale = 1, startMid = null;
+    var panStart = null;
+    var lastTap = 0;
+    function apply() { img.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')'; }
+    function clampPan() {
+        var vw = stage.clientWidth, vh = stage.clientHeight;
+        var w = natW * scale, h = natH * scale;
+        if (w <= vw) { tx = (vw - w) / 2; } else { tx = Math.min(0, Math.max(vw - w, tx)); }
+        if (h <= vh) { ty = (vh - h) / 2; } else { ty = Math.min(0, Math.max(vh - h, ty)); }
+    }
+    function fit() {
+        var vw = stage.clientWidth, vh = stage.clientHeight;
+        if (!natW || !natH) return;
+        baseScale = Math.min(vw / natW, vh / natH) * 0.94;
+        minScale = baseScale; maxScale = baseScale * 9; scale = baseScale;
+        clampPan(); apply();
+    }
+    function setNatural() { natW = img.naturalWidth || 1000; natH = img.naturalHeight || 800; }
+    function open(src, alt) {
+        img.onload = function () { setNatural(); fit(); };
+        img.src = src; img.alt = alt || '';
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        if (img.complete && img.naturalWidth) { setNatural(); fit(); }
+    }
+    function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+        pointers.clear(); panStart = null; startDist = 0;
+    }
+    function zoomAt(cx, cy, factor) {
+        var ns = Math.min(maxScale, Math.max(minScale, scale * factor));
+        var k = ns / scale;
+        tx = cx - (cx - tx) * k; ty = cy - (cy - ty) * k; scale = ns;
+        clampPan(); apply();
+    }
+    function rectXY(e) { var r = stage.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+    document.addEventListener('click', function (e) {
+        var t = e.target.closest ? e.target.closest('.zoomable') : null;
+        if (t) { e.preventDefault(); open(t.getAttribute('data-zoom-src'), t.getAttribute('data-zoom-alt')); }
+    });
+    closeBtn.addEventListener('click', close);
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
+    stage.addEventListener('wheel', function (e) {
+        if (!lb.classList.contains('open')) return;
+        e.preventDefault();
+        var p = rectXY(e);
+        zoomAt(p.x, p.y, e.deltaY < 0 ? 1.12 : 1 / 1.12);
+    }, { passive: false });
+    stage.addEventListener('pointerdown', function (e) {
+        stage.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, rectXY(e));
+        if (pointers.size === 1) { var p = pointers.get(e.pointerId); panStart = { x: p.x, y: p.y, tx: tx, ty: ty }; }
+        else if (pointers.size === 2) {
+            var a = Array.from(pointers.values());
+            startDist = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y);
+            startScale = scale;
+            startMid = { x: (a[0].x + a[1].x) / 2, y: (a[0].y + a[1].y) / 2 };
+        }
+    });
+    stage.addEventListener('pointermove', function (e) {
+        if (!pointers.has(e.pointerId)) return;
+        pointers.set(e.pointerId, rectXY(e));
+        if (pointers.size === 1 && panStart) {
+            var p = pointers.get(e.pointerId);
+            tx = panStart.tx + (p.x - panStart.x); ty = panStart.ty + (p.y - panStart.y);
+            clampPan(); apply();
+        } else if (pointers.size === 2 && startDist > 0) {
+            var a = Array.from(pointers.values());
+            var dist = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y);
+            var ns = Math.min(maxScale, Math.max(minScale, startScale * (dist / startDist)));
+            var k = ns / scale;
+            tx = startMid.x - (startMid.x - tx) * k; ty = startMid.y - (startMid.y - ty) * k; scale = ns;
+            clampPan(); apply();
+        }
+    });
+    function endPointer(e) {
+        if (pointers.has(e.pointerId)) pointers.delete(e.pointerId);
+        if (pointers.size < 2) startDist = 0;
+        if (pointers.size === 1) { var p = Array.from(pointers.values())[0]; panStart = { x: p.x, y: p.y, tx: tx, ty: ty }; }
+        else if (pointers.size === 0) {
+            panStart = null;
+            var now = Date.now();
+            var xy = rectXY(e);
+            if (now - lastTap < 300) {
+                if (scale > baseScale * 1.05) { fit(); } else { zoomAt(xy.x, xy.y, 2.4); }
+                lastTap = 0;
+            } else { lastTap = now; }
+        }
+    }
+    stage.addEventListener('pointerup', endPointer);
+    stage.addEventListener('pointercancel', endPointer);
+    window.addEventListener('resize', function () { if (lb.classList.contains('open')) fit(); });
+})();
 </script>
 
 </body>
