@@ -59,6 +59,8 @@
         .article a:hover { text-decoration-color: var(--text-muted); }
         .mermaid-container { margin: 32px 0; overflow-x: auto; padding: 24px 0; }
         .mermaid-container .mermaid { display: flex; justify-content: center; }
+        .timeline-section { padding: 40px 0; }
+        .timeline-section .toc-label { margin-bottom: 4px; }
         .chapter-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; margin: 24px 0; }
         .chapter-box h4 { margin-top: 0; color: var(--text-primary); }
         .chapter-box p { color: var(--text-secondary); }
@@ -229,6 +231,25 @@
             </div>
         </div>
     </article>
+</div>
+
+<div class="container">
+    <section class="timeline-section">
+        <div class="toc-label">System 33 · Version history</div>
+        <div class="mermaid-container">
+            <pre class="mermaid">
+gantt
+    title Version History
+    dateFormat YYYY-MM-DD
+    tickInterval 1month
+    axisFormat %b
+    section System 32
+        Private Development :done, 2026-01-01, 2026-04-14
+    section System 33
+        Public Release :active, 2026-04-07, 2026-06-18
+            </pre>
+        </div>
+    </section>
 </div>
 
 <div class="container"><div class="divider"></div></div>
