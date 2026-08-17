@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSM222 – MPC Test Øving</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PLACEHOLDER"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PLACEHOLDER');
+</script>
+<style>
+  :root {
+    --bg: #14151a;
+    --card: #1e2028;
+    --card-hover: #262933;
+    --border: #2f323d;
+    --text: #eceef2;
+    --muted: #9aa0ac;
+    --accent: #6c8cff;
+    --green: #35c46f;
+    --yellow: #e0b23a;
+    --red: #e05a5a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    padding: 24px 20px 8px;
+    text-align: center;
+  }
+  header h1 { margin: 0 0 4px; font-size: 1.5rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  #picker-screen .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .card:hover { background: var(--card-hover); transform: translateY(-2px); }
+  .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+  .card.full-test {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, #2b2f6e, #1e2028);
+    border-color: var(--accent);
+  }
+  .card.full-test h3 { font-size: 1.2rem; }
+  #quiz-screen, #results-screen { display: none; }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.2s;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+  .question-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .question-box h2 { font-size: 1.15rem; line-height: 1.4; margin-top: 0; }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .option-btn {
+    text-align: left;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .option-btn:hover { border-color: var(--accent); }
+  .option-btn.selected-correct { border-color: var(--green); background: rgba(53,196,111,0.12); }
+  .option-btn.selected-partial { border-color: var(--yellow); background: rgba(224,178,58,0.12); }
+  .option-btn.selected-wrong { border-color: var(--red); background: rgba(224,90,90,0.12); }
+  .option-btn.reveal-correct { border-color: var(--green); }
+  .option-btn.reveal-partial { border-color: var(--yellow); }
+  .option-btn[disabled] { cursor: default; }
+  .actions { display: flex; justify-content: space-between; margin-top: 20px; }
+  button.primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  button.primary:disabled { opacity: 0.4; cursor: default; }
+  button.ghost {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #results-screen .score-hero {
+    text-align: center;
+    padding: 30px 0 10px;
+  }
+  #results-screen .score-hero .big {
+    font-size: 3rem;
+    font-weight: 700;
+  }
+  #results-screen .score-hero .sub { color: var(--muted); margin-top: 6px; }
+  .review-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .review-item .q-points { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+  .review-item .points-pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .points-2 { background: rgba(53,196,111,0.18); color: var(--green); }
+  .points-1 { background: rgba(224,178,58,0.18); color: var(--yellow); }
+  .points-0 { background: rgba(224,90,90,0.18); color: var(--red); }
+  footer { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 30px 20px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>HSM222 – Marketing (MPC) Test Øving</h1>
+  <p>Basert på "Mulige spørsmål til MPC test Arbeidskrav 2026" – 71 spørsmål, 12 emner</p>
+</header>
+<main>
+
+  <section id="picker-screen">
+    <div id="full-test-wrap"></div>
+    <div class="grid" id="chapter-grid"></div>
+  </section>
+
+  <section id="quiz-screen">
+    <div class="meta-row">
+      <span id="quiz-title"></span>
+      <span id="quiz-progress"></span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="question-box">
+      <h2 id="question-text"></h2>
+      <div class="options" id="options-list"></div>
+      <div class="actions">
+        <button class="ghost" id="quit-btn">Avslutt</button>
+        <button class="primary" id="next-btn" disabled>Neste</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="results-screen">
+    <div class="score-hero">
+      <div class="big" id="score-big"></div>
+      <div class="sub" id="score-sub"></div>
+    </div>
+    <div class="actions" style="justify-content:center; gap:12px;">
+      <button class="primary" id="retry-btn">Ta quiz igjen</button>
+      <button class="ghost" id="home-btn">Tilbake til oversikt</button>
+    </div>
+    <h3 style="margin-top:30px;">Gjennomgang</h3>
+    <div id="review-list"></div>
+  </section>
+
+</main>
+<footer>system33.io &middot; HSM222 øvingsquiz &middot; ikke offisielt eksamensmateriale</footer>
+
+<script src="questions.js"></script>
+<script>
+(function () {
+  var CHAPTERS = [
+    "Holdninger og beslutninger",
+    "Merkevare og posisjonering",
+    "Merkekjennskap",
+    "Reklame og prosessering",
+    "Metodikk og statistikk",
+    "Innkjøp og verdikjede",
+    "Prising",
+    "Personlig salg",
+    "Jus og regulering",
+    "Strategi og ressurser",
+    "Digital markedsføring",
+    "CSR og innovasjon"
+  ];
+  var FULL_TEST_SIZE = 42; // trekkes tilfeldig av 71, jf. "Tom test"-format (N≈71-72, n≈42)
+
+  var pickerScreen = document.getElementById('picker-screen');
+  var quizScreen = document.getElementById('quiz-screen');
+  var resultsScreen = document.getElementById('results-screen');
+  var chapterGrid = document.getElementById('chapter-grid');
+  var fullTestWrap = document.getElementById('full-test-wrap');
+  var quizTitle = document.getElementById('quiz-title');
+  var quizProgress = document.getElementById('quiz-progress');
+  var progressFill = document.getElementById('progress-fill');
+  var questionText = document.getElementById('question-text');
+  var optionsList = document.getElementById('options-list');
+  var nextBtn = document.getElementById('next-btn');
+  var quitBtn = document.getElementById('quit-btn');
+  var retryBtn = document.getElementById('retry-btn');
+  var homeBtn = document.getElementById('home-btn');
+  var scoreBig = document.getElementById('score-big');
+  var scoreSub = document.getElementById('score-sub');
+  var reviewList = document.getElementById('review-list');
+
+  var state = { title: '', pool: [], idx: 0, answers: [], selectedValue: null };
+
+  function maxPoints(q) { return q.correct && q.correct.length ? 2 : 1; }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function buildPicker() {
+    var fullCard = document.createElement('div');
+    fullCard.className = 'card full-test';
+    fullCard.innerHTML = '<h3>🎲 Full test (tilfeldig ' + FULL_TEST_SIZE + ' av ' + QUESTIONS.length + ')</h3>' +
+      '<p>Simulerer eksamensformatet – tilfeldig trukket sett fra alle emner.</p>';
+    fullCard.addEventListener('click', function () { startQuiz('Full test', shuffle(QUESTIONS).slice(0, FULL_TEST_SIZE)); });
+    fullTestWrap.appendChild(fullCard);
+
+    CHAPTERS.forEach(function (chapter) {
+      var qs = QUESTIONS.filter(function (q) { return q.emne === chapter; });
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = '<h3>' + chapter + '</h3><p>' + qs.length + ' spørsmål</p>';
+      card.addEventListener('click', function () { startQuiz(chapter, shuffle(qs)); });
+      chapterGrid.appendChild(card);
+    });
+  }
+
+  function startQuiz(title, pool) {
+    state = { title: title, pool: pool, idx: 0, answers: [], selectedValue: null };
+    if (window.gtag) gtag('event', 'quiz_start', { quiz_title: title, question_count: pool.length });
+    pickerScreen.style.display = 'none';
+    resultsScreen.style.display = 'none';
+    quizScreen.style.display = 'block';
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    var q = state.pool[state.idx];
+    quizTitle.textContent = state.title;
+    quizProgress.textContent = 'Spørsmål ' + (state.idx + 1) + ' av ' + state.pool.length;
+    progressFill.style.width = ((state.idx) / state.pool.length * 100) + '%';
+    questionText.textContent = q.q;
+    optionsList.innerHTML = '';
+    nextBtn.disabled = true;
+    state.selectedValue = null;
+
+    q.options.forEach(function (opt) {
+      var btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', function () { selectOption(q, opt, btn); });
+      optionsList.appendChild(btn);
+    });
+  }
+
+  function selectOption(q, opt, btn) {
+    if (state.selectedValue !== null) return; // already answered
+    var points = 0;
+    if (q.correct && q.correct.indexOf(opt) !== -1) points = 2;
+    else if (q.partial && q.partial.indexOf(opt) !== -1) points = 1;
+
+    state.selectedValue = opt;
+    state.answers.push({ q: q, selected: opt, points: points, max: maxPoints(q) });
+
+    Array.prototype.forEach.call(optionsList.children, function (b) {
+      b.disabled = true;
+      var val = b.textContent;
+      if (val === opt) {
+        b.classList.add(points === 2 ? 'selected-correct' : points === 1 ? 'selected-partial' : 'selected-wrong');
+      } else if (q.correct && q.correct.indexOf(val) !== -1) {
+        b.classList.add('reveal-correct');
+      } else if (q.partial && q.partial.indexOf(val) !== -1) {
+        b.classList.add('reveal-partial');
+      }
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener('click', function () {
+    if (state.idx + 1 < state.pool.length) {
+      state.idx++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  });
+
+  quitBtn.addEventListener('click', function () {
+    quizScreen.style.display = 'none';
+    pickerScreen.style.display = 'block';
+  });
+
+  function finishQuiz() {
+    progressFill.style.width = '100%';
+    var totalPoints = 0, maxTotal = 0;
+    state.answers.forEach(function (a) { totalPoints += a.points; maxTotal += a.max; });
+    if (window.gtag) gtag('event', 'quiz_complete', { quiz_title: state.title, score: totalPoints, max_score: maxTotal });
+
+    quizScreen.style.display = 'none';
+    resultsScreen.style.display = 'block';
+
+    var pct = maxTotal ? Math.round((totalPoints / maxTotal) * 100) : 0;
+    scoreBig.textContent = totalPoints + ' / ' + maxTotal + ' poeng';
+    scoreSub.textContent = pct + '% – ' + state.title + ' (' + state.pool.length + ' spørsmål)';
+
+    reviewList.innerHTML = '';
+    state.answers.forEach(function (a, i) {
+      var div = document.createElement('div');
+      div.className = 'review-item';
+      var pillClass = a.points === 2 ? 'points-2' : a.points === 1 ? 'points-1' : 'points-0';
+      var correctText = (a.q.correct && a.q.correct.length) ? a.q.correct.join(' / ') : '(ingen fullt riktig i kilden)';
+      div.innerHTML =
+        '<div class="q-points">Spørsmål ' + (i + 1) + ' &middot; ' + a.q.emne + ' &middot; s. ' + a.q.page + '</div>' +
+        '<div style="margin-bottom:6px;"><strong>' + escapeHtml(a.q.q) + '</strong></div>' +
+        '<div>Ditt svar: ' + escapeHtml(a.selected) + ' <span class="points-pill ' + pillClass + '">' + a.points + ' av ' + a.max + ' poeng</span></div>' +
+        (a.points < 2 ? '<div style="margin-top:4px; color: var(--muted); font-size:0.85rem;">Riktig svar: ' + escapeHtml(correctText) + '</div>' : '');
+      reviewList.appendChild(div);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  retryBtn.addEventListener('click', function () {
+    startQuiz(state.title, shuffle(state.pool.map(function (a) { return a; })));
+  });
+  homeBtn.addEventListener('click', function () {
+    resultsScreen.style.display = 'none';
+    pickerScreen.style.display = 'block';
+  });
+
+  buildPicker();
+})();
+</script>
+</body>
+</html>
