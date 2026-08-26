@@ -144,7 +144,7 @@
   .option-btn.reveal-correct { border-color: var(--green); }
   .option-btn.reveal-partial { border-color: var(--yellow); }
   .option-btn[disabled] { cursor: default; }
-  .actions { display: flex; justify-content: space-between; margin-top: 20px; }
+  .actions { display: flex; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; gap: 10px; }
   button.primary {
     background: var(--accent);
     color: white;
@@ -155,6 +155,15 @@
     cursor: pointer;
   }
   button.primary:disabled { opacity: 0.4; cursor: default; }
+  button.secondary {
+    background: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
   button.ghost {
     background: none;
     border: 1px solid var(--border);
@@ -233,9 +242,11 @@
       <div class="sub" id="score-sub"></div>
     </div>
     <div class="actions" style="justify-content:center; gap:12px;">
-      <button class="primary" id="retry-btn">Ta quiz igjen</button>
+      <button class="primary" id="new-quiz-btn">🎲 Ny tilfeldig quiz</button>
+      <button class="secondary" id="retry-btn">🔁 Ta samme spørsmål igjen</button>
       <button class="ghost" id="home-btn">Tilbake til oversikt</button>
     </div>
+    <p style="text-align:center; color: var(--muted); font-size:0.8rem; margin-top:10px;">"Ny tilfeldig quiz" trekker et helt nytt tilfeldig sett spørsmål. "Ta samme spørsmål igjen" gir deg de samme spørsmålene i ny rekkefølge.</p>
     <h3 style="margin-top:30px;">Gjennomgang</h3>
     <div id="review-list"></div>
   </section>
@@ -277,12 +288,15 @@
   var nextBtn = document.getElementById('next-btn');
   var quitBtn = document.getElementById('quit-btn');
   var retryBtn = document.getElementById('retry-btn');
+  var newQuizBtn = document.getElementById('new-quiz-btn');
   var homeBtn = document.getElementById('home-btn');
   var scoreBig = document.getElementById('score-big');
   var scoreSub = document.getElementById('score-sub');
   var reviewList = document.getElementById('review-list');
 
-  var state = { title: '', pool: [], idx: 0, answers: [], selectedValue: null };
+  // state.poolGenerator, when called, returns a FRESH freshly-drawn/reshuffled
+  // pool from source data (e.g. a new random 30-of-71 draw for the full test).
+  var state = { title: '', pool: [], idx: 0, answers: [], selectedValue: null, poolGenerator: null };
   var timerInterval = null;
   var startTime = null;
   var elapsedMs = 0;
@@ -329,7 +343,10 @@
     fullCard.className = 'card full-test';
     fullCard.innerHTML = '<h3>🎲 Full test (tilfeldig ' + FULL_TEST_SIZE + ' av ' + QUESTIONS.length + ')</h3>' +
       '<p>Simulerer eksamensformatet – tilfeldig trukket sett fra alle emner. Tidtaking, poengsum vises av ' + TOTAL_SCALE_POINTS + '.</p>';
-    fullCard.addEventListener('click', function () { startQuiz('Full test', shuffle(QUESTIONS).slice(0, FULL_TEST_SIZE)); });
+    fullCard.addEventListener('click', function () {
+      var generator = function () { return shuffle(QUESTIONS).slice(0, FULL_TEST_SIZE); };
+      startQuiz('Full test', generator(), generator);
+    });
     fullTestWrap.appendChild(fullCard);
 
     CHAPTERS.forEach(function (chapter) {
@@ -337,13 +354,16 @@
       var card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = '<h3>' + chapter + '</h3><p>' + qs.length + ' spørsmål</p>';
-      card.addEventListener('click', function () { startQuiz(chapter, shuffle(qs)); });
+      card.addEventListener('click', function () {
+        var generator = function () { return shuffle(QUESTIONS.filter(function (q) { return q.emne === chapter; })); };
+        startQuiz(chapter, generator(), generator);
+      });
       chapterGrid.appendChild(card);
     });
   }
 
-  function startQuiz(title, pool) {
-    state = { title: title, pool: pool, idx: 0, answers: [], selectedValue: null };
+  function startQuiz(title, pool, poolGenerator) {
+    state = { title: title, pool: pool, idx: 0, answers: [], selectedValue: null, poolGenerator: poolGenerator || state.poolGenerator };
     if (window.gtag) gtag('event', 'quiz_start', { quiz_title: title, question_count: pool.length });
     pickerScreen.style.display = 'none';
     resultsScreen.style.display = 'none';
@@ -445,10 +465,19 @@
     });
   }
 
+  // Same questions, freshly reshuffled order only.
   retryBtn.addEventListener('click', function () {
-    startQuiz(state.title, shuffle(state.pool.map(function (a) { return a; })));
+    startQuiz(state.title, shuffle(state.pool.map(function (a) { return a; })), state.poolGenerator);
   });
+
+  // A brand-new random draw (e.g. a different 30-of-71 for the full test).
+  newQuizBtn.addEventListener('click', function () {
+    var pool = state.poolGenerator ? state.poolGenerator() : shuffle(state.pool.map(function (a) { return a; }));
+    startQuiz(state.title, pool, state.poolGenerator);
+  });
+
   homeBtn.addEventListener('click', function () {
+    stopTimer();
     resultsScreen.style.display = 'none';
     pickerScreen.style.display = 'block';
   });
