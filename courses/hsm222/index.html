@@ -107,9 +107,16 @@
   .meta-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     color: var(--muted);
     font-size: 0.85rem;
     margin-bottom: 10px;
+    gap: 10px;
+  }
+  .meta-row #quiz-timer {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--accent);
   }
   .question-box {
     background: var(--card);
@@ -206,6 +213,7 @@
   <section id="quiz-screen">
     <div class="meta-row">
       <span id="quiz-title"></span>
+      <span id="quiz-timer">⏱ 00:00</span>
       <span id="quiz-progress"></span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -253,6 +261,7 @@
     "CSR og innovasjon"
   ];
   var FULL_TEST_SIZE = 30; // trekkes tilfeldig av 71, jf. "Tom test"-format (N≈71-72, n≈30)
+  var TOTAL_SCALE_POINTS = 50; // sluttresultat skaleres alltid til å være av 50 poeng
 
   var pickerScreen = document.getElementById('picker-screen');
   var quizScreen = document.getElementById('quiz-screen');
@@ -261,6 +270,7 @@
   var fullTestWrap = document.getElementById('full-test-wrap');
   var quizTitle = document.getElementById('quiz-title');
   var quizProgress = document.getElementById('quiz-progress');
+  var quizTimer = document.getElementById('quiz-timer');
   var progressFill = document.getElementById('progress-fill');
   var questionText = document.getElementById('question-text');
   var optionsList = document.getElementById('options-list');
@@ -273,6 +283,9 @@
   var reviewList = document.getElementById('review-list');
 
   var state = { title: '', pool: [], idx: 0, answers: [], selectedValue: null };
+  var timerInterval = null;
+  var startTime = null;
+  var elapsedMs = 0;
 
   function maxPoints(q) { return q.correct && q.correct.length ? 2 : 1; }
 
@@ -285,11 +298,37 @@
     return a;
   }
 
+  function formatTime(ms) {
+    var totalSec = Math.floor(ms / 1000);
+    var m = Math.floor(totalSec / 60);
+    var s = totalSec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function updateTimerDisplay() {
+    elapsedMs = Date.now() - startTime;
+    quizTimer.textContent = '⏱ ' + formatTime(elapsedMs);
+  }
+
+  function startTimer() {
+    startTime = Date.now();
+    elapsedMs = 0;
+    updateTimerDisplay();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimerDisplay, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    elapsedMs = Date.now() - startTime;
+    return elapsedMs;
+  }
+
   function buildPicker() {
     var fullCard = document.createElement('div');
     fullCard.className = 'card full-test';
     fullCard.innerHTML = '<h3>🎲 Full test (tilfeldig ' + FULL_TEST_SIZE + ' av ' + QUESTIONS.length + ')</h3>' +
-      '<p>Simulerer eksamensformatet – tilfeldig trukket sett fra alle emner.</p>';
+      '<p>Simulerer eksamensformatet – tilfeldig trukket sett fra alle emner. Tidtaking, poengsum vises av ' + TOTAL_SCALE_POINTS + '.</p>';
     fullCard.addEventListener('click', function () { startQuiz('Full test', shuffle(QUESTIONS).slice(0, FULL_TEST_SIZE)); });
     fullTestWrap.appendChild(fullCard);
 
@@ -309,6 +348,7 @@
     pickerScreen.style.display = 'none';
     resultsScreen.style.display = 'none';
     quizScreen.style.display = 'block';
+    startTimer();
     renderQuestion();
   }
 
@@ -364,22 +404,25 @@
   });
 
   quitBtn.addEventListener('click', function () {
+    stopTimer();
     quizScreen.style.display = 'none';
     pickerScreen.style.display = 'block';
   });
 
   function finishQuiz() {
     progressFill.style.width = '100%';
+    var finalElapsed = stopTimer();
     var totalPoints = 0, maxTotal = 0;
     state.answers.forEach(function (a) { totalPoints += a.points; maxTotal += a.max; });
-    if (window.gtag) gtag('event', 'quiz_complete', { quiz_title: state.title, score: totalPoints, max_score: maxTotal });
+    if (window.gtag) gtag('event', 'quiz_complete', { quiz_title: state.title, score: totalPoints, max_score: maxTotal, time_seconds: Math.round(finalElapsed / 1000) });
 
     quizScreen.style.display = 'none';
     resultsScreen.style.display = 'block';
 
-    var pct = maxTotal ? Math.round((totalPoints / maxTotal) * 100) : 0;
-    scoreBig.textContent = totalPoints + ' / ' + maxTotal + ' poeng';
-    scoreSub.textContent = pct + '% – ' + state.title + ' (' + state.pool.length + ' spørsmål)';
+    var pct = maxTotal ? (totalPoints / maxTotal) : 0;
+    var scaledScore = Math.round(pct * TOTAL_SCALE_POINTS);
+    scoreBig.textContent = scaledScore + ' / ' + TOTAL_SCALE_POINTS + ' poeng';
+    scoreSub.textContent = Math.round(pct * 100) + '% – ' + state.title + ' (' + state.pool.length + ' spørsmål) · Tid: ' + formatTime(finalElapsed) + ' · Råpoeng: ' + totalPoints + ' av ' + maxTotal;
 
     reviewList.innerHTML = '';
     state.answers.forEach(function (a, i) {
