@@ -272,7 +272,7 @@
     "CSR og innovasjon"
   ];
   var FULL_TEST_SIZE = 30; // trekkes tilfeldig av 71, jf. "Tom test"-format (N≈71-72, n≈30)
-  var TOTAL_SCALE_POINTS = 50; // sluttresultat skaleres alltid til å være av 50 poeng
+  var PASS_PERCENT = 50 / 60; // beståttgrense: 50 av 60 poeng på full test (83,3%), skaleres proporsjonalt til andre sett
 
   var pickerScreen = document.getElementById('picker-screen');
   var quizScreen = document.getElementById('quiz-screen');
@@ -342,7 +342,7 @@
     var fullCard = document.createElement('div');
     fullCard.className = 'card full-test';
     fullCard.innerHTML = '<h3>🎲 Full test (tilfeldig ' + FULL_TEST_SIZE + ' av ' + QUESTIONS.length + ')</h3>' +
-      '<p>Simulerer eksamensformatet – tilfeldig trukket sett fra alle emner. Tidtaking, poengsum vises av ' + TOTAL_SCALE_POINTS + '.</p>';
+      '<p>Simulerer eksamensformatet – tilfeldig trukket sett fra alle emner. Tidtaking, råpoeng (maks 60), bestått fra 50 poeng.</p>';
     fullCard.addEventListener('click', function () {
       var generator = function () { return shuffle(QUESTIONS).slice(0, FULL_TEST_SIZE); };
       startQuiz('Full test', generator(), generator);
@@ -440,9 +440,10 @@
     resultsScreen.style.display = 'block';
 
     var pct = maxTotal ? (totalPoints / maxTotal) : 0;
-    var scaledScore = Math.round(pct * TOTAL_SCALE_POINTS);
-    scoreBig.textContent = scaledScore + ' / ' + TOTAL_SCALE_POINTS + ' poeng';
-    scoreSub.textContent = Math.round(pct * 100) + '% – ' + state.title + ' (' + state.pool.length + ' spørsmål) · Tid: ' + formatTime(finalElapsed) + ' · Råpoeng: ' + totalPoints + ' av ' + maxTotal;
+    var passThreshold = Math.round(maxTotal * PASS_PERCENT);
+    var passed = totalPoints >= passThreshold;
+    scoreBig.textContent = totalPoints + ' / ' + maxTotal + ' poeng';
+    scoreSub.textContent = (passed ? '✅ Bestått' : '❌ Ikke bestått') + ' (grense: ' + passThreshold + ' poeng) · ' + Math.round(pct * 100) + '% – ' + state.title + ' (' + state.pool.length + ' spørsmål) · Tid: ' + formatTime(finalElapsed);
 
     reviewList.innerHTML = '';
     state.answers.forEach(function (a, i) {
