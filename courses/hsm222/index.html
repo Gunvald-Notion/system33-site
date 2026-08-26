@@ -44,15 +44,30 @@
     padding: 20px;
   }
   .notice-banner {
-    background: rgba(224,178,58,0.12);
+    background: rgba(224,178,58,0.14);
     border: 1px solid var(--yellow);
     border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    font-size: 0.9rem;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
     line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
   }
-  .notice-banner a { color: var(--accent); font-weight: 600; }
+  .notice-banner .msg strong { color: var(--yellow); }
+  .notice-banner .cta-btn {
+    display: inline-block;
+    background: var(--yellow);
+    color: #14151a;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
   #picker-screen .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -181,7 +196,8 @@
 
   <section id="picker-screen">
     <div class="notice-banner">
-      ⚠️ <strong>9 spørsmål fikk oppdatert fasit 26.08.2026</strong> – noen svaralternativer var feil merket eller manglet. <a href="retrain.html">Se hva som endret seg og øv på dem her</a>.
+      <div class="msg">⚠️ <strong>9 spørsmål fikk oppdatert fasit 26.08.2026</strong> – noen svaralternativer var feil merket eller manglet.</div>
+      <a class="cta-btn" href="retrain.html">🎯 Test deg selv og fiks feilene</a>
     </div>
     <div id="full-test-wrap"></div>
     <div class="grid" id="chapter-grid"></div>

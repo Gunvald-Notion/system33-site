@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HSM222 – Rettede spørsmål (Retrain the Faults)</title>
+<title>HSM222 – Test deg selv: 9 rettede spørsmål</title>
 <style>
   :root {
     --bg: #14151a;
@@ -14,6 +14,7 @@
     --accent: #6c8cff;
     --green: #35c46f;
     --yellow: #e0b23a;
+    --red: #e05a5a;
   }
   * { box-sizing: border-box; }
   body {
@@ -24,198 +25,234 @@
     min-height: 100vh;
   }
   header { padding: 24px 20px 8px; text-align: center; }
-  header h1 { margin: 0 0 4px; font-size: 1.5rem; }
-  header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  header h1 { margin: 0 0 4px; font-size: 1.4rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.9rem; }
   main { max-width: 760px; margin: 0 auto; padding: 20px 20px 60px; }
+  a.back { display: inline-block; margin-bottom: 16px; color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+  a.back:hover { text-decoration: underline; }
   .notice {
     background: rgba(224,178,58,0.12);
     border: 1px solid var(--yellow);
     border-radius: 10px;
-    padding: 16px 18px;
-    margin-bottom: 28px;
-    font-size: 0.95rem;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
     line-height: 1.5;
   }
   .notice strong { color: var(--yellow); }
-  .q-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 16px;
+  .meta-row { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.2s; }
+  .question-box { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+  .question-box .q-topic { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+  .question-box h2 { font-size: 1.1rem; line-height: 1.4; margin: 0 0 4px; }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .option-btn {
+    text-align: left; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    padding: 12px 14px; border-radius: 10px; cursor: pointer; font-size: 0.95rem; line-height: 1.4;
   }
-  .q-card .q-meta { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
-  .q-card h2 { font-size: 1.05rem; line-height: 1.4; margin: 0 0 12px; }
-  .q-card ul { margin: 0 0 12px; padding-left: 20px; }
-  .q-card li { margin-bottom: 6px; line-height: 1.4; }
-  details {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 14px;
-  }
-  details summary {
-    cursor: pointer;
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-  details .answer { margin-top: 10px; font-size: 0.92rem; line-height: 1.5; }
-  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-right: 6px; }
-  .pill-correct { background: rgba(53,196,111,0.18); color: var(--green); }
-  .pill-partial { background: rgba(224,178,58,0.18); color: var(--yellow); }
-  a.back { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; }
-  a.back:hover { text-decoration: underline; }
+  .option-btn:hover { border-color: var(--accent); }
+  .option-btn.selected-correct { border-color: var(--green); background: rgba(53,196,111,0.12); }
+  .option-btn.selected-partial { border-color: var(--yellow); background: rgba(224,178,58,0.12); }
+  .option-btn.selected-wrong { border-color: var(--red); background: rgba(224,90,90,0.12); }
+  .option-btn.reveal-correct { border-color: var(--green); }
+  .option-btn.reveal-partial { border-color: var(--yellow); }
+  .option-btn[disabled] { cursor: default; }
+  .actions { display: flex; justify-content: space-between; margin-top: 20px; }
+  button.primary { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 0.95rem; cursor: pointer; }
+  button.primary:disabled { opacity: 0.4; cursor: default; }
+  button.ghost { background: none; border: 1px solid var(--border); color: var(--muted); padding: 10px 16px; border-radius: 8px; cursor: pointer; }
+  #results-screen { display: none; }
+  #results-screen .score-hero { text-align: center; padding: 20px 0 10px; }
+  #results-screen .score-hero .big { font-size: 2.6rem; font-weight: 700; }
+  #results-screen .score-hero .sub { color: var(--muted); margin-top: 6px; }
+  .review-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .review-item .q-points { font-size: 0.8rem; color: var(--muted); margin-bottom: 6px; }
+  .points-pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+  .points-2 { background: rgba(53,196,111,0.18); color: var(--green); }
+  .points-1 { background: rgba(224,178,58,0.18); color: var(--yellow); }
+  .points-0 { background: rgba(224,90,90,0.18); color: var(--red); }
   footer { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 10px 20px 30px; }
 </style>
 </head>
 <body>
 <header>
-  <h1>HSM222 – Rettede spørsmål</h1>
-  <p>9 spørsmål i øvingsquizen hadde feil eller ufullstendig fasit – nå rettet</p>
+  <h1>🎯 Test deg selv – og fiks feilene</h1>
+  <p>De 9 spørsmålene som fikk oppdatert fasit 26.08.2026</p>
 </header>
 <main>
-  <a class="back" href="index.html">← Tilbake til quizen</a>
-  <div class="notice">
-    <strong>Viktig:</strong> Ved en gjennomgang 26.08.2026 fant vi at 9 av spørsmålene i øvingsquizen hadde feil eller ufullstendige svaralternativer merket som riktige/delvis riktige. Dette er nå rettet i quizen. Hvis du har øvd på disse spørsmålene tidligere, bør du gå gjennom dem på nytt her før eksamen.
+  <a class="back" href="index.html">← Tilbake til hovedquizen</a>
+  <div class="notice" id="intro-notice">
+    <strong>Hvorfor denne testen finnes:</strong> Ved en gjennomgang fant vi at disse 9 spørsmålene tidligere hadde feil eller ufullstendig fasit i quizen. Ta testen på nytt her for å sjekke at du sitter igjen med riktig kunnskap.
   </div>
 
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 18 &middot; CSR og innovasjon</div>
-    <h2>Hva menes med «aktivering» av CSR (Corporate Social Responsibility)-aktiviteter?</h2>
-    <ul>
-      <li>a. At de ansatte bevisstgjøres på bedriftens samfunnsansvar</li>
-      <li>b. At tiltakene kommuniseres internt og/eller eksternt</li>
-      <li>c. At bedriftens potensial for å bidra positivt til samfunnet realiseres</li>
-      <li>d. Implementering av bedriftens planer for CSR-aktiviteter</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> b. At tiltakene kommuniseres internt og/eller eksternt<br><span class="pill pill-partial">1 poeng</span> a. At de ansatte bevisstgjøres på bedriftens samfunnsansvar</div>
-    </details>
-  </div>
+  <section id="quiz-screen">
+    <div class="meta-row">
+      <span id="quiz-progress"></span>
+      <span id="quiz-topic"></span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="question-box">
+      <h2 id="question-text"></h2>
+      <div class="options" id="options-list"></div>
+      <div class="actions">
+        <button class="ghost" onclick="location.href='index.html'">Avslutt</button>
+        <button class="primary" id="next-btn" disabled>Neste</button>
+      </div>
+    </div>
+  </section>
 
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 22 &middot; Prising</div>
-    <h2>I teori om produktprising er man opptatt av differanseverdien. Hvordan defineres differanseverdien?</h2>
-    <ul>
-      <li>a. Differansen mellom potensiell verdi og referanseverdien</li>
-      <li>b. Differansen mellom referanseverdien og prisen på det aktuelle produktet</li>
-      <li>c. Differansen mellom salgsprisen og enhetskostnaden</li>
-      <li>d. Differansen mellom referanseverdien og enhetskostnaden</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> a. Differansen mellom potensiell verdi og referanseverdien</div>
-    </details>
-  </div>
-
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 29 &middot; Reklame og prosessering</div>
-    <h2>Noen påstår at «merke-elementene alltid bør eksponeres tydelig i TV-reklamer». Har denne påstanden god støtte i reklameforskningen?</h2>
-    <ul>
-      <li>a. Ja, påstanden har god støtte</li>
-      <li>b. Saken er uklar, det kommer an på hva slags reklame det er snakk om</li>
-      <li>c. Nei, påstanden har dårlig støtte i reklameforskningen</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> a. Ja, påstanden har god støtte</div>
-    </details>
-  </div>
-
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 36 &middot; Merkevare og posisjonering</div>
-    <h2>Hvorfor er det viktig å fremstille assosiasjoner i nettverk når man skal forstå en merkevare?</h2>
-    <ul>
-      <li>a. Fordi nettverkene gir statistisk grunnlag for å vurdere hvilke faktorer som driver valg eller bortvalg av merkevaren</li>
-      <li>b. Fordi det gir god oversikt over alle assosiasjonene til et merke</li>
-      <li>c. Fordi enkeltassosiasjoner ikke har et selvstendig innhold</li>
-      <li>d. Fordi det er en rask og enkel metode for oppsummering av resultatene fra en assosiasjonsstudie</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> b. Fordi det gir god oversikt over alle assosiasjonene til et merke<br><span class="pill pill-partial">1 poeng</span> c. Fordi enkeltassosiasjoner ikke har et selvstendig innhold</div>
-    </details>
-  </div>
-
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 37 &middot; Reklame og prosessering</div>
-    <h2>Hvilke betingelser må være til stede for at konsumenten skal prosessere en reklame sentralt?</h2>
-    <ul>
-      <li>a. Kunden må være motivert, samt ha evne og anledning til å prosessere reklamen</li>
-      <li>b. Budskapet må være tydelig og kunden motivert</li>
-      <li>c. Kunden må være motivert</li>
-      <li>d. Reklamen må være engasjerende</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> a. Kunden må være motivert, samt ha evne og anledning til å prosessere reklamen<br><span class="pill pill-partial">1 poeng</span> c. Kunden må være motivert</div>
-    </details>
-  </div>
-
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 46 &middot; Strategi og ressurser</div>
-    <h2>Eieren av et selskap som driver med eiendomsmegling hevder at «våre meglere er vår fremste strategiske ressurs». Oppfyller meglerne de teoretiske kravene til strategiske ressurser?</h2>
-    <ul>
-      <li>a. Bare de beste meglerne fordi de er sjeldne, viktige og vanskelige å kopiere</li>
-      <li>b. Nei, fordi alle meglere har omtrent samme utdanning og bakgrunn</li>
-      <li>c. Ja, fordi meglerne spiller en viktig rolle i strategien</li>
-      <li>d. Nei, fordi meglerne representerer en ikke-approprierbar ressurs.</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> d. Nei, fordi meglerne representerer en ikke-approprierbar ressurs.<br><span class="pill pill-partial">1 poeng</span> a. Bare de beste meglerne fordi de er sjeldne, viktige og vanskelige å kopiere</div>
-    </details>
-  </div>
-
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 48 &middot; Metodikk og statistikk</div>
-    <h2>Du har målt effekten av ulike produktegenskaper på holdningen til merket ved hjelp av regresjonsanalyse. For egenskap H er effekten β = 0.03, og p &lt; .05. Hva forteller dette om egenskapens betydning?</h2>
-    <ul>
-      <li>a. Denne egenskapen har ingen betydning for holdningen til merket.</li>
-      <li>b. Denne egenskapen har stor betydning for holdningen til merket.</li>
-      <li>c. Denne egenskapen har minimal betydning for holdningen til merket.</li>
-      <li>d. Denne egenskapen har ikke signifikant effekt på holdningen.</li>
-      <li>e. I hvilken grad man kan trekke konklusjonen om årsaken til observasjonseffekten i en undersøkelse.</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> c. Denne egenskapen har minimal betydning for holdningen til merket.<br><span class="pill pill-partial">1 poeng</span> e. I hvilken grad man kan trekke konklusjonen om årsaken til observasjonseffekten i en undersøkelse. (dette svaralternativet manglet helt i quizen tidligere)</div>
-    </details>
-  </div>
-
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 51 &middot; Personlig salg</div>
-    <h2>Hvorfor er det mer lønnsomt å bruke noe tid på å forstå kundens behov i personlige salgsprosesser i stedet for å gå rett i gang med å selge det første produktet han viser interesse for?</h2>
-    <ul>
-      <li>a. Fordi du ellers risikerer å selge et produkt til kunden som han siden klager på</li>
-      <li>b. Fordi innsikt i kundes behov skaper muligheter for kryssalg</li>
-      <li>c. Fordi innsikt i kundens behov skaper kryss- og oppsalgsmuligheter</li>
-      <li>d. Fordi innsikt i kundens behov gjør det lettere å finne det riktige produktet for kunden</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng</span> c. Fordi innsikt i kundens behov skaper kryss- og oppsalgsmuligheter<br><span class="pill pill-partial">1 poeng (begge)</span> b. Fordi innsikt i kundes behov skaper muligheter for kryssalg / d. Fordi innsikt i kundens behov gjør det lettere å finne det riktige produktet for kunden</div>
-    </details>
-  </div>
-
-  <div class="q-card">
-    <div class="q-meta">Spørsmål 53 &middot; Jus og regulering</div>
-    <h2>G-Sport planlegger en reklamekampanje rettet mot barn i Norge. Hvilke av synspunktene nedenfor er mest korrekte i følge markedsføringsloven?</h2>
-    <ul>
-      <li>a. Man kan bare henvende seg til foreldrene, ikke direkte til barna.</li>
-      <li>b. Man kan henvende seg til barna dersom reklamen ikke oppfordrer direkte til kjøp.</li>
-      <li>c. Man kan henvende seg til barna dersom man tar hensyn til at barna er godtroende og lett påvirkelige.</li>
-      <li>d. Man kan henvende seg til barna, men bare på andre kanaler enn TV.</li>
-    </ul>
-    <details>
-      <summary>Vis fasit</summary>
-      <div class="answer"><span class="pill pill-correct">2 poeng (begge)</span> b. Man kan henvende seg til barna dersom reklamen ikke oppfordrer direkte til kjøp. / c. Man kan henvende seg til barna dersom man tar hensyn til at barna er godtroende og lett påvirkelige.</div>
-    </details>
-  </div>
-
+  <section id="results-screen">
+    <div class="score-hero">
+      <div class="big" id="score-big"></div>
+      <div class="sub" id="score-sub"></div>
+    </div>
+    <div class="actions" style="justify-content:center; gap:12px;">
+      <button class="primary" id="retry-btn">Ta testen igjen</button>
+      <button class="ghost" onclick="location.href='index.html'">Tilbake til hovedquizen</button>
+    </div>
+    <h3 style="margin-top:30px;">Gjennomgang</h3>
+    <div id="review-list"></div>
+  </section>
 </main>
 <footer>system33.io &middot; HSM222 øvingsquiz &middot; ikke offisielt eksamensmateriale</footer>
+
+<script>
+(function () {
+  var RETRAIN_QUESTIONS = [
+{"nr":18,"emne":"CSR og innovasjon","page":3,"q":"Hva menes med «aktivering» av CSR (Corporate Social Responsibility)-aktiviteter?","options":["a. At de ansatte bevisstgjøres på bedriftens samfunnsansvar","b. At tiltakene kommuniseres internt og/eller eksternt","c. At bedriftens potensial for å bidra positivt til samfunnet realiseres","d. Implementering av bedriftens planer for CSR-aktiviteter"],"correct":["b. At tiltakene kommuniseres internt og/eller eksternt"],"partial":["a. At de ansatte bevisstgjøres på bedriftens samfunnsansvar"]},
+{"nr":22,"emne":"Prising","page":4,"q":"I teori om produktprising er man opptatt av differanseverdien. Hvordan defineres differanseverdien?","options":["a. Differansen mellom potensiell verdi og referanseverdien","b. Differansen mellom referanseverdien og prisen på det aktuelle produktet","c. Differansen mellom salgsprisen og enhetskostnaden","d. Differansen mellom referanseverdien og enhetskostnaden"],"correct":["a. Differansen mellom potensiell verdi og referanseverdien"],"partial":[]},
+{"nr":29,"emne":"Reklame og prosessering","page":5,"q":"Noen påstår at «merke-elementene alltid bør eksponeres tydelig i TV-reklamer». Har denne påstanden god støtte i reklameforskningen?","options":["a. Ja, påstanden har god støtte","b. Saken er uklar, det kommer an på hva slags reklame det er snakk om","c. Nei, påstanden har dårlig støtte i reklameforskningen"],"correct":["a. Ja, påstanden har god støtte"],"partial":[]},
+{"nr":36,"emne":"Merkevare og posisjonering","page":6,"q":"Hvorfor er det viktig å fremstille assosiasjoner i nettverk når man skal forstå en merkevare?","options":["a. Fordi nettverkene gir statistisk grunnlag for å vurdere hvilke faktorer som driver valg eller bortvalg av merkevaren","b. Fordi det gir god oversikt over alle assosiasjonene til et merke","c. Fordi enkeltassosiasjoner ikke har et selvstendig innhold","d. Fordi det er en rask og enkel metode for oppsummering av resultatene fra en assosiasjonsstudie"],"correct":["b. Fordi det gir god oversikt over alle assosiasjonene til et merke"],"partial":["c. Fordi enkeltassosiasjoner ikke har et selvstendig innhold"]},
+{"nr":37,"emne":"Reklame og prosessering","page":6,"q":"Hvilke betingelser må være til stede for at konsumenten skal prosessere en reklame sentralt?","options":["a. Kunden må være motivert, samt ha evne og anledning til å prosessere reklamen","b. Budskapet må være tydelig og kunden motivert","c. Kunden må være motivert","d. Reklamen må være engasjerende"],"correct":["a. Kunden må være motivert, samt ha evne og anledning til å prosessere reklamen"],"partial":["c. Kunden må være motivert"]},
+{"nr":46,"emne":"Strategi og ressurser","page":7,"q":"Eieren av et selskap som driver med eiendomsmegling hevder at «våre meglere er vår fremste strategiske ressurs». Oppfyller meglerne de teoretiske kravene til strategiske ressurser?","options":["a. Bare de beste meglerne fordi de er sjeldne, viktige og vanskelige å kopiere","b. Nei, fordi alle meglere har omtrent samme utdanning og bakgrunn","c. Ja, fordi meglerne spiller en viktig rolle i strategien","d. Nei, fordi meglerne representerer en ikke-approprierbar ressurs."],"correct":["d. Nei, fordi meglerne representerer en ikke-approprierbar ressurs."],"partial":["a. Bare de beste meglerne fordi de er sjeldne, viktige og vanskelige å kopiere"]},
+{"nr":48,"emne":"Metodikk og statistikk","page":7,"q":"Du har målt effekten av ulike produktegenskaper på holdningen til merket ved hjelp av regresjonsanalyse. For egenskap H er effekten β= 0.03, og p <. 05. Hva forteller dette om egenskapens betydning?","options":["a. Denne egenskapen har ingen betydning for holdningen til merket.","b. Denne egenskapen har stor betydning for holdningen til merket.","c. Denne egenskapen har minimal betydning for holdningen til merket.","d. Denne egenskapen har ikke signifikant effekt på holdningen.","e. I hvilken grad man kan trekke konklusjonen om årsaken til observasjonseffekten i en undersøkelse."],"correct":["c. Denne egenskapen har minimal betydning for holdningen til merket."],"partial":["e. I hvilken grad man kan trekke konklusjonen om årsaken til observasjonseffekten i en undersøkelse."]},
+{"nr":51,"emne":"Personlig salg","page":8,"q":"Hvorfor er det mer lønnsomt å bruke noe tid på å forstå kundens behov i personlige salgsprosesser i stedet for å gå rett i gang med å selge det første produktet han viser interesse for?","options":["a. Fordi du ellers risikerer å selge et produkt til kunden som han siden klager på","b. Fordi innsikt i kundes behov skaper muligheter for kryssalg","c. Fordi innsikt i kundens behov skaper kryss- og oppsalgsmuligheter","d. Fordi innsikt i kundens behov gjør det lettere å finne det riktige produktet for kunden"],"correct":["c. Fordi innsikt i kundens behov skaper kryss- og oppsalgsmuligheter"],"partial":["b. Fordi innsikt i kundes behov skaper muligheter for kryssalg","d. Fordi innsikt i kundens behov gjør det lettere å finne det riktige produktet for kunden"]},
+{"nr":53,"emne":"Jus og regulering","page":8,"q":"G-Sport planlegger en reklamekampanje rettet mot barn i Norge. Hvilke av synspunktene nedenfor er mest korrekte i følge markedsføringsloven?","options":["a. Man kan bare henvende seg til foreldrene, ikke direkte til barna.","b. Man kan henvende seg til barna dersom reklamen ikke oppfordrer direkte til kjøp.","c. Man kan henvende seg til barna dersom man tar hensyn til at barna er godtroende og lett påvirkelige.","d. Man kan henvende seg til barna, men bare på andre kanaler enn TV."],"correct":["b. Man kan henvende seg til barna dersom reklamen ikke oppfordrer direkte til kjøp.","c. Man kan henvende seg til barna dersom man tar hensyn til at barna er godtroende og lett påvirkelige."],"partial":[]}
+  ];
+
+  var quizScreen = document.getElementById('quiz-screen');
+  var resultsScreen = document.getElementById('results-screen');
+  var quizProgress = document.getElementById('quiz-progress');
+  var quizTopic = document.getElementById('quiz-topic');
+  var progressFill = document.getElementById('progress-fill');
+  var questionText = document.getElementById('question-text');
+  var optionsList = document.getElementById('options-list');
+  var nextBtn = document.getElementById('next-btn');
+  var retryBtn = document.getElementById('retry-btn');
+  var scoreBig = document.getElementById('score-big');
+  var scoreSub = document.getElementById('score-sub');
+  var reviewList = document.getElementById('review-list');
+
+  var state = { pool: [], idx: 0, answers: [], selectedValue: null };
+
+  function maxPoints(q) { return q.correct && q.correct.length ? 2 : 1; }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function startQuiz(pool) {
+    state = { pool: pool, idx: 0, answers: [], selectedValue: null };
+    quizScreen.style.display = 'block';
+    resultsScreen.style.display = 'none';
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    var q = state.pool[state.idx];
+    quizProgress.textContent = 'Spørsmål ' + (state.idx + 1) + ' av ' + state.pool.length;
+    quizTopic.textContent = q.emne;
+    progressFill.style.width = (state.idx / state.pool.length * 100) + '%';
+    questionText.textContent = q.q;
+    optionsList.innerHTML = '';
+    nextBtn.disabled = true;
+    nextBtn.textContent = (state.idx + 1 < state.pool.length) ? 'Neste' : 'Se resultat';
+    state.selectedValue = null;
+
+    q.options.forEach(function (opt) {
+      var btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', function () { selectOption(q, opt); });
+      optionsList.appendChild(btn);
+    });
+  }
+
+  function selectOption(q, opt) {
+    if (state.selectedValue !== null) return;
+    var points = 0;
+    if (q.correct && q.correct.indexOf(opt) !== -1) points = 2;
+    else if (q.partial && q.partial.indexOf(opt) !== -1) points = 1;
+
+    state.selectedValue = opt;
+    state.answers.push({ q: q, selected: opt, points: points, max: maxPoints(q) });
+
+    Array.prototype.forEach.call(optionsList.children, function (b) {
+      b.disabled = true;
+      var val = b.textContent;
+      if (val === opt) {
+        b.classList.add(points === 2 ? 'selected-correct' : points === 1 ? 'selected-partial' : 'selected-wrong');
+      } else if (q.correct && q.correct.indexOf(val) !== -1) {
+        b.classList.add('reveal-correct');
+      } else if (q.partial && q.partial.indexOf(val) !== -1) {
+        b.classList.add('reveal-partial');
+      }
+    });
+    nextBtn.disabled = false;
+  }
+
+  nextBtn.addEventListener('click', function () {
+    if (state.idx + 1 < state.pool.length) {
+      state.idx++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function finishQuiz() {
+    progressFill.style.width = '100%';
+    var totalPoints = 0, maxTotal = 0;
+    state.answers.forEach(function (a) { totalPoints += a.points; maxTotal += a.max; });
+
+    quizScreen.style.display = 'none';
+    resultsScreen.style.display = 'block';
+
+    var pct = maxTotal ? Math.round((totalPoints / maxTotal) * 100) : 0;
+    scoreBig.textContent = totalPoints + ' / ' + maxTotal + ' poeng';
+    scoreSub.textContent = pct + '% – de 9 rettede spørsmålene';
+
+    reviewList.innerHTML = '';
+    state.answers.forEach(function (a, i) {
+      var div = document.createElement('div');
+      div.className = 'review-item';
+      var pillClass = a.points === 2 ? 'points-2' : a.points === 1 ? 'points-1' : 'points-0';
+      var correctText = (a.q.correct && a.q.correct.length) ? a.q.correct.join(' / ') : '(ingen fullt riktig i kilden)';
+      div.innerHTML =
+        '<div class="q-points">Spørsmål nr. ' + a.q.nr + ' &middot; ' + a.q.emne + ' &middot; s. ' + a.q.page + '</div>' +
+        '<div style="margin-bottom:6px;"><strong>' + escapeHtml(a.q.q) + '</strong></div>' +
+        '<div>Ditt svar: ' + escapeHtml(a.selected) + ' <span class="points-pill ' + pillClass + '">' + a.points + ' av ' + a.max + ' poeng</span></div>' +
+        (a.points < 2 ? '<div style="margin-top:4px; color: var(--muted); font-size:0.85rem;">Riktig svar: ' + escapeHtml(correctText) + '</div>' : '');
+      reviewList.appendChild(div);
+    });
+  }
+
+  retryBtn.addEventListener('click', function () { startQuiz(shuffle(RETRAIN_QUESTIONS)); });
+
+  startQuiz(shuffle(RETRAIN_QUESTIONS));
+})();
+</script>
 </body>
 </html>
