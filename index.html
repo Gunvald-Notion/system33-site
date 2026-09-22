@@ -1,569 +1,741 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZS0BJG5PFE"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZS0BJG5PFE');
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System 33 — An Operating System for Thinking</title>
-    <meta name="description" content="A collection of methods for learning, deciding, and building. Designed to work with any AI or on your own. Built by Gunvald.">
-    
-    <!-- Open Graph / LinkedIn preview -->
-    <meta property="og:title" content="System 33 — An Operating System for Thinking">
-    <meta property="og:description" content="Methods for learning, deciding, and building. Works with any AI or on your own.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://system33.io">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="System 33 — An Operating System for Thinking">
-    <meta name="twitter:description" content="Methods for learning, deciding, and building. Works with any AI or on your own.">
-    <meta name="google-site-verification" content="k3eTtsqy1m7WP4PahflMACDUg1KwJ43uh3UgmVrgQTg" />
-    
-    <style>
-        /* Reset & Base */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-card: #18181b;
-            --border: #27272a;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent: #e4e4e7;
-            --accent-glow: rgba(228, 228, 231, 0.08);
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        body {
-            font-family: var(--font);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            scroll-behavior: smooth;
-        }
-
-        a {
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        a:hover {
-            opacity: 0.7;
-        }
-
-        /* Layout */
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Hero */
-        .hero {
-            padding: 120px 0 80px;
-            text-align: center;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 32px;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 3.5rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: clamp(1.35rem, 2.4vw, 1.75rem);
-            color: var(--text-secondary);
-            max-width: 560px;
-            margin: 0 auto;
-            line-height: 1.5;
-        }
-
-        /* Divider */
-        .divider {
-            width: 100%;
-            height: 1px;
-            background: var(--border);
-            margin: 0;
-        }
-
-        /* Section */
-        .section {
-            padding: 64px 0;
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 32px;
-        }
-
-        /* Mermaid diagrams */
-        .diagram-container {
-            margin-bottom: 48px;
-        }
-
-        .diagram-container .mermaid {
-            display: flex;
-            justify-content: center;
-        }
-
-        .diagram-container .mermaid svg {
-            max-width: 100%;
-        }
-
-        /* Mermaid node links */
-        .mermaid .node {
-            cursor: pointer;
-        }
-
-        /* Method Cards */
-        .methods-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        .method-card {
-            display: block;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            transition: background 0.2s, border-color 0.2s;
-        }
-
-        .method-card:hover {
-            background: var(--accent-glow);
-            border-color: #3f3f46;
-            opacity: 1;
-        }
-
-        .method-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .method-card h3 {
-            font-size: 1.15rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-        }
-
-        .method-card-tag {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-            padding: 3px 10px;
-            border-radius: 100px;
-            white-space: nowrap;
-        }
-
-        .method-card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .method-card-arrow {
-            display: inline-block;
-            margin-top: 16px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .method-card:hover .method-card-arrow {
-            color: var(--text-primary);
-        }
-
-        /* Method card diagram - at top */
-        .method-card-diagram {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .method-card-diagram .mermaid svg {
-            max-width: 100%;
-        }
-
-        /* Coming soon card */
-        .method-card.coming-soon {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        /* Notes group sub-header */
-        .notes-group {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: -0.01em;
-            margin: 36px 0 16px;
-        }
-
-        .notes-group:first-of-type {
-            margin-top: 0;
-        }
-
-        /* Activate section helper */
-        .activate-footnote {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .activate-footnote a {
-            color: var(--text-secondary);
-        }
-
-        /* About */
-        .about-text {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            line-height: 1.8;
-        }
-
-        .about-text strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        /* Footer */
-        .footer {
-            padding: 48px 0;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .footer-left {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-links a {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        /* Mobile */
-        @media (max-width: 480px) {
-            .hero {
-                padding: 80px 0 56px;
-            }
-
-            .section {
-                padding: 48px 0;
-            }
-
-            .method-card {
-                padding: 22px;
-            }
-
-            .footer {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>System 33</title>
+<meta name="description" content="System 33 — patterns I've noticed from my work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+  :root{
+    --void:#01030a; --pool:#96b9ff; --core:#eef4ff; --ink:#dfe8fb; --ink-dim:#8594b8;
+    --sheet:rgba(6,12,30,.9); --line:rgba(150,185,255,.18);
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  html{scroll-padding-top:env(safe-area-inset-top,0px)}
+  html,body{height:100%;margin:0;overflow:hidden}
+  body{background:var(--void);color:var(--ink);font-family:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+  #sky{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+  #sky.dragging{cursor:grabbing}
+  #back{position:fixed;left:16px;top:calc(16px + env(safe-area-inset-top,0px));z-index:3;
+    background:rgba(6,12,30,.7);color:var(--ink);border:1px solid var(--line);border-radius:999px;
+    padding:10px 16px;font:500 14px "Figtree",system-ui,sans-serif;cursor:pointer;min-height:44px}
+  #back:hover{border-color:var(--pool)}
+  #back:focus-visible{outline:2px solid var(--pool);outline-offset:2px}
+  #hint{position:fixed;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom,0px));text-align:center;
+    font-size:13px;color:var(--ink-dim);pointer-events:none;transition:opacity .9s;z-index:2}
+  #social{position:fixed;right:16px;top:calc(16px + env(safe-area-inset-top,0px));z-index:3;display:flex;gap:10px}
+  #social a{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;
+    background:rgba(6,12,30,.7);border:1px solid var(--line);color:var(--ink-dim);transition:border-color .2s,color .2s}
+  #social a:hover,#social a:focus-visible{border-color:var(--pool);color:var(--core);opacity:1}
+  #social svg{width:18px;height:18px;fill:currentColor}
+  #panel{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+    width:min(420px,88vw);box-sizing:border-box;background:var(--sheet);border:1px solid var(--line);border-radius:14px;
+    padding:14px 18px;z-index:3;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  #pname{font-family:"Marcellus",Georgia,serif;font-size:21px;color:var(--core);margin:0 0 4px}
+  #pline{margin:0 0 8px;font-size:14.5px;line-height:1.45}
+  #proute{margin:0;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:12px;color:var(--ink-dim)}
+  [hidden]{display:none!important}
+  /* a room's own page: same sky, words to read */
+  #page{position:fixed;inset:0;overflow-y:auto;z-index:2;opacity:0;transition:opacity .7s ease;-webkit-overflow-scrolling:touch}
+  #page.on{opacity:1}
+  .pwrap{max-width:640px;margin:0 auto;padding:calc(96px + env(safe-area-inset-top,0px)) 24px calc(96px + env(safe-area-inset-bottom,0px))}
+  .pcore{display:block;width:16px;height:16px;padding:0;border:0;border-radius:50%;margin:0 auto 34px;background:#f5f8ff;animation:beat 3s infinite;cursor:pointer;position:relative}
+  .pcore::after{content:"";position:absolute;inset:-16px;border-radius:50%}
+  .pcore:focus-visible{outline:2px solid var(--pool);outline-offset:6px}
+  @keyframes beat{
+    0%,100%{box-shadow:0 0 14px 5px rgba(238,244,255,.7),0 0 60px 26px rgba(150,185,255,.22)}
+    4%{box-shadow:0 0 22px 9px rgba(238,244,255,.95),0 0 110px 48px rgba(150,185,255,.45)}
+    12%{box-shadow:0 0 16px 6px rgba(238,244,255,.75),0 0 70px 30px rgba(150,185,255,.26)}
+    16%{box-shadow:0 0 19px 7px rgba(238,244,255,.85),0 0 90px 38px rgba(150,185,255,.34)}
+    40%{box-shadow:0 0 14px 5px rgba(238,244,255,.7),0 0 60px 26px rgba(150,185,255,.22)}}
+  #ptitle{font-family:"Marcellus",Georgia,serif;font-weight:400;font-size:clamp(32px,7vw,48px);line-height:1.1;text-align:center;margin:0 0 12px;color:var(--core);text-shadow:0 0 24px rgba(150,185,255,.55)}
+  #plead{text-align:center;font-size:17px;line-height:1.55;color:var(--ink);max-width:34em;margin:0 auto}
+  .quick{margin:40px 0 56px;padding:20px 22px;border:1px solid var(--line);border-radius:16px;background:rgba(6,12,30,.62)}
+  .quick p{margin:0 0 14px;font-size:16px;line-height:1.55}
+  .quick .say{font-family:"Marcellus",Georgia,serif;font-size:20px;color:var(--core)}
+  .quick .route{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:13px;color:var(--ink-dim);margin:0}
+  #copy{min-height:44px;padding:10px 20px;border-radius:999px;border:1px solid rgba(150,185,255,.45);background:rgba(150,185,255,.12);color:var(--core);font:500 15px "Figtree",system-ui,sans-serif;cursor:pointer}
+  #copy:hover{background:rgba(150,185,255,.22)}
+  #copy:focus-visible{outline:2px solid var(--pool);outline-offset:2px}
+  .stages{position:relative;padding-left:46px}
+  .stages::before{content:"";position:absolute;left:15px;top:10px;bottom:40px;width:1.5px;background:rgba(150,185,255,.14)}
+  .vinefill{position:absolute;left:14px;top:10px;width:3.5px;height:0;border-radius:2px;background:linear-gradient(rgba(238,244,255,.95),rgba(150,185,255,.7));box-shadow:0 0 14px rgba(150,185,255,.85);transition:height 1s cubic-bezier(.2,.7,.2,1)}
+  .stage{position:relative;padding-bottom:44px;opacity:.28;transition:opacity 1s}
+  .stage.lit{opacity:1}
+  .stage .dot{position:absolute;left:-37px;top:9px;width:11px;height:11px;border-radius:50%;background:#1a2a58;transition:background .6s,box-shadow .6s}
+  .stage.lit .dot{background:#f5f8ff;box-shadow:0 0 12px 4px rgba(238,244,255,.75),0 0 44px 16px rgba(150,185,255,.3)}
+  .stage .num{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:12px;color:var(--ink-dim);margin:0 0 4px}
+  .stage h2{font-family:"Marcellus",Georgia,serif;font-weight:400;font-size:26px;margin:0 0 8px;color:var(--core)}
+  .stage p{margin:0;font-size:16.5px;line-height:1.65;max-width:36em}
+  .pfoot{margin-top:12px;text-align:center;color:var(--ink-dim);font-size:14px}
+</style>
 </head>
 <body>
+<canvas id="sky" aria-label="System 33, drawn as a tree of light branching out from its core. Click any branch or room to travel into it."></canvas>
+<button id="back" hidden>Back out</button>
+<div id="hint">Scroll down to follow the light. Drag to look around.</div>
+<article id="page" hidden aria-live="polite"><div class="pwrap"><button class="pcore" id="pcore" type="button" aria-label="Back out"></button><h1 id="ptitle"></h1><p id="plead"></p><div id="pbody"></div></div></article>
+<div id="panel" hidden role="status"><p id="pname"></p><p id="pline"></p><p id="proute"></p></div>
+<div id="social" hidden>
+  <a href="https://github.com/Gunvald-Notion/system33-site" target="_blank" rel="noopener" aria-label="System 33 on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+  <a href="https://www.linkedin.com/in/gunvald7/" target="_blank" rel="noopener" aria-label="Gunvald on LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M14.82 0H1.18C.53 0 0 .52 0 1.16v13.68C0 15.48.53 16 1.18 16h13.64c.65 0 1.18-.52 1.18-1.16V1.16C16 .52 15.47 0 14.82 0ZM4.75 13.65H2.38V6.03h2.37v7.62ZM3.56 5c-.76 0-1.38-.62-1.38-1.38 0-.76.62-1.37 1.38-1.37.76 0 1.38.61 1.38 1.37 0 .76-.62 1.38-1.38 1.38Zm10.09 8.65h-2.36V9.95c0-.9-.02-2.05-1.25-2.05-1.25 0-1.44.98-1.44 1.99v3.76H6.24V6.03h2.27v1.04h.03c.32-.6 1.09-1.24 2.24-1.24 2.4 0 2.84 1.58 2.84 3.63v4.19Z"/></svg></a>
+</div>
+<script>
+(() => {
+  const cv = document.getElementById('sky'), ctx = cv.getContext('2d');
+  const backBtn = document.getElementById('back'), hint = document.getElementById('hint');
+  const panel = document.getElementById('panel'), pName = document.getElementById('pname'),
+        pLine = document.getElementById('pline'), pRoute = document.getElementById('proute');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DISPLAY = '"Marcellus","Palatino Linotype",Palatino,Georgia,serif';
+  const BODY = '"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif';
+  const POOL = '150,185,255', CORE_C = '238,244,255', MASS = '55,95,210';
+  const V = 620, PERIOD = 3, RW = 150, BY = 780, CY = 1140, N = 40;
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-badge">Open Source</div>
-            <h1>System 33</h1>
-            <p>Patterns I've noticed from my work.</p>
-        </div>
-    </section>
+  // ---- content: the real rooms of system33.io ----
+  const DATA = [
+    { name:'Methods', line:'Patterns, formalized', kids:[
+      { name:'Understanding Method', line:'Six stages to understand anything', route:'/activate/understanding-method/' },
+      { name:'More methods', line:'In the making', dim:true } ] },
+    { name:'Courses', line:'What I study, turned into tools', kids:[
+      { name:'HSM126', line:'Study and quiz tool for the statistics exam', route:'/courses/hsm126/' },
+      { name:'HSM222', line:'Practice quiz for marketing, the MPC test', route:'/courses/hsm222/' } ] },
+    { name:'Notes', line:'Reading, written down', kids:[
+      { name:'Ed Catmull', line:'The Pixar co-founder on getting the read right', route:'/notes/ed-catmull-pixar-the-read/' },
+      { name:'Gustav Söderström', line:'The Spotify Co-CEO on media worth your time', route:'/notes/gustav-soderstrom-time-well-spent/' },
+      { name:'High agency', line:'Notes on George Mack', route:'/notes/george-mack-high-agency/' } ] }
+  ];
+  const HOME = { pre:'Welcome to', title:'System 33', sub:"Patterns I've noticed from my work", kids:DATA };
+  const levelOf = d => ({ pre:null, title:d.name, sub:d.line, kids:d.kids || [] });
 
-    <div class="container"><div class="divider"></div></div>
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const ease = p => p * p * (3 - 2 * p);
+  const easeOut = p => 1 - (1 - p) ** 3;
+  const easeIn = p => p * p * p;
 
-    <!-- Activate -->
-    <section class="section">
-        <div class="container">
-            <div class="section-label">Activate</div>
-            <div class="methods-grid">
-                <a href="/activate/understanding-method/" class="method-card">
-                    <div class="method-card-header">
-                        <h3>Activate Understanding Method</h3>
-                        <span class="method-card-tag">Six stages</span>
-                    </div>
-                    <p>A six-stage learning protocol. Copy the prompt, paste into any AI, name your topic. Understand anything — origin, principle, application.</p>
-                    <span class="method-card-arrow">Activate →</span>
-                </a>
-            </div>
-            <p class="activate-footnote">More methods become activatable as they're ready. <a href="/activate/">View all →</a></p>
-        </div>
-    </section>
+  // ---- curves ----
+  function cps(e, t) {
+    const a = e.a, b = e.b;
+    const s1 = RM ? 0 : Math.sin(t * .7 + e.ph) * e.amp;
+    const s2 = RM ? 0 : Math.sin(t * .55 + e.ph * 1.3) * e.amp;
+    if (e.trunk) return [a.x, a.y, a.x + s1 * .4, a.y + 420, b.x + s2, b.y - 230, b.x, b.y];
+    const h = (b.y - a.y) * .5;
+    return [a.x, a.y, a.x + s1 * .5, a.y + h, b.x + s2, b.y - h, b.x, b.y];
+  }
+  function bez(p, u) {
+    const v = 1 - u, a = v * v * v, b = 3 * v * v * u, c = 3 * v * u * u, d = u * u * u;
+    return [a * p[0] + b * p[2] + c * p[4] + d * p[6], a * p[1] + b * p[3] + c * p[5] + d * p[7]];
+  }
+  function buildTab(e) {
+    const p = cps(e, 0); e.cum = [0]; let q = bez(p, 0), L = 0;
+    for (let i = 1; i <= N; i++) { const r = bez(p, i / N); L += Math.hypot(r[0] - q[0], r[1] - q[1]); e.cum.push(L); q = r; }
+    e.len = L; e.progU = 0;
+  }
+  function uAt(e, f) {
+    const target = f * e.len, c = e.cum;
+    for (let i = 1; i <= N; i++) if (c[i] >= target) { const k = (target - c[i - 1]) / ((c[i] - c[i - 1]) || 1); return (i - 1 + k) / N; }
+    return 1;
+  }
 
-    <div class="container"><div class="divider"></div></div>
+  // ---- screen ----
+  let W = 0, H = 0, DPR = 1;
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    makeStars();
+    if (scene) {
+      const old = scene;
+      scene = buildScene(old.level);
+      Object.assign(scene, { focus: old.focus, grown: old.grown, skipFirst: old.skipFirst, manual: old.manual, sigs: [] });
+      scene.edges.forEach((e, i) => e.grow = old.edges[i].grow);
+      scene.nodes.forEach((n, i) => { n.rev = old.nodes[i].rev; n.revT = old.nodes[i].revT; });
+      if (old.cam) scene.cam = old.cam;
+    }
+  }
 
-    <!-- Creator -->
-    <section class="section">
-        <div class="container">
-            <div class="section-label">Creator</div>
-            <p class="about-text">
-                My name is Gunvald. I'm the person publishing this and developing it.
-            </p>
-            <br>
-            <p class="about-text">
-                System 33 is the published version of System 32 — my own main folder, the one that makes the system work. What I've built is larger than what's public, but I'm sharing the tools because the more people who use them, the faster they develop.
-            </p>
-            <br>
-            <p class="about-text">
-                The total I've built so far is roughly nineteen methods. One is public today. The rest will come as they're ready.
-            </p>
-        </div>
-    </section>
+  // ---- a scene: one core with its branches ----
+  function buildScene(level) {
+    const core = { kind:'core', x:0, y:0, flare:0, out:[] };
+    const nodes = [], edges = [];
+    const spread = clamp((W / H) * 420, 210, 380);
+    const n1 = level.kids.length;
+    const sp1 = n1 <= 2 ? Math.min(spread * 1.5, 460) : spread;
+    level.kids.forEach((d, i) => {
+      const nd = { kind:'n1', data:d, name:d.name, line:d.line, route:d.route, dim:!!d.dim,
+                   depth:1, x:(i - (n1 - 1) / 2) * sp1, y:BY + (n1 > 2 ? (i % 2) * 50 : 0), flare:0, rev:false, revT:0, out:[], kids:[] };
+      nodes.push(nd);
+      const e = { a:core, b:nd, ph:i * 1.7, amp:16, trunk:true, grow:0 }; edges.push(e); core.out.push(e);
+      const fan = Math.min(190, sp1 * .9), m = (d.kids || []).length;
+      (d.kids || []).forEach((c, j) => {
+        const cn = { kind:'n2', depth:2, data:c, name:c.name, line:c.line, route:c.route, dim:!!c.dim, parent:nd,
+                     x:nd.x + (j - (m - 1) / 2) * fan, y:CY + (n1 > 2 ? (i % 2) * 50 : 0) + (j % 2) * 60,
+                     flare:0, rev:false, revT:0, out:[] };
+        nodes.push(cn); nd.kids.push(cn);
+        const ce = { a:nd, b:cn, ph:i * 1.7 + j * 2.3 + 1, amp:10, trunk:false, grow:0 }; edges.push(ce); nd.out.push(ce);
+      });
+    });
+    edges.forEach(buildTab);
+    const box = list => {
+      let minX = -230, maxX = 230, maxY = 220;
+      list.forEach(n => { minX = Math.min(minX, n.x - 120); maxX = Math.max(maxX, n.x + 120); maxY = Math.max(maxY, n.y + 95); });
+      return { minX, maxX, minY: -170, maxY };
+    };
+    const fit = bx => ({ x: (bx.minX + bx.maxX) / 2, y: (bx.minY + bx.maxY) / 2,
+                         z: Math.min(W / (bx.maxX - bx.minX), H / (bx.maxY - bx.minY)) * .94 });
+    const maxDepth = nodes.some(n => n.kind === 'n2') ? 2 : nodes.length ? 1 : 0;
+    // one camera frame per ring of growth: the core, then the branches, then the rooms
+    const frames = [{ x: 0, y: 50, z: Math.min(W * .82 / 440, H * .55 / 320) }];
+    for (let d = 1; d <= maxDepth; d++) frames.push(fit(box(nodes.filter(n => n.depth <= d))));
+    for (let i = 1; i < frames.length; i++) frames[i].z = Math.min(frames[i].z, frames[i - 1].z);
+    // lock the resting frame to the branch-level fit so rooms may extend past the edge instead of forcing a further zoom-out
+    for (let i = 2; i < frames.length; i++) { frames[i].x = frames[1].x; frames[i].y = frames[1].y; frames[i].z = frames[1].z; }
+    const bbox = box(nodes);
+    const { minX, maxX, maxY } = bbox;
+    const dust = Array.from({ length: Math.round(clamp(W * H / 1400, 320, 800)) }, () => {
+      const x = minX - 250 + Math.random() * (maxX - minX + 500), y = -500 + Math.random() * (maxY + 750);
+      return { x, y, d: Math.hypot(x, y), lit: 0, base: .05 + Math.random() * .1 };
+    });
+    return { level, core, nodes, edges, bbox, frames, dust, sigs: [], pan: 0, panY: 0, age: 0, focus: null,
+             grown: 0, maxDepth, skipFirst: level === HOME, cam: null, manual: false };
+  }
 
-    <div class="container"><div class="divider"></div></div>
+  // ---- camera: s = 0 is inside the core, s = 1 is the whole system ----
+  let s = 0, sT = 0;
+  function camAt(sv) {
+    const F = scene.frames, K = F.length - 1;
+    if (!K) return { x: F[0].x + scene.pan, y: F[0].y + scene.panY, z: F[0].z };
+    sv = clamp(sv, 0, K);
+    const i = Math.min(K - 1, Math.floor(sv)), f = ease(sv - i), A = F[i], B = F[i + 1];
+    const z = Math.exp(Math.log(A.z) + (Math.log(B.z) - Math.log(A.z)) * f);
+    return { x: A.x + (B.x - A.x) * f + scene.pan, y: A.y + (B.y - A.y) * f + scene.panY, z };
+  }
 
-    <!-- Ecosystem -->
-    <section class="section">
-        <div class="container">
-            <div class="section-label">Ecosystem</div>
-            <div class="diagram-container">
-                <pre class="mermaid">
-                    graph TD
-                        S33["🧠 System 33"]
-                        S33 --> ACT["⚡ Activate"]
-                        ACT --> UM["Understanding Method"]
-                        S33 --> COURSES["📚 Courses"]
-                        COURSES --> HSM["HSM126 — Prøv deg selv"]
-                        COURSES --> HSM222["HSM222 — MPC-quiz"]
-                        S33 --> NOTES["📝 Notes"]
-                        NOTES --> DS["David Senra · Founders"]
-                        NOTES --> CW["Chris Williamson"]
-                        DS --> CAT["Ed Catmull — Pixar"]
-                        DS --> TWS["Time Well Spent — Söderström"]
-                        CW --> GM["High Agency — Mack"]
-                        click HSM "/courses/hsm126/"
-                        click HSM222 "/courses/hsm222/"
-                        click CAT "/notes/ed-catmull-pixar-the-read/"
-                        click TWS "/notes/gustav-soderstrom-time-well-spent/"
-                        click GM "/notes/george-mack-high-agency/"
-                        click ACT "/activate/"
-                        click UM "/activate/understanding-method/"
-                </pre>
-            </div>
-        </div>
-    </section>
+  // ---- sky ----
+  // the sky, ported from the Sovereign Archive Map: sprite stars coloured by temperature, steady, never twinkling
+  const TEMPS = [[155,176,255],[170,191,255],[202,215,255],[228,232,255],[248,247,255],[255,244,234],[255,226,196],[255,204,150]];
+  const TW = [.14,.16,.2,.18,.14,.08,.06,.04];
+  function pickTemp() { let r = Math.random(), a = 0; for (let k = 0; k < TW.length; k++) { a += TW[k]; if (r < a) return k; } return 2; }
+  function makeSprite(size, draw) { const c = document.createElement('canvas'); c.width = c.height = size; draw(c.getContext('2d'), size / 2); return c; }
+  const DOT = TEMPS.map(t => makeSprite(32, (g, h) => {
+    const p = g.createRadialGradient(h, h, 0, h, h, h);
+    p.addColorStop(0, 'rgba(255,255,255,1)'); p.addColorStop(.12, `rgba(${t},.95)`); p.addColorStop(.35, `rgba(${t},.28)`); p.addColorStop(1, `rgba(${t},0)`);
+    g.fillStyle = p; g.fillRect(0, 0, h * 2, h * 2);
+  }));
+  const BRIGHT = TEMPS.map(t => makeSprite(128, (g, h) => {
+    const halo = g.createRadialGradient(h, h, 0, h, h, h * .55);
+    halo.addColorStop(0, `rgba(${t},.28)`); halo.addColorStop(.3, `rgba(${t},.07)`); halo.addColorStop(1, `rgba(${t},0)`);
+    g.fillStyle = halo; g.fillRect(0, 0, h * 2, h * 2);
+    const spike = (len, wid, alpha, rot) => {
+      g.save(); g.translate(h, h); g.rotate(rot);
+      const s = g.createLinearGradient(0, -len, 0, len);
+      s.addColorStop(0, `rgba(${t},0)`); s.addColorStop(.5, `rgba(255,255,255,${alpha})`); s.addColorStop(1, `rgba(${t},0)`);
+      g.fillStyle = s; g.beginPath(); g.moveTo(0, -len); g.lineTo(wid, 0); g.lineTo(0, len); g.lineTo(-wid, 0); g.closePath(); g.fill(); g.restore();
+    };
+    spike(h * .85, .9, .24, 0); spike(h * .5, .8, .17, Math.PI / 2);
+    const c2 = g.createRadialGradient(h, h, 0, h, h, h * .12);
+    c2.addColorStop(0, 'rgba(255,255,255,1)'); c2.addColorStop(.5, `rgba(${t},.8)`); c2.addColorStop(1, `rgba(${t},0)`);
+    g.fillStyle = c2; g.fillRect(0, 0, h * 2, h * 2);
+  }));
+  let stars = [];
+  function makeStars() {
+    const n = Math.round(clamp(W * H / 3400, 170, 520));
+    stars = Array.from({ length: n }, () => {
+      const z = Math.random() ** 1.6 * .85 + .15, g = Math.random() ** 3;
+      return { x: Math.random(), y: Math.random(), z, temp: pickTemp(),
+               r: Math.max(.3, (.45 + 2.4 * Math.sqrt(g)) * (.3 + z * 1.1) * .8), bright: g > .9,
+               op: .22 + Math.random() * .5 };
+    });
+  }
 
-    <div class="container"><div class="divider"></div></div>
+  let scene = null, stack = [], mode = 'level', dv = null, flashA = 0, hover = null, leaveAcc = 0;
+  let time = 0, nextBeat = .4, pending = 0;
+  const fronts = [];
 
-    <!-- Methods -->
-    <section class="section">
-        <div class="container">
-            <div class="section-label">Methods</div>
-            <div class="methods-grid">
-                
-                <a href="/activate/understanding-method/" id="method-understanding" class="method-card">
-                    <div class="method-card-diagram">
-                        <pre class="mermaid">
-                            gantt
-                                title Version History
-                                dateFormat YYYY-MM-DD
-                                tickInterval 1month
-                                axisFormat %b
-                                section System 32
-                                    Private Development :done, 2026-01-01, 2026-04-14
-                                section System 33
-                                    Public Release :active, 2026-04-07, 2026-04-14
-                        </pre>
-                    </div>
-                    <div class="method-card-header">
-                        <h3>Understanding Method</h3>
-                        <span class="method-card-tag">Activate</span>
-                    </div>
-                    <p>A six-stage method for learning anything by finding out where it came from, why it exists, and how it's actually used. Works with any AI or on your own.</p>
-                    <span class="method-card-arrow">Activate →</span>
-                </a>
+  // every main beat carries the growth one ring further out, and the camera rides along with it
+  function beat(str) {
+    const sc = scene;
+    sc.core.flare = Math.max(sc.core.flare, str);
+    fronts.push({ t0: time, str });
+    let grow = false;
+    if (str === 1 && sc.grown < sc.maxDepth) {
+      if (sc.skipFirst) sc.skipFirst = false;
+      else {
+        grow = true; sc.grown++;
+        let dist = 0;
+        sc.edges.forEach(e => { if (e.b.depth <= sc.grown) dist = Math.max(dist, e.b.depth === 1 ? e.len : 0); });
+        if (sc.grown === 2) dist += Math.max(...sc.edges.filter(e => !e.trunk).map(e => e.len));
+        if (!sc.manual) sc.cam = { from: s, to: sc.grown, t: 0, dur: Math.max(.6, dist / V * .95) };
+      }
+    }
+    sc.core.out.forEach(e => sc.sigs.push({ e, f: 0, en: str, grow }));
+  }
 
-            </div>
-        </div>
-    </section>
+  function glow(x, y, r, a, col) {
+    if (!(r > 0) || a <= 0) return;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(1, `rgba(${col},0)`);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  }
 
-    <div class="container"><div class="divider"></div></div>
+  function drawStars(focus, p, c) {
+    const ox = (c ? c.x * c.z : 0) * .1, oy = (c ? c.y * c.z : 0) * .1;
+    const diag = Math.hypot(W, H) || 1;
+    ctx.globalCompositeOperation = 'lighter';
+    for (const st of stars) {
+      const x = ((st.x * W - ox) % W + W) % W, y = ((st.y * H - oy) % H + H) % H;
+      let sx = x, sy = y;
+      if (focus && p > 0) {
+        // stars far from the focus point don't start pulling in until the dive is well underway,
+        // so the field stays spread across the whole frame for most of the animation; every star
+        // still lands exactly on schedule by p=1, same arrival "impact" as before.
+        const far = clamp(Math.hypot(focus[0] - x, focus[1] - y) / diag, 0, 1);
+        const delay = far * .62, peff = clamp((p - delay) / Math.max(1 - delay, 1e-4), 0, 1);
+        const k = peff * peff * .92, nx = x + (focus[0] - x) * k, ny = y + (focus[1] - y) * k;
+        const tx = nx + (focus[0] - nx) * .18 * p, ty = ny + (focus[1] - ny) * .18 * p;
+        ctx.globalAlpha = Math.min(1, st.op * .6 * Math.sin(Math.min(p, 1) * Math.PI));
+        ctx.strokeStyle = `rgb(${TEMPS[st.temp]})`; ctx.lineWidth = Math.max(1, st.r * 1.3);
+        ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(tx + .01, ty); ctx.stroke();
+        continue;
+      }
+      ctx.globalAlpha = Math.min(1, st.op * .78);
+      if (st.bright) { const sz = st.r * 14; ctx.drawImage(BRIGHT[st.temp], sx - sz / 2, sy - sz / 2, sz, sz); }
+      else { const d = st.r * 5.6; ctx.drawImage(DOT[st.temp], sx - d / 2, sy - d / 2, d, d); }
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  }
 
-    <!-- Courses -->
-    <section class="section">
-        <div class="container">
-            <div class="section-label">Courses</div>
-            <div class="methods-grid">
+  function drawScene(c) {
+    const S = (x, y) => [(x - c.x) * c.z + W / 2, (y - c.y) * c.z + H / 2];
+    const z = c.z, core = scene.core, lv = scene.level;
+    const cp = S(0, 0);
 
-                <a href="/courses/hsm126/" id="course-hsm126" class="method-card">
-                    <div class="method-card-header">
-                        <h3>HSM126 — Prøv deg selv</h3>
-                        <span class="method-card-tag">Gratis · Norsk</span>
-                    </div>
-                    <p>Flervalgstest for Statistikk for økonomer. 75 spørsmål fordelt på 7 kapitler. Velg kapittel, svar, se forklaring. Ingen pålogging.</p>
-                    <span class="method-card-arrow">Start →</span>
-                </a>
+    glow(cp[0], cp[1], 560 * z, .10 + .06 * core.flare, MASS);
 
-                <a href="/courses/hsm222/" id="course-hsm222" class="method-card">
-                    <div class="method-card-header">
-                        <h3>HSM222 — MPC-quiz</h3>
-                        <span class="method-card-tag">Gratis · Norsk</span>
-                    </div>
-                    <p>Øvingsquiz for markedsføring (MPC-testen). 71 spørsmål fordelt på 12 emner, pluss en full test som trekker et tilfeldig sett. 2/1/0-poengs fasit. Ingen pålogging.</p>
-                    <span class="method-card-arrow">Start →</span>
-                </a>
+    for (const d of scene.dust) {
+      const q = S(d.x, d.y);
+      if (q[0] < -5 || q[0] > W + 5 || q[1] < -5 || q[1] > H + 5) continue;
+      ctx.fillStyle = `rgba(${POOL},${Math.min(.9, Math.max(d.lit, d.base))})`;
+      ctx.beginPath(); ctx.arc(q[0], q[1], 1.15, 0, Math.PI * 2); ctx.fill();
+    }
 
-            </div>
-        </div>
-    </section>
+    for (const e of scene.edges) {
+      if (e.grow <= 0) continue;
+      const p = cps(e, time), uEnd = e.grow >= 1 ? 1 : uAt(e, e.grow);
+      const steps = Math.max(2, Math.ceil(N * uEnd)), sp = [];
+      for (let i = 0; i <= steps; i++) { const q = bez(p, uEnd * i / steps); sp.push(S(q[0], q[1])); }
+      const path = () => { ctx.beginPath(); ctx.moveTo(sp[0][0], sp[0][1]); for (let i = 1; i < sp.length; i++) ctx.lineTo(sp[i][0], sp[i][1]); };
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      path(); ctx.strokeStyle = `rgba(${POOL},.08)`; ctx.lineWidth = (e.trunk ? 10 : 7) * z; ctx.stroke();
+      path(); ctx.strokeStyle = `rgba(${POOL},.45)`; ctx.lineWidth = Math.max(1, (e.trunk ? 2.4 : 1.8) * z); ctx.stroke();
+    }
 
-    <div class="container"><div class="divider"></div></div>
+    for (const sg of scene.sigs) {
+      const p = cps(sg.e, time);
+      for (let k = 0; k < 3; k++) {
+        const f = sg.f - k * .012; if (f < 0) break;
+        const q = S(...bez(p, uAt(sg.e, f)));
+        glow(q[0], q[1], Math.max(5, (16 - k * 2.4) * z) * (.5 + sg.en * .6), (.75 - k * .14) * sg.en, CORE_C);
+      }
+    }
 
-    <!-- Notes -->
-    <section class="section">
-        <div class="container">
-            <div class="section-label">Notes</div>
+    // the core: the same kind of light as the branches, only bigger, words underneath
+    const fl = core.flare;
+    const hc = hover === core ? .35 : 0;
+    glow(cp[0], cp[1], 150 * z * (1 + fl * .9 + hc), .24 + .5 * fl + hc, POOL);
+    glow(cp[0], cp[1], 40 * z * (1 + fl * .3), .9, CORE_C);
+    ctx.fillStyle = '#f5f8ff'; ctx.beginPath(); ctx.arc(cp[0], cp[1], 11 * z, 0, Math.PI * 2); ctx.fill();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const tY = lv.pre ? 128 : 100;
+    if (lv.pre) {
+      ctx.fillStyle = 'rgba(223,232,251,.8)'; ctx.font = `500 ${Math.max(11, 22 * z)}px ${BODY}`;
+      ctx.fillText(lv.pre, cp[0], cp[1] + 80 * z);
+    }
+    ctx.shadowColor = `rgba(${POOL},${.55 + .35 * fl})`; ctx.shadowBlur = 14 + 22 * fl;
+    ctx.fillStyle = '#eef4ff'; ctx.font = `400 ${Math.max(18, 60 * z)}px ${DISPLAY}`;
+    ctx.fillText(lv.title, cp[0], cp[1] + tY * z);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(223,232,251,.75)'; ctx.font = `400 ${Math.max(11, 22 * z)}px ${BODY}`;
+    ctx.fillText(lv.sub, cp[0], cp[1] + (tY + 48) * z);
+    ctx.textBaseline = 'alphabetic';
 
-            <h3 class="notes-group">David Senra · Founders</h3>
-            <div class="methods-grid">
-                
-                <a href="/notes/ed-catmull-pixar-the-read/" class="method-card">
-                    <div class="method-card-header">
-                        <h3>Ed Catmull — The Read</h3>
-                        <span class="method-card-tag">Pixar</span>
-                    </div>
-                    <p>The Pixar co-founder on building a studio that stays creative without a single genius. Fourteen chapters, plus Tangen's companion interview on the constraint that makes freedom work.</p>
-                    <span class="method-card-arrow">Read →</span>
-                </a>
+    // branches and their rooms
+    for (const n of scene.nodes) {
+      if (!n.rev) continue;
+      const a = clamp((time - n.revT) / .6, 0, 1) * (n.dim ? .5 : 1);
+      const q = S(n.x, n.y), big = n.kind === 'n1';
+      const hv = hover === n ? .5 : 0;
+      glow(q[0], q[1], Math.max(18, (big ? 60 : 40) * z) * (1 + n.flare * .9 + hv), (.22 + .5 * n.flare + hv) * a, POOL);
+      glow(q[0], q[1], Math.max(6, (big ? 16 : 11) * z), .85 * a, CORE_C);
+      ctx.fillStyle = `rgba(245,248,255,${a})`; ctx.beginPath(); ctx.arc(q[0], q[1], Math.max(2.4, (big ? 5 : 3.6) * z), 0, Math.PI * 2); ctx.fill();
+      ctx.textAlign = 'center';
+      if (big) {
+        const fs = Math.max(14, 30 * z);
+        ctx.fillStyle = `rgba(238,244,255,${a})`; ctx.font = `400 ${fs}px ${DISPLAY}`;
+        ctx.fillText(n.name, q[0], q[1] + fs * 1.6);
+        ctx.fillStyle = `rgba(133,148,184,${a})`; ctx.font = `400 ${Math.max(11, 17 * z)}px ${BODY}`;
+        ctx.fillText(n.line, q[0], q[1] + fs * 1.6 + Math.max(15, 24 * z));
+      } else {
+        const fs = Math.max(11.5, 19 * z);
+        ctx.fillStyle = `rgba(223,232,251,${a})`; ctx.font = `500 ${fs}px ${BODY}`;
+        ctx.fillText(n.name, q[0], q[1] + fs * 1.9);
+      }
+    }
+  }
 
-                <a href="/notes/gustav-soderstrom-time-well-spent/" class="method-card">
-                    <div class="method-card-header">
-                        <h3>Gustav Söderström — Time Well Spent</h3>
-                        <span class="method-card-tag">Spotify</span>
-                    </div>
-                    <p>Spotify's Co-CEO on building media people don't regret. Six chapters, from "you ship your org chart" to "you are your thoughts."</p>
-                    <span class="method-card-arrow">Read →</span>
-                </a>
+  function whiteout(a, x, y) {
+    if (a <= 0) return;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, Math.max(W, H) * 1.2);
+    g.addColorStop(0, `rgba(248,250,255,${a})`); g.addColorStop(.45, `rgba(200,218,255,${a * .9})`); g.addColorStop(1, `rgba(150,185,255,${a * .55})`);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
+  function diveFlare(a, x, y) {
+    if (a <= 0) return;
+    const r = Math.max(W, H) * .4;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, `rgba(248,250,255,${a})`); g.addColorStop(.5, `rgba(200,218,255,${a * .45})`); g.addColorStop(1, 'rgba(200,218,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  }
 
-            </div>
+  // ---- moving between cores ----
+  function goesIn(n) { return n.kind === 'n1' || n.kind === 'n2' ? n : null; }
 
-            <h3 class="notes-group">Chris Williamson · Modern Wisdom</h3>
-            <div class="methods-grid">
+  // ---- a room's page ----
+  const social = document.getElementById('social');
+  const page = document.getElementById('page'), pTitle = document.getElementById('ptitle'),
+        pLead = document.getElementById('plead'), pBody = document.getElementById('pbody');
+  const UM = `
+    <div class="quick">
+      <p>Copy the method, paste it into any AI you use, and say:</p>
+      <p class="say">“I want to understand [your topic].”</p>
+      <p>The AI walks you through six stages. No AI? Walk through them yourself.</p>
+      <button id="copy" type="button">Copy the method</button>
+    </div>
+    <div class="stages"><div class="vinefill"></div>
+      <section class="stage"><span class="dot"></span><p class="num">Stage 1</p><h2>Intake</h2>
+        <p>Name the one thing you’re going to understand, and find where it sits: the field it belongs to, the rules that govern it, what you already know that touches it.</p></section>
+      <section class="stage"><span class="dot"></span><p class="num">Stage 2</p><h2>Origin</h2>
+        <p>Go back to where it came from. What was broken before it existed? Understanding begins at the problem that made the thing necessary.</p></section>
+      <section class="stage"><span class="dot"></span><p class="num">Stage 3</p><h2>First principle</h2>
+        <p>Break it down to the one line you can carry through everything, then compress that line into a phrase you can recall in five seconds.</p></section>
+      <section class="stage"><span class="dot"></span><p class="num">Stage 4</p><h2>Strategic expansion</h2>
+        <p>Look at how the people who understand it best actually use it. You learn fastest by studying the masters.</p></section>
+      <section class="stage"><span class="dot"></span><p class="num">Stage 5</p><h2>Application</h2>
+        <p>Find your own piece of it. Where does it already live in your life, and what would you now decide differently?</p></section>
+      <section class="stage"><span class="dot"></span><p class="num">Stage 6</p><h2>Output</h2>
+        <p>Save what you built. When you need it again, run the method on it once more. Nothing is lost, everything compounds.</p></section>
+    </div>
+    <p class="pfoot">Free to use, copy and share. Made by Gunvald.</p>`;
+  const ABOUT = `
+    <div class="quick">
+      <p>My name is Gunvald. I'm the person publishing this and developing it.</p>
+      <p>System 33 is the published version of System 32, my own main folder, the one that makes the system work. What I've built is larger than what's public, but I'm sharing the tools because the more people who use them, the faster they develop.</p>
+      <p>The total I've built so far is roughly nineteen methods. One is public today. The rest will come as they're ready.</p>
+      <p>The system itself isn't done developing. It's built in Notion, where pages and databases are what the whole thing is made of, so the structure of the tool matches the structure of what's built inside it.</p>
+      <p>It develops through data and iteration. Sessions accumulate, patterns become visible over time. Over the last several months, AI has slowly but steadily been folded into how it runs, across more than 222 saved sessions and 54 databases, likely more. The AI serves the work, and the work develops the AI.</p>
+      <p>A method is a pattern, formalized: the same kind of work run over and over until the pattern that produces the result you want becomes clear enough to name. The stronger the system gets, the faster methods take shape inside it.</p>
+    </div>`;
+  function openPage(d) {
+    if (d.name === 'CORE_ABOUT') {
+      pTitle.textContent = 'Gunvald'; pLead.textContent = 'The person behind System 33, and the system underneath it.';
+      pBody.innerHTML = ABOUT;
+      page.scrollTop = 0; page.hidden = false;
+      social.hidden = false;
+      requestAnimationFrame(() => page.classList.add('on'));
+      return;
+    }
+    pTitle.textContent = d.name; pLead.textContent = d.name === 'Understanding Method'
+      ? 'A six-stage method for learning anything by finding out where it came from, why it exists, and how it’s actually used.' : d.line;
+    pBody.innerHTML = d.name === 'Understanding Method' ? UM
+      : `<div class="quick"><p>${d.route ? 'On the real site this room is its own page:' : 'This room doesn’t have a page yet.'}</p>${d.route ? `<p class="route">system33.io${d.route}</p>` : ''}</div>`;
+    page.scrollTop = 0; page.hidden = false;
+    social.hidden = true;
+    requestAnimationFrame(() => page.classList.add('on'));
+    setTimeout(lightStages, 900);
+  }
+  function enterAbout() {
+    stack.push({ level: scene.level, name: 'CORE_ABOUT' });
+    openPage({ name: 'CORE_ABOUT' }); mode = 'page'; backBtn.hidden = false;
+  }
+  function lightStages() {
+    const st = pBody.querySelectorAll('.stage'), fill = pBody.querySelector('.vinefill');
+    if (!st.length) return;
+    const lim = page.clientHeight * .78; let reach = 0;
+    st.forEach(el => { if (el.getBoundingClientRect().top < lim) el.classList.add('lit'); if (el.classList.contains('lit')) reach = el.offsetTop + 14; });
+    fill.style.height = reach + 'px';
+  }
+  page.addEventListener('scroll', lightStages, { passive: true });
+  document.getElementById('pcore').addEventListener('click', () => leave());
+  pBody.addEventListener('click', async e => {
+    if (e.target.id !== 'copy') return;
+    try { await navigator.clipboard.writeText('System 33, Understanding Method. I want to understand [your topic].'); e.target.textContent = 'Copied'; }
+    catch { e.target.textContent = 'Copying works on the real page'; }
+  });
+  function startDive(node, scrub, focus) {
+    if (mode !== 'level') return;
+    hidePanel(); hover = null;
+    const c0 = camAt(s);
+    // focus0 is where the target already sits on screen right now; the dive keeps its projected
+    // position moving in a straight, bounded line from there to screen-center, instead of letting
+    // position and zoom ease on independent curves and swing the target off-screen mid-flight.
+    const focus0 = [(node.x - c0.x) * c0.z + W / 2, (node.y - c0.y) * c0.z + H / 2];
+    dv = { node, focus: focus || null, p: 0, scrub: !!scrub, idle: 0, c0, focus0, zEnd: c0.z * 19 };
+    node.flare = 1.5; mode = 'dive';
+  }
+  function scrubBy(dy) { dv.idle = 0; dv.p = clamp(dv.p + dy * .0011, 0, 1); if (dv.p >= .68) dv.scrub = false; }
+  function enter() {
+    stack.push({ level: scene.level, name: dv.node.name });
+    if (!dv.node.kids || !dv.node.kids.length) {
+      openPage(dv.node.data); flashA = 1; mode = 'page'; dv = null; backBtn.hidden = false; return;
+    }
+    scene = buildScene(levelOf(dv.node.data));
+    scene.focus = dv.focus ? dv.focus.name : null;
+    s = sT = 0; flashA = 1; mode = 'level'; dv = null;
+    nextBeat = time + .9; pending = 0;
+    backBtn.hidden = false;
+  }
+  function leave() {
+    if (mode === 'page') { page.classList.remove('on'); dv = { p: 0 }; mode = 'pageout'; backBtn.hidden = true; return; }
+    if (mode !== 'level' || !stack.length) return;
+    hidePanel(); hover = null; leaveAcc = 0;
+    dv = { p: 0, c0: camAt(s) }; mode = 'sink';
+  }
 
-                <a href="/notes/george-mack-high-agency/" class="method-card">
-                    <div class="method-card-header">
-                        <h3>George Mack — High Agency</h3>
-                        <span class="method-card-tag">Writer</span>
-                    </div>
-                    <p>High agency: the most underdiscussed and most important idea of the 21st century. Are you happening to life, or is life happening to you? ~17,000 words across 16 chapters.</p>
-                    <span class="method-card-arrow">Read →</span>
-                </a>
+  function showPanel(n) {
+    pName.textContent = n.name; pLine.textContent = n.line;
+    pRoute.textContent = n.route ? 'Opens system33.io' + n.route + ' on the real site' : 'Not a page yet';
+    panel.hidden = false;
+  }
+  function hidePanel() { panel.hidden = true; }
 
-            </div>
-        </div>
-    </section>
+  // ---- frame ----
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now; time += dt;
+    scene.age += dt;
 
-    <div class="container"><div class="divider"></div></div>
+    if (time >= nextBeat) { beat(1); pending = time + .36; nextBeat += scene.grown < scene.maxDepth ? 2.0 : PERIOD; }
+    if (pending && time >= pending) { beat(.55); pending = 0; }
 
-    <!-- The System -->
-    <section class="section">
-        <div class="container">
-            <div class="section-label">The System</div>
-            <p class="about-text">
-                The reality is the system isn't done developing. It has a lot in it, and it keeps growing.
-            </p>
-            <br>
-            <p class="about-text">
-                It's built in Notion. Notion at its core is pages and databases — and pages and databases are what the system is. The structure of the tool matches the structure of the thing built inside it.
-            </p>
-            <br>
-            <p class="about-text">
-                The system develops through data and iteration. Sessions accumulate, data collects, patterns become visible over time. Over the last four to five months, AI has slowly but steadily been integrated into how it runs — across more than 222 saved sessions and 54 databases, likely more. The AI serves the work; the work develops the AI. More data led to more focus on the AI, and that raised the standard of how we work together. That standard became the new floor.
-            </p>
-            <br>
-            <p class="about-text">
-                Methods are what the system produces. A method forms by running the same kind of work over and over, watching for patterns that produce the result you want, and formalizing the pattern once it's clear. A method is a pattern, formalized. The stronger the system gets, the faster methods take shape inside it.
-            </p>
-            <br>
-            <p class="about-text">
-                Where it develops further is where it meets reality.
-            </p>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer">
-                <div class="footer-left">
-                    © 2026 System 33. MIT License.
-                </div>
-                <div class="footer-links">
-                    <a href="https://github.com/Gunvald-Notion" target="_blank" rel="noopener">GitHub</a>
-                    <a href="https://www.linkedin.com/in/gunvald7/" target="_blank" rel="noopener">LinkedIn</a>
-                    <a href="/updates/">Updates</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Mermaid.js -->
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({
-            startOnLoad: true,
-            theme: 'dark',
-            securityLevel: 'loose',
-            themeVariables: {
-                primaryColor: '#18181b',
-                primaryTextColor: '#fafafa',
-                primaryBorderColor: '#27272a',
-                lineColor: '#a1a1aa',
-                secondaryColor: '#27272a',
-                tertiaryColor: '#111113',
-                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
-            }
+    if (mode === 'level') {
+      if (scene.cam) {
+        const c = scene.cam; c.t = Math.min(1, c.t + dt / (RM ? .2 : c.dur));
+        s = sT = c.from + (c.to - c.from) * c.t;
+        if (c.t >= 1) scene.cam = null;
+      } else s += (sT - s) * Math.min(1, dt * (RM ? 20 : 5));
+      if (scene.focus && scene.grown >= scene.maxDepth && s > scene.maxDepth - .04) { const f = scene.nodes.find(n => n.name === scene.focus); if (f) showPanel(f); scene.focus = null; }
+    }
+    const sg = scene.sigs;
+    for (let i = sg.length - 1; i >= 0; i--) {
+      const q = sg[i];
+      q.f += V * dt / q.e.len;
+      if (q.grow) q.e.grow = Math.max(q.e.grow, Math.min(1, q.f));
+      else if (q.f < 1 && q.f > q.e.grow + .002) { sg.splice(i, 1); continue; }
+      if (q.f >= 1) {
+        const n = q.e.b; n.flare = Math.max(n.flare, q.en * 1.1);
+        if (q.grow && !n.rev) { n.rev = true; n.revT = time; n.flare = Math.max(n.flare, 1.2); }
+        n.out.forEach(e => {
+          if (e.grow >= 1) { if (q.en > .12) sg.push({ e, f: 0, en: q.en * .72, grow: q.grow }); }
+          else if (q.grow && e.b.depth === scene.grown) sg.push({ e, f: 0, en: Math.max(.6, q.en * .72), grow: true });
         });
-    </script>
+        sg.splice(i, 1); continue;
+      }
+    }
+    const decay = Math.exp(-dt * 2.2);
+    scene.core.flare *= decay; scene.nodes.forEach(n => n.flare *= decay);
+    for (let i = fronts.length - 1; i >= 0; i--) if ((time - fronts[i].t0) * V > 3200) fronts.splice(i, 1);
+    const dd = Math.exp(-dt * 1.3);
+    for (const d of scene.dust) {
+      d.lit *= dd;
+      for (const f of fronts) {
+        const diff = Math.abs((time - f.t0) * V - d.d);
+        if (diff < 30) d.lit = Math.max(d.lit, f.str * (1 - diff / 30) / (1 + d.d / 1300));
+      }
+    }
 
+    ctx.fillStyle = '#01030a'; ctx.fillRect(0, 0, W, H);
+    const vig = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .35, W / 2, H / 2, Math.max(W, H) * .78);
+    // stars first, then the vignette, then the tree — the same order as the archive map
+    if (mode === 'level') {
+      const c = camAt(s);
+      const b = scene.bbox;
+      const rangeOf = (minC, maxC, base, viewport) => {
+        const hw = viewport / 2 / c.z, pad = 40 / c.z;
+        let lo = minC - pad + hw, hi = maxC + pad - hw;
+        if (lo > hi) { const mid = (minC + maxC) / 2; lo = mid - pad; hi = mid + pad; }
+        return [lo - base, hi - base];
+      };
+      const baseX = c.x - scene.pan, baseY = c.y - scene.panY;
+      const rx = rangeOf(b.minX, b.maxX, baseX, W), ry = rangeOf(b.minY, b.maxY, baseY, H);
+      scene.pan = clamp(scene.pan, rx[0], rx[1]);
+      scene.panY = clamp(scene.panY, ry[0], ry[1]);
+      drawStars(null, 0, c);
+      vig.addColorStop(0, 'rgba(0,0,0,.12)'); vig.addColorStop(1, 'rgba(0,0,0,.72)'); ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+      drawScene(c);
+      if (flashA > 0) { flashA = Math.max(0, flashA - dt / .8); diveFlare(easeOut(flashA) * flashA * .6, W / 2, H / 2); }
+    } else if (mode === 'dive') {
+      if (dv.scrub) { dv.idle += dt; if (dv.idle > .45) dv.p = Math.max(0, dv.p - dt * 1.4); }
+      else dv.p = Math.min(1, dv.p + dt / (RM ? .35 : 1.2));
+      const g = easeIn(dv.p), c0 = dv.c0;
+      const z = c0.z + (dv.zEnd - c0.z) * g;
+      const focus = [dv.focus0[0] + (W / 2 - dv.focus0[0]) * g, dv.focus0[1] + (H / 2 - dv.focus0[1]) * g];
+      const c = { x: dv.node.x - (focus[0] - W / 2) / z, y: dv.node.y - (focus[1] - H / 2) / z, z };
+      drawStars(focus, RM ? 0 : dv.p, c);
+      vig.addColorStop(0, 'rgba(0,0,0,.12)'); vig.addColorStop(1, 'rgba(0,0,0,.72)'); ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+      drawScene(c);
+      diveFlare(clamp((dv.p - .75) / .25, 0, 1) * .55, focus[0], focus[1]);
+      if (dv.p >= 1) enter();
+      else if (dv.scrub && dv.p <= 0 && dv.idle > .45) { mode = 'level'; dv = null; }
+    } else if (mode === 'sink') {
+      dv.p = Math.min(1, dv.p + dt / (RM ? .2 : .55));
+      const c = { ...dv.c0, z: dv.c0.z * (1 - .85 * ease(dv.p)) };
+      drawStars(null, 0, c);
+      vig.addColorStop(0, 'rgba(0,0,0,.12)'); vig.addColorStop(1, 'rgba(0,0,0,.72)'); ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+      drawScene(c);
+      whiteout(ease(dv.p), W / 2, H / 2);
+      if (dv.p >= 1) {
+        const prev = stack.pop();
+        scene = buildScene(prev.level);
+        scene.edges.forEach(e => e.grow = 1); scene.nodes.forEach(n => { n.rev = true; n.revT = -9; });
+        scene.grown = scene.maxDepth; scene.skipFirst = false;
+        s = sT = scene.maxDepth;
+        const node = scene.nodes.find(n => n.name === prev.name) || scene.core;
+        dv = { p: 0, node }; mode = 'emerge';
+        backBtn.hidden = stack.length === 0;
+      }
+    } else if (mode === 'page') {
+      drawStars(null, 0, null);
+      vig.addColorStop(0, 'rgba(0,0,0,.12)'); vig.addColorStop(1, 'rgba(0,0,0,.72)'); ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+      if (flashA > 0) { flashA = Math.max(0, flashA - dt / .9); diveFlare(easeOut(flashA) * flashA * .6, W / 2, H / 2); }
+    } else if (mode === 'pageout') {
+      dv.p = Math.min(1, dv.p + dt / (RM ? .2 : .55));
+      drawStars(null, 0, null);
+      vig.addColorStop(0, 'rgba(0,0,0,.12)'); vig.addColorStop(1, 'rgba(0,0,0,.72)'); ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+      whiteout(ease(dv.p), W / 2, H / 2);
+      if (dv.p >= 1) {
+        page.hidden = true;
+        social.hidden = true;
+        const prev = stack.pop();
+        const node = scene.nodes.find(n => n.name === prev.name) || scene.core;
+        s = sT = scene.grown;
+        dv = { p: 0, node }; mode = 'emerge';
+        backBtn.hidden = stack.length === 0;
+      }
+    } else if (mode === 'emerge') {
+      dv.p = Math.min(1, dv.p + dt / (RM ? .3 : 1.0));
+      const e = ease(dv.p), c1 = camAt(s);
+      const c = { x: dv.node.x + (c1.x - dv.node.x) * e, y: dv.node.y + (c1.y - dv.node.y) * e, z: c1.z * (1 + 18 * (1 - dv.p) ** 3) };
+      drawStars(null, 0, c);
+      vig.addColorStop(0, 'rgba(0,0,0,.12)'); vig.addColorStop(1, 'rgba(0,0,0,.72)'); ctx.fillStyle = vig; ctx.fillRect(0, 0, W, H);
+      drawScene(c);
+      whiteout(1 - easeOut(dv.p), W / 2, H / 2);
+      if (dv.p >= 1) { mode = 'level'; dv = null; }
+    }
+
+    // hint
+    let h = '';
+    if (mode === 'level') {
+      if (hover === scene.core) h = stack.length ? 'Click the core to go back out' : '';
+      else if (hover && goesIn(hover)) h = 'Scroll to go into ' + goesIn(hover).name + ', or click it';
+      else if (scene.grown >= scene.maxDepth && s > scene.maxDepth - .03 && panel.hidden) h = stack.length ? 'Click a room to open it. Back out whenever you like.' : 'Click a branch, or go straight to a room.';
+    }
+    if (h) hint.textContent = h;
+    hint.style.opacity = h ? 1 : 0;
+    requestAnimationFrame(frame);
+  }
+
+  // ---- input ----
+  function hit(x, y) {
+    if (mode !== 'level') return null;
+    const c = camAt(s);
+    let best = null, bd = 1e9;
+    {
+      const cx = (0 - c.x) * c.z + W / 2, cy = (0 - c.y) * c.z + H / 2;
+      const d = Math.min(Math.hypot(x - cx, y - cy), Math.hypot(x - cx, y - (cy + 110 * c.z)));
+      if (d < Math.max(44, 70 * c.z)) { best = scene.core; bd = d; }
+    }
+    for (const n of scene.nodes) {
+      if (!n.rev) continue;
+      const sx = (n.x - c.x) * c.z + W / 2, sy = (n.y - c.y) * c.z + H / 2;
+      const d = Math.min(Math.hypot(x - sx, y - sy), Math.hypot(x - sx, y - (sy + Math.max(22, 44 * c.z))));
+      if (d < 38 && d < bd) { bd = d; best = n; }
+    }
+    return best;
+  }
+  function scrollBy(dy, x, y, wheel) {
+    if (mode === 'dive' && dv.scrub) { if (wheel) scrubBy(dy); return; }
+    if (mode !== 'level') return;
+    if (wheel && dy > 0 && scene.grown >= 1 && s > scene.grown - .15) {
+      const h = hit(x, y), g = h && goesIn(h);
+      if (g) { startDive(g, false); return; }
+    }
+    if (wheel && Math.abs(s - scene.grown) < .001 && s > 0) {
+      if (scene.cam) { scene.cam = null; sT = s; }
+      scene.manual = true; scene.panY -= dy / camAt(s).z; return;
+    }
+    if (dy < 0 && sT <= 0 && stack.length) { leaveAcc += -dy; if (leaveAcc > 260) leave(); return; }
+    leaveAcc = 0;
+    if (scene.cam) { scene.cam = null; sT = s; }
+    scene.manual = true;
+    sT = clamp(sT + dy * .0016, 0, scene.grown);
+    scene.focus = null;
+  }
+
+  let down = null;
+  cv.addEventListener('pointerdown', e => {
+    down = { x: e.clientX, y: e.clientY, lx: e.clientX, ly: e.clientY, moved: 0 };
+    cv.setPointerCapture(e.pointerId);
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!down) {
+      const over = hit(e.clientX, e.clientY);
+      hover = e.pointerType === 'mouse' ? over : null;
+      cv.style.cursor = over ? 'pointer' : '';
+      return;
+    }
+    const dx = e.clientX - down.lx, dy = e.clientY - down.ly;
+    down.lx = e.clientX; down.ly = e.clientY; down.moved += Math.hypot(dx, dy);
+    if (down.moved > 6) cv.classList.add('dragging');
+    if (mode === 'level') {
+      scene.pan -= dx / camAt(s).z;
+      scene.panY -= dy / camAt(s).z;
+    }
+  });
+  cv.addEventListener('pointerup', e => {
+    cv.classList.remove('dragging');
+    if (down && down.moved < 6 && mode === 'level') {
+      const n = hit(e.clientX, e.clientY);
+      if (!n) hidePanel();
+      else if (n === scene.core) { if (stack.length) leave(); else enterAbout(); }
+      else startDive(n, false);
+    }
+    down = null;
+  });
+  cv.addEventListener('pointercancel', () => { down = null; cv.classList.remove('dragging'); });
+  cv.addEventListener('wheel', e => {
+    e.preventDefault();
+    const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+    const dx = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX;
+    if (mode === 'level' && Math.abs(dx) > Math.abs(dy)) { scene.pan += dx / camAt(s).z; return; }
+    scrollBy(dy, e.clientX, e.clientY, true);
+  }, { passive: false });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') { leave(); return; }
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') scrollBy(140, 0, 0, false);
+    else if (e.key === 'ArrowUp' || e.key === 'PageUp') { if (sT <= 0 && stack.length) leave(); else scrollBy(-140, 0, 0, false); }
+  });
+  backBtn.addEventListener('click', leave);
+
+  resize(); makeStars();
+  scene = buildScene(HOME);
+  addEventListener('resize', resize);
+  const start = () => requestAnimationFrame(t => { last = t; frame(t); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+})();
+</script>
 </body>
 </html>
