@@ -10,18 +10,23 @@
     <meta property="og:title" content="HSM126 — Formasjoner">
     <meta property="og:description" content="Firetrinns gjennomganger av formlene i HSM126. Én formasjon per kapittel.">
     <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-card: #18181b;
-            --border: #27272a;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent: #a78bfa;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --bg-primary: #01030a;
+            --bg-secondary: rgba(6,12,30,.6);
+            --bg-card: rgba(6,12,30,.9);
+            --border: rgba(150,185,255,.18);
+            --text-primary: #eef4ff;
+            --text-secondary: #dfe8fb;
+            --text-muted: #8594b8;
+            --accent: #96b9ff;
+            --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-display: 'Marcellus', Georgia, serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
         }
         body {
             font-family: var(--font);
@@ -39,12 +44,12 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(10, 10, 11, 0.85);
+            background: rgba(1, 3, 10, 0.85);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--border);
         }
-        .site-back { color: var(--text-muted); font-size: 0.85rem; }
+        .site-back { color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono); }
         .mode-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .mode-tab {
             display: inline-block;
@@ -56,32 +61,38 @@
             color: var(--text-secondary);
             transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
-        .mode-tab:hover { border-color: #3f3f46; color: var(--text-primary); opacity: 1; }
-        .mode-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(167, 139, 250, 0.08); }
+        .mode-tab:hover { border-color: var(--accent); color: var(--text-primary); opacity: 1; }
+        .mode-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(150, 185, 255, 0.1); }
         .hero { padding: 48px 0 24px; text-align: center; }
         .hero-badge {
             display: inline-block;
             padding: 6px 16px;
             border: 1px solid var(--border);
             border-radius: 100px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--accent);
             letter-spacing: 0.05em;
             text-transform: uppercase;
             margin-bottom: 24px;
+            background: var(--bg-card);
         }
         .hero h1 {
+            font-family: var(--font-display);
+            font-weight: 400;
             font-size: clamp(2rem, 5vw, 2.75rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
+            letter-spacing: 0;
             line-height: 1.1;
             margin-bottom: 16px;
+            color: var(--text-primary);
+            text-shadow: 0 0 24px rgba(150,185,255,.45);
         }
         .hero p { font-size: 1.05rem; color: var(--text-secondary); max-width: 540px; margin: 0 auto; }
         .hero p em { color: var(--accent); font-style: normal; }
         .section { padding: 24px 0 64px; }
         .section-label {
-            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
             color: var(--text-muted);
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -93,17 +104,20 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 20px;
-            transition: background 0.2s, border-color 0.2s;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: border-color 0.2s, box-shadow 0.2s;
             display: block;
         }
-        .spell-card:hover { border-color: #3f3f46; background: rgba(228, 228, 231, 0.03); opacity: 1; }
+        .spell-card:hover { border-color: var(--accent); box-shadow: 0 0 26px rgba(150,185,255,.14); opacity: 1; }
         .spell-icon { font-size: 1.8rem; margin-bottom: 10px; }
-        .spell-name { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
-        .spell-kap { font-size: 0.75rem; color: var(--accent); margin-bottom: 6px; }
+        .spell-name { font-family: var(--font-display); font-weight: 400; font-size: 1.05rem; color: var(--text-primary); margin-bottom: 4px; }
+        .spell-kap { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent); margin-bottom: 6px; }
         .spell-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; }
         footer {
             padding: 32px 0;
             border-top: 1px solid var(--border);
+            font-family: var(--font-mono);
             font-size: 0.8rem;
             color: var(--text-muted);
             text-align: center;
