@@ -49,13 +49,23 @@
         }
         body {
             font-family: var(--font);
-            background: radial-gradient(ellipse 900px 620px at 50% -6%, rgba(150,185,255,.16), rgba(150,185,255,.05) 38%, rgba(1,3,10,0) 68%), var(--bg-primary);
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            background: var(--bg-primary);
+            position: relative;
             color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             min-height: 100vh;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse 900px 620px at 50% -6%, rgba(150,185,255,.16), rgba(150,185,255,.05) 38%, rgba(1,3,10,0) 68%);
+            pointer-events: none;
+            z-index: -1;
         }
         a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
         a:hover { opacity: 0.7; }
@@ -167,7 +177,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-badge">Formasjoner · Norsk</div>
-            <a class="light-core" href="https://system33.io" aria-label="Tilbake til system33.io"></a>
+            <a class="light-core" href="https://system33.io" aria-label="Tilbake til system33.io" onclick="if(window.history.length>1){window.history.back();return false;}"></a>
             <h1>Formasjoner</h1>
             <p>Hver formasjon tar formlene i ett kapittel og deler dem opp i en <em>firetrinns prosess</em> som fører deg gjennom formelen — fra rådata til svaret faller ut. Velg en formasjon for å starte.</p>
         </div>
