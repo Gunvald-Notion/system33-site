@@ -39,7 +39,10 @@
     margin: 0 auto 28px;
     background: #f5f8ff;
     animation: beat 3s infinite;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
+  .light-core:hover { opacity: 1; }
   @keyframes beat {
     0%,100% { box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); }
     4% { box-shadow: 0 0 22px 9px rgba(238,244,255,.95), 0 0 110px 48px rgba(150,185,255,.45); }
@@ -247,7 +250,7 @@
 </head>
 <body>
 <header>
-  <div class="light-core"></div>
+  <a class="light-core" href="https://system33.io" aria-label="Tilbake til system33.io"></a>
   <h1>HSM222 – Marketing (MPC) Test Øving</h1>
   <p>Basert på "Mulige spørsmål til MPC test Arbeidskrav 2026" – 71 spørsmål, 12 emner</p>
 </header>
@@ -314,7 +317,7 @@
     "Digital markedsføring",
     "CSR og innovasjon"
   ];
-  var FULL_TEST_SIZE = 30; // trekkes tilfeldig av 71, jf. "Tom test"-format (N≈ 71-72, n≈30)
+  var FULL_TEST_SIZE = 30; // trekkes tilfeldig av 71, jf. "Tom test"-format (N≈ 71-72, n≈ 30)
   var PASS_PERCENT = 50 / 60; // beståttgrense: 50 av 60 poeng på full test (83,3%), skaleres proporsjonalt til andre sett
 
   var pickerScreen = document.getElementById('picker-screen');
