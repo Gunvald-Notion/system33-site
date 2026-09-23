@@ -192,10 +192,12 @@
     const frames = [{ x: 0, y: 50, z: Math.min(W * .82 / 440, H * .55 / 320) }];
     for (let d = 1; d <= maxDepth; d++) frames.push(fit(box(nodes.filter(n => n.depth <= d))));
     for (let i = 1; i < frames.length; i++) frames[i].z = Math.min(frames[i].z, frames[i - 1].z);
-    // lock the resting frame to the branch-level fit so rooms may extend past the edge instead of forcing a further zoom-out
-    for (let i = 2; i < frames.length; i++) { frames[i].x = frames[1].x; frames[i].y = frames[1].y; frames[i].z = frames[1].z; }
+    // lock the resting frame to the branch-level fit so rooms may extend past the edge instead of forcing a further
+    // zoom-out, but never let that lock push the full set of rooms past the sides of a narrow (phone-width) viewport
     const bbox = box(nodes);
     const { minX, maxX, maxY } = bbox;
+    const widthZ = (W - 24) / Math.max(1e-6, maxX - minX);
+    for (let i = 2; i < frames.length; i++) { frames[i].x = frames[1].x; frames[i].y = frames[1].y; frames[i].z = Math.min(frames[1].z, widthZ); }
     const dust = Array.from({ length: Math.round(clamp(W * H / 1400, 320, 800)) }, () => {
       const x = minX - 250 + Math.random() * (maxX - minX + 500), y = -500 + Math.random() * (maxY + 750);
       return { x, y, d: Math.hypot(x, y), lit: 0, base: .05 + Math.random() * .1 };
