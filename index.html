@@ -151,7 +151,7 @@
     if (scene) {
       const old = scene;
       scene = buildScene(old.level);
-      Object.assign(scene, { focus: old.focus, grown: old.grown, skipFirst: old.skipFirst, manual: old.manual, sigs: [] });
+      Object.assign(scene, { focus: old.focus, grown: old.grown, skipFirst: old.skipFirst, manual: old.manual, sigs: [], zoom: old.zoom });
       scene.edges.forEach((e, i) => e.grow = old.edges[i].grow);
       scene.nodes.forEach((n, i) => { n.rev = old.nodes[i].rev; n.revT = old.nodes[i].revT; });
       if (old.cam) scene.cam = old.cam;
@@ -200,7 +200,7 @@
       const x = minX - 250 + Math.random() * (maxX - minX + 500), y = -500 + Math.random() * (maxY + 750);
       return { x, y, d: Math.hypot(x, y), lit: 0, base: .05 + Math.random() * .1 };
     });
-    return { level, core, nodes, edges, bbox, frames, dust, sigs: [], pan: 0, panY: 0, age: 0, focus: null,
+    return { level, core, nodes, edges, bbox, frames, dust, sigs: [], pan: 0, panY: 0, zoom: 1, age: 0, focus: null,
              grown: 0, maxDepth, skipFirst: level === HOME, cam: null, manual: false };
   }
 
@@ -208,11 +208,12 @@
   let s = 0, sT = 0;
   function camAt(sv) {
     const F = scene.frames, K = F.length - 1;
-    if (!K) return { x: F[0].x + scene.pan, y: F[0].y + scene.panY, z: F[0].z };
+    const zoom = scene.zoom || 1;
+    if (!K) return { x: F[0].x + scene.pan, y: F[0].y + scene.panY, z: F[0].z * zoom };
     sv = clamp(sv, 0, K);
     const i = Math.min(K - 1, Math.floor(sv)), f = ease(sv - i), A = F[i], B = F[i + 1];
     const z = Math.exp(Math.log(A.z) + (Math.log(B.z) - Math.log(A.z)) * f);
-    return { x: A.x + (B.x - A.x) * f + scene.pan, y: A.y + (B.y - A.y) * f + scene.panY, z };
+    return { x: A.x + (B.x - A.x) * f + scene.pan, y: A.y + (B.y - A.y) * f + scene.panY, z: z * zoom };
   }
 
   // ---- sky ----
@@ -687,12 +688,36 @@
       if (scene.cam) { scene.cam = null; sT = s; }
       scene.manual = true; scene.panY -= dy / camAt(s).z; return;
     }
-    if (dy < 0 && sT <= 0 && stack.length) { leaveAcc += -dy; if (leaveAcc > 260) leave(); return; }
-    leaveAcc = 0;
+    // Backing out: credit net upward scroll continuously, including the motion that
+    // brings the level back toward its top, instead of only counting extra scroll once
+    // already resting there. A stray tick in the wrong direction only bleeds some of
+    // that credit rather than wiping it out, so fast jittery back-and-forth from a
+    // trackpad still reads as one consistent "go back" instead of failing to leave.
+    if (stack.length) {
+      if (dy < 0) leaveAcc += -dy;
+      else leaveAcc = Math.max(0, leaveAcc - dy * .4);
+      if (sT <= 0 && leaveAcc > 260) { leave(); return; }
+    } else leaveAcc = 0;
     if (scene.cam) { scene.cam = null; sT = s; }
     scene.manual = true;
-    sT = clamp(sT + dy * .0016, 0, scene.grown);
+    // widened so a normal scroll burst no longer slams into the top or bottom of a level
+    // almost immediately
+    sT = clamp(sT + dy * .0008, 0, scene.grown);
     scene.focus = null;
+  }
+
+  // ---- zoom: pinch/ctrl+wheel zooms toward the cursor, layered on top of the automatic
+  // camera the same way panning already is, so it never touches dive/leave depth state ----
+  function zoomBy(delta, x, y) {
+    if (mode !== 'level') return;
+    const c0 = camAt(s);
+    const wx = (x - W / 2) / c0.z + c0.x, wy = (y - H / 2) / c0.z + c0.y;
+    const baseX = c0.x - scene.pan, baseY = c0.y - scene.panY, baseZ = c0.z / (scene.zoom || 1);
+    scene.zoom = clamp((scene.zoom || 1) * Math.exp(delta * .0016), .6, 5);
+    const z1 = baseZ * scene.zoom;
+    scene.pan = wx - baseX - (x - W / 2) / z1;
+    scene.panY = wy - baseY - (y - H / 2) / z1;
+    scene.manual = true;
   }
 
   let down = null;
@@ -730,6 +755,10 @@
     e.preventDefault();
     const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
     const dx = e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX;
+    // trackpad pinch (and ctrl+wheel) arrive as wheel events with ctrlKey set, so they can
+    // be told apart from a normal two-finger scroll without any guessing, and can zoom
+    // toward the cursor without touching the dive/leave depth logic at all.
+    if (e.ctrlKey) { if (mode === 'level') zoomBy(-dy, e.clientX, e.clientY); return; }
     if (mode === 'level' && Math.abs(dx) > Math.abs(dy)) { scene.pan += dx / camAt(s).z; return; }
     scrollBy(dy, e.clientX, e.clientY, true);
   }, { passive: false });
