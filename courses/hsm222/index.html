@@ -31,6 +31,22 @@
     --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   }
   * { box-sizing: border-box; }
+  .light-core {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin: 0 auto 28px;
+    background: #f5f8ff;
+    animation: beat 3s infinite;
+  }
+  @keyframes beat {
+    0%,100% { box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); }
+    4% { box-shadow: 0 0 22px 9px rgba(238,244,255,.95), 0 0 110px 48px rgba(150,185,255,.45); }
+    12% { box-shadow: 0 0 16px 6px rgba(238,244,255,.75), 0 0 70px 30px rgba(150,185,255,.26); }
+    16% { box-shadow: 0 0 19px 7px rgba(238,244,255,.85), 0 0 90px 38px rgba(150,185,255,.34); }
+    40% { box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); }
+  }
   body {
     margin: 0;
     font-family: var(--font);
@@ -44,7 +60,7 @@
     padding: 24px 20px 8px;
     text-align: center;
   }
-  header h1 { margin: 0 0 4px; font-size: 1.6rem; font-family: var(--font-display); font-weight: 400; color: var(--text); text-shadow: 0 0 20px rgba(150,185,255,.4); }
+  header h1 { margin: 0 0 4px; font-size: 1.6rem; font-family: var(--font-display); font-weight: 400; color: var(--text); text-shadow: 0 0 24px rgba(150,185,255,.55); }
   header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
   main {
     max-width: 920px;
@@ -231,6 +247,7 @@
 </head>
 <body>
 <header>
+  <div class="light-core"></div>
   <h1>HSM222 – Marketing (MPC) Test Øving</h1>
   <p>Basert på "Mulige spørsmål til MPC test Arbeidskrav 2026" – 71 spørsmål, 12 emner</p>
 </header>
@@ -297,7 +314,7 @@
     "Digital markedsføring",
     "CSR og innovasjon"
   ];
-  var FULL_TEST_SIZE = 30; // trekkes tilfeldig av 71, jf. "Tom test"-format (N≈71-72, n≈30)
+  var FULL_TEST_SIZE = 30; // trekkes tilfeldig av 71, jf. "Tom test"-format (N≈ 71-72, n≈30)
   var PASS_PERCENT = 50 / 60; // beståttgrense: 50 av 60 poeng på full test (83,3%), skaleres proporsjonalt til andre sett
 
   var pickerScreen = document.getElementById('picker-screen');
