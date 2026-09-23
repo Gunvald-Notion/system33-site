@@ -493,7 +493,12 @@
   function enter() {
     stack.push({ level: scene.level, name: dv.node.name });
     if (!dv.node.kids || !dv.node.kids.length) {
-      openPage(dv.node.data); flashA = 1; mode = 'page'; dv = null; backBtn.hidden = false; return;
+      const d = dv.node.data;
+      // rooms that point at a real page on the live site should actually take you there,
+      // not just describe where it lives; the immersive in-canvas page stays only for
+      // content built to live inside the tree itself (Understanding Method).
+      if (d.route && d.name !== 'Understanding Method') { location.href = d.route; return; }
+      openPage(d); flashA = 1; mode = 'page'; dv = null; backBtn.hidden = false; return;
     }
     scene = buildScene(levelOf(dv.node.data));
     scene.focus = dv.focus ? dv.focus.name : null;
