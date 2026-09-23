@@ -252,7 +252,7 @@
     });
   }
 
-  let scene = null, stack = [], mode = 'level', dv = null, flashA = 0, hover = null, leaveAcc = 0;
+  let scene = null, stack = [], mode = 'level', dv = null, flashA = 0, hover = null, leaveAcc = 0, diveAcc = 0, diveNode = null;
   let time = 0, nextBeat = .4, pending = 0;
   const fronts = [];
 
@@ -671,8 +671,18 @@
     if (mode !== 'level') return;
     if (wheel && dy > 0 && scene.grown >= 1 && s > scene.grown - .15) {
       const h = hit(x, y), g = h && goesIn(h);
-      if (g) { startDive(g, false); return; }
+      // require a small build-up of scroll before committing to a dive, rather than firing on
+      // the very first wheel tick. A mouse notch clears this in one go; a trackpad's stream of
+      // tiny events (including its momentum tail after fingers lift) now has to actually persist
+      // over the same target instead of triggering by accident.
+      if (g) {
+        if (diveNode !== g) { diveNode = g; diveAcc = 0; }
+        diveAcc += dy;
+        if (diveAcc > 46) startDive(g, false);
+        return;
+      }
     }
+    diveNode = null; diveAcc = 0;
     if (wheel && Math.abs(s - scene.grown) < .001 && s > 0) {
       if (scene.cam) { scene.cam = null; sT = s; }
       scene.manual = true; scene.panY -= dy / camAt(s).z; return;
