@@ -28,6 +28,22 @@
             --font-display: 'Marcellus', Georgia, serif;
             --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
         }
+        .light-core {
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin: 0 auto 28px;
+            background: #f5f8ff;
+            animation: beat 3s infinite;
+        }
+        @keyframes beat {
+            0%,100% { box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); }
+            4% { box-shadow: 0 0 22px 9px rgba(238,244,255,.95), 0 0 110px 48px rgba(150,185,255,.45); }
+            12% { box-shadow: 0 0 16px 6px rgba(238,244,255,.75), 0 0 70px 30px rgba(150,185,255,.26); }
+            16% { box-shadow: 0 0 19px 7px rgba(238,244,255,.85), 0 0 90px 38px rgba(150,185,255,.34); }
+            40% { box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); }
+        }
         body {
             font-family: var(--font);
             background: radial-gradient(ellipse 900px 620px at 50% -6%, rgba(150,185,255,.16), rgba(150,185,255,.05) 38%, rgba(1,3,10,0) 68%), var(--bg-primary);
@@ -87,7 +103,7 @@
             line-height: 1.1;
             margin-bottom: 16px;
             color: var(--text-primary);
-            text-shadow: 0 0 24px rgba(150,185,255,.45);
+            text-shadow: 0 0 24px rgba(150,185,255,.55);
         }
         .hero p { font-size: 1.05rem; color: var(--text-secondary); max-width: 540px; margin: 0 auto; }
         .hero p em { color: var(--accent); font-style: normal; }
@@ -148,6 +164,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-badge">Formasjoner · Norsk</div>
+            <div class="light-core"></div>
             <h1>Formasjoner</h1>
             <p>Hver formasjon tar formlene i ett kapittel og deler dem opp i en <em>firetrinns prosess</em> som fører deg gjennom formelen — fra rådata til svaret faller ut. Velg en formasjon for å starte.</p>
         </div>
