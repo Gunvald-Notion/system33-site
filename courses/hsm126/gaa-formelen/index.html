@@ -14,20 +14,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-card: #18181b;
-            --border: #27272a;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent: #a78bfa;
+            --bg-primary: #01030a;
+            --bg-secondary: rgba(6,12,30,.6);
+            --bg-card: rgba(6,12,30,.9);
+            --border: rgba(150,185,255,.18);
+            --text-primary: #eef4ff;
+            --text-secondary: #dfe8fb;
+            --text-muted: #8594b8;
+            --accent: #96b9ff;
             --correct: #22c55e;
             --wrong: #ef4444;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-display: 'Marcellus', Georgia, serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
         }
         body {
             font-family: var(--font);
@@ -45,12 +50,12 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(10, 10, 11, 0.85);
+            background: rgba(1, 3, 10, 0.85);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border-bottom: 1px solid var(--border);
         }
-        .site-back { color: var(--text-muted); font-size: 0.85rem; }
+        .site-back { color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono); }
         .mode-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .mode-tab {
             display: inline-block;
@@ -62,26 +67,31 @@
             color: var(--text-secondary);
             transition: background 0.2s, border-color 0.2s, color 0.2s;
         }
-        .mode-tab:hover { border-color: #3f3f46; color: var(--text-primary); opacity: 1; }
-        .mode-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(167, 139, 250, 0.08); }
+        .mode-tab:hover { border-color: var(--accent); color: var(--text-primary); opacity: 1; }
+        .mode-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(150, 185, 255, 0.1); }
         .hero { padding: 48px 0 32px; text-align: center; }
         .hero-badge {
             display: inline-block;
             padding: 6px 16px;
             border: 1px solid var(--border);
             border-radius: 100px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--accent);
             letter-spacing: 0.05em;
             text-transform: uppercase;
             margin-bottom: 24px;
+            background: var(--bg-card);
         }
         .hero h1 {
+            font-family: var(--font-display);
+            font-weight: 400;
             font-size: clamp(2rem, 5vw, 2.75rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
+            letter-spacing: 0;
             line-height: 1.1;
             margin-bottom: 16px;
+            color: var(--text-primary);
+            text-shadow: 0 0 24px rgba(150,185,255,.45);
         }
         .hero p {
             font-size: 1.05rem;
@@ -92,7 +102,8 @@
         .hero p em { color: var(--accent); font-style: normal; }
         .section { padding: 32px 0 64px; }
         .section-label {
-            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
             color: var(--text-muted);
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -110,11 +121,13 @@
             cursor: pointer;
             font-family: inherit;
             color: inherit;
-            transition: background 0.2s, border-color 0.2s;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         .chapter-card:hover {
-            background: rgba(228, 228, 231, 0.04);
-            border-color: #3f3f46;
+            border-color: var(--accent);
+            box-shadow: 0 0 26px rgba(150,185,255,.14);
         }
         .chapter-card-header {
             display: flex;
@@ -123,9 +136,10 @@
             margin-bottom: 8px;
             gap: 12px;
         }
-        .chapter-card h3 { font-size: 1.05rem; font-weight: 600; }
+        .chapter-card h3 { font-family: var(--font-display); font-weight: 400; font-size: 1.15rem; color: var(--text-primary); }
         .chapter-card-weight {
-            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
             color: var(--text-muted);
             border: 1px solid var(--border);
             padding: 3px 10px;
@@ -138,6 +152,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
+            font-family: var(--font-mono);
             font-size: 0.8rem;
             color: var(--text-muted);
         }
@@ -149,7 +164,7 @@
             margin-bottom: 32px;
             overflow: hidden;
         }
-        .progress-bar-fill { height: 100%; background: var(--text-primary); transition: width 0.3s ease; }
+        .progress-bar-fill { height: 100%; background: var(--accent); transition: width 0.3s ease; box-shadow: 0 0 10px rgba(150,185,255,.6); }
         .question-text {
             font-size: 1.2rem;
             font-weight: 500;
@@ -167,13 +182,15 @@
             font-family: inherit;
             font-size: 0.95rem;
             color: var(--text-primary);
-            transition: background 0.15s, border-color 0.15s;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: border-color 0.15s, box-shadow 0.15s;
             line-height: 1.45;
         }
-        .option-btn:hover:not(:disabled) { background: rgba(228, 228, 231, 0.04); border-color: #3f3f46; }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent); box-shadow: 0 0 18px rgba(150,185,255,.12); }
         .option-btn:disabled { cursor: default; }
-        .option-btn.correct { border-color: var(--correct); background: rgba(34, 197, 94, 0.08); }
-        .option-btn.wrong { border-color: var(--wrong); background: rgba(239, 68, 68, 0.08); }
+        .option-btn.correct { border-color: var(--correct); background: rgba(34, 197, 94, 0.1); }
+        .option-btn.wrong { border-color: var(--wrong); background: rgba(239, 68, 68, 0.1); }
         .option-letter {
             display: inline-block;
             width: 22px;
@@ -200,6 +217,7 @@
         .walk-intro strong { color: var(--text-primary); }
         .proc-block { border-left: 2px solid var(--accent); padding-left: 16px; margin-bottom: 18px; }
         .proc-title {
+            font-family: var(--font-mono);
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -211,7 +229,7 @@
         .proc-step strong { color: var(--text-primary); }
         .proc-step em { color: var(--accent); font-style: normal; }
         .walk-note {
-            background: rgba(167, 139, 250, 0.08);
+            background: rgba(150, 185, 255, 0.08);
             border-radius: 8px;
             padding: 12px 16px;
             margin-bottom: 4px;
@@ -221,7 +239,7 @@
         .walk-note strong { color: var(--text-primary); }
         .next-btn {
             width: 100%;
-            background: var(--text-primary);
+            background: var(--accent);
             color: var(--bg-primary);
             border: none;
             border-radius: 10px;
@@ -230,15 +248,18 @@
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s, box-shadow 0.2s;
         }
-        .next-btn:hover { opacity: 0.85; }
+        .next-btn:hover { opacity: 0.88; box-shadow: 0 0 24px rgba(150,185,255,.35); }
         .results-score { text-align: center; padding: 16px 0 24px; }
         .results-score-number {
+            font-family: var(--font-display);
+            font-weight: 400;
             font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
+            letter-spacing: 0;
             margin-bottom: 6px;
+            color: var(--text-primary);
+            text-shadow: 0 0 20px rgba(150,185,255,.4);
         }
         .results-score-label { font-size: 0.9rem; color: var(--text-secondary); }
         .squares-grid {
@@ -254,7 +275,7 @@
             border-radius: 5px;
             cursor: pointer;
             border: none;
-            font-family: inherit;
+            font-family: var(--font-mono);
             font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-primary);
@@ -283,12 +304,13 @@
             font-size: 0.95rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: border-color 0.2s;
         }
-        .btn-secondary:hover { background: rgba(228, 228, 231, 0.04); }
+        .btn-secondary:hover { border-color: var(--accent); }
         footer {
             padding: 32px 0;
             border-top: 1px solid var(--border);
+            font-family: var(--font-mono);
             font-size: 0.8rem;
             color: var(--text-muted);
             text-align: center;
@@ -576,9 +598,9 @@
                 startOnLoad: false,
                 theme: "dark",
                 themeVariables: {
-                    background: "#18181b",
+                    background: "#01030a",
                     primaryColor: "#22c55e",
-                    primaryTextColor: "#fafafa",
+                    primaryTextColor: "#eef4ff",
                     pie1: "#22c55e",
                     pie2: "#ef4444"
                 }
