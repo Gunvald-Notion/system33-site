@@ -17,23 +17,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+    <link rel="stylesheet" href="/styles/shared.css">
+    <script src="/styles/starfield.js" defer></script>
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-primary: #01030a;
-            --bg-secondary: rgba(6,12,30,.6);
-            --bg-card: rgba(6,12,30,.9);
-            --border: rgba(150,185,255,.18);
-            --text-primary: #eef4ff;
-            --text-secondary: #dfe8fb;
-            --text-muted: #8594b8;
-            --accent: #96b9ff;
-            --correct: #22c55e;
-            --wrong: #ef4444;
-            --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-display: 'Marcellus', Georgia, serif;
-            --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+#starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
         }
+        body > *:not(#starfield) { position: relative; z-index: 1; }
         .light-core {
             display: block;
             width: 16px;
@@ -140,7 +134,17 @@
             text-transform: uppercase;
             margin-bottom: 24px;
         }
-        .chapter-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .chapter-grid { display: grid; grid-template-columns: 1fr; gap: 12px; position: relative; padding-left: 34px; }
+        .chapter-grid::before {
+            content: "";
+            position: absolute;
+            left: 3.5px;
+            top: 10px;
+            bottom: 24px;
+            width: 3px;
+            border-radius: 2px;
+            background: rgba(150,185,255,.14);
+        }
         .chapter-card {
             display: block;
             width: 100%;
@@ -154,7 +158,24 @@
             color: inherit;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, opacity .6s;
+            position: relative;
+            opacity: .35;
+        }
+        .chapter-card.lit { opacity: 1; }
+        .chapter-card .dot {
+            position: absolute;
+            left: -34px;
+            top: 24px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #1a2a58;
+            transition: background .5s, box-shadow .5s;
+        }
+        .chapter-card.lit .dot {
+            background: #f5f8ff;
+            box-shadow: 0 0 10px 3px rgba(238,244,255,.7), 0 0 36px 14px rgba(150,185,255,.28);
         }
         .chapter-card:hover {
             border-color: var(--accent);
@@ -358,6 +379,7 @@
     </style>
 </head>
 <body>
+    <canvas id="starfield"></canvas>
     <header class="site-header">
         <div class="container">
             <a class="site-back" href="https://system33.io">← system33.io</a>
@@ -382,7 +404,7 @@
         <section class="section">
             <div class="container">
                 <div class="section-label">Kapitler</div>
-                <div class="chapter-grid" id="chapter-grid"></div>
+                <div class="chapter-grid" id="chapter-grid"><div class="vinefill" id="chapter-vinefill"></div></div>
             </div>
         </section>
     </div>
@@ -488,12 +510,15 @@
 
         function renderChapterGrid() {
             const grid = document.getElementById("chapter-grid");
+            const fill = document.getElementById("chapter-vinefill");
             grid.innerHTML = "";
+            grid.appendChild(fill);
             CHAPTERS.forEach(ch => {
                 const count = QUESTIONS.filter(q => q.chapter === ch.id).length;
                 const card = document.createElement("button");
                 card.className = "chapter-card";
                 card.innerHTML = `
+                    <span class="dot"></span>
                     <div class="chapter-card-header">
                         <h3>${ch.name}</h3>
                         <span class="chapter-card-weight">${ch.weight}</span>
@@ -503,7 +528,23 @@
                 card.addEventListener("click", () => startChapter(ch));
                 grid.appendChild(card);
             });
+            lightChapterGrid();
         }
+
+        function lightChapterGrid() {
+            const grid = document.getElementById("chapter-grid");
+            const fill = document.getElementById("chapter-vinefill");
+            const items = grid.querySelectorAll(".chapter-card");
+            const lim = window.innerHeight * .85;
+            let reach = 0;
+            items.forEach(el => {
+                if (el.getBoundingClientRect().top < lim) el.classList.add("lit");
+                if (el.classList.contains("lit")) reach = el.offsetTop + 14;
+            });
+            fill.style.height = reach + "px";
+        }
+        window.addEventListener("scroll", lightChapterGrid, { passive: true });
+        window.addEventListener("resize", lightChapterGrid);
 
         function startChapter(ch) {
             currentChapter = ch;

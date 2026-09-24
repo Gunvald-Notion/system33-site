@@ -1,0 +1,87 @@
+/* System 33 — shared design tokens and vine-progress component.
+   Pulled from the Light Echo reading page (index.html, the UM template
+   and its styles). Any page below can link this file and use these
+   variables and the .stages/.vinefill/.stage(or .lit-item)/.dot pattern
+   to get the same night sky, type, and scroll-lit progress line. */
+
+:root {
+    --bg-primary: #01030a;
+    --bg-secondary: rgba(6,12,30,.6);
+    --bg-card: rgba(6,12,30,.9);
+    --border: rgba(150,185,255,.18);
+    --text-primary: #eef4ff;
+    --text-secondary: #dfe8fb;
+    --text-muted: #8594b8;
+    --accent: #96b9ff;
+    --correct: #22c55e;
+    --wrong: #ef4444;
+    --font: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Marcellus', Georgia, serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+
+/* the scroll-lit vertical line, exactly as on the reading page */
+.vinefill {
+    position: absolute;
+    left: 3.5px;
+    top: 10px;
+    width: 3px;
+    height: 0;
+    border-radius: 2px;
+    background: linear-gradient(rgba(238,244,255,.95), rgba(150,185,255,.7));
+    box-shadow: 0 0 14px rgba(150,185,255,.85);
+    transition: height .6s cubic-bezier(.2,.7,.2,1);
+}
+
+/* apply .lit-list to the container that holds the items (gives room for the vine + dots,
+   and draws the dim always-visible track the vinefill grows over) */
+.lit-list {
+    position: relative;
+    padding-left: 34px;
+}
+.lit-list::before {
+    content: "";
+    position: absolute;
+    left: 3.5px;
+    top: 10px;
+    bottom: 24px;
+    width: 3px;
+    border-radius: 2px;
+    background: rgba(150,185,255,.14);
+}
+
+/* apply .lit-item to each row/card in that list */
+.lit-item {
+    position: relative;
+    opacity: .35;
+    transition: opacity .6s;
+}
+.lit-item.lit { opacity: 1; }
+.lit-item .dot {
+    position: absolute;
+    left: -34px;
+    top: 24px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1a2a58;
+    transition: background .5s, box-shadow .5s;
+}
+.lit-item.lit .dot {
+    background: #f5f8ff;
+    box-shadow: 0 0 10px 3px rgba(238,244,255,.7), 0 0 36px 14px rgba(150,185,255,.28);
+}
+
+/* attach to window scroll (or a scrollable ancestor) on pages using this pattern:
+function lightList(container) {
+    const items = container.querySelectorAll('.lit-item');
+    const fill = container.querySelector('.vinefill');
+    const lim = window.innerHeight * .82;
+    let reach = 0;
+    items.forEach(el => {
+        if (el.getBoundingClientRect().top < lim) el.classList.add('lit');
+        if (el.classList.contains('lit')) reach = el.offsetTop + 14;
+    });
+    if (fill) fill.style.height = reach + 'px';
+}
+*/
