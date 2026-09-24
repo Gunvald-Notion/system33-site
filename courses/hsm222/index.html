@@ -14,23 +14,30 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="/styles/shared.css">
+<script src="/styles/starfield.js" defer></script>
 <style>
+  /* tokens come from /styles/shared.css; these aliases keep this page's own names working */
   :root {
-    --bg: #01030a;
-    --card: rgba(6,12,30,.9);
+    --bg: var(--bg-primary);
+    --card: var(--bg-card);
     --card-hover: rgba(6,12,30,.75);
-    --border: rgba(150,185,255,.18);
-    --text: #eef4ff;
-    --muted: #8594b8;
-    --accent: #96b9ff;
+    --border: var(--border);
+    --text: var(--text-primary);
+    --muted: var(--text-muted);
+    --accent: var(--accent);
     --green: #35c46f;
     --yellow: #e0b23a;
     --red: #e05a5a;
-    --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-display: 'Marcellus', Georgia, serif;
-    --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   }
   * { box-sizing: border-box; }
+  #starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  body > *:not(#starfield) { position: relative; z-index: 1; }
   .light-core {
     display: block;
     width: 16px;
@@ -259,6 +266,7 @@
 </style>
 </head>
 <body>
+<canvas id="starfield"></canvas>
 <header>
   <a class="light-core" href="https://system33.io" aria-label="Tilbake til system33.io" onclick="if(window.history.length>1){window.history.back();return false;}"></a>
   <h1>HSM222 – Marketing (MPC) Test Øving</h1>
