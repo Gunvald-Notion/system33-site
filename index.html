@@ -165,15 +165,24 @@
     const spread = clamp((W / H) * 420, 210, 380);
     const n1 = level.kids.length;
     const sp1 = n1 <= 2 ? Math.min(spread * 1.5, 460) : spread;
+    // phones: every room gets its own slot across the full width (evenly spaced, three staggered rows),
+    // each branch sits over the middle of its rooms, and the camera then zooms out to fit it all
+    const slim = W < 620 && n1 > 2;
+    const roomsTotal = level.kids.reduce((a, d) => a + (d.kids || []).length, 0);
+    const DX = 120, ROW = 100;
+    let slot = 0;
     level.kids.forEach((d, i) => {
+      const m0 = (d.kids || []).length, first = slot, slimX = slim && m0 ? (first + (m0 - 1) / 2 - (roomsTotal - 1) / 2) * DX : null;
       const nd = { kind:'n1', data:d, name:d.name, line:d.line, route:d.route, dim:!!d.dim,
-                   depth:1, x:(i - (n1 - 1) / 2) * sp1, y:BY + (n1 > 2 ? (i % 2) * 50 : 0), flare:0, rev:false, revT:0, out:[], kids:[] };
+                   depth:1, x:slimX !== null ? slimX : (i - (n1 - 1) / 2) * sp1, y:BY + (n1 > 2 ? (i % 2) * 50 : 0), flare:0, rev:false, revT:0, out:[], kids:[] };
       nodes.push(nd);
       const e = { a:core, b:nd, ph:i * 1.7, amp:16, trunk:true, grow:0 }; edges.push(e); core.out.push(e);
       const fan = Math.min(190, sp1 * .9), m = (d.kids || []).length;
       (d.kids || []).forEach((c, j) => {
+        const k = slot++;
         const cn = { kind:'n2', depth:2, data:c, name:c.name, line:c.line, route:c.route, dim:!!c.dim, parent:nd,
-                     x:nd.x + (j - (m - 1) / 2) * fan, y:CY + (n1 > 2 ? (i % 2) * 50 : 0) + (j % 2) * 60,
+                     x:slim ? (k - (roomsTotal - 1) / 2) * DX : nd.x + (j - (m - 1) / 2) * fan,
+                     y:slim ? CY + (k % 3) * ROW : CY + (n1 > 2 ? (i % 2) * 50 : 0) + (j % 2) * 60,
                      flare:0, rev:false, revT:0, out:[] };
         nodes.push(cn); nd.kids.push(cn);
         const ce = { a:nd, b:cn, ph:i * 1.7 + j * 2.3 + 1, amp:10, trunk:false, grow:0 }; edges.push(ce); nd.out.push(ce);
@@ -405,7 +414,7 @@
       };
       const boxes = [];
       for (const L of labs.slice().sort((p, q) => (q.big - p.big) || (p.x - q.x))) {
-        const fs = L.big ? Math.max(13, 28 * z) : Math.max(9.5, 17 * z), fsL = Math.max(9.5, 15 * z);
+        const fs = L.big ? Math.max(14, 28 * z) : Math.max(11, 17 * z), fsL = Math.max(10.5, 15 * z);
         const nameFont = L.big ? `400 ${fs}px ${DISPLAY}` : `500 ${fs}px ${BODY}`, subFont = `400 ${fsL}px ${BODY}`;
         const nl = wrap(L.n.name, nameFont, L.big ? maxW : maxW * 1.4);
         const sl = L.big && L.n.line ? wrap(L.n.line, subFont, maxW) : [];
