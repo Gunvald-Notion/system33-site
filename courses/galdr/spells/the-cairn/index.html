@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>🪨 The Cairn — Galdr Formation | System 33</title><meta name="description" content="Descriptive statistics as a Galdr formation — five formulas, each walked through four steps and four moves."><style>
+<!DOCTYPE html><html lang="en" class="s33-legacy"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>🪨 The Cairn — Galdr Formation | System 33</title><meta name="description" content="Descriptive statistics as a Galdr formation — five formulas, each walked through four steps and four moves."><style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+:root{--bg:#01030a;--bg2:rgba(6,12,30,.6);--bg-card:rgba(6,12,30,.9);--border:rgba(150,185,255,.18);--text:#eef4ff;--text2:#dfe8fb;--muted:#8594b8;--accent:#96b9ff;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--font:'Figtree',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
 a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
 .container{max-width:760px;margin:0 auto;padding:0 24px}
@@ -17,11 +17,11 @@ a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:
 .principle a{color:var(--accent)}
 .mode-nav,.step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
 .mode-btn,.step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font:inherit;font-size:.78rem;color:var(--text2);cursor:pointer;transition:all .2s}
-.mode-btn:hover,.step-btn:hover{border-color:#3f3f46}
-.mode-btn.active,.step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+.mode-btn:hover,.step-btn:hover{border-color:rgba(150,185,255,.38)}
+.mode-btn.active,.step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(150,185,255,.08)}
 .step-btn.done{border-color:var(--green);color:var(--green)}
 .viz-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:24px}
-.viz-wrap{background:radial-gradient(circle at center,rgba(167,139,250,.04),transparent 70%);border-radius:12px;padding:8px;overflow:hidden}
+.viz-wrap{background:radial-gradient(circle at center,rgba(150,185,255,.04),transparent 70%);border-radius:12px;padding:8px;overflow:hidden}
 .viz-wrap canvas{display:block;margin:0 auto}
 .viz-caption{color:var(--muted);font-size:.82rem;text-align:center;margin-top:12px}
 .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
@@ -51,10 +51,10 @@ a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:
 .data-table th{background:var(--bg2);color:var(--text2);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
 .data-table td{color:var(--text2);font-family:'SF Mono',Menlo,monospace}
 .data-table td:first-child{color:var(--text);font-family:var(--font)}
-.action-btn{background:var(--accent);color:#0a0a0b;border:none;border-radius:10px;padding:11px 18px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+.action-btn{background:var(--accent);color:#01030a;border:none;border-radius:10px;padding:11px 18px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
 .action-btn.secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
 .btn-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2);font-family:'SF Mono',Menlo,monospace}
+.derivation{background:rgba(150,185,255,.04);border:1px solid rgba(150,185,255,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2);font-family:'SF Mono',Menlo,monospace}
 .derivation .d-label{color:var(--accent);font-size:.7rem;text-transform:uppercase;margin-bottom:8px;font-family:var(--font);font-weight:600;letter-spacing:.05em}
 .derivation strong{color:var(--text)}
 .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
@@ -67,7 +67,7 @@ a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:
 .calc{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:12px 0}
 .calc h4{font-size:.9rem;font-weight:600;margin-bottom:8px;color:var(--text)}
 .calc p{font-size:.85rem;color:var(--text2);line-height:1.65;margin-bottom:8px}
-.key{display:inline-block;background:var(--bg-card);border:1px solid #3f3f46;border-radius:5px;padding:1px 7px;font-size:.8rem;color:var(--text);font-weight:600}
+.key{display:inline-block;background:var(--bg-card);border:1px solid rgba(150,185,255,.38);border-radius:5px;padding:1px 7px;font-size:.8rem;color:var(--text);font-weight:600}
 .formula-ref{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:10px}
 .formula-ref-header{display:flex;justify-content:space-between;margin-bottom:8px;gap:12px}
 .formula-ref-name{font-size:.92rem;font-weight:600}
@@ -77,10 +77,12 @@ footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:v
 footer a{color:var(--text2)}
 .lang-toggle{display:flex;gap:4px}
 .lang-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:5px 11px;font:inherit;font-size:.72rem;font-weight:600;color:var(--text2);cursor:pointer;letter-spacing:.04em;transition:all .2s}
-.lang-btn:hover{border-color:#3f3f46}
-.lang-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+.lang-btn:hover{border-color:rgba(150,185,255,.38)}
+.lang-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(150,185,255,.08)}
 @media(max-width:600px){.piece-text{font-size:.9rem;padding:5px 6px}.data-table{font-size:.78rem}.mode-nav{flex-direction:column}}
-</style></head><body>
+</style>    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/styles/theme.js" defer></script>
+</head><body>
 <header class="site-header"><div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px"><a href="/courses/galdr/spells/" data-i18n="back">← Galdr Formations</a><div class="lang-toggle"><button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button><button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button></div></div></header>
 <section class="hero"><div class="container"><div class="hero-icon">🪨</div><div class="hero-badge" data-i18n="badge">Galdr Formation · Kap 1</div><h1>The Cairn</h1><p data-i18n="heroP">Describe the pile of data you already hold. Pick a formula, walk the four steps, watch each move build.</p></div></section>
 <section class="section"><div class="container"><div class="principle" data-i18n="principle"><strong>First principle.</strong> The Cairn works on a <strong>sample you already gathered</strong> — a finished pile of numbers. It never forecasts; it describes. Every formula here is one of three questions about that pile: where is its <strong>center</strong>, how wide is its <strong>spread</strong>, and do two columns <strong>move together</strong>. The split that runs through the whole course: the Cairn counts real stones and divides by n (or n−1); the <a href="/courses/galdr/spells/weighing-table/">Weighing Table</a> weighs a distribution of what could happen by P(x). Same skeleton, different fuel.</div></div></section>

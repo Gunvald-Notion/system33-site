@@ -49,7 +49,7 @@ function gen(m){return m==="var"?genVar():genCov();}
 
 function whyCard(m){
 var w=WHY[m];
-return '<div class="step-content" style="border-color:rgba(167,139,250,0.3)">'+
+return '<div class="step-content" style="border-color:rgba(150,185,255,0.3)">'+
 '<p style="color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem">Why this spell matters</p>'+
 '<p><strong>What it is.</strong> '+w.what+'</p>'+
 '<p><strong>Where it shows up.</strong> '+w.use+'</p>'+
@@ -62,7 +62,7 @@ function inputRow(id,label,fn){
 return '<div style="display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap">'+
 '<label style="font-size:.85rem;color:var(--text2);min-width:96px">'+label+'</label>'+
 '<input id="'+id+'" type="text" inputmode="decimal" placeholder="?" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-family:inherit;font-size:.9rem;width:120px">'+
-'<button onclick="'+fn+'" style="background:rgba(167,139,250,0.1);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:8px 16px;font-family:inherit;font-size:.85rem;cursor:pointer">Check</button>'+
+'<button onclick="'+fn+'" style="background:rgba(150,185,255,0.1);border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:8px 16px;font-family:inherit;font-size:.85rem;cursor:pointer">Check</button>'+
 '</div>';
 }
 
