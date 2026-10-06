@@ -79,15 +79,15 @@ function drawTreeViz(){
     ctx.clearRect(0, 0, cw, ch);
 
     const R = 6;
-    const accent = '#a78bfa';
-    const accentDim = 'rgba(167,139,250,0.12)';
-    const accentHi = 'rgba(167,139,250,0.35)';
-    const linec = 'rgba(167,139,250,0.15)';
-    const lineHi = 'rgba(167,139,250,0.4)';
-    const muted = '#71717a';
+    const accent = '#96b9ff';
+    const accentDim = 'rgba(150,185,255,0.12)';
+    const accentHi = 'rgba(150,185,255,0.35)';
+    const linec = 'rgba(150,185,255,0.15)';
+    const lineHi = 'rgba(150,185,255,0.4)';
+    const muted = '#8594b8';
     const green = '#22c55e';
     const red = '#ef4444';
-    const text2 = '#a1a1aa';
+    const text2 = '#dfe8fb';
     const midX = cw / 2;
 
     function poolAt(round){ return formula === 'ns' ? N : N - round; }
@@ -101,7 +101,7 @@ function drawTreeViz(){
     ctx.strokeStyle = accent;
     ctx.lineWidth = 2;
     ctx.stroke();
-    ctx.fillStyle = '#fafafa';
+    ctx.fillStyle = '#eef4ff';
     ctx.font = 'bold 10px Inter,sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -144,7 +144,7 @@ function drawTreeViz(){
             ctx.arc(dotX, y, R, 0, Math.PI * 2);
             ctx.fillStyle = i === 0 ? accentHi : accentDim;
             ctx.fill();
-            ctx.strokeStyle = i === 0 ? accent : 'rgba(167,139,250,0.4)';
+            ctx.strokeStyle = i === 0 ? accent : 'rgba(150,185,255,0.4)';
             ctx.lineWidth = i === 0 ? 1.5 : 1;
             ctx.stroke();
         }

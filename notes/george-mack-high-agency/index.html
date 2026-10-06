@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="s33-legacy">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,10 +17,10 @@
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-primary: #0a0a0b; --bg-secondary: #111113; --bg-card: #18181b;
-            --border: #27272a; --text-primary: #fafafa; --text-secondary: #a1a1aa;
-            --text-muted: #71717a; --accent-glow: rgba(228, 228, 231, 0.08);
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --bg-primary: #01030a; --bg-secondary: rgba(6,12,30,.6); --bg-card: rgba(6,12,30,.9);
+            --border: rgba(150,185,255,.18); --text-primary: #eef4ff; --text-secondary: #dfe8fb;
+            --text-muted: #8594b8; --accent-glow: rgba(150,185,255, 0.08);
+            --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         body { font-family: var(--font); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; -webkit-font-smoothing: antialiased; }
         a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
@@ -36,7 +36,7 @@
         .hero-thumb { width: 100%; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border); }
         .hero-links { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; }
         .hero-links a { color: var(--text-secondary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; }
-        .hero-links a:hover { background: var(--accent-glow); border-color: #3f3f46; opacity: 1; }
+        .hero-links a:hover { background: var(--accent-glow); border-color: rgba(150,185,255,.38); opacity: 1; }
         .divider { width: 100%; height: 1px; background: var(--border); margin: 0; }
         .toc { padding: 48px 0; }
         .toc-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
@@ -62,7 +62,7 @@
         .code-wrapper { position: relative; margin: 16px 0 24px; }
         .code-wrapper pre { margin: 0; }
         .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); padding: 5px 14px; border-radius: 6px; font-size: 0.75rem; font-family: var(--font); cursor: pointer; transition: all 0.2s; z-index: 2; }
-        .copy-btn:hover { color: var(--text-primary); border-color: #3f3f46; background: var(--accent-glow); }
+        .copy-btn:hover { color: var(--text-primary); border-color: rgba(150,185,255,.38); background: var(--accent-glow); }
         .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0 24px; overflow-x: auto; font-size: 0.88rem; line-height: 1.6; }
         .article pre code { color: var(--text-secondary); font-family: 'SF Mono', 'Fira Code', monospace; }
         .article code { background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'SF Mono', 'Fira Code', monospace; }
@@ -99,6 +99,8 @@
             .footer { flex-direction: column; align-items: flex-start; }
         }
     </style>
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/styles/theme.js" defer></script>
 </head>
 <body>
 
@@ -831,12 +833,12 @@ graph TD
         flowchart: { padding: 20, nodeSpacing: 40, rankSpacing: 50 },
         timeline: { padding: 20 },
         themeVariables: {
-            primaryColor: '#18181b',
-            primaryTextColor: '#fafafa',
-            primaryBorderColor: '#27272a',
-            lineColor: '#a1a1aa',
-            secondaryColor: '#27272a',
-            tertiaryColor: '#111113',
+            primaryColor: 'rgba(6,12,30,.9)',
+            primaryTextColor: '#eef4ff',
+            primaryBorderColor: 'rgba(150,185,255,.18)',
+            lineColor: '#dfe8fb',
+            secondaryColor: 'rgba(150,185,255,.18)',
+            tertiaryColor: 'rgba(6,12,30,.6)',
             fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
             fontSize: '24px'
         }

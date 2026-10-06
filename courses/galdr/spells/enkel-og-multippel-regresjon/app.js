@@ -26,7 +26,7 @@ function rsvg(){
  cs.forEach(function(c,i){if(S.solved&&Math.abs(c.v)>.001){var sg=c.v>=0?1:-1,vL=Math.abs(c.v)*sc;var vx=cx+Math.cos(c.ang)*vL*sg,vy=cy+Math.sin(c.ang)*vL*sg;var th=2+Math.min(Math.abs(c.v)*.5,4.5);s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+vx+'" y2="'+vy+'" stroke="'+c.c+'" stroke-width="'+th+'" marker-end="url(#m'+i+')" stroke-linecap="round"/>'}var lx=cx+Math.cos(c.ang)*(aL+22),ly=cy+Math.sin(c.ang)*(aL+22);s+='<text x="'+lx+'" y="'+ly+'" class="arm-label" style="fill:'+c.c+'">'+c.n+'</text>';if(S.solved)s+='<text x="'+lx+'" y="'+(ly+13)+'" class="arm-magnitude" style="fill:'+c.c+'">'+(c.v>=0?'+':'')+fmt(c.v)+'</text>'});
  s+='<circle cx="'+bX+'" cy="'+bY+'" r="'+bR+'" fill="'+fil+'" stroke="'+stk+'" stroke-width="2.5" stroke-dasharray="'+(S.solved?'none':'4,4')+'"/>';
  s+='<text x="'+bX+'" y="'+(bY-9)+'" class="center-y-label">ŷ</text>';
- s+='<text x="'+bX+'" y="'+(bY+8)+'" class="center-y" style="'+(S.solved?'fill:'+stk:'font-size:13px;fill:#71717a')+'">'+(S.solved?fmt(yh):'?')+'</text>';
+ s+='<text x="'+bX+'" y="'+(bY+8)+'" class="center-y" style="'+(S.solved?'fill:'+stk:'font-size:13px;fill:#8594b8')+'">'+(S.solved?fmt(yh):'?')+'</text>';
  svg.innerHTML=s
 }
 function fviz(filled){
@@ -65,7 +65,7 @@ function bellSvg(tcrit){
  s+='<text x="'+(cx+critPx)+'" y="'+(base+15)+'" class="bell-tick">+'+tx.toFixed(3)+'</text>';
  s+='<text x="'+(cx-critPx-30)+'" y="95" class="bell-region-label" style="fill:#3b82f6">forkast H₀</text>';
  s+='<text x="'+(cx-critPx-30)+'" y="110" class="bell-region-label" style="fill:#3b82f6">α/2 = 0.025</text>';
- s+='<text x="'+cx+'" y="60" class="bell-region-label" style="fill:#a1a1aa">ikke forkast H₀</text>';
+ s+='<text x="'+cx+'" y="60" class="bell-region-label" style="fill:#dfe8fb">ikke forkast H₀</text>';
  s+='<text x="'+(cx+critPx+30)+'" y="95" class="bell-region-label" style="fill:#3b82f6">forkast H₀</text>';
  s+='<text x="'+(cx+critPx+30)+'" y="110" class="bell-region-label" style="fill:#3b82f6">α/2 = 0.025</text>';
  s+='</svg>';

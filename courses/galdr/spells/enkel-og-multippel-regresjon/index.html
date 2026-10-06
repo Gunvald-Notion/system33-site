@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>📈 Enkel &amp; Multippel Regresjon — Galdr Formation</title><style>
+<!DOCTYPE html><html lang="en" class="s33-legacy"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>📈 Enkel &amp; Multippel Regresjon — Galdr Formation</title><style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#f59e0b;--blue:#3b82f6;--green:#22c55e;--font:'Inter',-apple-system,sans-serif}
+:root{--bg:#01030a;--bg2:rgba(6,12,30,.6);--bg-card:rgba(6,12,30,.9);--border:rgba(150,185,255,.18);--text:#eef4ff;--text2:#dfe8fb;--muted:#8594b8;--accent:#f59e0b;--blue:#3b82f6;--green:#22c55e;--font:'Figtree',-apple-system,sans-serif}
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:var(--text);text-decoration:none}a:hover{opacity:.7}
 .container{max-width:760px;margin:0 auto;padding:0 24px}
@@ -16,7 +16,7 @@ a{color:var(--text);text-decoration:none}a:hover{opacity:.7}
 .principle strong{color:var(--text)}
 .mode-nav,.step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
 .mode-btn,.step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font:inherit;font-size:.78rem;color:var(--text2);cursor:pointer;transition:all .2s}
-.mode-btn:hover:not(:disabled),.step-btn:hover{border-color:#3f3f46}
+.mode-btn:hover:not(:disabled),.step-btn:hover{border-color:rgba(150,185,255,.38)}
 .mode-btn.active,.step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.08)}
 .step-btn.done{border-color:var(--green);color:var(--green)}
 .mode-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -54,8 +54,8 @@ svg.conv{width:100%;max-width:560px;height:auto;display:block}
 .data-table td{color:var(--text2);font-family:'SF Mono',Menlo,monospace}
 .data-table td:first-child{color:var(--text);font-family:var(--font)}
 .r2bar{display:flex;height:32px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin:8px 0 16px}
-.r2bar-ssr{background:var(--accent);display:flex;align-items:center;justify-content:center;color:#0a0a0b;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;font-weight:700}
-.r2bar-sse{background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fafafa;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;font-weight:700;opacity:.85}
+.r2bar-ssr{background:var(--accent);display:flex;align-items:center;justify-content:center;color:#01030a;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;font-weight:700}
+.r2bar-sse{background:var(--blue);display:flex;align-items:center;justify-content:center;color:#eef4ff;font-family:'SF Mono',Menlo,monospace;font-size:.78rem;font-weight:700;opacity:.85}
 .bellsvg{width:100%;max-width:480px;height:auto;display:block;margin:12px auto 6px}
 .bell-curve-line{fill:none;stroke:var(--accent);stroke-width:2}
 .bell-fill-accept{fill:rgba(245,158,11,.08)}
@@ -84,7 +84,9 @@ svg.conv{width:100%;max-width:560px;height:auto;display:block}
 footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:24px}
 footer a{color:var(--text2)}
 @media(max-width:600px){.piece-text{font-size:.92rem;padding:5px 6px}.data-table{font-size:.78rem}}
-</style></head><body>
+</style>    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/styles/theme.js" defer></script>
+</head><body>
 <header class="site-header"><div class="container"><a href="/courses/galdr/spells/">← Galdr Formations</a></div></header>
 <section class="hero"><div class="container"><div class="hero-icon">📈</div><div class="hero-badge">Galdr Formation · Kap 11</div><h1>Enkel &amp; Multippel Regresjon</h1><p>The convergence formation. Pick a form, walk the four steps, watch each piece of the formula build.</p></div></section>
 <section class="section"><div class="container"><div class="principle"><strong>First principle.</strong> A regression model iz a <strong>convergence of forces</strong>. Each predictor X<sub>j</sub> iz an arm radiating from center at iz own axis — k predictors means k+1 dimensions, flattened onto one plane fer the eye. Intercept b₀ iz the equilibrium scalar. Each arm contributes bⱼ·Xⱼ, an the bead migrates by the vector sum.</div></div></section>

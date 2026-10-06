@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="s33-legacy">
 <head>
     <meta charset="UTF-8">
     <!-- System 33 analytics (shared) -->
@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+        :root{--bg:#01030a;--bg2:rgba(6,12,30,.6);--bg-card:rgba(6,12,30,.9);--border:rgba(150,185,255,.18);--text:#eef4ff;--text2:#dfe8fb;--muted:#8594b8;--accent:#96b9ff;--font:'Figtree',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
         body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
         a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
         .container{max-width:760px;margin:0 auto;padding:0 24px}
@@ -23,13 +23,13 @@
         .hero p{font-size:1rem;color:var(--text2);max-width:520px;margin:0 auto}
         .track-nav{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
         .track-link{display:inline-block;padding:10px 22px;border:1px solid var(--border);border-radius:100px;font-size:.85rem;color:var(--text2);transition:all .2s}
-        .track-link:hover{border-color:#3f3f46;color:var(--text);opacity:1}
-        .track-link.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .track-link:hover{border-color:rgba(150,185,255,.38);color:var(--text);opacity:1}
+        .track-link.active{border-color:var(--accent);color:var(--accent);background:rgba(150,185,255,.08)}
         .section{padding:24px 0}
         .section-label{font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
         .spell-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
         .spell-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all .2s;display:block}
-        .spell-card:hover{border-color:#3f3f46;background:rgba(228,228,231,.03);opacity:1}
+        .spell-card:hover{border-color:rgba(150,185,255,.38);background:rgba(150,185,255,.03);opacity:1}
         .spell-icon{font-size:1.8rem;margin-bottom:10px}
         .spell-name{font-size:1rem;font-weight:600;margin-bottom:4px}
         .spell-kap{font-size:.75rem;color:var(--muted);margin-bottom:6px}
@@ -37,6 +37,8 @@
         footer{padding:32px 0;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center;margin-top:40px}
         footer a{color:var(--text2)}
     </style>
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/styles/theme.js" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="container"><a href="https://system33.io">&larr; system33.io</a></div></header>

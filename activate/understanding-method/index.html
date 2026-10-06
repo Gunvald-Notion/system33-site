@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="s33-legacy">
 <head>
     <meta charset="UTF-8">
     <!-- System 33 analytics (shared) -->
@@ -17,16 +17,16 @@
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-primary: #0a0a0b;
-            --bg-secondary: #111113;
-            --bg-card: #18181b;
-            --border: #27272a;
-            --text-primary: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-muted: #71717a;
-            --accent-glow: rgba(228, 228, 231, 0.08);
+            --bg-primary: #01030a;
+            --bg-secondary: rgba(6,12,30,.6);
+            --bg-card: rgba(6,12,30,.9);
+            --border: rgba(150,185,255,.18);
+            --text-primary: #eef4ff;
+            --text-secondary: #dfe8fb;
+            --text-muted: #8594b8;
+            --accent-glow: rgba(150,185,255, 0.08);
             --success: #22c55e;
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         body {
             font-family: var(--font);
@@ -155,7 +155,7 @@
         .dashboard-box .step-done { color: #22c55e; }
         .dashboard-box .step-current { color: #3b82f6; }
         .dashboard-box .bar-fill { color: #22c55e; }
-        .dashboard-box .bar-empty { color: #52525b; }
+        .dashboard-box .bar-empty { color: #5b6a8f; }
         .copy-btn {
             position: absolute;
             top: 18px;
@@ -172,42 +172,7 @@
             transition: opacity 0.2s;
         }
         .copy-btn:hover { opacity: 0.85; }
-        .copy-btn.copied { background: var(--success); color: #fafafa; }
-        .step-list { list-style: none; counter-reset: step; }
-        .step-list li {
-            counter-increment: step;
-            padding: 16px 0 16px 48px;
-            position: relative;
-            border-bottom: 1px solid var(--border);
-        }
-        .step-list li:last-child { border-bottom: none; }
-        .step-list li::before {
-            content: counter(step);
-            position: absolute;
-            left: 0;
-            top: 18px;
-            width: 28px;
-            height: 28px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.85rem;
-            line-height: 26px;
-            color: var(--text-secondary);
-        }
-        .step-list li strong {
-            display: block;
-            font-size: 1rem;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        .step-list li span {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.55;
-        }
+        .copy-btn.copied { background: var(--success); color: #eef4ff; }
         .about-text {
             color: var(--text-secondary);
             font-size: 1rem;
@@ -232,6 +197,8 @@
             .copy-btn { top: 14px; right: 14px; }
         }
     </style>
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/styles/theme.js" defer></script>
 </head>
 <body>
     <header class="site-header">
@@ -559,14 +526,20 @@ License: MIT — free to use, copy, modify, and share.</pre>
     <section class="section">
         <div class="container">
             <div class="section-label">The Six Stages</div>
-            <ol class="step-list">
-                <li><strong>Intake</strong><span>Name the thing precisely. What exactly do you want to understand?</span></li>
-                <li><strong>Origin</strong><span>Where did this come from? Who created it, and what were they trying to solve?</span></li>
-                <li><strong>Principle</strong><span>Strip it down to its first principle. What is the bedrock truth?</span></li>
-                <li><strong>Strategic Expansion</strong><span>Where else does this principle apply? Find the pattern in other domains.</span></li>
-                <li><strong>Application</strong><span>How does this change what you do? What circumstance now triggers different behavior?</span></li>
-                <li><strong>Output</strong><span>One-sentence compression. The thing you carry forward.</span></li>
-            </ol>
+            <div class="stages"><div class="vinefill"></div>
+                <section class="stage"><span class="dot"></span><p class="num">Stage 1</p><h2>Intake</h2>
+                    <p>Name the thing precisely. What exactly do you want to understand?</p></section>
+                <section class="stage"><span class="dot"></span><p class="num">Stage 2</p><h2>Origin</h2>
+                    <p>Where did this come from? Who created it, and what were they trying to solve?</p></section>
+                <section class="stage"><span class="dot"></span><p class="num">Stage 3</p><h2>Principle</h2>
+                    <p>Strip it down to its first principle. What is the bedrock truth?</p></section>
+                <section class="stage"><span class="dot"></span><p class="num">Stage 4</p><h2>Strategic Expansion</h2>
+                    <p>Where else does this principle apply? Find the pattern in other domains.</p></section>
+                <section class="stage"><span class="dot"></span><p class="num">Stage 5</p><h2>Application</h2>
+                    <p>How does this change what you do? What circumstance now triggers different behavior?</p></section>
+                <section class="stage"><span class="dot"></span><p class="num">Stage 6</p><h2>Output</h2>
+                    <p>One-sentence compression. The thing you carry forward.</p></section>
+            </div>
         </div>
     </section>
 

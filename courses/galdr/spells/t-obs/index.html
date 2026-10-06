@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="s33-legacy">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📏 T_obs — Galdr Spell | System 33</title>
     <style>
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#0a0a0b;--bg2:#111113;--bg-card:#18181b;--border:#27272a;--text:#fafafa;--text2:#a1a1aa;--muted:#71717a;--accent:#a78bfa;--green:#22c55e;--red:#ef4444;--font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+        :root{--bg:#01030a;--bg2:rgba(6,12,30,.6);--bg-card:rgba(6,12,30,.9);--border:rgba(150,185,255,.18);--text:#eef4ff;--text2:#dfe8fb;--muted:#8594b8;--accent:#96b9ff;--green:#22c55e;--red:#ef4444;--font:'Figtree',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
         body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
         a{color:var(--text);text-decoration:none;transition:opacity .2s}a:hover{opacity:.7}
         .container{max-width:760px;margin:0 auto;padding:0 24px}
@@ -22,12 +22,12 @@
         .principle strong{color:var(--text)}
         .mode-nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
         .mode-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:12px 20px;font-family:inherit;font-size:.82rem;color:var(--text2);cursor:pointer;transition:all .2s;font-weight:500}
-        .mode-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
-        .mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .mode-btn:hover{background:rgba(150,185,255,.04);border-color:rgba(150,185,255,.38)}
+        .mode-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(150,185,255,.08)}
         .step-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
         .step-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:100px;padding:10px 18px;font-family:inherit;font-size:.8rem;color:var(--text2);cursor:pointer;transition:all .2s}
-        .step-btn:hover{background:rgba(228,228,231,.04);border-color:#3f3f46}
-        .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,.08)}
+        .step-btn:hover{background:rgba(150,185,255,.04);border-color:rgba(150,185,255,.38)}
+        .step-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(150,185,255,.08)}
         .step-btn.done{border-color:var(--green);color:var(--green)}
         .step-content{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
         .step-content h3{font-size:1.1rem;font-weight:600;margin-bottom:12px}
@@ -47,7 +47,7 @@
         .data-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:8px 0}
         .data-table th,.data-table td{border:1px solid var(--border);padding:8px 12px;text-align:center}
         .data-table th{background:var(--bg2);color:var(--text2);font-weight:600;font-size:.78rem}
-        .derivation{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2)}
+        .derivation{background:rgba(150,185,255,.04);border:1px solid rgba(150,185,255,.15);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:.85rem;line-height:1.8;color:var(--text2)}
         .derivation .d-label{color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
         .derivation .d-line{margin:2px 0}
         .result-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:20px 24px;margin-top:16px}
@@ -71,6 +71,8 @@
         footer a{color:var(--text2)}
         @media(max-width:520px){.hero{padding:32px 0 20px}.mode-nav{flex-direction:column}}
     </style>
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/styles/theme.js" defer></script>
 </head>
 <body>
 <header class="site-header"><div class="container"><a href="/courses/galdr/spells/">&larr; Galdr Spells</a></div></header>
@@ -363,7 +365,7 @@ function drawTest(){
     var ctx=canvas.getContext('2d');
     ctx.scale(dpr,dpr);ctx.clearRect(0,0,cw,ch);
 
-    var accent='#a78bfa',green='#22c55e',red='#ef4444',muted='#71717a',border='#27272a';
+    var accent='#96b9ff',green='#22c55e',red='#ef4444',muted='#8594b8',border='rgba(150,185,255,.18)';
     var padL=30,padR=30,padTop=20,padBot=48;
     var plotW=cw-padL-padR;
     var plotH=ch-padTop-padBot;
@@ -393,7 +395,7 @@ function drawTest(){
     }
 
     // Acceptance shading
-    ctx.fillStyle='rgba(167,139,250,0.05)';
+    ctx.fillStyle='rgba(150,185,255,0.05)';
     if(c.oneTail){
         ctx.beginPath();ctx.moveTo(tx(xMin),ch-padBot);
         for(var x=xMin;x<=c.crits[0];x+=st)ctx.lineTo(tx(x),ty(pv(x)));
@@ -410,7 +412,7 @@ function drawTest(){
     ctx.strokeStyle=accent;ctx.lineWidth=2;ctx.stroke();
 
     // Critical value walls
-    ctx.setLineDash([4,3]);ctx.strokeStyle='#fafafa';ctx.lineWidth=1;
+    ctx.setLineDash([4,3]);ctx.strokeStyle='#eef4ff';ctx.lineWidth=1;
     c.crits.forEach(function(cv){
         ctx.beginPath();ctx.moveTo(tx(cv),ty(pv(cv)));ctx.lineTo(tx(cv),ch-padBot);ctx.stroke();
     });
@@ -427,12 +429,12 @@ function drawTest(){
     ctx.beginPath();ctx.moveTo(tx(c.tobs),ty(pv(c.tobs)));ctx.lineTo(tx(c.tobs),ch-padBot);ctx.stroke();
 
     // Labels: center
-    ctx.fillStyle=accent;ctx.font='bold 10px Inter,sans-serif';
+    ctx.fillStyle=accent;ctx.font='bold 10px Figtree,sans-serif';
     ctx.textAlign='center';ctx.textBaseline='top';
     ctx.fillText('\u03BC\u2080',tx(0),ch-padBot+4);
 
     // Labels: critical values
-    ctx.fillStyle='#fafafa';ctx.font='10px Inter,sans-serif';
+    ctx.fillStyle='#eef4ff';ctx.font='10px Figtree,sans-serif';
     c.crits.forEach(function(cv){
         ctx.textAlign='center';ctx.textBaseline='top';
         var label=cv>0?'+'+cv.toFixed(3):cv.toFixed(3);
@@ -440,25 +442,25 @@ function drawTest(){
     });
 
     // Label: T_obs
-    ctx.fillStyle=tobsColor;ctx.font='bold 11px Inter,sans-serif';
+    ctx.fillStyle=tobsColor;ctx.font='bold 11px Figtree,sans-serif';
     ctx.textAlign='center';ctx.textBaseline='bottom';
     ctx.fillText(c.tobsL,tx(c.tobs),ty(pv(c.tobs))-6);
 
     // Zone labels
-    ctx.font='9px Inter,sans-serif';
+    ctx.font='9px Figtree,sans-serif';
     ctx.fillStyle='rgba(239,68,68,0.6)';
     if(c.oneTail){
         ctx.fillText('Forkast',tx(3),ty(0.06));
-        ctx.fillStyle='rgba(167,139,250,0.4)';ctx.fillText('Behold',tx(-1),ty(0.3));
+        ctx.fillStyle='rgba(150,185,255,0.4)';ctx.fillText('Behold',tx(-1),ty(0.3));
     } else {
         ctx.fillText('Forkast',tx(-3),ty(0.06));
         ctx.fillText('Forkast',tx(3),ty(0.06));
-        ctx.fillStyle='rgba(167,139,250,0.4)';ctx.fillText('Behold',tx(0),ty(0.3));
+        ctx.fillStyle='rgba(150,185,255,0.4)';ctx.fillText('Behold',tx(0),ty(0.3));
     }
 
     // Result
     var resColor=c.result==='forkast'?red:green;
-    ctx.fillStyle=resColor;ctx.font='bold 13px Inter,sans-serif';
+    ctx.fillStyle=resColor;ctx.font='bold 13px Figtree,sans-serif';
     ctx.textAlign='center';ctx.textBaseline='top';
     ctx.fillText(c.resultL,cw/2,ch-16);
 }

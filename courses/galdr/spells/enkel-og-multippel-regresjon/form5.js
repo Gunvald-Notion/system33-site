@@ -19,7 +19,7 @@ function bellSvgPlus(tcrit, tts){
  s+='<text x="'+(cx+critPx)+'" y="'+(base+15)+'" class="bell-tick">+'+tx.toFixed(3)+'</text>';
  s+='<text x="'+(cx-critPx-30)+'" y="95" class="bell-region-label" style="fill:#3b82f6">forkast H₀</text>';
  s+='<text x="'+(cx-critPx-30)+'" y="110" class="bell-region-label" style="fill:#3b82f6">α/2 = 0.025</text>';
- s+='<text x="'+cx+'" y="60" class="bell-region-label" style="fill:#a1a1aa">ikke forkast H₀</text>';
+ s+='<text x="'+cx+'" y="60" class="bell-region-label" style="fill:#dfe8fb">ikke forkast H₀</text>';
  s+='<text x="'+(cx+critPx+30)+'" y="95" class="bell-region-label" style="fill:#3b82f6">forkast H₀</text>';
  s+='<text x="'+(cx+critPx+30)+'" y="110" class="bell-region-label" style="fill:#3b82f6">α/2 = 0.025</text>';
  if(tts!==undefined){
