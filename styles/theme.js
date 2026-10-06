@@ -12,6 +12,16 @@
             var s = document.createElement('script'); s.src = '/styles/starfield.js';
             document.body.appendChild(s);
         }
+        // reading pages (notes): one fixed bar, "Return to System 33 →" pointing at the pulsing dot in the middle
+        var oldNav = document.querySelector('nav.nav');
+        if (oldNav && document.documentElement.classList.contains('s33-legacy') && !document.querySelector('.s33-bar')) {
+            var bar = document.createElement('div'); bar.className = 's33-bar';
+            bar.innerHTML = '<a class="s33-bar-back" href="/">Return to System 33 <span aria-hidden="true">→</span></a>' +
+                '<a class="light-core" href="/" aria-label="Return to System 33"></a>';
+            document.body.insertBefore(bar, document.body.firstChild);
+            document.body.classList.add('s33-has-bar');
+            oldNav.style.display = 'none';
+        }
         if (document.documentElement.classList.contains('s33-legacy') && !document.querySelector('.light-core')) {
             var badge = document.querySelector('.hero .hero-badge');
             var hero = document.querySelector('.hero');
