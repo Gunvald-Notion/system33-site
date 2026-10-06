@@ -14,11 +14,17 @@
         }
         if (document.documentElement.classList.contains('s33-legacy') && !document.querySelector('.light-core')) {
             var badge = document.querySelector('.hero .hero-badge');
+            var hero = document.querySelector('.hero');
+            var a = document.createElement('a');
+            a.className = 'light-core'; a.href = '/'; a.setAttribute('aria-label', 'Back to system33.io');
+            a.style.marginBottom = '22px';
             if (badge && badge.parentNode) {
-                var a = document.createElement('a');
-                a.className = 'light-core'; a.href = '/'; a.setAttribute('aria-label', 'Back to system33.io');
-                a.style.marginBottom = '22px';
                 badge.parentNode.insertBefore(a, badge);
+            } else if (hero) {
+                // reading pages: left aligned hero, so the dot sits on the left above the title
+                if (getComputedStyle(hero).textAlign !== 'center') a.style.marginLeft = '4px';
+                a.style.marginTop = '8px';
+                hero.insertBefore(a, hero.firstChild);
             }
         }
         var lists = document.querySelectorAll('.stages');

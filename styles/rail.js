@@ -38,6 +38,7 @@
             rail.appendChild(b); return b;
         });
         document.body.appendChild(rail);
+        document.body.classList.add('s33-has-rail');
         update();
     }
     function update() {
