@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="s33-legacy">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,10 +16,10 @@
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg-primary: #0a0a0b; --bg-secondary: #111113; --bg-card: #18181b;
-            --border: #27272a; --text-primary: #fafafa; --text-secondary: #a1a1aa;
-            --text-muted: #71717a; --accent-glow: rgba(228, 228, 231, 0.08);
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --bg-primary: #01030a; --bg-secondary: rgba(6,12,30,.6); --bg-card: rgba(6,12,30,.9);
+            --border: rgba(150,185,255,.18); --text-primary: #eef4ff; --text-secondary: #dfe8fb;
+            --text-muted: #8594b8; --accent-glow: rgba(150,185,255, 0.08);
+            --font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         body { font-family: var(--font); background: var(--bg-primary); color: var(--text-primary); line-height: 1.7; -webkit-font-smoothing: antialiased; }
         a { color: var(--text-primary); text-decoration: none; transition: opacity 0.2s; }
@@ -35,7 +35,7 @@
         .hero-thumb { width: 100%; border-radius: 12px; margin-bottom: 24px; border: 1px solid var(--border); }
         .hero-links { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; }
         .hero-links a { color: var(--text-secondary); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; }
-        .hero-links a:hover { background: var(--accent-glow); border-color: #3f3f46; opacity: 1; }
+        .hero-links a:hover { background: var(--accent-glow); border-color: rgba(150,185,255,.38); opacity: 1; }
         .divider { width: 100%; height: 1px; background: var(--border); margin: 0; }
         .toc { padding: 48px 0; }
         .toc-label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
@@ -80,7 +80,7 @@
         /* Cast person cards — portrait beside text, Notion-style */
         .person { display: flex; gap: 20px; align-items: flex-start; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; }
         .person-photo { flex: 0 0 96px; width: 96px; height: 96px; border-radius: 12px; object-fit: cover; border: 1px solid var(--border); background: var(--bg-secondary); }
-        .person-monogram { flex: 0 0 96px; width: 96px; height: 96px; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(135deg, #1f1f23, #2a2a30); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--text-secondary); }
+        .person-monogram { flex: 0 0 96px; width: 96px; height: 96px; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(10,20,46,.9), rgba(150,185,255,.14)); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--text-secondary); }
         .person-body { flex: 1 1 auto; min-width: 0; }
         .person-body h4 { margin: 0 0 8px; color: var(--text-primary); font-size: 1.1rem; }
         .person-body p { color: var(--text-secondary); margin-bottom: 10px; }
@@ -93,28 +93,30 @@
         .org-box { flex: 1 1 200px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; min-width: 0; }
         .org-box .role { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 3px; }
         .org-box .name { color: var(--text-primary); font-weight: 600; font-size: 0.98rem; }
-        .org-box.lead { border-color: #3f3f46; background: #1c1c20; }
+        .org-box.lead { border-color: rgba(150,185,255,.38); background: #1c1c20; }
         .org-box .org-note { color: var(--text-muted); font-size: 0.82rem; margin-top: 3px; font-weight: 400; }
         .org-connector { text-align: center; color: var(--text-muted); font-size: 1.1rem; line-height: 1; margin: 2px 0 12px; }
         .org-figure { margin: 28px 0 8px; }
         .org-figure a { display: block; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-secondary); padding: 16px; }
-        .org-figure a:hover { border-color: #3f3f46; opacity: 1; }
+        .org-figure a:hover { border-color: rgba(150,185,255,.38); opacity: 1; }
         .org-figure img { width: 100%; height: auto; display: block; }
         .org-figcaption { font-size: 0.8rem; color: var(--text-muted); margin: 10px 2px 0; }
         .zoomable { cursor: zoom-in; }
-        .lightbox { position: fixed; inset: 0; z-index: 1000; display: none; background: rgba(8, 8, 10, 0.94); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); touch-action: none; overscroll-behavior: contain; }
+        .lightbox { position: fixed; inset: 0; z-index: 1000; display: none; background: rgba(1,3,10, 0.94); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); touch-action: none; overscroll-behavior: contain; }
         .lightbox.open { display: block; }
         .lightbox-stage { position: absolute; inset: 0; overflow: hidden; touch-action: none; cursor: grab; }
         .lightbox-stage:active { cursor: grabbing; }
         .lightbox-img { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
-        .lightbox-close { position: absolute; top: 14px; right: 14px; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: rgba(24, 24, 27, 0.92); color: var(--text-primary); font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .lightbox-close:hover { border-color: #3f3f46; }
-        .lightbox-hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 2; font-size: 0.78rem; color: var(--text-secondary); background: rgba(24, 24, 27, 0.88); border: 1px solid var(--border); padding: 7px 14px; border-radius: 20px; pointer-events: none; max-width: 90vw; text-align: center; }
+        .lightbox-close { position: absolute; top: 14px; right: 14px; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: rgba(6,12,30, 0.92); color: var(--text-primary); font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .lightbox-close:hover { border-color: rgba(150,185,255,.38); }
+        .lightbox-hint { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 2; font-size: 0.78rem; color: var(--text-secondary); background: rgba(6,12,30, 0.88); border: 1px solid var(--border); padding: 7px 14px; border-radius: 20px; pointer-events: none; max-width: 90vw; text-align: center; }
         @media (max-width: 480px) {
             .person { flex-direction: column; gap: 14px; }
             .person-photo, .person-monogram { width: 72px; height: 72px; flex-basis: 72px; }
         }
     </style>
+    <link rel="stylesheet" href="/styles/theme.css">
+    <script src="/styles/theme.js" defer></script>
 </head>
 <body>
 
@@ -234,41 +236,41 @@
         </div>
 
         <div class="mermaid-container">
-            <svg viewBox="0 0 720 400" role="img" aria-label="Diminishing returns — growth is steepest at the start, then comfort flattens it" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+            <svg viewBox="0 0 720 400" role="img" aria-label="Diminishing returns — growth is steepest at the start, then comfort flattens it" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;font-family:Figtree,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
                 <defs>
                     <linearGradient id="dr-fill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#fafafa" stop-opacity="0.16"/>
-                        <stop offset="100%" stop-color="#fafafa" stop-opacity="0"/>
+                        <stop offset="0%" stop-color="#eef4ff" stop-opacity="0.16"/>
+                        <stop offset="100%" stop-color="#eef4ff" stop-opacity="0"/>
                     </linearGradient>
                 </defs>
-                <text x="60" y="22" fill="#fafafa" font-size="16" font-weight="600">Diminishing returns — the steepest growth is at the start</text>
-                <g stroke="#27272a" stroke-width="1">
+                <text x="60" y="22" fill="#eef4ff" font-size="16" font-weight="600">Diminishing returns — the steepest growth is at the start</text>
+                <g stroke="rgba(150,185,255,.18)" stroke-width="1">
                     <line x1="60" y1="40" x2="690" y2="40"/>
                     <line x1="60" y1="112" x2="690" y2="112"/>
                     <line x1="60" y1="184" x2="690" y2="184"/>
                     <line x1="60" y1="256" x2="690" y2="256"/>
                     <line x1="60" y1="328" x2="690" y2="328"/>
                 </g>
-                <line x1="60" y1="40" x2="60" y2="328" stroke="#a1a1aa" stroke-width="1.5"/>
-                <line x1="60" y1="328" x2="690" y2="328" stroke="#a1a1aa" stroke-width="1.5"/>
+                <line x1="60" y1="40" x2="60" y2="328" stroke="#dfe8fb" stroke-width="1.5"/>
+                <line x1="60" y1="328" x2="690" y2="328" stroke="#dfe8fb" stroke-width="1.5"/>
                 <path d="M60,328 C138.75,328 138.75,131 217.5,131 C296.25,131 296.25,77 375,77 C453.75,77 453.75,51 532.5,51 C611.25,51 611.25,40 690,40 L690,328 Z" fill="url(#dr-fill)"/>
-                <path d="M60,328 C138.75,328 138.75,131 217.5,131 C296.25,131 296.25,77 375,77 C453.75,77 453.75,51 532.5,51 C611.25,51 611.25,40 690,40" fill="none" stroke="#fafafa" stroke-width="2.5"/>
-                <g fill="#fafafa">
+                <path d="M60,328 C138.75,328 138.75,131 217.5,131 C296.25,131 296.25,77 375,77 C453.75,77 453.75,51 532.5,51 C611.25,51 611.25,40 690,40" fill="none" stroke="#eef4ff" stroke-width="2.5"/>
+                <g fill="#eef4ff">
                     <circle cx="60" cy="328" r="4"/>
                     <circle cx="217.5" cy="131" r="4"/>
                     <circle cx="375" cy="77" r="4"/>
                     <circle cx="532.5" cy="51" r="4"/>
                     <circle cx="690" cy="40" r="4"/>
                 </g>
-                <g fill="#a1a1aa" font-size="13" text-anchor="middle">
+                <g fill="#dfe8fb" font-size="13" text-anchor="middle">
                     <text x="60" y="350">Start</text>
                     <text x="217.5" y="350">Early</text>
                     <text x="375" y="350">Mid</text>
                     <text x="532.5" y="350">Late</text>
                     <text x="690" y="350">Comfort</text>
                 </g>
-                <text x="375" y="384" fill="#71717a" font-size="12" text-anchor="middle">Effort / time spent in one thing →</text>
-                <text x="20" y="184" fill="#71717a" font-size="12" text-anchor="middle" transform="rotate(-90 20 184)">Total growth gained</text>
+                <text x="375" y="384" fill="#8594b8" font-size="12" text-anchor="middle">Effort / time spent in one thing →</text>
+                <text x="20" y="184" fill="#8594b8" font-size="12" text-anchor="middle" transform="rotate(-90 20 184)">Total growth gained</text>
             </svg>
         </div>
 
@@ -455,12 +457,12 @@ flowchart TD
         fontSize: 26,
         flowchart: { padding: 20, nodeSpacing: 40, rankSpacing: 50 },
         themeVariables: {
-            primaryColor: '#18181b',
-            primaryTextColor: '#fafafa',
-            primaryBorderColor: '#27272a',
-            lineColor: '#a1a1aa',
-            secondaryColor: '#27272a',
-            tertiaryColor: '#111113',
+            primaryColor: 'rgba(6,12,30,.9)',
+            primaryTextColor: '#eef4ff',
+            primaryBorderColor: 'rgba(150,185,255,.18)',
+            lineColor: '#dfe8fb',
+            secondaryColor: 'rgba(150,185,255,.18)',
+            tertiaryColor: 'rgba(6,12,30,.6)',
             fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
             fontSize: '24px'
         }

@@ -1,0 +1,79 @@
+/* System 33, one theme for the whole site (Light Echo).
+   Source of truth: the night-sky reading page at / (index.html).
+   Link this last in <head>, and add theme.js. It gives every page the same
+   fonts, void background, glow, starfield, beating light-core and the
+   scroll-lit .stages line. Pages that carry the old zinc look also get
+   class="s33-legacy" on <html> so the shared component styling below applies. */
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+@import url('/styles/shared.css');
+
+:root {
+    --void: #01030a; --pool: #96b9ff; --core: #eef4ff; --ink: #dfe8fb; --ink-dim: #8594b8;
+    --sheet: rgba(6,12,30,.9); --line: rgba(150,185,255,.18);
+}
+
+html { background: none; } /* body colour propagates to the canvas so the starfield (z-index -1) shows above it */
+body {
+    font-family: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background-color: #01030a;
+    color: #dfe8fb;
+    -webkit-font-smoothing: antialiased;
+}
+body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse 900px 620px at 50% -6%, rgba(150,185,255,.16), rgba(150,185,255,.05) 38%, rgba(1,3,10,0) 68%);
+    pointer-events: none;
+    z-index: -1;
+}
+#starfield { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+/* the beating light-core (same as the course pages) */
+.light-core {
+    display: block; width: 16px; height: 16px; border-radius: 50%;
+    margin: 0 auto 28px; background: #f5f8ff;
+    animation: s33beat 3s infinite; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.light-core:hover { opacity: 1; }
+@keyframes s33beat {
+    0%,100% { box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); }
+    4% { box-shadow: 0 0 22px 9px rgba(238,244,255,.95), 0 0 110px 48px rgba(150,185,255,.45); }
+    12% { box-shadow: 0 0 16px 6px rgba(238,244,255,.75), 0 0 70px 30px rgba(150,185,255,.26); }
+    16% { box-shadow: 0 0 19px 7px rgba(238,244,255,.85), 0 0 90px 38px rgba(150,185,255,.34); }
+    40% { box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); }
+}
+@media (prefers-reduced-motion: reduce) { .light-core { animation: none; box-shadow: 0 0 14px 5px rgba(238,244,255,.7), 0 0 60px 26px rgba(150,185,255,.22); } }
+
+/* the scroll-lit stage line, exactly as on the reading page */
+.stages { position: relative; padding-left: 46px; }
+.stages::before { content: ""; position: absolute; left: 15px; top: 10px; bottom: 40px; width: 1.5px; background: rgba(150,185,255,.14); }
+.stages .vinefill { position: absolute; left: 14px; top: 10px; width: 3.5px; height: 0; border-radius: 2px;
+    background: linear-gradient(rgba(238,244,255,.95), rgba(150,185,255,.7)); box-shadow: 0 0 14px rgba(150,185,255,.85);
+    transition: height 1s cubic-bezier(.2,.7,.2,1); }
+.stage { position: relative; padding-bottom: 44px; opacity: .28; transition: opacity 1s; }
+.stage.lit { opacity: 1; }
+.stage .dot { position: absolute; left: -37px; top: 9px; width: 11px; height: 11px; border-radius: 50%; background: #1a2a58; transition: background .6s, box-shadow .6s; }
+.stage.lit .dot { background: #f5f8ff; box-shadow: 0 0 12px 4px rgba(238,244,255,.75), 0 0 44px 16px rgba(150,185,255,.3); }
+.stage .num { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: #8594b8; margin: 0 0 4px; }
+.stage h2 { font-family: 'Marcellus', Georgia, serif; font-weight: 400; font-size: 26px; margin: 0 0 8px; color: #eef4ff; }
+.stage p:not(.num) { margin: 0; font-size: 16.5px; line-height: 1.65; max-width: 36em; color: #dfe8fb; }
+
+/* component styling for pages that came from the old zinc look */
+.s33-legacy a:hover { opacity: .85; }
+.s33-legacy h1, .s33-legacy h2, .s33-legacy h3 { font-family: 'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: 0; }
+.s33-legacy .hero h1 { color: #eef4ff; text-shadow: 0 0 24px rgba(150,185,255,.45); }
+.s33-legacy .hero-badge { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; color: #96b9ff; background: rgba(6,12,30,.9); letter-spacing: .08em; }
+.s33-legacy .section-label { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+.s33-legacy .site-header a { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+.s33-legacy .site-header a:hover { color: #96b9ff; }
+.s33-legacy footer { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+.s33-legacy footer a:hover { color: #96b9ff; }
+.s33-legacy .method-card, .s33-legacy .step-content, .s33-legacy .tree-section, .s33-legacy .formula-ref {
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.s33-legacy .method-card { border-radius: 14px; transition: border-color .25s, box-shadow .25s, transform .25s; }
+.s33-legacy .method-card:hover { border-color: #96b9ff; box-shadow: 0 0 32px rgba(150,185,255,.16); opacity: 1; transform: translateY(-1px); }
+.s33-legacy .method-card h3 { color: #eef4ff; }
+.s33-legacy .method-card:hover .method-card-arrow { color: #96b9ff; }
+.s33-legacy ::selection { background: rgba(150,185,255,.3); }
+/* embeds we cannot theme (the Notion form) get a frame so they sit in the sky on purpose */
+.s33-legacy .form-embed { border: 1px solid rgba(150,185,255,.35); border-radius: 14px; box-shadow: 0 0 32px rgba(150,185,255,.14); }
