@@ -77,3 +77,24 @@ body::before {
 .s33-legacy ::selection { background: rgba(150,185,255,.3); }
 /* embeds we cannot theme (the Notion form) get a frame so they sit in the sky on purpose */
 .s33-legacy .form-embed { border: 1px solid rgba(150,185,255,.35); border-radius: 14px; box-shadow: 0 0 32px rgba(150,185,255,.14); }
+
+/* fixed progress rail on long reading pages (notes). see rail.js */
+.s33-rail { position: fixed; right: 18px; top: 50%; width: 26px; height: min(68vh, calc(var(--n, 6) * 34px)); transform: translateY(-50%); z-index: 40; }
+.s33-rail-track { position: absolute; left: 50%; top: 0; bottom: 0; width: 1.5px; margin-left: -.75px; background: rgba(150,185,255,.18); border-radius: 2px; }
+.s33-rail-fill { position: absolute; left: -1px; top: 0; width: 3.5px; height: 0; border-radius: 2px; background: linear-gradient(rgba(238,244,255,.95), rgba(150,185,255,.7)); box-shadow: 0 0 14px rgba(150,185,255,.85); transition: height .5s cubic-bezier(.2,.7,.2,1); }
+.s33-rail-dot { position: absolute; left: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; padding: 0; border-radius: 50%; border: 1px solid rgba(150,185,255,.28); background: #050b1d; color: #8594b8; font: 400 10px 'IBM Plex Mono', ui-monospace, Menlo, monospace; cursor: pointer; transition: background .5s, border-color .5s, color .5s, box-shadow .5s; -webkit-tap-highlight-color: transparent; }
+.s33-rail-dot .n { display: block; line-height: 20px; text-align: center; }
+.s33-rail-dot.lit { background: #1a2a58; border-color: rgba(150,185,255,.6); color: #eef4ff; }
+.s33-rail-dot.cur { background: #f5f8ff; border-color: #f5f8ff; color: #01030a; box-shadow: 0 0 12px 4px rgba(238,244,255,.7), 0 0 36px 12px rgba(150,185,255,.3); }
+.s33-rail-dot:focus-visible { outline: 2px solid #96b9ff; outline-offset: 3px; }
+.s33-rail-dot .tip { position: absolute; right: 30px; top: 50%; transform: translateY(-50%); white-space: nowrap; max-width: 60vw; overflow: hidden; text-overflow: ellipsis; padding: 6px 10px; border-radius: 8px; background: rgba(6,12,30,.95); border: 1px solid rgba(150,185,255,.25); color: #eef4ff; font: 400 12px 'Figtree', system-ui, sans-serif; opacity: 0; pointer-events: none; transition: opacity .2s; }
+@media (hover: hover) { .s33-rail-dot:hover .tip, .s33-rail-dot:focus-visible .tip { opacity: 1; } }
+@media (max-width: 700px) {
+    .s33-rail { right: 5px; width: 14px; }
+    .s33-rail-dot { width: 12px; height: 12px; margin: -6px 0 0 -6px; }
+    .s33-rail-dot .n { display: none; }
+    .s33-rail-dot.cur { box-shadow: 0 0 8px 3px rgba(238,244,255,.7); }
+}
+/* wide tables and figures scroll inside themselves instead of pushing the page sideways on phones */
+.s33-legacy table { max-width: 100%; }
+@media (max-width: 700px) { .s33-legacy .container table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; } }
