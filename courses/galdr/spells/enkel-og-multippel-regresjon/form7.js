@@ -4,10 +4,10 @@ function biasBars(aSlope,bSlope,scale){
  var aW=(aSlope/sc)*(xEnd-xStart);
  var bW=(bSlope/sc)*(xEnd-xStart);
  var s='<svg class="bellsvg" viewBox="0 0 '+w+' '+h+'">';
- s+='<text x="10" y="38" class="bell-tick" style="text-anchor:start;fill:#fafafa">Model A</text>';
- s+='<text x="10" y="52" class="bell-tick" style="text-anchor:start;fill:#71717a">(Radio only)</text>';
- s+='<text x="10" y="100" class="bell-tick" style="text-anchor:start;fill:#fafafa">Model B</text>';
- s+='<text x="10" y="114" class="bell-tick" style="text-anchor:start;fill:#71717a">(TV + Radio)</text>';
+ s+='<text x="10" y="38" class="bell-tick" style="text-anchor:start;fill:#eef4ff">Model A</text>';
+ s+='<text x="10" y="52" class="bell-tick" style="text-anchor:start;fill:#8594b8">(Radio only)</text>';
+ s+='<text x="10" y="100" class="bell-tick" style="text-anchor:start;fill:#eef4ff">Model B</text>';
+ s+='<text x="10" y="114" class="bell-tick" style="text-anchor:start;fill:#8594b8">(TV + Radio)</text>';
  s+='<rect x="'+xStart+'" y="30" width="'+aW+'" height="'+barH+'" fill="#dc2626" opacity=".85"/>';
  s+='<text x="'+(xStart+aW+8)+'" y="49" class="bell-tick" style="text-anchor:start;fill:#dc2626;font-weight:700">'+aSlope.toFixed(2)+'</text>';
  s+='<rect x="'+xStart+'" y="92" width="'+bW+'" height="'+barH+'" fill="#22c55e" opacity=".85"/>';
@@ -19,7 +19,7 @@ function biasBars(aSlope,bSlope,scale){
  s+='<text x="'+((biasStart+biasEnd)/2)+'" y="68" class="bell-region-label" style="fill:#f59e0b;font-weight:700">Δb = +'+(aSlope-bSlope).toFixed(2)+' (bias)</text>';
  s+='<line x1="'+xStart+'" y1="134" x2="'+xEnd+'" y2="134" class="bell-axis"/>';
  for(var i=0;i<=Math.floor(sc);i++){var tx=xStart+(i/sc)*(xEnd-xStart);s+='<line x1="'+tx+'" y1="132" x2="'+tx+'" y2="136" class="bell-axis"/>';s+='<text x="'+tx+'" y="148" class="bell-tick">'+i+'</text>'}
- s+='<text x="'+xEnd+'" y="148" class="bell-tick" style="text-anchor:end;fill:#71717a">slope on Radio</text>';
+ s+='<text x="'+xEnd+'" y="148" class="bell-tick" style="text-anchor:end;fill:#8594b8">slope on Radio</text>';
  s+='</svg>';
  return s;
 }

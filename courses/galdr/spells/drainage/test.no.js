@@ -2,10 +2,10 @@
   if(window.__drTestInit){ return; }
   window.__drTestInit = true;
 
-  var GREEN = "#22c55e", RED = "#ef4444", ACCENT = "#a78bfa";
-  var BTN = "background:#fafafa;color:#0a0a0b;border:none;border-radius:10px;padding:11px 18px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer";
-  var BTN2 = "background:transparent;color:#fafafa;border:1px solid #27272a;border-radius:10px;padding:11px 18px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer";
-  var INP = "background:#0a0a0b;border:1px solid #27272a;border-radius:8px;padding:9px 12px;font-family:inherit;font-size:.95rem;color:#fafafa;width:160px;text-align:center";
+  var GREEN = "#22c55e", RED = "#ef4444", ACCENT = "#96b9ff";
+  var BTN = "background:#eef4ff;color:#01030a;border:none;border-radius:10px;padding:11px 18px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer";
+  var BTN2 = "background:transparent;color:#eef4ff;border:1px solid rgba(150,185,255,.18);border-radius:10px;padding:11px 18px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer";
+  var INP = "background:#01030a;border:1px solid rgba(150,185,255,.18);border-radius:8px;padding:9px 12px;font-family:inherit;font-size:.95rem;color:#eef4ff;width:160px;text-align:center";
 
   function byId(id){ return document.getElementById(id); }
   function ri(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
@@ -44,12 +44,12 @@
   }
 
   function whyCard(){
-    return '<div style="background:#111113;border-left:3px solid ' + ACCENT + ';border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 20px">'
-      + '<div style="font-size:.72rem;color:#71717a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Hvorfor denne formelen betyr noe</div>'
-      + '<p style="color:#a1a1aa;font-size:.88rem;line-height:1.65;margin:0 0 10px"><strong style="color:#fafafa">Hva det er. </strong>' + WHY.what + '</p>'
-      + '<p style="color:#a1a1aa;font-size:.88rem;line-height:1.65;margin:0 0 10px"><strong style="color:#fafafa">Hvor det biter. </strong>' + WHY.use + '</p>'
-      + '<p style="color:#a1a1aa;font-size:.88rem;line-height:1.65;margin:0 0 10px"><strong style="color:#fafafa">På eksamen. </strong>' + WHY.exam + '</p>'
-      + '<p style="color:#a1a1aa;font-size:.88rem;line-height:1.65;margin:0"><strong style="color:#fafafa">Det gøye. </strong>' + WHY.fun + '</p>'
+    return '<div style="background:rgba(6,12,30,.6);border-left:3px solid ' + ACCENT + ';border-radius:0 8px 8px 0;padding:16px 20px;margin:0 0 20px">'
+      + '<div style="font-size:.72rem;color:#8594b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Hvorfor denne formelen betyr noe</div>'
+      + '<p style="color:#dfe8fb;font-size:.88rem;line-height:1.65;margin:0 0 10px"><strong style="color:#eef4ff">Hva det er. </strong>' + WHY.what + '</p>'
+      + '<p style="color:#dfe8fb;font-size:.88rem;line-height:1.65;margin:0 0 10px"><strong style="color:#eef4ff">Hvor det biter. </strong>' + WHY.use + '</p>'
+      + '<p style="color:#dfe8fb;font-size:.88rem;line-height:1.65;margin:0 0 10px"><strong style="color:#eef4ff">På eksamen. </strong>' + WHY.exam + '</p>'
+      + '<p style="color:#dfe8fb;font-size:.88rem;line-height:1.65;margin:0"><strong style="color:#eef4ff">Det gøye. </strong>' + WHY.fun + '</p>'
       + '</div>';
   }
 
@@ -137,9 +137,9 @@
       '<h3>Steg 5 — Test deg selv</h3>'
       + '<p>Les scenarioet, bestem de to signalene, og tell. Trykk Ny test for et nytt et.</p>'
       + whyCard()
-      + '<div style="background:#0a0a0b;border:1px solid #27272a;border-radius:10px;padding:16px 20px;margin:14px 0">'
-        + '<div style="font-size:.72rem;color:#71717a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Scenario</div>'
-        + '<p style="color:#fafafa;font-size:.95rem;line-height:1.6;margin:0">' + D.prob + '</p>'
+      + '<div style="background:#01030a;border:1px solid rgba(150,185,255,.18);border-radius:10px;padding:16px 20px;margin:14px 0">'
+        + '<div style="font-size:.72rem;color:#8594b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Scenario</div>'
+        + '<p style="color:#eef4ff;font-size:.95rem;line-height:1.6;margin:0">' + D.prob + '</p>'
       + '</div>'
       + '<div class="q-block"><div class="q-label">1. Teller rekkefølgen?</div><div class="q-options">'
         + '<div class="q-opt" id="dr-o-ordered"><div class="q-opt-title">Ja — ordnet</div></div>'
@@ -151,7 +151,7 @@
       + '</div></div>'
       + '<div style="margin-top:10px"><button id="dr-check-type" style="' + BTN + '">Sjekk formelen</button></div>'
       + '<div id="dr-type-fb" style="margin-top:10px;font-size:.88rem"></div>'
-      + '<div id="dr-stage2" class="hidden" style="margin-top:18px;border-top:1px solid #27272a;padding-top:18px">'
+      + '<div id="dr-stage2" class="hidden" style="margin-top:18px;border-top:1px solid rgba(150,185,255,.18);padding-top:18px">'
         + '<div class="q-label" style="margin-bottom:8px">Hvor mange måter finnes det?</div>'
         + '<input type="text" id="dr-count-in" placeholder="tall" style="' + INP + '">'
         + '<div style="margin-top:12px"><button id="dr-check-count" style="' + BTN + '">Sjekk tellingen</button></div>'
