@@ -3,7 +3,7 @@
    passed sections stay lit, click a dot to jump there. Rebuilds itself when sections arrive late
    (the Ed Catmull read fetches its chapters). Add: <script src="/styles/rail.js" defer></script> */
 (function () {
-    var rail, fill, dots = [], heads = [], raf = 0, sig = '';
+    var rail, fill, dots = [], heads = [], labels = [], raf = 0, sig = '', lastCur = null, tipTimer = 0;
     function clean(t) {
         return t.replace(/^\s*\d+\s*·\s*/, '').replace(/^\s*(\d+:)?\d{1,2}:\d{2}\s*[—–-]\s*/, '').trim();
     }
@@ -16,6 +16,15 @@
         var hs = collect(), s = hs.map(function (h) { return h.id; }).join('|');
         if (s === sig) return;
         sig = s; heads = hs;
+        // the dot shows the chapter's own number. Pages with numbered chapters keep those numbers and
+        // mark unnumbered sections (cast, sources) with a small dot; otherwise we count 1, 2, 3
+        var numbered = hs.some(function (h) { return /^\s*\d+\s*·/.test(h.textContent); });
+        var seq = 0;
+        labels = hs.map(function (h) {
+            var m = h.textContent.match(/^\s*(\d+)\s*·/);
+            if (numbered) return m ? m[1] : '·';
+            seq += 1; return String(seq);
+        });
         if (rail) rail.remove();
         if (hs.length < 3) { rail = null; return; }
         rail = document.createElement('nav');
@@ -28,10 +37,11 @@
             var b = document.createElement('button');
             b.type = 'button'; b.className = 's33-rail-dot';
             b.style.top = (hs.length === 1 ? 0 : i / (hs.length - 1) * 100) + '%';
-            b.setAttribute('aria-label', 'Section ' + (i + 1) + ': ' + clean(h.textContent));
-            b.innerHTML = '<span class="n">' + (i + 1) + '</span><span class="tip">' + clean(h.textContent).replace(/</g, '&lt;') + '</span>';
+            var title = clean(h.textContent).replace(/</g, '&lt;');
+            b.setAttribute('aria-label', (labels[i] === '·' ? '' : 'Section ' + labels[i] + ': ') + clean(h.textContent));
+            b.innerHTML = '<span class="n">' + labels[i] + '</span><span class="tip">' + (labels[i] === '·' ? '' : '<b>' + labels[i] + '</b> ') + title + '</span>';
             b.addEventListener('click', function () {
-                var y = h.getBoundingClientRect().top + scrollY - 24;
+                var y = h.getBoundingClientRect().top + scrollY - 76;
                 scrollTo({ top: y, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
                 if (window.s33Sky) window.s33Sky.bump(1.2);
             });
@@ -58,6 +68,14 @@
         if (atEnd) { cur = n - 1; prog = n - 1; }
         fill.style.height = (n === 1 ? 0 : Math.min(100, prog / (n - 1) * 100)) + '%';
         dots.forEach(function (d, i) { d.classList.toggle('lit', i <= cur); d.classList.toggle('cur', i === cur); });
+        // arriving at a section swipes its number and name in beside the rail for a moment
+        if (lastCur !== null && cur !== lastCur && cur >= 0 && dots[cur]) {
+            dots.forEach(function (d) { d.classList.remove('show'); });
+            dots[cur].classList.add('show');
+            clearTimeout(tipTimer);
+            tipTimer = setTimeout(function () { dots.forEach(function (d) { d.classList.remove('show'); }); }, 2600);
+        }
+        lastCur = cur;
     }
     function queue() { if (!raf) raf = requestAnimationFrame(update); }
     var mo, t;
