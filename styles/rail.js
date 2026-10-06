@@ -1,8 +1,8 @@
 /* System 33, the reading line for long pages (notes).
    The whole line is on screen all the time, right beside the text column, with every number on it.
    Click a number to go there. The light fills down the line as you read, and the section you are in
-   pushes in toward the text. The same number is lit inside the heading itself, so each number
-   shows once in the text and once on the line, never twice side by side.
+   pushes in toward the text. The number in the heading text is what lights up, and the bead on the line
+   goes in without a number, so a number never shows twice side by side.
    Rebuilds itself when sections arrive late (the Ed Catmull read fetches its chapters).
    Add: <script src="/styles/rail.js" defer></script> */
 (function () {
@@ -22,17 +22,24 @@
         for (var k in attrs) e.setAttribute(k, attrs[k]);
         return e;
     }
-    // the number belongs to the heading: it becomes a small badge that lights when you reach the section
+    // the number is part of the heading text: it stays there all the time and lights when the line reaches it
     function badge(h, label) {
-        if (label === '·' || h.querySelector('.s33-hnum')) return h.querySelector('.s33-hnum');
+        if (label === '·') return null;
+        var old = h.querySelector('.s33-hnum');
+        if (old) return old;
         var b = document.createElement('span');
-        b.className = 's33-hnum'; b.textContent = label; b.setAttribute('aria-hidden', 'true');
+        b.className = 's33-hnum'; b.textContent = label;
         var first = h.firstChild;
-        if (first && first.nodeType === 3) {
-            var m = first.nodeValue.match(/^\s*\d+\s*·\s*/);
-            if (m) first.nodeValue = first.nodeValue.slice(m[0].length);
+        var m = first && first.nodeType === 3 && first.nodeValue.match(/^\s*\d+(?=\s*·)/);
+        if (m) {
+            first.nodeValue = first.nodeValue.slice(m[0].length);
+            h.insertBefore(b, first);
+        } else {
+            var sep = document.createElement('span');
+            sep.className = 's33-hsep'; sep.textContent = ' \u00b7 ';
+            h.insertBefore(sep, h.firstChild);
+            h.insertBefore(b, sep);
         }
-        h.insertBefore(b, h.firstChild);
         return b;
     }
     function pathD(c) {
@@ -69,7 +76,7 @@
         var barH = 54;
         railH = Math.min(innerHeight * (phone ? .8 : .68), n * (phone ? 30 : 34));
         var top = barH + Math.max(8, (innerHeight - barH - railH) / 2);
-        D = phone ? 8 : 10; R = phone ? 13 : 15;
+        D = phone ? 8 : 14; R = phone ? 13 : 15;
         ys = hs.map(function (h, i) { return n === 1 ? 0 : i / (n - 1) * railH; });
         rail = document.createElement('nav');
         rail.className = 's33-rail'; rail.setAttribute('aria-label', 'Sections of this page');
